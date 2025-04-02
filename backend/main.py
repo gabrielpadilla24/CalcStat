@@ -12,6 +12,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+
 class ExponentialData(BaseModel):
     initialValue: float
     growthRate: float
