@@ -34,9 +34,9 @@ const NavBar = () => {
         >
           <img
             src="/img/logo.png"
-            className="h-8 ml-5"
+            className="h-8"
             alt="Logo"
-            style={{ transform: "scale(7)" }}
+            style={{ transform: "scale(2)" }}
           />
         </Link>
 
