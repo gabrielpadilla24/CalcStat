@@ -37,11 +37,11 @@ To bridge mathematics, finance, and code through intuitive, educational, and pow
 ### 📈 Exponential Growth Calculator
 
 - 📄 [Detailed Documentation](#-exponential-growth-calculator-docs)
+- ✨ Visualize how your capital grows over time!
 - 🧮 Dynamic formula rendering with KaTeX
 - 🔁 Annual vs Monthly contributions
 - 📬 Backend API with breakdown per year
-- 📹 Demo Video or Screenshot
-- ✨ Designed for finance and quant contexts
+
 
 ### 📈 Compound Interest Calculator
 
