@@ -260,6 +260,15 @@ const ExponentialForm: React.FC<Props> = ({
           Final Amount: {formatearNumero(resultado)}
         </div>
       )}
+
+      {/* Nuevo contenido agregado aquí */}
+      <div
+        className="mt-4 text-center text-sm text-gray-500 flex justify-center items-center gap-1"
+        style={{ marginTop: "15px" }}
+      >
+        <span className="text-lg">↓</span>
+        <span>See how it was calculated</span>
+      </div>
     </form>
   );
 };
