@@ -1,6 +1,6 @@
 # 📈 Exponential Growth Calculator Documentation
 
-The Exponential Growth Calculator models the evolution of capital over time with compounded growth and periodic contributions, tailored for financial engineers, quants, and students. It is one of the foundational tools in our Financial Calculator module.
+The Compound Interest Calculator models the evolution of capital over time with compounded growth and periodic contributions, tailored for financial engineers, quants, and students. It is one of the foundational tools in our Financial Calculator module.
 
 ---
 
