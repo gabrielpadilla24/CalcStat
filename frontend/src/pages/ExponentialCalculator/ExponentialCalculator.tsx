@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import ExponentialForm from "./components/ExponentialForm";
 import ExponentialGraph from "./components/ExponentialGraph";
 import ExponentialFormula from "./components/ExponentialFormula";
@@ -18,6 +18,13 @@ const ExponentialCalculator = () => {
   const [mostrarFormulaConValores, setMostrarFormulaConValores] =
     useState(false);
 
+  // 👉 Ref para hacer scroll a la fórmula
+  const formulaRef = useRef<HTMLDivElement>(null);
+
+  const scrollToFormula = () => {
+    formulaRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
   return (
     <div className="min-h-screen bg-gray-100 py-10">
       <h1 className="text-4xl font-bold text-center mb-12">
@@ -31,6 +38,7 @@ const ExponentialCalculator = () => {
             setAportesPorAño={setAportesPorAño}
             setFormulaData={setFormulaData}
             setMostrarFormulaConValores={setMostrarFormulaConValores}
+            scrollToFormula={scrollToFormula} // ✅ PASAMOS scrollToFormula
           />
         </div>
         <div>
@@ -38,7 +46,8 @@ const ExponentialCalculator = () => {
         </div>
       </div>
 
-      <div>
+      {/* 🔽 Fórmula con scroll-to-ref */}
+      <div ref={formulaRef}>
         <ExponentialFormula
           P={formulaData.P}
           r={formulaData.r}

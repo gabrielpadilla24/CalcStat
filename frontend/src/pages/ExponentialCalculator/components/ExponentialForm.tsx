@@ -15,6 +15,7 @@ interface Props {
     frequency: string;
   }) => void;
   setMostrarFormulaConValores: (visible: boolean) => void;
+  scrollToFormula: () => void;
 }
 
 const ExponentialForm: React.FC<Props> = ({
@@ -22,6 +23,7 @@ const ExponentialForm: React.FC<Props> = ({
   setAportesPorAño,
   setFormulaData,
   setMostrarFormulaConValores,
+  scrollToFormula,
 }) => {
   const [formData, setFormData] = useState({
     initialValue: "",
@@ -263,7 +265,8 @@ const ExponentialForm: React.FC<Props> = ({
 
       {/* Nuevo contenido agregado aquí */}
       <div
-        className="mt-4 text-center text-sm text-gray-500 flex justify-center items-center gap-1"
+        onClick={scrollToFormula}
+        className="mt-4 text-center text-sm text-gray-500 flex justify-center items-center gap-1 cursor-pointer hover:text-gray-700 transition-colors"
         style={{ marginTop: "15px" }}
       >
         <span className="text-lg">↓</span>
