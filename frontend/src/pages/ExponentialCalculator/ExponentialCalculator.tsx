@@ -25,7 +25,7 @@ const ExponentialCalculator = () => {
         </div>
       </div>
       <div>
-        <ExponentialFormula />
+        <ExponentialFormula P={1000} r={0.1} t={35} C={100} n={12} />
       </div>
     </div>
   );

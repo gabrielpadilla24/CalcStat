@@ -1,9 +1,28 @@
+import React from "react";
 import { BlockMath } from "react-katex";
 import "katex/dist/katex.min.css";
 
-const ExponentialFormula = () => {
-  const formula = String.raw`
-    FV = P \cdot (1 + r)^t + \frac{C \left( (1 + \frac{r}{n})^{nt} - 1 \right)}{\frac{r}{n}}
+interface ExponentialFormulaProps {
+  P: number; // Monto inicial
+  r: number; // Tasa de interés (decimal)
+  t: number; // Tiempo en años
+  C: number; // Contribución periódica
+  n: number; // Periodos de capitalización por año
+}
+
+const ExponentialFormula: React.FC<ExponentialFormulaProps> = ({
+  P,
+  r,
+  t,
+  C,
+  n,
+}) => {
+  const generalFormula = String.raw`
+    FV = P \cdot (1 + r)^t + \frac{C \left( (1 + {r})^{t} - 1 \right)}{r}
+  `;
+
+  const substitutedFormula = String.raw`
+    FV = ${P} \cdot (1 + ${r})^{${t}} + \frac{${C} \left( (1 + ${r})^{${t}} - 1 \right)}{${r}}
   `;
 
   return (
@@ -17,31 +36,37 @@ const ExponentialFormula = () => {
         contributions:
       </p>
 
+      {/* General formula */}
       <div className="bg-gray-100 p-4 rounded text-base overflow-x-auto mb-4 text-center">
-        <BlockMath math={formula} />
+        <BlockMath math={generalFormula} />
       </div>
 
-      <p className="text-gray-600 text-sm mb-1">
+      {/* Formula with values */}
+      <h3 className="text-md font-semibold text-gray-800 mt-6 mb-2">
+        🔢 With Your Values
+      </h3>
+      <div className="bg-yellow-50 p-4 rounded text-base overflow-x-auto text-center border border-yellow-200">
+        <BlockMath math={substitutedFormula} />
+      </div>
+
+      <p className="text-gray-600 text-sm mt-6 mb-1">
         <strong>Where:</strong>
       </p>
       <ul className="list-disc list-inside text-gray-600 text-sm">
         <li>
-          <strong>FV</strong>: Final value
+          <strong>P</strong>: Initial amount = {P}
         </li>
         <li>
-          <strong>P</strong>: Initial amount
+          <strong>r</strong>: Interest rate = {r}
         </li>
         <li>
-          <strong>r</strong>: Annual interest rate (as a decimal)
+          <strong>t</strong>: Time in years = {t}
         </li>
         <li>
-          <strong>t</strong>: Time in years
+          <strong>C</strong>: Contribution per period = {C}
         </li>
         <li>
-          <strong>C</strong>: Contribution amount per period
-        </li>
-        <li>
-          <strong>n</strong>: Number of compounding periods per year
+          <strong>n</strong>: Compounding periods per year = {n}
         </li>
       </ul>
     </div>
