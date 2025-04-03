@@ -7,6 +7,7 @@ interface ExponentialFormulaProps {
   r: number;
   t: number;
   C: number;
+  frequency: string;
   showSubstituted: boolean;
 }
 
@@ -15,14 +16,18 @@ const ExponentialFormula: React.FC<ExponentialFormulaProps> = ({
   r,
   t,
   C,
+  frequency,
   showSubstituted,
 }) => {
+  const rawAnnualC = frequency === "Monthly" ? C * 12 : C;
+  const annualC = Number(rawAnnualC.toFixed(1));
+
   const generalFormula = String.raw`
     FV = P \cdot (1 + r)^t + C \cdot \left( \frac{(1 + r)^t - 1}{r} \right)
   `;
 
   const substitutedFormula = String.raw`
-    FV = ${P} \cdot (1 + ${r})^{${t}} + ${C} \cdot \left( \frac{(1 + ${r})^{${t}} - 1}{${r}} \right)
+    FV = ${P} \cdot (1 + ${r})^{${t}} + ${annualC} \cdot \left( \frac{(1 + ${r})^{${t}} - 1}{${r}} \right)
   `;
 
   return (
@@ -65,7 +70,8 @@ const ExponentialFormula: React.FC<ExponentialFormulaProps> = ({
           <strong>t</strong>: Time in years = {t}
         </li>
         <li>
-          <strong>C</strong>: Contribution per period = {C}
+          <strong>C</strong>: Contribution per period ={" "}
+          {frequency === "Monthly" ? `${C} × 12 = ${annualC}` : C}
         </li>
       </ul>
     </div>

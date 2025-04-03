@@ -12,6 +12,7 @@ const ExponentialCalculator = () => {
     r: 0,
     t: 0,
     C: 0,
+    frequency: "Yearly",
   });
 
   const [mostrarFormulaConValores, setMostrarFormulaConValores] =
@@ -43,6 +44,7 @@ const ExponentialCalculator = () => {
           r={formulaData.r}
           t={formulaData.t}
           C={formulaData.C}
+          frequency={formulaData.frequency}
           showSubstituted={mostrarFormulaConValores}
         />
       </div>

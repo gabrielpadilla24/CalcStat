@@ -12,6 +12,7 @@ interface Props {
     r: number;
     t: number;
     C: number;
+    frequency: string;
   }) => void;
   setMostrarFormulaConValores: (visible: boolean) => void;
 }
@@ -91,7 +92,7 @@ const ExponentialForm: React.FC<Props> = ({
       time: Number(formData.time),
       addConstant: formData.addConstant,
       constantValue: formData.addConstant ? Number(formData.constantValue) : 0,
-      frequency: formData.addConstant ? formData.frequency : "",
+      frequency: formData.addConstant ? formData.frequency : "Yearly",
     };
 
     fetch("http://localhost:8000/calcular", {
@@ -117,12 +118,12 @@ const ExponentialForm: React.FC<Props> = ({
           setValoresPorAño(data.valoresPorAño);
           setAportesPorAño(data.aportesPorAño);
 
-          // Actualiza datos para la fórmula con valores
           setFormulaData({
             P: Number(formData.initialValue),
             r: Number(formData.growthRate) / 100,
             t: Number(formData.time),
             C: formData.addConstant ? Number(formData.constantValue) : 0,
+            frequency: formData.addConstant ? formData.frequency : "Yearly",
           });
 
           setMostrarFormulaConValores(true);
