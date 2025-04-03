@@ -6,9 +6,7 @@ const LandingPage = () => {
     <>
       <NavBar />
       <div className="min-h-screen flex flex-col justify-center items-center bg-gray-100">
-        <h1 className="text-4xl font-bold mb-6">
-          Bienvenido a la Calculadora Exponencial
-        </h1>
+        <h1 className="text-4xl font-bold mb-6">Welcome to CalcStat!</h1>
         <Link
           to="/calculadora"
           className="text-blue-500 hover:underline text-xl"
