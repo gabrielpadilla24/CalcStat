@@ -1,6 +1,7 @@
 import { useState } from "react";
 import ExponentialForm from "./components/ExponentialForm";
 import ExponentialGraph from "./components/ExponentialGraph";
+import ExponentialFormula from "./components/ExponentialForumla";
 
 const ExponentialCalculator = () => {
   const [valoresPorAño, setValoresPorAño] = useState<number[]>([]);
@@ -22,6 +23,9 @@ const ExponentialCalculator = () => {
         <div>
           <ExponentialGraph valores={valoresPorAño} aportes={aportesPorAño} />
         </div>
+      </div>
+      <div>
+        <ExponentialFormula />
       </div>
     </div>
   );
