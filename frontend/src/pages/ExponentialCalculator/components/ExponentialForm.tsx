@@ -144,6 +144,8 @@ const ExponentialForm: React.FC<Props> = ({
         borderRadius: "8px",
         boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
         width: "550px",
+        height: formData.addConstant ? "600px" : "auto", // Cambia la altura dinámicamente
+        transition: "height 0.3s ease", // Transición suave al cambiar la altura
       }}
     >
       <table style={{ width: "100%", borderSpacing: "12px" }}>

@@ -31,7 +31,11 @@ const ExponentialFormula: React.FC<ExponentialFormulaProps> = ({
   `;
 
   return (
-    <div className="bg-white shadow-md rounded-xl p-6 mt-8 max-w-3xl mx-auto border border-gray-200">
+    <div className="bg-white shadow-md rounded-xl p-6 mt-8 max-w-[1350px] mx-auto border border-gray-200">
+      <h1 className="text-4xl font-bold text-center mt-12 mb-4">
+        📐 Formula Breakdown
+      </h1>
+
       <h2 className="text-xl font-semibold mb-4 text-gray-800">
         📘 Formula Used
       </h2>
