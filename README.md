@@ -23,7 +23,7 @@ To bridge mathematics, finance, and code through intuitive, educational, and pow
 
 | Category | Calculators |
 |---------|-------------|
-| 📈 Financial | [Exponential Growth](#-exponential-growth-calculator)<br>[Compound Interest](#-compound-interest-calculator)<br>[Annuities](#-annuity-calculator) |
+| 📈 Financial | [Compound Interest](#-compound-interest-calculator)<br>[Annuities](#-annuity-calculator) |
 | 📊 Quant | [Monte Carlo Simulations](#-monte-carlo-simulator)<br>[Option Pricing (B&S)](#-black--scholes-calculator) |
 | 📐 Calculus | [Single Variable](#-single-variable-calculus)<br>[Multivariable](#-multivariable-calculus)<br>[Definite Integrals](#-definite-integral-calculator) |
 | 📏 Linear Algebra | [Matrix Operations](#-matrix-calculator)<br>[Eigenvalue Solver](#-eigenvalue-decomposer) |
@@ -34,18 +34,15 @@ To bridge mathematics, finance, and code through intuitive, educational, and pow
 
 ## 🔍 Calculator Documentation
 
-### 📈 Exponential Growth Calculator
+### 📈 Compound Interest Calculator
 
-- 📄 [Detailed Documentation](docs/exponential-growth.md)
+- 📄 [Detailed Documentation](docs/compound-interest.md)
 - ✨ Visualize how your capital grows over time!
 - 🧮 Dynamic formula rendering with KaTeX
 - 🔁 Annual vs Monthly contributions
 - 📬 Backend API with breakdown per year
 
-
-### 📈 Compound Interest Calculator
-
-- Similar structure...
+---
 
 ### 📉 Brownian Motion Simulator
 
