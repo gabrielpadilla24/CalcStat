@@ -5,7 +5,7 @@ const LandingPage = () => {
   return (
     <>
       <NavBar />
-      <div className="min-h-screen flex flex-col items-center justify-center bg-gray-100 text-center px-4">
+      <div className="flex flex-col items-center bg-gray-100 text-center px-4 pt-10 pb-20 min-h-[70vh]">
         <img
           src="/img/logo.png"
           alt="Ilustración de calculadora"

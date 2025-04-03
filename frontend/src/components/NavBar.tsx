@@ -27,14 +27,14 @@ const NavBar = () => {
 
   return (
     <nav className="bg-white border-gray-200 dark:bg-gray-900 dark:border-gray-700">
-      <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
+      <div className="w-full flex flex-wrap items-center justify-between px-4 py-4">
         <Link
           to="/"
           className="flex items-center space-x-3 rtl:space-x-reverse"
         >
           <img
             src="/img/logo.png"
-            className="h-8"
+            className="h-8 ml-11"
             alt="Logo"
             style={{ transform: "scale(2)" }}
           />
