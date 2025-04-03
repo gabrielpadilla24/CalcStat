@@ -3,11 +3,11 @@ import { BlockMath } from "react-katex";
 import "katex/dist/katex.min.css";
 
 interface ExponentialFormulaProps {
-  P: number; // Monto inicial
-  r: number; // Tasa de interés (decimal)
-  t: number; // Tiempo en años
-  C: number; // Contribución periódica
-  n: number; // Periodos de capitalización por año
+  P: number;
+  r: number;
+  t: number;
+  C: number;
+  showSubstituted: boolean;
 }
 
 const ExponentialFormula: React.FC<ExponentialFormulaProps> = ({
@@ -15,14 +15,14 @@ const ExponentialFormula: React.FC<ExponentialFormulaProps> = ({
   r,
   t,
   C,
-  n,
+  showSubstituted,
 }) => {
   const generalFormula = String.raw`
-    FV = P \cdot (1 + r)^t + \frac{C \left( (1 + {r})^{t} - 1 \right)}{r}
+    FV = P \cdot (1 + r)^t + C \cdot \left( \frac{(1 + r)^t - 1}{r} \right)
   `;
 
   const substitutedFormula = String.raw`
-    FV = ${P} \cdot (1 + ${r})^{${t}} + \frac{${C} \left( (1 + ${r})^{${t}} - 1 \right)}{${r}}
+    FV = ${P} \cdot (1 + ${r})^{${t}} + ${C} \cdot \left( \frac{(1 + ${r})^{${t}} - 1}{${r}} \right)
   `;
 
   return (
@@ -36,18 +36,20 @@ const ExponentialFormula: React.FC<ExponentialFormulaProps> = ({
         contributions:
       </p>
 
-      {/* General formula */}
       <div className="bg-gray-100 p-4 rounded text-base overflow-x-auto mb-4 text-center">
         <BlockMath math={generalFormula} />
       </div>
 
-      {/* Formula with values */}
-      <h3 className="text-md font-semibold text-gray-800 mt-6 mb-2">
-        🔢 With Your Values
-      </h3>
-      <div className="bg-yellow-50 p-4 rounded text-base overflow-x-auto text-center border border-yellow-200">
-        <BlockMath math={substitutedFormula} />
-      </div>
+      {showSubstituted && (
+        <>
+          <h3 className="text-md font-semibold text-gray-800 mt-6 mb-2">
+            🔢 With Your Values
+          </h3>
+          <div className="bg-yellow-50 p-4 rounded text-base overflow-x-auto text-center border border-yellow-200">
+            <BlockMath math={substitutedFormula} />
+          </div>
+        </>
+      )}
 
       <p className="text-gray-600 text-sm mt-6 mb-1">
         <strong>Where:</strong>
@@ -64,9 +66,6 @@ const ExponentialFormula: React.FC<ExponentialFormulaProps> = ({
         </li>
         <li>
           <strong>C</strong>: Contribution per period = {C}
-        </li>
-        <li>
-          <strong>n</strong>: Compounding periods per year = {n}
         </li>
       </ul>
     </div>

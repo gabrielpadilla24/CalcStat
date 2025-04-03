@@ -7,11 +7,20 @@ import Tooltip from "../../../components/Tooltip/Tooltip";
 interface Props {
   setValoresPorAño: (valores: number[]) => void;
   setAportesPorAño: (aportes: number[]) => void;
+  setFormulaData: (data: {
+    P: number;
+    r: number;
+    t: number;
+    C: number;
+  }) => void;
+  setMostrarFormulaConValores: (visible: boolean) => void;
 }
 
 const ExponentialForm: React.FC<Props> = ({
   setValoresPorAño,
   setAportesPorAño,
+  setFormulaData,
+  setMostrarFormulaConValores,
 }) => {
   const [formData, setFormData] = useState({
     initialValue: "",
@@ -107,6 +116,16 @@ const ExponentialForm: React.FC<Props> = ({
           setResultado(data.resultado);
           setValoresPorAño(data.valoresPorAño);
           setAportesPorAño(data.aportesPorAño);
+
+          // Actualiza datos para la fórmula con valores
+          setFormulaData({
+            P: Number(formData.initialValue),
+            r: Number(formData.growthRate) / 100,
+            t: Number(formData.time),
+            C: formData.addConstant ? Number(formData.constantValue) : 0,
+          });
+
+          setMostrarFormulaConValores(true);
         }
       )
       .catch((err) => {

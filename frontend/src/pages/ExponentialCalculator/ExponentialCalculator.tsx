@@ -1,11 +1,21 @@
 import { useState } from "react";
 import ExponentialForm from "./components/ExponentialForm";
 import ExponentialGraph from "./components/ExponentialGraph";
-import ExponentialFormula from "./components/ExponentialForumla";
+import ExponentialFormula from "./components/ExponentialFormula";
 
 const ExponentialCalculator = () => {
   const [valoresPorAño, setValoresPorAño] = useState<number[]>([]);
   const [aportesPorAño, setAportesPorAño] = useState<number[]>([]);
+
+  const [formulaData, setFormulaData] = useState({
+    P: 0,
+    r: 0,
+    t: 0,
+    C: 0,
+  });
+
+  const [mostrarFormulaConValores, setMostrarFormulaConValores] =
+    useState(false);
 
   return (
     <div className="min-h-screen bg-gray-100 py-10">
@@ -18,14 +28,23 @@ const ExponentialCalculator = () => {
           <ExponentialForm
             setValoresPorAño={setValoresPorAño}
             setAportesPorAño={setAportesPorAño}
+            setFormulaData={setFormulaData}
+            setMostrarFormulaConValores={setMostrarFormulaConValores}
           />
         </div>
         <div>
           <ExponentialGraph valores={valoresPorAño} aportes={aportesPorAño} />
         </div>
       </div>
+
       <div>
-        <ExponentialFormula P={1000} r={0.1} t={35} C={100} n={12} />
+        <ExponentialFormula
+          P={formulaData.P}
+          r={formulaData.r}
+          t={formulaData.t}
+          C={formulaData.C}
+          showSubstituted={mostrarFormulaConValores}
+        />
       </div>
     </div>
   );
