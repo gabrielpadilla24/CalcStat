@@ -1,4 +1,5 @@
 import NavBar from "../../components/NavBar";
+import { Link } from "react-router-dom";
 
 const LandingPage = () => {
   return (
@@ -8,12 +9,12 @@ const LandingPage = () => {
         <h1 className="text-4xl font-bold mb-6">
           Bienvenido a la Calculadora Exponencial
         </h1>
-        <a
-          href="/calculadora"
+        <Link
+          to="/calculadora"
           className="text-blue-500 hover:underline text-xl"
         >
           Ir a la Calculadora
-        </a>
+        </Link>
       </div>
     </>
   );
