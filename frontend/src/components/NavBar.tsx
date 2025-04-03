@@ -1,6 +1,13 @@
 import { Link } from "react-router-dom";
+import { useState } from "react";
 
 const NavBar = () => {
+  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
+
+  const toggleDropdown = () => {
+    setIsDropdownOpen(!isDropdownOpen);
+  };
+
   return (
     <nav className="bg-white border-gray-200 dark:bg-gray-900 dark:border-gray-700">
       <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-4">
@@ -46,31 +53,68 @@ const NavBar = () => {
             <li>
               <Link
                 to="/"
-                className="block py-2 px-3 text-white bg-blue-700 rounded-sm md:bg-transparent md:text-blue-700 md:p-0 md:dark:text-blue-500 dark:bg-blue-600 md:dark:bg-transparent"
+                className="block py-2 px-3 text-white bg-[#5FBA9B] rounded-sm md:bg-transparent md:text-[#5FBA9B] md:p-0 md:dark:text-[#5FBA9B] dark:bg-[#5FBA9B] md:dark:bg-transparent"
               >
                 Home
               </Link>
             </li>
-            <li>
-              <Link
-                to="/calculadora"
-                className="block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
+            <li className="relative">
+              <button
+                onClick={toggleDropdown}
+                className="flex items-center justify-between w-full py-2 px-3 text-gray-900 hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-[#5FBA9B] md:p-0 md:w-auto dark:text-white md:dark:hover:text-[#5FBA9B] dark:focus:text-white dark:hover:bg-gray-700 md:dark:hover:bg-transparent"
               >
-                Calculadora
-              </Link>
-            </li>
-            <li>
-              <Link
-                to="/services"
-                className="block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
-              >
-                Services
-              </Link>
+                Financial
+                <svg
+                  className="w-2.5 h-2.5 ml-2"
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 10 6"
+                >
+                  <path
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="m1 1 4 4 4-4"
+                  />
+                </svg>
+              </button>
+              {isDropdownOpen && (
+                <div className="absolute z-10 mt-2 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
+                  <ul className="py-2 text-sm text-gray-700 dark:text-gray-200">
+                    <li>
+                      <Link
+                        to="/calculadora"
+                        className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                      >
+                        Compound Interest
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        to="/billing"
+                        className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                      >
+                        Billing
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        to="/rewards"
+                        className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                      >
+                        Rewards
+                      </Link>
+                    </li>
+                  </ul>
+                </div>
+              )}
             </li>
             <li>
               <Link
                 to="/pricing"
-                className="block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
+                className="block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-100 hover:text-[#5FBA9B] md:hover:bg-transparent md:border-0 md:p-0 dark:text-[#5FBA9B] dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
               >
                 Pricing
               </Link>
@@ -78,7 +122,7 @@ const NavBar = () => {
             <li>
               <Link
                 to="/contact"
-                className="block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-blue-700 md:p-0 dark:text-white md:dark:hover:text-blue-500 dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
+                className="block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-100 hover:text-[#5FBA9B] md:hover:bg-transparent md:border-0 md:p-0 dark:text-[#5FBA9B] dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
               >
                 Contact
               </Link>
