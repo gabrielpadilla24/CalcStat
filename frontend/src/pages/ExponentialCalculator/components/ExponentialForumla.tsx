@@ -1,4 +1,11 @@
+import { BlockMath } from "react-katex";
+import "katex/dist/katex.min.css";
+
 const ExponentialFormula = () => {
+  const formula = String.raw`
+    FV = P \cdot (1 + r)^t + \frac{C \left( (1 + \frac{r}{n})^{nt} - 1 \right)}{\frac{r}{n}}
+  `;
+
   return (
     <div className="bg-white shadow-md rounded-xl p-6 mt-8 max-w-3xl mx-auto border border-gray-200">
       <h2 className="text-xl font-semibold mb-4 text-gray-800">
@@ -10,10 +17,9 @@ const ExponentialFormula = () => {
         contributions:
       </p>
 
-      <pre className="bg-gray-100 p-4 rounded text-sm overflow-x-auto mb-4">
-        FV = P * (1 + r)<sup>t</sup> + [C * ((1 + r/n)<sup>nt</sup> - 1)] /
-        (r/n)
-      </pre>
+      <div className="bg-gray-100 p-4 rounded text-base overflow-x-auto mb-4 text-center">
+        <BlockMath math={formula} />
+      </div>
 
       <p className="text-gray-600 text-sm mb-1">
         <strong>Where:</strong>
