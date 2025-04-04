@@ -74,11 +74,18 @@ const LandingPage = () => {
             </div>
 
             {/* Overlapping image aligned to the right */}
-            <div className="absolute right-[-600px] top-1/2 -translate-y-1/2 z-20">
+            <div
+              className="absolute right-[-600px] top-1/2 -translate-y-1/2 z-20 overflow-hidden"
+              style={{ width: "calc(100% - 25px)" }}
+            >
               <img
                 src="/img/quantimg.png"
                 alt="Quant visual"
-                className="h-[430px] rounded-md shadow-md" // Reducido un 10% de 460px (460px - 10%)
+                className="h-[430px] rounded-md shadow-md"
+                style={{
+                  objectFit: "cover", // Asegura que la imagen se recorte
+                  objectPosition: "left", // Mantiene el recorte desde el borde izquierdo
+                }}
               />
             </div>
           </div>
