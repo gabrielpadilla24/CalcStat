@@ -33,6 +33,25 @@ const LandingPage = () => {
           insight, and confidence at every step{" "}
         </p>
       </div>
+      <div className="text-center mt-16 px-4">
+        <h2 className="text-5xl font-bold text-gray-800 mb-4">
+          A calculator for every need
+        </h2>
+        <p className="text-xl text-gray-600 max-w-2xl mx-auto">
+          Dive into endless possibilities — explore tools built to simplify your
+          most complex decisions.
+        </p>
+      </div>
+
+      <div
+        className="bg-[#F0F0E6] mt-10"
+        style={{
+          width: "50vw",
+          aspectRatio: "20 / 15",
+        }}
+      >
+        {/* Aquí irán más cosas después */}
+      </div>
     </>
   );
 };
