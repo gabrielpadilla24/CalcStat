@@ -1,8 +1,11 @@
 import NavBar from "../../components/NavBar";
-import { Link } from "react-router-dom";
 import SubmitButton from "../../components/SubmitButton";
+import { useRef } from "react";
+import { Link } from "react-router-dom";
 
 const LandingPage = () => {
+  const calculatorsRef = useRef<HTMLDivElement>(null);
+
   return (
     <div className="bg-gray-100">
       <NavBar />
@@ -21,12 +24,14 @@ const LandingPage = () => {
           analysis — making your calculations faster, more accurate, and visual.
         </p>
 
-        <Link
-          to="/calculadora"
-          className="bg-[#5FBA9B] text-white px-6 py-3 rounded-xl text-lg font-semibold hover:bg-[#4ea487] transition"
+        <button
+          onClick={() =>
+            calculatorsRef.current?.scrollIntoView({ behavior: "smooth" })
+          }
+          className=" bg-[#5FBA9B] text-white px-6 py-3 rounded-xl text-lg font-semibold hover:bg-[#4ea487] transition"
         >
-          Explora nuestras calculadoras
-        </Link>
+          Discover our calculators
+        </button>
       </div>
 
       <div className="w-full bg-[#4A9A80] py-10 px-4 flex justify-center items-center">
@@ -36,7 +41,7 @@ const LandingPage = () => {
         </p>
       </div>
 
-      <div className="text-center mt-16 px-4">
+      <div ref={calculatorsRef} className="text-center mt-16 px-4">
         <h2 className="text-5xl font-bold text-gray-800 mb-4">
           A calculator for every need
         </h2>
@@ -277,7 +282,9 @@ const LandingPage = () => {
               money math to life.
             </p>
             <div className="w-fit pr-5 ml-20">
-              <SubmitButton text="Go to Finance" />
+              <Link to="/financial">
+                <SubmitButton text="Go to Finance" />
+              </Link>
             </div>
           </div>
         </div>
