@@ -51,7 +51,8 @@ const LandingPage = () => {
         className="bg-[#F0F0E6] mt-10 ml-8 flex flex-col justify-center px-8 py-8 shadow-md rounded-md border border-[#e0e0e0] overflow-visible relative"
         style={{
           width: "48vw",
-          aspectRatio: "21 / 16",
+          height: "525px",
+          //aspectRatio: "21 / 16",
         }}
       >
         {/* Imagen superpuesta */}
