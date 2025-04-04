@@ -27,6 +27,12 @@ const LandingPage = () => {
           Explora nuestras calculadoras
         </Link>
       </div>
+      <div className="w-full bg-[#4A9A80] py-10 px-4 flex justify-center items-center">
+        <p className="text-white text-2xl md:text-3xl font-semibold text-center max-w-3xl">
+          Data-driven thinking starts with the right tools, built for clarity,
+          insight, and confidence at every step{" "}
+        </p>
+      </div>
     </>
   );
 };
