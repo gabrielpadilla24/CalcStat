@@ -51,14 +51,14 @@ const LandingPage = () => {
           aspectRatio: "20 / 15",
         }}
       >
-        <h2 className="text-5xl font-bold text-gray-800 mb-4 ml-5">
+        <h2 className="text-5xl font-bold text-gray-800 mb-4 pl-5">
           Quant Calculator
         </h2>
-        <p className="text-base text-gray-600 mb-6 ml-5 max-w-md">
+        <p className="text-base text-gray-600 mb-6 pl-5 max-w-md">
           From risk models to optimization tools, our Quant Calculator helps you
           explore financial logic with precision and speed.
         </p>
-        <div className="w-fit ml-5">
+        <div className="w-fit pl-5">
           <SubmitButton text="Go to Quant" />
         </div>
       </div>
