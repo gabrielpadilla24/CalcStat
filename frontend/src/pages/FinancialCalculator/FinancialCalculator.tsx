@@ -1,8 +1,14 @@
+import { useState } from "react";
 import NavBar from "../../components/NavBar";
 import { Link } from "react-router-dom";
 import SubmitButton from "../../components/SubmitButton";
 
 const FinancialCalculator = () => {
+  const [selectedCategory, setSelectedCategory] = useState<string>("All");
+
+  const showCompound =
+    selectedCategory === "All" || selectedCategory === "Compound";
+
   return (
     <div className="bg-gray-100 min-h-screen">
       <NavBar />
@@ -20,43 +26,79 @@ const FinancialCalculator = () => {
 
       {/* Category Navigation */}
       <div className="flex justify-center gap-4 flex-wrap mb-10 px-4">
-        <button className="bg-[#5FBA9B] text-white px-5 py-2 rounded-lg hover:bg-[#4ea487] transition">
+        <button
+          onClick={() => setSelectedCategory("All")}
+          className={`px-5 py-2 rounded-lg transition ${
+            selectedCategory === "All"
+              ? "bg-[#5FBA9B] text-white"
+              : "bg-white text-[#5FBA9B] border border-[#5FBA9B] hover:bg-[#e0f7f1]"
+          }`}
+        >
           All Financial
         </button>
-        <button className="bg-white text-[#5FBA9B] border border-[#5FBA9B] px-5 py-2 rounded-lg hover:bg-[#e0f7f1] transition">
+        <button
+          onClick={() => setSelectedCategory("Compound")}
+          className={`px-5 py-2 rounded-lg transition ${
+            selectedCategory === "Compound"
+              ? "bg-[#5FBA9B] text-white"
+              : "bg-white text-[#5FBA9B] border border-[#5FBA9B] hover:bg-[#e0f7f1]"
+          }`}
+        >
           Compound
         </button>
-        <button className="bg-white text-[#5FBA9B] border border-[#5FBA9B] px-5 py-2 rounded-lg hover:bg-[#e0f7f1] transition">
+        <button
+          onClick={() => setSelectedCategory("Loan")}
+          className={`px-5 py-2 rounded-lg transition ${
+            selectedCategory === "Loan"
+              ? "bg-[#5FBA9B] text-white"
+              : "bg-white text-[#5FBA9B] border border-[#5FBA9B] hover:bg-[#e0f7f1]"
+          }`}
+        >
           Loan
         </button>
-        <button className="bg-white text-[#5FBA9B] border border-[#5FBA9B] px-5 py-2 rounded-lg hover:bg-[#e0f7f1] transition">
+        <button
+          onClick={() => setSelectedCategory("Investment")}
+          className={`px-5 py-2 rounded-lg transition ${
+            selectedCategory === "Investment"
+              ? "bg-[#5FBA9B] text-white"
+              : "bg-white text-[#5FBA9B] border border-[#5FBA9B] hover:bg-[#e0f7f1]"
+          }`}
+        >
           Investment
         </button>
-        <button className="bg-white text-[#5FBA9B] border border-[#5FBA9B] px-5 py-2 rounded-lg hover:bg-[#e0f7f1] transition">
+        <button
+          onClick={() => setSelectedCategory("Savings")}
+          className={`px-5 py-2 rounded-lg transition ${
+            selectedCategory === "Savings"
+              ? "bg-[#5FBA9B] text-white"
+              : "bg-white text-[#5FBA9B] border border-[#5FBA9B] hover:bg-[#e0f7f1]"
+          }`}
+        >
           Savings
         </button>
       </div>
 
       {/* Financial Calculator Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto px-4 pb-20">
-        {/* Compound Interest */}
-        <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] text-left">
-          <img
-            src="/img/compound.png"
-            alt="Compound Interest Calculator"
-            className="h-40 w-full object-cover mb-4 rounded"
-          />
-          <h2 className="text-xl font-bold text-gray-800 mb-2">
-            Compound Interest Calculator
-          </h2>
-          <p className="text-sm text-gray-600 mb-4">
-            Calculate compound growth over time. Great for savings, investments,
-            and long-term financial planning.
-          </p>
-          <Link to="/compoundinterest">
-            <SubmitButton text="Open Calculator" />
-          </Link>
-        </div>
+        {showCompound && (
+          <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] text-left">
+            <img
+              src="/img/compound.png"
+              alt="Compound Interest Calculator"
+              className="h-40 w-full object-cover mb-4 rounded"
+            />
+            <h2 className="text-xl font-bold text-gray-800 mb-2">
+              Compound Interest Calculator
+            </h2>
+            <p className="text-sm text-gray-600 mb-4">
+              Calculate compound growth over time. Great for savings,
+              investments, and long-term financial planning.
+            </p>
+            <Link to="/compoundinterest">
+              <SubmitButton text="Open Calculator" />
+            </Link>
+          </div>
+        )}
       </div>
 
       {/* Call to Action */}
