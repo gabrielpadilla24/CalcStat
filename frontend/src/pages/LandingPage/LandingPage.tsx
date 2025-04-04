@@ -78,7 +78,7 @@ const LandingPage = () => {
               <img
                 src="/img/quantimg.png"
                 alt="Quant visual"
-                className="h-[414px] rounded-md shadow-md" // Reducido un 10% de 460px (460px - 10%)
+                className="h-[430px] rounded-md shadow-md" // Reducido un 10% de 460px (460px - 10%)
               />
             </div>
           </div>
