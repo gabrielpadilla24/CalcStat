@@ -9,7 +9,7 @@ const App = () => {
     <Router>
       <Routes>
         <Route path="/" element={<LandingPage />} />
-        <Route path="/calculadora" element={<ExponentialCalculator />} />
+        <Route path="/compoundinterest" element={<ExponentialCalculator />} />
         <Route path="/financial" element={<FinancialCalculator />} />
         <Route path="/calculators" element={<Menu />} />
       </Routes>
