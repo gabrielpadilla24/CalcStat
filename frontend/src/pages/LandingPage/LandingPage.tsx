@@ -59,7 +59,7 @@ const LandingPage = () => {
             className="bg-[#F0F0E6] flex flex-col justify-center px-8 py-8 shadow-md rounded-md border border-[#e0e0e0] relative z-10"
             style={{
               width: "45vw",
-              height: "525px",
+              height: "472.5px", // Reducido un 10% de 525px (525px - 10%)
             }}
           >
             <h2 className="text-5xl font-bold text-gray-800 mb-4 pl-5">
@@ -78,7 +78,7 @@ const LandingPage = () => {
               <img
                 src="/img/quantimg.png"
                 alt="Quant visual"
-                className="h-[460px] rounded-md shadow-md"
+                className="h-[414px] rounded-md shadow-md" // Reducido un 10% de 460px (460px - 10%)
               />
             </div>
           </div>
