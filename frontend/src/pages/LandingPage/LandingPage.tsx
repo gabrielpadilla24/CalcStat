@@ -47,32 +47,41 @@ const LandingPage = () => {
       </div>
 
       {/* Card con imagen overlapping */}
-      <div
-        className="bg-[#F0F0E6] mt-10 ml-8 flex flex-col justify-center px-8 py-8 shadow-md rounded-md border border-[#e0e0e0] overflow-visible relative"
-        style={{
-          width: "48vw",
-          height: "525px",
-          //aspectRatio: "21 / 16",
-        }}
-      >
-        {/* Imagen superpuesta */}
-        <div className="absolute right-[-550px] top-1/2 -translate-y-1/2">
-          <img
-            src="/img/quantimg.png"
-            alt="Quant visual"
-            className="h-[460px] rounded-md shadow-md"
-          />
-        </div>
+      <div className="w-full mt-10 flex justify-center">
+        <div
+          className="relative overflow-visible"
+          style={{
+            width: "calc(48vw + 550px)", // total width: card (48vw) + image overflow (550px)
+          }}
+        >
+          {/* Card */}
+          <div
+            className="bg-[#F0F0E6] flex flex-col justify-center px-8 py-8 shadow-md rounded-md border border-[#e0e0e0] relative z-10"
+            style={{
+              width: "45vw",
+              height: "525px",
+            }}
+          >
+            <h2 className="text-5xl font-bold text-gray-800 mb-4 pl-5">
+              Quant Calculator
+            </h2>
+            <p className="text-base text-gray-600 mb-6 pl-5 max-w-md">
+              From risk models to optimization tools, our Quant Calculator helps
+              you explore financial logic with precision and speed.
+            </p>
+            <div className="w-fit pl-5">
+              <SubmitButton text="Go to Quant" />
+            </div>
 
-        <h2 className="text-5xl font-bold text-gray-800 mb-4 pl-5 z-10">
-          Quant Calculator
-        </h2>
-        <p className="text-base text-gray-600 mb-6 pl-5 max-w-md z-10">
-          From risk models to optimization tools, our Quant Calculator helps you
-          explore financial logic with precision and speed.
-        </p>
-        <div className="w-fit pl-5 z-10">
-          <SubmitButton text="Go to Quant" />
+            {/* Overlapping image aligned to the right */}
+            <div className="absolute right-[-600px] top-1/2 -translate-y-1/2 z-20">
+              <img
+                src="/img/quantimg.png"
+                alt="Quant visual"
+                className="h-[460px] rounded-md shadow-md"
+              />
+            </div>
+          </div>
         </div>
       </div>
     </div>
