@@ -48,10 +48,10 @@ const LandingPage = () => {
 
       {/* Card con imagen overlapping */}
       <div
-        className="bg-[#F0F0E6] mt-10 flex flex-col justify-center px-8 py-8 shadow-md rounded-md border border-[#e0e0e0] overflow-visible relative"
+        className="bg-[#F0F0E6] mt-10 ml-8 flex flex-col justify-center px-8 py-8 shadow-md rounded-md border border-[#e0e0e0] overflow-visible relative"
         style={{
-          width: "50vw",
-          aspectRatio: "20 / 15",
+          width: "48vw",
+          aspectRatio: "21 / 16",
         }}
       >
         {/* Imagen superpuesta */}
