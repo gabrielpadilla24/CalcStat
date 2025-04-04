@@ -28,12 +28,14 @@ const LandingPage = () => {
           Explora nuestras calculadoras
         </Link>
       </div>
+
       <div className="w-full bg-[#4A9A80] py-10 px-4 flex justify-center items-center">
         <p className="text-white text-2xl md:text-3xl font-semibold text-center max-w-3xl">
           Data-driven thinking starts with the right tools, built for clarity,
-          insight, and confidence at every step{" "}
+          insight, and confidence at every step
         </p>
       </div>
+
       <div className="text-center mt-16 px-4">
         <h2 className="text-5xl font-bold text-gray-800 mb-4">
           A calculator for every need
@@ -44,28 +46,31 @@ const LandingPage = () => {
         </p>
       </div>
 
+      {/* Card con imagen overlapping */}
       <div
-        className="bg-[#F0F0E6] mt-10 flex flex-col justify-center px-8 py-8 shadow-md rounded-md border border-[#e0e0e0] relative overflow-hidden"
+        className="bg-[#F0F0E6] mt-10 flex flex-col justify-center px-8 py-8 shadow-md rounded-md border border-[#e0e0e0] overflow-visible relative"
         style={{
           width: "50vw",
           aspectRatio: "20 / 15",
         }}
       >
-        {/* Icon inside top-right corner */}
-        <img
-          src="/img/icons/quant.png"
-          alt="Quant Icon"
-          className="absolute top-4 right-4 w-48 h-48 opacity-100"
-        />
+        {/* Imagen superpuesta */}
+        <div className="absolute right-[-550px] top-1/2 -translate-y-1/2">
+          <img
+            src="/img/quantimg.png"
+            alt="Quant visual"
+            className="h-[460px] rounded-md shadow-md"
+          />
+        </div>
 
-        <h2 className="text-5xl font-bold text-gray-800 mb-4 pl-5">
+        <h2 className="text-5xl font-bold text-gray-800 mb-4 pl-5 z-10">
           Quant Calculator
         </h2>
-        <p className="text-base text-gray-600 mb-6 pl-5 max-w-md">
+        <p className="text-base text-gray-600 mb-6 pl-5 max-w-md z-10">
           From risk models to optimization tools, our Quant Calculator helps you
           explore financial logic with precision and speed.
         </p>
-        <div className="w-fit pl-5">
+        <div className="w-fit pl-5 z-10">
           <SubmitButton text="Go to Quant" />
         </div>
       </div>
