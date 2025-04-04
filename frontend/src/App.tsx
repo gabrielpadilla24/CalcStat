@@ -3,10 +3,13 @@ import LandingPage from "./pages/LandingPage/LandingPage";
 import ExponentialCalculator from "./pages/CompoundInterest/ExponentialCalculator";
 import FinancialCalculator from "./pages/FinancialCalculator/FinancialCalculator";
 import Menu from "./pages/Menu";
+import ScrollToTop from "./pages/CompoundInterest/components/ScrollToTop";
 
 const App = () => {
   return (
     <Router>
+      <ScrollToTop />
+
       <Routes>
         <Route path="/" element={<LandingPage />} />
         <Route path="/compoundinterest" element={<ExponentialCalculator />} />
