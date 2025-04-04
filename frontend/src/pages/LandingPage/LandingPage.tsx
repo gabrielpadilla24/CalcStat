@@ -45,12 +45,19 @@ const LandingPage = () => {
       </div>
 
       <div
-        className="bg-[#F0F0E6] mt-10 flex flex-col justify-center px-8 py-8 shadow-md rounded-md border border-[#e0e0e0] transition-opacity duration-500 ease-in animate-fadeIn"
+        className="bg-[#F0F0E6] mt-10 flex flex-col justify-center px-8 py-8 shadow-md rounded-md border border-[#e0e0e0] relative overflow-hidden"
         style={{
           width: "50vw",
           aspectRatio: "20 / 15",
         }}
       >
+        {/* Icon inside top-right corner */}
+        <img
+          src="/img/icons/quant.png"
+          alt="Quant Icon"
+          className="absolute top-4 right-4 w-48 h-48 opacity-100"
+        />
+
         <h2 className="text-5xl font-bold text-gray-800 mb-4 pl-5">
           Quant Calculator
         </h2>
