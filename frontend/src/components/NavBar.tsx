@@ -124,6 +124,17 @@ const NavBar = () => {
                         Rewards
                       </Link>
                     </li>
+                    <li>
+                      <hr className="my-2 border-gray-200 dark:border-gray-600" />
+                    </li>
+                    <li>
+                      <Link
+                        to="/financial"
+                        className="block px-4 py-2 font-medium text-[#5FBA9B] hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                      >
+                        See All
+                      </Link>
+                    </li>
                   </ul>
                 </div>
               )}
