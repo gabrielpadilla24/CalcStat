@@ -46,7 +46,7 @@ const LandingPage = () => {
         </p>
       </div>
 
-      {/* Card con imagen overlapping */}
+      {/* Quant Card */}
       <div className="w-full mt-10 flex justify-center">
         <div
           className="relative overflow-visible"
@@ -80,6 +80,45 @@ const LandingPage = () => {
                 alt="Quant visual"
                 className="h-[430px] rounded-md shadow-md" // Reducido un 10% de 460px (460px - 10%)
               />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Stochastic Card */}
+      <div className="w-full mt-10 flex justify-center">
+        <div
+          className="relative overflow-visible flex justify-end"
+          style={{
+            width: "calc(45vw + 600px)", // same total width
+          }}
+        >
+          {/* Overlapping image aligned to the left */}
+          <div className="absolute right-[600px] top-1/2 -translate-y-1/2 z-20">
+            <img
+              src="/img/stochasticimg.png"
+              alt="Stochastic visual"
+              className="h-[430px] rounded-md shadow-md"
+            />
+          </div>
+
+          {/* Card */}
+          <div
+            className="bg-[#F0F0E6] flex flex-col justify-center px-8 py-8 shadow-md rounded-md border border-[#e0e0e0] relative z-10"
+            style={{
+              width: "45vw",
+              height: "472.5px",
+            }}
+          >
+            <h2 className="text-5xl font-bold text-gray-800 mb-4 pr-5 ml-20 text-left">
+              Stochastic Calculator
+            </h2>
+            <p className="text-base text-gray-600 mb-6 pr-5 max-w-md ml-20 text-left">
+              Model uncertainty and randomness in complex systems — our
+              Stochastic Calculator brings advanced math to life.
+            </p>
+            <div className="w-fit pr-5 ml-20">
+              <SubmitButton text="Go to Stochastic" />
             </div>
           </div>
         </div>
