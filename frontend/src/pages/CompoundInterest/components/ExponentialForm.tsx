@@ -97,7 +97,7 @@ const ExponentialForm: React.FC<Props> = ({
       frequency: formData.addConstant ? formData.frequency : "Yearly",
     };
 
-    fetch("http://localhost:8000/calcular", {
+    fetch("http://localhost:8000/compoundinterest", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

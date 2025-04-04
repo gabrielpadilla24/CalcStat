@@ -21,7 +21,7 @@ class ExponentialData(BaseModel):
     constantValue: float
     frequency: str  # "año" o "mes"
 
-@app.post("/calcular")
+@app.post("/compoundinterest")
 def calcular(data: ExponentialData):
     valores = [round(data.initialValue, 2)]  # Año 0
     aportes = [round(data.initialValue, 2)]  # Aportes acumulados
