@@ -74,18 +74,11 @@ const LandingPage = () => {
             </div>
 
             {/* Overlapping image aligned to the right */}
-            <div
-              className="absolute right-[-600px] top-1/2 -translate-y-1/2 z-20 overflow-hidden"
-              style={{ width: "calc(100% - 25px)" }}
-            >
+            <div className="absolute right-[-600px] top-1/2 -translate-y-1/2 z-20">
               <img
                 src="/img/quantimg.png"
                 alt="Quant visual"
-                className="h-[430px] rounded-md shadow-md"
-                style={{
-                  objectFit: "cover", // Asegura que la imagen se recorte
-                  objectPosition: "left", // Mantiene el recorte desde el borde izquierdo
-                }}
+                className="h-[430px] rounded-md shadow-md" // Reducido un 10% de 460px (460px - 10%)
               />
             </div>
           </div>
@@ -126,6 +119,165 @@ const LandingPage = () => {
             </p>
             <div className="w-fit pr-5 ml-20">
               <SubmitButton text="Go to Stochastic" />
+            </div>
+          </div>
+        </div>
+      </div>
+      {/* Calculus Card */}
+      <div className="w-full mt-10 flex justify-center">
+        <div
+          className="relative overflow-visible"
+          style={{
+            width: "calc(48vw + 550px)", // total width: card (48vw) + image overflow (550px)
+          }}
+        >
+          {/* Card */}
+          <div
+            className="bg-[#F0F0E6] flex flex-col justify-center px-8 py-8 shadow-md rounded-md border border-[#e0e0e0] relative z-10"
+            style={{
+              width: "45vw",
+              height: "472.5px",
+            }}
+          >
+            <h2 className="text-5xl font-bold text-gray-800 mb-4 pl-5">
+              Calculus Calculator
+            </h2>
+            <p className="text-base text-gray-600 mb-6 pl-5 max-w-md">
+              Tackle differential, integral, and multivariable calculus with
+              ease. Our Calculus Calculator is built for single-variable and
+              vector analysis.
+            </p>
+            <div className="w-fit pl-5">
+              <SubmitButton text="Go to Calculus" />
+            </div>
+
+            {/* Overlapping image aligned to the right */}
+            <div className="absolute right-[-600px] top-1/2 -translate-y-1/2 z-20">
+              <img
+                src="/img/calculusimg.png"
+                alt="Calculus visual"
+                className="h-[430px] rounded-md shadow-md"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Linear Algebra Card */}
+      <div className="w-full mt-10 flex justify-center">
+        <div
+          className="relative overflow-visible flex justify-end"
+          style={{
+            width: "calc(45vw + 600px)", // card width + image overlap
+          }}
+        >
+          {/* Overlapping image aligned to the left */}
+          <div className="absolute right-[600px] top-1/2 -translate-y-1/2 z-20">
+            <img
+              src="/img/linearimg.png"
+              alt="Linear Algebra visual"
+              className="h-[430px] rounded-md shadow-md"
+            />
+          </div>
+
+          {/* Card */}
+          <div
+            className="bg-[#F0F0E6] flex flex-col justify-center px-8 py-8 shadow-md rounded-md border border-[#e0e0e0] relative z-10"
+            style={{
+              width: "45vw",
+              height: "472.5px",
+            }}
+          >
+            <h2 className="text-5xl font-bold text-gray-800 mb-4 pr-5 ml-20 text-left">
+              Linear Algebra Calculator
+            </h2>
+            <p className="text-base text-gray-600 mb-6 pr-5 max-w-md ml-20 text-left">
+              Work with matrices, vectors, transformations and systems of
+              equations. Our Linear Algebra Calculator empowers your
+              understanding of core linear structures.
+            </p>
+            <div className="w-fit pr-5 ml-20">
+              <SubmitButton text="Go to Linear Algebra" />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Probability & Statistics Card */}
+      <div className="w-full mt-10 flex justify-center">
+        <div
+          className="relative overflow-visible"
+          style={{
+            width: "calc(48vw + 550px)", // card + image overflow width
+          }}
+        >
+          {/* Card */}
+          <div
+            className="bg-[#F0F0E6] flex flex-col justify-center px-8 py-8 shadow-md rounded-md border border-[#e0e0e0] relative z-10"
+            style={{
+              width: "45vw",
+              height: "472.5px",
+            }}
+          >
+            <h2 className="text-5xl font-bold text-gray-800 mb-4 pl-5">
+              Probability & Statistics
+            </h2>
+            <p className="text-base text-gray-600 mb-6 pl-5 max-w-md">
+              Calculate probabilities, visualize distributions, and analyze data
+              with precision. Our Probability & Statistics Calculator supports
+              everything from descriptive stats to hypothesis testing.
+            </p>
+            <div className="w-fit pl-5">
+              <SubmitButton text="Go to Stats" />
+            </div>
+
+            {/* Overlapping image aligned to the right */}
+            <div className="absolute right-[-600px] top-1/2 -translate-y-1/2 z-20">
+              <img
+                src="/img/probstatsimg.png"
+                alt="Probability & Statistics visual"
+                className="h-[430px] rounded-md shadow-md"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Financial Calculator Card (mirrored layout) */}
+      <div className="w-full mt-10 flex justify-center">
+        <div
+          className="relative overflow-visible flex justify-end"
+          style={{
+            width: "calc(45vw + 600px)", // card width + image offset
+          }}
+        >
+          {/* Overlapping image aligned to the left */}
+          <div className="absolute right-[600px] top-1/2 -translate-y-1/2 z-20">
+            <img
+              src="/img/financialimg.png"
+              alt="Financial visual"
+              className="h-[430px] rounded-md shadow-md"
+            />
+          </div>
+
+          {/* Card */}
+          <div
+            className="bg-[#F0F0E6] flex flex-col justify-center px-8 py-8 shadow-md rounded-md border border-[#e0e0e0] relative z-10"
+            style={{
+              width: "45vw",
+              height: "472.5px",
+            }}
+          >
+            <h2 className="text-5xl font-bold text-gray-800 mb-4 pr-5 ml-20 text-left">
+              Financial Calculator
+            </h2>
+            <p className="text-base text-gray-600 mb-6 pr-5 max-w-md ml-20 text-left">
+              Handle compound interest, annuities, loan amortization, and
+              investment growth effortlessly. Our Financial Calculator brings
+              money math to life.
+            </p>
+            <div className="w-fit pr-5 ml-20">
+              <SubmitButton text="Go to Finance" />
             </div>
           </div>
         </div>
