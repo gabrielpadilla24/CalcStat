@@ -1,5 +1,6 @@
 import NavBar from "../../components/NavBar";
 import { Link } from "react-router-dom";
+import SubmitButton from "../../components/SubmitButton";
 
 const LandingPage = () => {
   return (
@@ -44,13 +45,22 @@ const LandingPage = () => {
       </div>
 
       <div
-        className="bg-[#F0F0E6] mt-10"
+        className="bg-[#F0F0E6] mt-10 flex flex-col justify-center px-8 py-8 shadow-md rounded-md border border-[#e0e0e0] transition-opacity duration-500 ease-in animate-fadeIn"
         style={{
           width: "50vw",
           aspectRatio: "20 / 15",
         }}
       >
-        {/* Aquí irán más cosas después */}
+        <h2 className="text-5xl font-bold text-gray-800 mb-4 ml-5">
+          Quant Calculator
+        </h2>
+        <p className="text-base text-gray-600 mb-6 ml-5 max-w-md">
+          From risk models to optimization tools, our Quant Calculator helps you
+          explore financial logic with precision and speed.
+        </p>
+        <div className="w-fit ml-5">
+          <SubmitButton text="Go to Quant" />
+        </div>
       </div>
     </div>
   );
