@@ -3,9 +3,9 @@ import { Link } from "react-router-dom";
 
 const LandingPage = () => {
   return (
-    <>
+    <div className="bg-gray-100">
       <NavBar />
-      <div className="flex flex-col items-center bg-gray-100 text-center px-4 pt-10 pb-20 min-h-[70vh]">
+      <div className="flex flex-col items-center text-center px-4 pt-10 pb-20 min-h-[70vh]">
         <img
           src="/img/logo.png"
           alt="Ilustración de calculadora"
@@ -52,7 +52,7 @@ const LandingPage = () => {
       >
         {/* Aquí irán más cosas después */}
       </div>
-    </>
+    </div>
   );
 };
 
