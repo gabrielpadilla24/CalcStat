@@ -69,7 +69,7 @@ const AmortizationGraph: React.FC<AmortizationGraphProps> = ({
   ];
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-6 w-full max-w-[750px]">
+    <div className="bg-white rounded-lg shadow-md p-6 w-[1200px]">
       <ReactApexChart
         options={options}
         series={series}
