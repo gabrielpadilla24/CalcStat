@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import InputField from "../../../components/InputField";
 import SubmitButton from "../../../components/SubmitButton";
-import CheckBox from "./CheckBox";
+import CheckBox from "../../../components/CheckBox";
 import Tooltip from "../../../components/Tooltip/Tooltip";
 
 interface Props {
