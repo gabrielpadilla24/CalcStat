@@ -7,11 +7,10 @@ import Balloon from "./Balloon";
 import Jumbo from "./Jumbo";
 
 interface Props {
-  setPrincipal: (value: number) => void;
-  setInterest: (value: number) => void;
+  setTotalPayment: (value: number) => void;
 }
 
-const MortgageForm: React.FC<Props> = ({ setPrincipal, setInterest }) => {
+const MortgageForm: React.FC<Props> = ({ setTotalPayment }) => {
   const [formData, setFormData] = useState({
     loanType: "",
     homePrice: "",
@@ -26,6 +25,13 @@ const MortgageForm: React.FC<Props> = ({ setPrincipal, setInterest }) => {
     balloonYear: "",
   });
 
+  const [resultado, setResultado] = useState<{
+    monthlyPayment: number;
+    loanAmount: number;
+    totalPayments: number;
+    monthlyRate: number;
+  } | null>(null);
+
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
@@ -34,6 +40,8 @@ const MortgageForm: React.FC<Props> = ({ setPrincipal, setInterest }) => {
       ...prev,
       [name]: value,
     }));
+    setResultado(null); // Limpia resultados si se modifica algo
+    setTotalPayment(0); // Limpia el gráfico
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -89,17 +97,13 @@ const MortgageForm: React.FC<Props> = ({ setPrincipal, setInterest }) => {
           const { monthlyPayment, loanAmount, totalPayments, monthlyRate } =
             data;
 
-          alert(
-            `📊 Resultado:\nCuota mensual: $${monthlyPayment}\nMonto del préstamo: $${loanAmount}\nPagos: ${totalPayments}\nTasa mensual: ${monthlyRate}%`
-          );
-
-          // ➕ Cálculo del breakdown del primer pago
-          const monthlyRateDecimal = monthlyRate / 100;
-          const firstInterest = loanAmount * monthlyRateDecimal;
-          const firstPrincipal = monthlyPayment - firstInterest;
-
-          setPrincipal(parseFloat(firstPrincipal.toFixed(2)));
-          setInterest(parseFloat(firstInterest.toFixed(2)));
+          setResultado({
+            monthlyPayment,
+            loanAmount,
+            totalPayments,
+            monthlyRate,
+          });
+          setTotalPayment(monthlyPayment); // Actualiza gráfico
         })
         .catch((err) => {
           console.error(err);
@@ -109,7 +113,7 @@ const MortgageForm: React.FC<Props> = ({ setPrincipal, setInterest }) => {
       return;
     }
 
-    // Resto de tipos de hipoteca (sin cambios)
+    // Interest Only
     if (formData.loanType === "Interest Only") {
       const interestRate = Number(formData.interestRate) / 100;
       const interestOnlyPeriod = Number(formData.interestOnlyPeriod);
@@ -134,6 +138,7 @@ const MortgageForm: React.FC<Props> = ({ setPrincipal, setInterest }) => {
       );
     }
 
+    // ARM
     if (formData.loanType === "ARM") {
       const initialRate = Number(formData.initialRate) / 100;
 
@@ -167,6 +172,7 @@ const MortgageForm: React.FC<Props> = ({ setPrincipal, setInterest }) => {
       );
     }
 
+    // Balloon
     if (formData.loanType === "Balloon Payments") {
       const interestRate = Number(formData.interestRate) / 100;
       const loanTerm = Number(formData.loanTerm);
@@ -192,6 +198,7 @@ const MortgageForm: React.FC<Props> = ({ setPrincipal, setInterest }) => {
       );
     }
 
+    // Jumbo
     if (formData.loanType === "Jumbo Loans") {
       const interestRate = Number(formData.interestRate) / 100;
       const loanTerm = Number(formData.loanTerm);
@@ -229,7 +236,6 @@ const MortgageForm: React.FC<Props> = ({ setPrincipal, setInterest }) => {
     >
       <table style={{ width: "100%", borderSpacing: "12px" }}>
         <tbody>
-          {/* Mortgage Type Selector */}
           <tr style={{ height: "60px" }}>
             <td align="left" style={{ width: "50%" }}>
               <label htmlFor="loanType">Mortgage Type:</label>
@@ -341,6 +347,27 @@ const MortgageForm: React.FC<Props> = ({ setPrincipal, setInterest }) => {
       <div style={{ marginTop: "25px", textAlign: "center" }}>
         <SubmitButton text="Continue" />
       </div>
+
+      {resultado && (
+        <div
+          style={{
+            marginTop: "25px",
+            padding: "16px",
+            borderRadius: "8px",
+            backgroundColor: "#f0fdf4",
+            border: "1px solid #10b981",
+            color: "#065f46",
+            fontWeight: "bold",
+            fontSize: "16px",
+            textAlign: "center",
+          }}
+        >
+          <p>Monthly Payment: ${resultado.monthlyPayment.toLocaleString()}</p>
+          <p>Loan Amount: ${resultado.loanAmount.toLocaleString()}</p>
+          <p>Total Payments: {resultado.totalPayments}</p>
+          <p>Monthly Interest Rate: {resultado.monthlyRate}%</p>
+        </div>
+      )}
     </form>
   );
 };

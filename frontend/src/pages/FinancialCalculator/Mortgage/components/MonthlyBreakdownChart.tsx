@@ -2,19 +2,21 @@ import React from "react";
 import ReactApexChart from "react-apexcharts";
 
 interface Props {
-  principal: number;
-  interest: number;
+  totalPayment: number;
 }
 
-const MonthlyBreakdownChart: React.FC<Props> = ({ principal, interest }) => {
-  const series = [principal, interest];
+const MonthlyBreakdownChart: React.FC<Props> = ({ totalPayment }) => {
+  const series = [totalPayment];
 
   const options: ApexCharts.ApexOptions = {
     chart: {
       type: "donut",
     },
-    labels: ["Principal", "Interest"],
-    colors: ["#10b981", "#f87171"],
+    labels: ["Monthly Payment"],
+    colors: ["#10b981"],
+    legend: {
+      show: false, // ya no hay desglose
+    },
     responsive: [
       {
         breakpoint: 480,
@@ -22,22 +24,15 @@ const MonthlyBreakdownChart: React.FC<Props> = ({ principal, interest }) => {
           chart: {
             width: 250,
           },
-          legend: {
-            position: "bottom",
-          },
         },
       },
     ],
-    legend: {
-      position: "right",
-      offsetY: 0,
-    },
   };
 
   return (
     <div className="bg-white rounded-lg shadow-md p-6 w-full max-w-[400px]">
       <h2 className="text-xl font-semibold text-center mb-4">
-        Monthly Payment Breakdown
+        Monthly Payment Chart
       </h2>
       <ReactApexChart
         options={options}
