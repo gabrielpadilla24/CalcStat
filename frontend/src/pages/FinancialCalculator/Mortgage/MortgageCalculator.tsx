@@ -12,7 +12,7 @@ const MortgageCalculator = () => {
     monthlyRate: number;
   } | null>(null);
 
-  const [, setTotalPayment] = useState(0); // not used directly, just setter
+  const [, setTotalPayment] = useState(0);
   const [principalPaid, setPrincipalPaid] = useState<number[]>([]);
   const [interestPaid, setInterestPaid] = useState<number[]>([]);
   const [loanBalance, setLoanBalance] = useState<number[]>([]);
@@ -21,10 +21,9 @@ const MortgageCalculator = () => {
   const [hoaFees, setHOAFees] = useState<string>("");
   const [insurance, setInsurance] = useState<string>("");
 
-  // Convert annual to monthly where needed
   const monthlyPropertyTax = propertyTaxes ? Number(propertyTaxes) / 12 : 0;
-  const monthlyInsurance = insurance ? Number(insurance) / 12 : 0;
   const monthlyHOA = hoaFees ? Number(hoaFees) : 0;
+  const monthlyInsurance = insurance ? Number(insurance) / 12 : 0;
 
   return (
     <>
@@ -35,7 +34,7 @@ const MortgageCalculator = () => {
         </h1>
 
         <div className="flex justify-center items-start gap-10 flex-wrap mb-10">
-          {/* Form & Pie Chart */}
+          {/* Formulario */}
           <div>
             <MortgageForm
               setResultado={setResultado}
@@ -49,6 +48,7 @@ const MortgageCalculator = () => {
             />
           </div>
 
+          {/* Pie Chart */}
           <div>
             <MonthlyBreakdownChart
               resultado={resultado}
@@ -59,7 +59,7 @@ const MortgageCalculator = () => {
           </div>
         </div>
 
-        {/* Amortization Chart */}
+        {/* Gráfico de Amortización debajo */}
         <div className="flex justify-center">
           <AmortizationGraph
             principalPaid={principalPaid}

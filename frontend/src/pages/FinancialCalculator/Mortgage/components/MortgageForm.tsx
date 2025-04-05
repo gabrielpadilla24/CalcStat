@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import SubmitButton from "@/components/SubmitButton";
 import FRM from "./FRM";
-import InterestOnly from "./InterestOnly";
-import ARM from "./ARM";
-import Balloon from "./Balloon";
-import Jumbo from "./Jumbo";
+//import InterestOnly from "./InterestOnly";
+//import ARM from "./ARM";
+//import Balloon from "./Balloon";
+//import Jumbo from "./Jumbo";
 
 interface Props {
   setTotalPayment: (value: number) => void;
@@ -55,14 +55,23 @@ const MortgageForm: React.FC<Props> = ({
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
   ) => {
     const { name, value } = e.target;
+
     setFormData((prev) => ({
       ...prev,
       [name]: value,
     }));
 
-    setResultado(null);
-    setTotalPayment(0);
+    // Solo limpiar cálculo si es un campo relevante al resultado
+    const shouldClear = !["propertyTaxes", "hoaFees", "insurance"].includes(
+      name
+    );
 
+    if (shouldClear) {
+      setResultado(null);
+      setTotalPayment(0);
+    }
+
+    // Actualizar estados correspondientes
     if (name === "propertyTaxes") setPropertyTaxes(value);
     if (name === "hoaFees") setHOAFees(value);
     if (name === "insurance") setInsurance(value);
@@ -148,36 +157,20 @@ const MortgageForm: React.FC<Props> = ({
       return;
     }
 
-    // ARM, Interest Only, Balloon, and Jumbo alerts only
-    if (formData.loanType === "Interest Only") {
-      alert("Interest Only form submitted.");
-    }
-    if (formData.loanType === "ARM") {
-      alert("ARM form submitted.");
-    }
-    if (formData.loanType === "Balloon Payments") {
-      alert("Balloon form submitted.");
-    }
-    if (formData.loanType === "Jumbo Loans") {
-      alert("Jumbo Loan form submitted.");
-    }
+    // Otros tipos de hipoteca (puedes adaptar lógicamente según avances)
+    alert("Este tipo de hipoteca aún no está implementado completamente.");
   };
 
   return (
     <form
       onSubmit={handleSubmit}
-      style={{
-        backgroundColor: "white",
-        padding: "24px",
-        borderRadius: "8px",
-        boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
-        width: "550px",
-      }}
+      className="bg-white p-6 rounded-lg shadow-lg w-[550px]"
     >
-      <table style={{ width: "100%", borderSpacing: "12px" }}>
+      <table className="w-full space-y-4">
         <tbody>
-          <tr style={{ height: "60px" }}>
-            <td align="left" style={{ width: "50%" }}>
+          {/* Tipo de Hipoteca */}
+          <tr>
+            <td>
               <label htmlFor="loanType">Mortgage Type:</label>
             </td>
             <td>
@@ -186,12 +179,7 @@ const MortgageForm: React.FC<Props> = ({
                 name="loanType"
                 value={formData.loanType}
                 onChange={handleChange}
-                style={{
-                  width: "100%",
-                  padding: "8px",
-                  borderRadius: "6px",
-                  border: "1px solid #ccc",
-                }}
+                className="w-full p-2 border border-gray-300 rounded"
               >
                 <option value="">Select</option>
                 <option value="Fixed Rate">Fixed Rate</option>
@@ -203,10 +191,11 @@ const MortgageForm: React.FC<Props> = ({
             </td>
           </tr>
 
+          {/* Campos dinámicos */}
           {formData.loanType === "Fixed Rate" && (
             <>
-              <tr style={{ height: "60px" }}>
-                <td align="left">
+              <tr>
+                <td>
                   <label htmlFor="duration">Mortgage Duration:</label>
                 </td>
                 <td>
@@ -215,12 +204,7 @@ const MortgageForm: React.FC<Props> = ({
                     name="duration"
                     value={formData.duration}
                     onChange={handleChange}
-                    style={{
-                      width: "100%",
-                      padding: "8px",
-                      borderRadius: "6px",
-                      border: "1px solid #ccc",
-                    }}
+                    className="w-full p-2 border border-gray-300 rounded"
                   >
                     <option value="">Select</option>
                     <option value="10">10 years</option>
@@ -239,91 +223,59 @@ const MortgageForm: React.FC<Props> = ({
             </>
           )}
 
-          {/* Other types: render their forms */}
-          {formData.loanType === "Interest Only" && (
-            <InterestOnly {...formData} onChange={handleChange} />
-          )}
-          {formData.loanType === "ARM" && (
-            <ARM {...formData} onChange={handleChange} />
-          )}
-          {formData.loanType === "Balloon Payments" && (
-            <Balloon {...formData} onChange={handleChange} />
-          )}
-          {formData.loanType === "Jumbo Loans" && (
-            <Jumbo {...formData} onChange={handleChange} />
-          )}
-
-          {/* Optional Fields */}
-          <tr style={{ height: "60px" }}>
-            <td align="left">
+          {/* Campos opcionales */}
+          <tr>
+            <td>
               <label htmlFor="propertyTaxes">Property Taxes (Annual):</label>
             </td>
             <td>
               <input
                 type="number"
-                id="propertyTaxes"
                 name="propertyTaxes"
                 value={formData.propertyTaxes}
                 onChange={handleChange}
                 placeholder="Optional"
-                style={{
-                  width: "100%",
-                  padding: "8px",
-                  borderRadius: "6px",
-                  border: "1px solid #ccc",
-                }}
+                className="w-full p-2 border border-gray-300 rounded"
               />
             </td>
           </tr>
 
-          <tr style={{ height: "60px" }}>
-            <td align="left">
+          <tr>
+            <td>
               <label htmlFor="hoaFees">HOA Fees (Monthly):</label>
             </td>
             <td>
               <input
                 type="number"
-                id="hoaFees"
                 name="hoaFees"
                 value={formData.hoaFees}
                 onChange={handleChange}
                 placeholder="Optional"
-                style={{
-                  width: "100%",
-                  padding: "8px",
-                  borderRadius: "6px",
-                  border: "1px solid #ccc",
-                }}
+                className="w-full p-2 border border-gray-300 rounded"
               />
             </td>
           </tr>
 
-          <tr style={{ height: "60px" }}>
-            <td align="left">
+          <tr>
+            <td>
               <label htmlFor="insurance">Insurance (Annual):</label>
             </td>
             <td>
               <input
                 type="number"
-                id="insurance"
                 name="insurance"
                 value={formData.insurance}
                 onChange={handleChange}
                 placeholder="Optional"
-                style={{
-                  width: "100%",
-                  padding: "8px",
-                  borderRadius: "6px",
-                  border: "1px solid #ccc",
-                }}
+                className="w-full p-2 border border-gray-300 rounded"
               />
             </td>
           </tr>
         </tbody>
       </table>
 
-      <div style={{ marginTop: "25px", textAlign: "center" }}>
-        <SubmitButton text="Continue" />
+      <div className="mt-6 text-center">
+        <SubmitButton text="Calculate" />
       </div>
     </form>
   );
