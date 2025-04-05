@@ -4,7 +4,7 @@ import CompoundInterestCalculator from "./pages/FinancialCalculator/CompoundInte
 import FinancialCalculator from "./pages/FinancialCalculator/FinancialCalculator";
 import Menu from "./pages/Menu";
 import ScrollToTop from "./components/ScrollToTop";
-import MortgageCalculator from "./pages/Mortgage/MortgageCalculator";
+import MortgageCalculator from "./pages/FinancialCalculator/Mortgage/MortgageCalculator";
 const App = () => {
   return (
     <Router>
