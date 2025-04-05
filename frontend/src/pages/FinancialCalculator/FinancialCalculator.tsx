@@ -9,6 +9,9 @@ const FinancialCalculator = () => {
   const showCompound =
     selectedCategory === "All" || selectedCategory === "Compound";
 
+  const showMortgage =
+    selectedCategory === "All" || selectedCategory === "Loan";
+
   return (
     <div className="bg-gray-100 min-h-screen">
       <NavBar />
@@ -95,6 +98,26 @@ const FinancialCalculator = () => {
               investments, and long-term financial planning.
             </p>
             <Link to="/compoundinterest">
+              <SubmitButton text="Open Calculator" />
+            </Link>
+          </div>
+        )}
+
+        {showMortgage && (
+          <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] text-left">
+            <img
+              src="/img/mortgage.png"
+              alt="Mortgage Payments Calculator"
+              className="h-40 w-full object-cover mb-4 rounded"
+            />
+            <h2 className="text-xl font-bold text-gray-800 mb-2">
+              Mortgage Payments Calculator
+            </h2>
+            <p className="text-sm text-gray-600 mb-4">
+              Calculate your monthly mortgage payments. Perfect for home buyers,
+              refinancing, and long-term loan planning.
+            </p>
+            <Link to="/mortgage">
               <SubmitButton text="Open Calculator" />
             </Link>
           </div>

@@ -4,7 +4,7 @@ import CompoundInterestCalculator from "./pages/CompoundInterest/CompoundInteres
 import FinancialCalculator from "./pages/FinancialCalculator/FinancialCalculator";
 import Menu from "./pages/Menu";
 import ScrollToTop from "./pages/CompoundInterest/components/ScrollToTop";
-
+import MortgageCalculator from "./pages/Mortgage/MortgageCalculator";
 const App = () => {
   return (
     <Router>
@@ -16,6 +16,8 @@ const App = () => {
           path="/compoundinterest"
           element={<CompoundInterestCalculator />}
         />
+        <Route path="/mortgage" element={<MortgageCalculator />} />
+
         <Route path="/financial" element={<FinancialCalculator />} />
         <Route path="/calculators" element={<Menu />} />
       </Routes>
