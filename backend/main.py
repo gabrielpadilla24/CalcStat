@@ -49,3 +49,29 @@ def calcular(data: ExponentialData):
         "valoresPorAño": valores,
         "aportesPorAño": aportes,
     }
+
+
+class FixedRateData(BaseModel):
+    homePrice: float
+    downPayment: float
+    interestRate: float  # anual en %
+    duration: int  # años
+@app.post("/fixedrate")
+def calcular_fixed_rate(data: FixedRateData):
+    loan_amount = data.homePrice - data.downPayment
+    annual_rate = data.interestRate / 100
+    monthly_rate = annual_rate / 12
+    total_payments = data.duration * 12
+
+    if monthly_rate == 0:
+        monthly_payment = loan_amount / total_payments
+    else:
+        monthly_payment = loan_amount * (monthly_rate * (1 + monthly_rate) ** total_payments) / ((1 + monthly_rate) ** total_payments - 1)
+
+    return {
+        "monthlyPayment": round(monthly_payment, 2),
+        "loanAmount": round(loan_amount, 2),
+        "totalPayments": total_payments,
+        "monthlyRate": round(monthly_rate * 100, 4)
+    }
+
