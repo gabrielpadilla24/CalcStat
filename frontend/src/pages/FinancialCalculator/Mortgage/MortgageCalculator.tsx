@@ -5,6 +5,12 @@ import MonthlyBreakdownChart from "./components/MonthlyBreakdownChart";
 
 const MortgageCalculator = () => {
   const [totalPayment, setTotalPayment] = useState(0);
+  const [resultado, setResultado] = useState<{
+    monthlyPayment: number;
+    loanAmount: number;
+    totalPayments: number;
+    monthlyRate: number;
+  } | null>(null);
 
   return (
     <>
@@ -16,11 +22,17 @@ const MortgageCalculator = () => {
 
         <div className="flex justify-center items-start gap-10 flex-wrap">
           <div>
-            <MortgageForm setTotalPayment={setTotalPayment} />
+            <MortgageForm
+              setTotalPayment={setTotalPayment}
+              setResultado={setResultado}
+            />
           </div>
 
           <div>
-            <MonthlyBreakdownChart totalPayment={totalPayment} />
+            <MonthlyBreakdownChart
+              totalPayment={totalPayment}
+              resultado={resultado}
+            />
           </div>
         </div>
       </div>

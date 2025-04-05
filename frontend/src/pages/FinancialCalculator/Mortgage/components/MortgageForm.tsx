@@ -8,9 +8,17 @@ import Jumbo from "./Jumbo";
 
 interface Props {
   setTotalPayment: (value: number) => void;
+  setResultado: (
+    value: {
+      monthlyPayment: number;
+      loanAmount: number;
+      totalPayments: number;
+      monthlyRate: number;
+    } | null
+  ) => void; // ✅ acepta null
 }
 
-const MortgageForm: React.FC<Props> = ({ setTotalPayment }) => {
+const MortgageForm: React.FC<Props> = ({ setTotalPayment, setResultado }) => {
   const [formData, setFormData] = useState({
     loanType: "",
     homePrice: "",
@@ -27,13 +35,6 @@ const MortgageForm: React.FC<Props> = ({ setTotalPayment }) => {
     hoaFees: "",
     insurance: "",
   });
-
-  const [resultado, setResultado] = useState<{
-    monthlyPayment: number;
-    loanAmount: number;
-    totalPayments: number;
-    monthlyRate: number;
-  } | null>(null);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -262,7 +263,8 @@ const MortgageForm: React.FC<Props> = ({ setTotalPayment }) => {
               </select>
             </td>
           </tr>
-          {/* Mortgage-specific Fields */}
+
+          {/* Dynamic Fields */}
           {formData.loanType === "Fixed Rate" && (
             <>
               <tr style={{ height: "60px" }}>
@@ -336,6 +338,8 @@ const MortgageForm: React.FC<Props> = ({ setTotalPayment }) => {
               onChange={handleChange}
             />
           )}
+
+          {/* Optional Fields */}
           <tr style={{ height: "60px" }}>
             <td align="left">
               <label htmlFor="propertyTaxes">Property Taxes (Annual):</label>
@@ -398,34 +402,13 @@ const MortgageForm: React.FC<Props> = ({ setTotalPayment }) => {
                 }}
               />
             </td>
-          </tr>{" "}
+          </tr>
         </tbody>
       </table>
 
       <div style={{ marginTop: "25px", textAlign: "center" }}>
         <SubmitButton text="Continue" />
       </div>
-
-      {resultado && (
-        <div
-          style={{
-            marginTop: "25px",
-            padding: "16px",
-            borderRadius: "8px",
-            backgroundColor: "#f0fdf4",
-            border: "1px solid #10b981",
-            color: "#065f46",
-            fontWeight: "bold",
-            fontSize: "16px",
-            textAlign: "center",
-          }}
-        >
-          <p>Monthly Payment: ${resultado.monthlyPayment.toLocaleString()}</p>
-          <p>Loan Amount: ${resultado.loanAmount.toLocaleString()}</p>
-          <p>Total Payments: {resultado.totalPayments}</p>
-          <p>Monthly Interest Rate: {resultado.monthlyRate}%</p>
-        </div>
-      )}
     </form>
   );
 };
