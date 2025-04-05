@@ -146,7 +146,7 @@ const MonthlyBreakdownChart: React.FC<Props> = ({
           onClick={scrollToGraph}
           className="text-gray-600 hover:text-gray-800 transition-colors text-sm underline underline-offset-4 mt-20"
         >
-          ↓ See how it was calculated
+          ↓ See Amortization Graph
         </button>
       </div>
     </div>
