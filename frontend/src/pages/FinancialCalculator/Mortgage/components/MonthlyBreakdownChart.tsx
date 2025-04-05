@@ -79,7 +79,7 @@ const MonthlyBreakdownChart: React.FC<Props> = ({
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-6 w-full max-w-[900px] h-[540px]">
+    <div className="bg-white rounded-lg shadow-md p-6 w-full max-w-[900px] h-[516px]">
       <h2 className="text-xl font-semibold text-center mb-4">
         Monthly Payment Chart
       </h2>
@@ -162,7 +162,7 @@ const MonthlyBreakdownChart: React.FC<Props> = ({
       <div className="pt-6 text-center">
         <button
           onClick={scrollToGraph}
-          className="text-gray-600 hover:text-gray-800 transition-colors text-sm underline underline-offset-4"
+          className="text-gray-600 hover:text-gray-800 transition-colors text-sm underline underline-offset-4 mt-10"
         >
           ↓ See Amortization Graph
         </button>
