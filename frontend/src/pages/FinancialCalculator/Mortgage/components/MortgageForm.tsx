@@ -23,6 +23,9 @@ const MortgageForm: React.FC<Props> = ({ setTotalPayment }) => {
     armType: "",
     loanTerm: "",
     balloonYear: "",
+    propertyTaxes: "",
+    hoaFees: "",
+    insurance: "",
   });
 
   const [resultado, setResultado] = useState<{
@@ -40,8 +43,8 @@ const MortgageForm: React.FC<Props> = ({ setTotalPayment }) => {
       ...prev,
       [name]: value,
     }));
-    setResultado(null); // Limpia resultados si se modifica algo
-    setTotalPayment(0); // Limpia el gráfico
+    setResultado(null);
+    setTotalPayment(0);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -103,7 +106,7 @@ const MortgageForm: React.FC<Props> = ({ setTotalPayment }) => {
             totalPayments,
             monthlyRate,
           });
-          setTotalPayment(monthlyPayment); // Actualiza gráfico
+          setTotalPayment(monthlyPayment);
         })
         .catch((err) => {
           console.error(err);
@@ -113,7 +116,6 @@ const MortgageForm: React.FC<Props> = ({ setTotalPayment }) => {
       return;
     }
 
-    // Interest Only
     if (formData.loanType === "Interest Only") {
       const interestRate = Number(formData.interestRate) / 100;
       const interestOnlyPeriod = Number(formData.interestOnlyPeriod);
@@ -138,7 +140,6 @@ const MortgageForm: React.FC<Props> = ({ setTotalPayment }) => {
       );
     }
 
-    // ARM
     if (formData.loanType === "ARM") {
       const initialRate = Number(formData.initialRate) / 100;
 
@@ -172,7 +173,6 @@ const MortgageForm: React.FC<Props> = ({ setTotalPayment }) => {
       );
     }
 
-    // Balloon
     if (formData.loanType === "Balloon Payments") {
       const interestRate = Number(formData.interestRate) / 100;
       const loanTerm = Number(formData.loanTerm);
@@ -198,7 +198,6 @@ const MortgageForm: React.FC<Props> = ({ setTotalPayment }) => {
       );
     }
 
-    // Jumbo
     if (formData.loanType === "Jumbo Loans") {
       const interestRate = Number(formData.interestRate) / 100;
       const loanTerm = Number(formData.loanTerm);
@@ -236,6 +235,7 @@ const MortgageForm: React.FC<Props> = ({ setTotalPayment }) => {
     >
       <table style={{ width: "100%", borderSpacing: "12px" }}>
         <tbody>
+          {/* Mortgage Type */}
           <tr style={{ height: "60px" }}>
             <td align="left" style={{ width: "50%" }}>
               <label htmlFor="loanType">Mortgage Type:</label>
@@ -262,44 +262,42 @@ const MortgageForm: React.FC<Props> = ({ setTotalPayment }) => {
               </select>
             </td>
           </tr>
-
+          {/* Mortgage-specific Fields */}
           {formData.loanType === "Fixed Rate" && (
-            <tr style={{ height: "60px" }}>
-              <td align="left" style={{ width: "50%" }}>
-                <label htmlFor="duration">Mortgage Duration:</label>
-              </td>
-              <td>
-                <select
-                  id="duration"
-                  name="duration"
-                  value={formData.duration}
-                  onChange={handleChange}
-                  style={{
-                    width: "100%",
-                    padding: "8px",
-                    borderRadius: "6px",
-                    border: "1px solid #ccc",
-                  }}
-                >
-                  <option value="">Select</option>
-                  <option value="10">10 years</option>
-                  <option value="15">15 years</option>
-                  <option value="20">20 years</option>
-                  <option value="30">30 years</option>
-                </select>
-              </td>
-            </tr>
+            <>
+              <tr style={{ height: "60px" }}>
+                <td align="left">
+                  <label htmlFor="duration">Mortgage Duration:</label>
+                </td>
+                <td>
+                  <select
+                    id="duration"
+                    name="duration"
+                    value={formData.duration}
+                    onChange={handleChange}
+                    style={{
+                      width: "100%",
+                      padding: "8px",
+                      borderRadius: "6px",
+                      border: "1px solid #ccc",
+                    }}
+                  >
+                    <option value="">Select</option>
+                    <option value="10">10 years</option>
+                    <option value="15">15 years</option>
+                    <option value="20">20 years</option>
+                    <option value="30">30 years</option>
+                  </select>
+                </td>
+              </tr>
+              <FRM
+                homePrice={formData.homePrice}
+                downPayment={formData.downPayment}
+                interestRate={formData.interestRate}
+                onChange={handleChange}
+              />
+            </>
           )}
-
-          {formData.loanType === "Fixed Rate" && (
-            <FRM
-              homePrice={formData.homePrice}
-              downPayment={formData.downPayment}
-              interestRate={formData.interestRate}
-              onChange={handleChange}
-            />
-          )}
-
           {formData.loanType === "Interest Only" && (
             <InterestOnly
               homePrice={formData.homePrice}
@@ -310,7 +308,6 @@ const MortgageForm: React.FC<Props> = ({ setTotalPayment }) => {
               onChange={handleChange}
             />
           )}
-
           {formData.loanType === "ARM" && (
             <ARM
               homePrice={formData.homePrice}
@@ -320,7 +317,6 @@ const MortgageForm: React.FC<Props> = ({ setTotalPayment }) => {
               onChange={handleChange}
             />
           )}
-
           {formData.loanType === "Balloon Payments" && (
             <Balloon
               homePrice={formData.homePrice}
@@ -331,7 +327,6 @@ const MortgageForm: React.FC<Props> = ({ setTotalPayment }) => {
               onChange={handleChange}
             />
           )}
-
           {formData.loanType === "Jumbo Loans" && (
             <Jumbo
               homePrice={formData.homePrice}
@@ -341,6 +336,69 @@ const MortgageForm: React.FC<Props> = ({ setTotalPayment }) => {
               onChange={handleChange}
             />
           )}
+          <tr style={{ height: "60px" }}>
+            <td align="left">
+              <label htmlFor="propertyTaxes">Property Taxes (Annual):</label>
+            </td>
+            <td>
+              <input
+                type="number"
+                id="propertyTaxes"
+                name="propertyTaxes"
+                value={formData.propertyTaxes}
+                onChange={handleChange}
+                placeholder="Optional"
+                style={{
+                  width: "100%",
+                  padding: "8px",
+                  borderRadius: "6px",
+                  border: "1px solid #ccc",
+                }}
+              />
+            </td>
+          </tr>
+          <tr style={{ height: "60px" }}>
+            <td align="left">
+              <label htmlFor="hoaFees">HOA Fees (Monthly):</label>
+            </td>
+            <td>
+              <input
+                type="number"
+                id="hoaFees"
+                name="hoaFees"
+                value={formData.hoaFees}
+                onChange={handleChange}
+                placeholder="Optional"
+                style={{
+                  width: "100%",
+                  padding: "8px",
+                  borderRadius: "6px",
+                  border: "1px solid #ccc",
+                }}
+              />
+            </td>
+          </tr>
+          <tr style={{ height: "60px" }}>
+            <td align="left">
+              <label htmlFor="insurance">Insurance (Annual):</label>
+            </td>
+            <td>
+              <input
+                type="number"
+                id="insurance"
+                name="insurance"
+                value={formData.insurance}
+                onChange={handleChange}
+                placeholder="Optional"
+                style={{
+                  width: "100%",
+                  padding: "8px",
+                  borderRadius: "6px",
+                  border: "1px solid #ccc",
+                }}
+              />
+            </td>
+          </tr>{" "}
         </tbody>
       </table>
 
