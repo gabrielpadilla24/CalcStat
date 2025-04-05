@@ -1,9 +1,9 @@
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import LandingPage from "./pages/LandingPage/LandingPage";
-import CompoundInterestCalculator from "./pages/CompoundInterest/CompoundInterestCalculator";
+import CompoundInterestCalculator from "./pages/FinancialCalculator/CompoundInterest/CompoundInterestCalculator";
 import FinancialCalculator from "./pages/FinancialCalculator/FinancialCalculator";
 import Menu from "./pages/Menu";
-import ScrollToTop from "./pages/CompoundInterest/components/ScrollToTop";
+import ScrollToTop from "./components/ScrollToTop";
 import MortgageCalculator from "./pages/Mortgage/MortgageCalculator";
 const App = () => {
   return (

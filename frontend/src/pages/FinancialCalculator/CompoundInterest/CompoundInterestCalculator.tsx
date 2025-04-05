@@ -2,7 +2,7 @@ import { useRef, useState } from "react";
 import ExponentialForm from "./components/ExponentialForm";
 import ExponentialGraph from "./components/ExponentialGraph";
 import ExponentialFormula from "./components/ExponentialFormula";
-import NavBar from "../../components/NavBar";
+import NavBar from "@/components/NavBar";
 
 const ExponentialCalculator = () => {
   const [valoresPorAño, setValoresPorAño] = useState<number[]>([]);

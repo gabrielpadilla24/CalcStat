@@ -1,7 +1,7 @@
 import { useState } from "react";
-import NavBar from "../../components/NavBar";
+import NavBar from "@/components/NavBar";
 import { Link } from "react-router-dom";
-import SubmitButton from "../../components/SubmitButton";
+import SubmitButton from "@/components/SubmitButton";
 
 const FinancialCalculator = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>("All");

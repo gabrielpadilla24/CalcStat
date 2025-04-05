@@ -1,5 +1,5 @@
-import NavBar from "../components/NavBar";
-import SubmitButton from "../components/SubmitButton";
+import NavBar from "@/components/NavBar";
+import SubmitButton from "@/components/SubmitButton";
 import { Link } from "react-router-dom";
 
 const Menu = () => {
