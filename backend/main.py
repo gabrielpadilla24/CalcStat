@@ -4,7 +4,7 @@ from pydantic import BaseModel
 
 app = FastAPI()
 
-# CORS para permitir conexión con frontend
+# Configurar CORS solo una vez
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:5173"],
@@ -13,7 +13,9 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# -----------------------------
 # MODELOS
+# -----------------------------
 
 class ExponentialData(BaseModel):
     initialValue: float
@@ -21,18 +23,19 @@ class ExponentialData(BaseModel):
     time: float
     addConstant: bool
     constantValue: float
-    frequency: str  # "año" o "mes"
+    frequency: str  # "Yearly" o "Monthly"
 
 class FixedRateData(BaseModel):
     homePrice: float
     downPayment: float
     interestRate: float  # anual en %
-    duration: int  # años
+    duration: int        # años
 
-
+# -----------------------------
 # ENDPOINT DE INTERÉS COMPUESTO
+# -----------------------------
 @app.post("/compoundinterest")
-def calcular(data: ExponentialData):
+def calcular_compound(data: ExponentialData):
     valores = [round(data.initialValue, 2)]  # Año 0
     aportes = [round(data.initialValue, 2)]  # Aportes acumulados
     capital = data.initialValue
@@ -60,27 +63,9 @@ def calcular(data: ExponentialData):
         "aportesPorAño": aportes,
     }
 
+# -----------------------------
 # ENDPOINT DE HIPOTECA A TASA FIJA
-from fastapi import FastAPI
-from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
-
-app = FastAPI()
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["http://localhost:5173"],
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
-
-class FixedRateData(BaseModel):
-    homePrice: float
-    downPayment: float
-    interestRate: float  # anual en %
-    duration: int        # años
-
+# -----------------------------
 @app.post("/fixedrate")
 def calcular_fixed_rate(data: FixedRateData):
     loan_amount = data.homePrice - data.downPayment
@@ -88,26 +73,22 @@ def calcular_fixed_rate(data: FixedRateData):
     monthly_rate = annual_rate / 12
     total_payments = data.duration * 12
 
-    # Cálculo de cuota mensual
     if monthly_rate == 0:
         monthly_payment = loan_amount / total_payments
     else:
         monthly_payment = loan_amount * (monthly_rate * (1 + monthly_rate) ** total_payments) / \
                           ((1 + monthly_rate) ** total_payments - 1)
 
-    # Inicializar listas con Year 0
     principal_paid = [0.0]
     interest_paid = [0.0]
     loan_balance = [round(loan_amount, 2)]
 
-    # Variables para la iteración
     balance = loan_amount
     yearly_principal = 0
     yearly_interest = 0
     acum_principal = 0
     acum_interest = 0
 
-    # Calcular amortización mes a mes
     for month in range(1, total_payments + 1):
         interest = balance * monthly_rate
         principal = monthly_payment - interest
@@ -116,7 +97,6 @@ def calcular_fixed_rate(data: FixedRateData):
         yearly_principal += principal
         yearly_interest += interest
 
-        # Al final de cada año o último mes
         if month % 12 == 0 or month == total_payments:
             acum_principal += yearly_principal
             acum_interest += yearly_interest
