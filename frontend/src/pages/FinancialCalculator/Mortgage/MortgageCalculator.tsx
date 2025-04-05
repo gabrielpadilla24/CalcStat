@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import NavBar from "@/components/NavBar";
 import MortgageForm from "./components/MortgageForm";
 import MonthlyBreakdownChart from "./components/MonthlyBreakdownChart";
@@ -21,6 +21,14 @@ const MortgageCalculator = () => {
   const [hoaFees, setHOAFees] = useState<string>("");
   const [insurance, setInsurance] = useState<string>("");
 
+  const amortizationRef = useRef<HTMLDivElement | null>(null);
+
+  const scrollToGraph = () => {
+    if (amortizationRef.current) {
+      amortizationRef.current.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   const monthlyPropertyTax = propertyTaxes ? Number(propertyTaxes) / 12 : 0;
   const monthlyHOA = hoaFees ? Number(hoaFees) : 0;
   const monthlyInsurance = insurance ? Number(insurance) / 12 : 0;
@@ -33,9 +41,9 @@ const MortgageCalculator = () => {
           Mortgage Calculator
         </h1>
 
-        <div className="flex justify-center flex-wrap gap-x-10 mb-10">
-          {/* Formulario con min-width */}
-          <div className="min-w-[550px]">
+        <div className="flex justify-center items-start gap-12 flex-wrap mb-16">
+          {/* Formulario */}
+          <div>
             <MortgageForm
               setResultado={setResultado}
               setTotalPayment={setTotalPayment}
@@ -48,19 +56,20 @@ const MortgageCalculator = () => {
             />
           </div>
 
-          {/* Pie Chart más ancho y alineado */}
-          <div className="w-[750px]">
+          {/* Pie Chart más amplio */}
+          <div className="w-full md:w-auto">
             <MonthlyBreakdownChart
               resultado={resultado}
               monthlyPropertyTax={monthlyPropertyTax}
               monthlyHOA={monthlyHOA}
               monthlyInsurance={monthlyInsurance}
+              scrollToGraph={scrollToGraph}
             />
           </div>
         </div>
 
-        {/* Gráfico de Amortización debajo */}
-        <div className="flex justify-center">
+        {/* Gráfico de Amortización */}
+        <div ref={amortizationRef} className="flex justify-center">
           <AmortizationGraph
             principalPaid={principalPaid}
             interestPaid={interestPaid}
