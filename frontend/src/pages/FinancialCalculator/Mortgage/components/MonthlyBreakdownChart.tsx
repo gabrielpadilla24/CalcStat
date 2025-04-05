@@ -88,11 +88,18 @@ const MonthlyBreakdownChart: React.FC<Props> = ({
         height={300}
       />
 
+      {/* Highlighted Total */}
+      <div className="mt-6 flex justify-center">
+        <div className="bg-green-100 border border-green-300 text-green-700 px-4 py-3 rounded-lg text-center shadow-sm w-full max-w-xs text-lg font-semibold">
+          Total Monthly Payment:{" "}
+          <span className="block text-2xl mt-1 font-bold">
+            {hasResult ? formatCurrency(totalPayment) : "—"}
+          </span>
+        </div>
+      </div>
+
+      {/* Breakdown */}
       <div className="mt-6 text-sm text-gray-700">
-        <p>
-          <strong>Total Monthly Payment:</strong>{" "}
-          {hasResult ? formatCurrency(totalPayment) : "—"}
-        </p>
         <p>
           <strong>Principal + Interest:</strong>{" "}
           {hasResult ? formatCurrency(basePayment) : "—"}
