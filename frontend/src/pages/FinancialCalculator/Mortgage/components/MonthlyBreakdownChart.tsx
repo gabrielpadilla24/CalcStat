@@ -11,7 +11,7 @@ interface Props {
   monthlyPropertyTax?: number;
   monthlyHOA?: number;
   monthlyInsurance?: number;
-  scrollToGraph: () => void;
+  scrollToGraph: () => void; // <- usar esta prop correctamente
 }
 
 const MonthlyBreakdownChart: React.FC<Props> = ({
@@ -19,6 +19,7 @@ const MonthlyBreakdownChart: React.FC<Props> = ({
   monthlyPropertyTax = 0,
   monthlyHOA = 0,
   monthlyInsurance = 0,
+  scrollToGraph, // <- asegúrate de incluirla aquí
 }) => {
   const hasResult = resultado !== null;
   const basePayment = hasResult ? resultado!.monthlyPayment : 0;
@@ -142,12 +143,7 @@ const MonthlyBreakdownChart: React.FC<Props> = ({
       {/* Scroll Button inside the card */}
       <div className="pt-6 text-center">
         <button
-          onClick={() => {
-            const section = document.getElementById("amortization-section");
-            if (section) {
-              section.scrollIntoView({ behavior: "smooth" });
-            }
-          }}
+          onClick={scrollToGraph}
           className="text-gray-600 hover:text-gray-800 transition-colors text-sm underline underline-offset-4 mt-20"
         >
           ↓ See how it was calculated
