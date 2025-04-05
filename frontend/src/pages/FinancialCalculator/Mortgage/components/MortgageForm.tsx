@@ -6,7 +6,12 @@ import ARM from "./ARM";
 import Balloon from "./Balloon";
 import Jumbo from "./Jumbo";
 
-const MortgageForm: React.FC = () => {
+interface Props {
+  setPrincipal: (value: number) => void;
+  setInterest: (value: number) => void;
+}
+
+const MortgageForm: React.FC<Props> = ({ setPrincipal, setInterest }) => {
   const [formData, setFormData] = useState({
     loanType: "",
     homePrice: "",
@@ -66,7 +71,6 @@ const MortgageForm: React.FC = () => {
         return;
       }
 
-      // Fetch al backend
       fetch("http://localhost:8000/fixedrate", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -82,9 +86,20 @@ const MortgageForm: React.FC = () => {
           return res.json();
         })
         .then((data) => {
+          const { monthlyPayment, loanAmount, totalPayments, monthlyRate } =
+            data;
+
           alert(
-            `📊 Resultado:\nCuota mensual: $${data.monthlyPayment}\nMonto del préstamo: $${data.loanAmount}\nPagos: ${data.totalPayments}\nTasa mensual: ${data.monthlyRate}%`
+            `📊 Resultado:\nCuota mensual: $${monthlyPayment}\nMonto del préstamo: $${loanAmount}\nPagos: ${totalPayments}\nTasa mensual: ${monthlyRate}%`
           );
+
+          // ➕ Cálculo del breakdown del primer pago
+          const monthlyRateDecimal = monthlyRate / 100;
+          const firstInterest = loanAmount * monthlyRateDecimal;
+          const firstPrincipal = monthlyPayment - firstInterest;
+
+          setPrincipal(parseFloat(firstPrincipal.toFixed(2)));
+          setInterest(parseFloat(firstInterest.toFixed(2)));
         })
         .catch((err) => {
           console.error(err);
@@ -94,6 +109,7 @@ const MortgageForm: React.FC = () => {
       return;
     }
 
+    // Resto de tipos de hipoteca (sin cambios)
     if (formData.loanType === "Interest Only") {
       const interestRate = Number(formData.interestRate) / 100;
       const interestOnlyPeriod = Number(formData.interestOnlyPeriod);
@@ -241,7 +257,6 @@ const MortgageForm: React.FC = () => {
             </td>
           </tr>
 
-          {/* Duration for Fixed Rate */}
           {formData.loanType === "Fixed Rate" && (
             <tr style={{ height: "60px" }}>
               <td align="left" style={{ width: "50%" }}>
@@ -270,7 +285,6 @@ const MortgageForm: React.FC = () => {
             </tr>
           )}
 
-          {/* Sub-form for each mortgage type */}
           {formData.loanType === "Fixed Rate" && (
             <FRM
               homePrice={formData.homePrice}
