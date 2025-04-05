@@ -20,6 +20,8 @@ interface Props {
   setInterestPaid: (arr: number[]) => void;
   setLoanBalance: (arr: number[]) => void;
   setPropertyTaxes: (value: string) => void;
+  setHOAFees: (value: string) => void;
+  setInsurance: (value: string) => void;
 }
 
 const MortgageForm: React.FC<Props> = ({
@@ -29,6 +31,8 @@ const MortgageForm: React.FC<Props> = ({
   setInterestPaid,
   setLoanBalance,
   setPropertyTaxes,
+  setHOAFees,
+  setInsurance,
 }) => {
   const [formData, setFormData] = useState({
     loanType: "",
@@ -55,12 +59,13 @@ const MortgageForm: React.FC<Props> = ({
       ...prev,
       [name]: value,
     }));
+
     setResultado(null);
     setTotalPayment(0);
 
-    if (name === "propertyTaxes") {
-      setPropertyTaxes(value);
-    }
+    if (name === "propertyTaxes") setPropertyTaxes(value);
+    if (name === "hoaFees") setHOAFees(value);
+    if (name === "insurance") setInsurance(value);
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -143,109 +148,18 @@ const MortgageForm: React.FC<Props> = ({
       return;
     }
 
+    // ARM, Interest Only, Balloon, and Jumbo alerts only
     if (formData.loanType === "Interest Only") {
-      const interestRate = Number(formData.interestRate) / 100;
-      const interestOnlyPeriod = Number(formData.interestOnlyPeriod);
-      const totalTerm = Number(formData.totalTerm);
-
-      if (
-        !formData.interestRate ||
-        isNaN(interestRate) ||
-        !formData.interestOnlyPeriod ||
-        isNaN(interestOnlyPeriod) ||
-        !formData.totalTerm ||
-        isNaN(totalTerm)
-      ) {
-        alert("Please enter valid values for Interest Only mortgage.");
-        return;
-      }
-
-      alert(
-        `Interest Only Mortgage:\nHome Price: $${homePrice}\nDown Payment: $${downPayment}\nInterest Rate: ${
-          interestRate * 100
-        }%\nInterest-Only Period: ${interestOnlyPeriod} years\nTotal Term: ${totalTerm} years`
-      );
+      alert("Interest Only form submitted.");
     }
-
     if (formData.loanType === "ARM") {
-      const initialRate = Number(formData.initialRate) / 100;
-
-      const armMap: Record<string, { fixed: number; adjust: number }> = {
-        "5/1": { fixed: 5, adjust: 1 },
-        "5/6": { fixed: 5, adjust: 0.5 },
-        "7/1": { fixed: 7, adjust: 1 },
-        "7/6": { fixed: 7, adjust: 0.5 },
-        "10/1": { fixed: 10, adjust: 1 },
-        "10/6": { fixed: 10, adjust: 0.5 },
-      };
-
-      const selectedARM = armMap[formData.armType];
-
-      if (
-        !formData.initialRate ||
-        isNaN(initialRate) ||
-        !formData.armType ||
-        !selectedARM
-      ) {
-        alert("Please enter valid ARM values.");
-        return;
-      }
-
-      alert(
-        `ARM Mortgage:\nHome Price: $${homePrice}\nDown Payment: $${downPayment}\nInitial Rate: ${
-          initialRate * 100
-        }%\nFixed Period: ${selectedARM.fixed} years\nAdjustment Interval: ${
-          selectedARM.adjust
-        } years`
-      );
+      alert("ARM form submitted.");
     }
-
     if (formData.loanType === "Balloon Payments") {
-      const interestRate = Number(formData.interestRate) / 100;
-      const loanTerm = Number(formData.loanTerm);
-      const balloonYear = Number(formData.balloonYear);
-
-      if (
-        !formData.interestRate ||
-        isNaN(interestRate) ||
-        !formData.loanTerm ||
-        isNaN(loanTerm) ||
-        !formData.balloonYear ||
-        isNaN(balloonYear) ||
-        balloonYear > loanTerm
-      ) {
-        alert("Please enter valid Balloon Payment mortgage values.");
-        return;
-      }
-
-      alert(
-        `Balloon Mortgage:\nHome Price: $${homePrice}\nDown Payment: $${downPayment}\nInterest Rate: ${
-          interestRate * 100
-        }%\nLoan Term: ${loanTerm} years\nBalloon Year: ${balloonYear}`
-      );
+      alert("Balloon form submitted.");
     }
-
     if (formData.loanType === "Jumbo Loans") {
-      const interestRate = Number(formData.interestRate) / 100;
-      const loanTerm = Number(formData.loanTerm);
-
-      if (
-        !formData.interestRate ||
-        isNaN(interestRate) ||
-        !formData.loanTerm ||
-        isNaN(loanTerm) ||
-        loanTerm <= 0 ||
-        interestRate <= 0
-      ) {
-        alert("Please enter valid Jumbo Loan values.");
-        return;
-      }
-
-      alert(
-        `Jumbo Loan:\nHome Price: $${homePrice}\nDown Payment: $${downPayment}\nInterest Rate: ${
-          interestRate * 100
-        }%\nLoan Term: ${loanTerm} years`
-      );
+      alert("Jumbo Loan form submitted.");
     }
   };
 
@@ -325,48 +239,21 @@ const MortgageForm: React.FC<Props> = ({
             </>
           )}
 
+          {/* Other types: render their forms */}
           {formData.loanType === "Interest Only" && (
-            <InterestOnly
-              homePrice={formData.homePrice}
-              downPayment={formData.downPayment}
-              interestRate={formData.interestRate}
-              interestOnlyPeriod={formData.interestOnlyPeriod}
-              totalTerm={formData.totalTerm}
-              onChange={handleChange}
-            />
+            <InterestOnly {...formData} onChange={handleChange} />
           )}
-
           {formData.loanType === "ARM" && (
-            <ARM
-              homePrice={formData.homePrice}
-              downPayment={formData.downPayment}
-              initialRate={formData.initialRate}
-              armType={formData.armType}
-              onChange={handleChange}
-            />
+            <ARM {...formData} onChange={handleChange} />
           )}
-
           {formData.loanType === "Balloon Payments" && (
-            <Balloon
-              homePrice={formData.homePrice}
-              downPayment={formData.downPayment}
-              interestRate={formData.interestRate}
-              loanTerm={formData.loanTerm}
-              balloonYear={formData.balloonYear}
-              onChange={handleChange}
-            />
+            <Balloon {...formData} onChange={handleChange} />
           )}
-
           {formData.loanType === "Jumbo Loans" && (
-            <Jumbo
-              homePrice={formData.homePrice}
-              downPayment={formData.downPayment}
-              interestRate={formData.interestRate}
-              loanTerm={formData.loanTerm}
-              onChange={handleChange}
-            />
+            <Jumbo {...formData} onChange={handleChange} />
           )}
 
+          {/* Optional Fields */}
           <tr style={{ height: "60px" }}>
             <td align="left">
               <label htmlFor="propertyTaxes">Property Taxes (Annual):</label>

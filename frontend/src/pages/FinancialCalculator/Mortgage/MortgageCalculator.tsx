@@ -11,13 +11,20 @@ const MortgageCalculator = () => {
     totalPayments: number;
     monthlyRate: number;
   } | null>(null);
-  const [, setTotalPayment] = useState(0);
+
+  const [, setTotalPayment] = useState(0); // not used directly, just setter
   const [principalPaid, setPrincipalPaid] = useState<number[]>([]);
   const [interestPaid, setInterestPaid] = useState<number[]>([]);
   const [loanBalance, setLoanBalance] = useState<number[]>([]);
-  const [propertyTaxes, setPropertyTaxes] = useState<string>("");
 
+  const [propertyTaxes, setPropertyTaxes] = useState<string>("");
+  const [hoaFees, setHOAFees] = useState<string>("");
+  const [insurance, setInsurance] = useState<string>("");
+
+  // Convert annual to monthly where needed
   const monthlyPropertyTax = propertyTaxes ? Number(propertyTaxes) / 12 : 0;
+  const monthlyInsurance = insurance ? Number(insurance) / 12 : 0;
+  const monthlyHOA = hoaFees ? Number(hoaFees) : 0;
 
   return (
     <>
@@ -28,7 +35,7 @@ const MortgageCalculator = () => {
         </h1>
 
         <div className="flex justify-center items-start gap-10 flex-wrap mb-10">
-          {/* Formulario y Pie Chart */}
+          {/* Form & Pie Chart */}
           <div>
             <MortgageForm
               setResultado={setResultado}
@@ -37,6 +44,8 @@ const MortgageCalculator = () => {
               setInterestPaid={setInterestPaid}
               setLoanBalance={setLoanBalance}
               setPropertyTaxes={setPropertyTaxes}
+              setHOAFees={setHOAFees}
+              setInsurance={setInsurance}
             />
           </div>
 
@@ -44,11 +53,13 @@ const MortgageCalculator = () => {
             <MonthlyBreakdownChart
               resultado={resultado}
               monthlyPropertyTax={monthlyPropertyTax}
+              monthlyHOA={monthlyHOA}
+              monthlyInsurance={monthlyInsurance}
             />
           </div>
         </div>
 
-        {/* Gráfico de Amortización debajo */}
+        {/* Amortization Chart */}
         <div className="flex justify-center">
           <AmortizationGraph
             principalPaid={principalPaid}

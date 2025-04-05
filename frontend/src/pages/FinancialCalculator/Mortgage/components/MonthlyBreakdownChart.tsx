@@ -9,29 +9,39 @@ interface Props {
     monthlyRate: number;
   } | null;
   monthlyPropertyTax?: number;
+  monthlyHOA?: number;
+  monthlyInsurance?: number;
 }
 
 const MonthlyBreakdownChart: React.FC<Props> = ({
   resultado,
   monthlyPropertyTax = 0,
+  monthlyHOA = 0,
+  monthlyInsurance = 0,
 }) => {
   const hasResult = resultado !== null;
   const basePayment = hasResult ? resultado!.monthlyPayment : 0;
-  const totalPayment = basePayment + monthlyPropertyTax;
 
-  const series =
-    hasResult && monthlyPropertyTax > 0
-      ? [basePayment, monthlyPropertyTax]
-      : hasResult
-      ? [basePayment]
-      : [0];
+  const totalPayment =
+    basePayment + monthlyPropertyTax + monthlyHOA + monthlyInsurance;
 
-  const labels =
-    hasResult && monthlyPropertyTax > 0
-      ? ["Principal + Interest", "Property Tax"]
-      : hasResult
-      ? ["Monthly Payment"]
-      : ["Principal + Interest"];
+  const series = hasResult
+    ? [
+        basePayment,
+        ...(monthlyPropertyTax > 0 ? [monthlyPropertyTax] : []),
+        ...(monthlyHOA > 0 ? [monthlyHOA] : []),
+        ...(monthlyInsurance > 0 ? [monthlyInsurance] : []),
+      ]
+    : [0];
+
+  const labels = hasResult
+    ? [
+        "Principal + Interest",
+        ...(monthlyPropertyTax > 0 ? ["Property Tax"] : []),
+        ...(monthlyHOA > 0 ? ["HOA Fees"] : []),
+        ...(monthlyInsurance > 0 ? ["Insurance"] : []),
+      ]
+    : ["Principal + Interest"];
 
   const formatCurrency = (val: number) =>
     val.toLocaleString("en-US", {
@@ -45,7 +55,7 @@ const MonthlyBreakdownChart: React.FC<Props> = ({
       type: "donut",
     },
     labels,
-    colors: ["#10b981", "#f59e0b"],
+    colors: ["#10b981", "#f59e0b", "#6366f1", "#ec4899"],
     legend: {
       show: true,
       position: "bottom",
@@ -90,6 +100,14 @@ const MonthlyBreakdownChart: React.FC<Props> = ({
         <p>
           <strong>Property Tax:</strong>{" "}
           {monthlyPropertyTax > 0 ? formatCurrency(monthlyPropertyTax) : "—"}
+        </p>
+        <p>
+          <strong>HOA Fees:</strong>{" "}
+          {monthlyHOA > 0 ? formatCurrency(monthlyHOA) : "—"}
+        </p>
+        <p>
+          <strong>Insurance:</strong>{" "}
+          {monthlyInsurance > 0 ? formatCurrency(monthlyInsurance) : "—"}
         </p>
         <hr className="my-2" />
         <p>
