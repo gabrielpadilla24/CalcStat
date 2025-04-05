@@ -33,9 +33,9 @@ const MortgageCalculator = () => {
           Mortgage Calculator
         </h1>
 
-        <div className="flex justify-center items-start gap-10 flex-wrap mb-10">
-          {/* Formulario */}
-          <div>
+        <div className="flex justify-center flex-wrap gap-x-10 mb-10">
+          {/* Formulario con min-width */}
+          <div className="min-w-[550px]">
             <MortgageForm
               setResultado={setResultado}
               setTotalPayment={setTotalPayment}
@@ -48,8 +48,8 @@ const MortgageCalculator = () => {
             />
           </div>
 
-          {/* Pie Chart */}
-          <div>
+          {/* Pie Chart más ancho y alineado */}
+          <div className="w-[750px]">
             <MonthlyBreakdownChart
               resultado={resultado}
               monthlyPropertyTax={monthlyPropertyTax}

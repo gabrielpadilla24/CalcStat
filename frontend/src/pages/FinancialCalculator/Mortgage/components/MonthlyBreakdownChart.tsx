@@ -76,64 +76,71 @@ const MonthlyBreakdownChart: React.FC<Props> = ({
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-6 w-full max-w-[400px]">
-      <h2 className="text-xl font-semibold text-center mb-4">
+    <div className="bg-white rounded-lg shadow-md p-6 w-full max-w-[900px] h-[515px]">
+      <h2 className="text-xl font-semibold text-center mb-6">
         Monthly Payment Chart
       </h2>
+
       <div
-        className={`transition-opacity duration-700 ease-in-out ${
+        className={`transition-opacity duration-700 ease-in-out flex flex-col md:flex-row md:items-start md:justify-between gap-6 ${
           hasResult ? "opacity-100" : "opacity-0"
         }`}
       >
-        <ReactApexChart
-          options={options}
-          series={series}
-          type="donut"
-          height={300}
-        />
-      </div>
-
-      {/* Highlighted Total */}
-      <div className="mt-6 flex justify-center">
-        <div className="bg-green-100 border border-green-300 text-green-700 px-4 py-3 rounded-lg text-center shadow-sm w-full max-w-xs text-lg font-semibold">
-          Total Monthly Payment:{" "}
-          <span className="block text-2xl mt-1 font-bold">
-            {hasResult ? formatCurrency(totalPayment) : "—"}
-          </span>
+        {/* Donut Chart */}
+        <div className="flex-1 flex justify-center">
+          <ReactApexChart
+            options={options}
+            series={series}
+            type="donut"
+            height={300}
+          />
         </div>
-      </div>
 
-      {/* Breakdown */}
-      <div className="mt-6 text-sm text-gray-700">
-        <p>
-          <strong>Principal + Interest:</strong>{" "}
-          {hasResult ? formatCurrency(basePayment) : "—"}
-        </p>
-        <p>
-          <strong>Property Tax:</strong>{" "}
-          {monthlyPropertyTax > 0 ? formatCurrency(monthlyPropertyTax) : "—"}
-        </p>
-        <p>
-          <strong>HOA Fees:</strong>{" "}
-          {monthlyHOA > 0 ? formatCurrency(monthlyHOA) : "—"}
-        </p>
-        <p>
-          <strong>Insurance:</strong>{" "}
-          {monthlyInsurance > 0 ? formatCurrency(monthlyInsurance) : "—"}
-        </p>
-        <hr className="my-2" />
-        <p>
-          <strong>Loan Amount:</strong>{" "}
-          {hasResult ? `$${resultado!.loanAmount.toLocaleString()}` : "—"}
-        </p>
-        <p>
-          <strong>Total Payments:</strong>{" "}
-          {hasResult ? resultado!.totalPayments : "—"} months
-        </p>
-        <p>
-          <strong>Monthly Interest Rate:</strong>{" "}
-          {hasResult ? `${resultado!.monthlyRate.toFixed(4)}%` : "—"}
-        </p>
+        {/* Datos a la derecha */}
+        <div className="flex-1">
+          {/* Highlighted Total */}
+          <div className="bg-green-100 border border-green-300 text-green-700 px-4 py-3 rounded-lg text-center shadow-sm w-full text-lg font-semibold mb-4">
+            Total Monthly Payment:{" "}
+            <span className="block text-2xl mt-1 font-bold">
+              {hasResult ? formatCurrency(totalPayment) : "—"}
+            </span>
+          </div>
+
+          {/* Breakdown */}
+          <div className="text-sm text-gray-700 space-y-1">
+            <p>
+              <strong>Principal + Interest:</strong>{" "}
+              {hasResult ? formatCurrency(basePayment) : "—"}
+            </p>
+            <p>
+              <strong>Property Tax:</strong>{" "}
+              {monthlyPropertyTax > 0
+                ? formatCurrency(monthlyPropertyTax)
+                : "—"}
+            </p>
+            <p>
+              <strong>HOA Fees:</strong>{" "}
+              {monthlyHOA > 0 ? formatCurrency(monthlyHOA) : "—"}
+            </p>
+            <p>
+              <strong>Insurance:</strong>{" "}
+              {monthlyInsurance > 0 ? formatCurrency(monthlyInsurance) : "—"}
+            </p>
+            <hr className="my-2" />
+            <p>
+              <strong>Loan Amount:</strong>{" "}
+              {hasResult ? `$${resultado!.loanAmount.toLocaleString()}` : "—"}
+            </p>
+            <p>
+              <strong>Total Payments:</strong>{" "}
+              {hasResult ? resultado!.totalPayments : "—"} months
+            </p>
+            <p>
+              <strong>Monthly Interest Rate:</strong>{" "}
+              {hasResult ? `${resultado!.monthlyRate.toFixed(4)}%` : "—"}
+            </p>
+          </div>
+        </div>
       </div>
     </div>
   );
