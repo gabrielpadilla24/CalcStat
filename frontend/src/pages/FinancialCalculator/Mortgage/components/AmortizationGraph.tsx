@@ -12,7 +12,7 @@ const AmortizationGraph: React.FC<AmortizationGraphProps> = ({
   interestPaid,
   loanBalance,
 }) => {
-  const years = principalPaid.map((_, i) => `Year ${i + 1}`);
+  const years = principalPaid.map((_, i) => `Year ${i}`);
 
   const formatCurrency = (val: number): string =>
     val.toLocaleString("en-US", {
