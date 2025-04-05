@@ -11,7 +11,7 @@ interface Props {
   monthlyPropertyTax?: number;
   monthlyHOA?: number;
   monthlyInsurance?: number;
-  scrollToGraph: () => void; // <- usar esta prop correctamente
+  scrollToGraph: () => void;
 }
 
 const MonthlyBreakdownChart: React.FC<Props> = ({
@@ -19,7 +19,7 @@ const MonthlyBreakdownChart: React.FC<Props> = ({
   monthlyPropertyTax = 0,
   monthlyHOA = 0,
   monthlyInsurance = 0,
-  scrollToGraph, // <- asegúrate de incluirla aquí
+  scrollToGraph,
 }) => {
   const hasResult = resultado !== null;
   const basePayment = hasResult ? resultado!.monthlyPayment : 0;
@@ -45,6 +45,8 @@ const MonthlyBreakdownChart: React.FC<Props> = ({
       ]
     : ["Principal + Interest"];
 
+  const colors = ["#10b981", "#f59e0b", "#6366f1", "#ec4899"];
+
   const formatCurrency = (val: number) =>
     val.toLocaleString("en-US", {
       style: "currency",
@@ -57,10 +59,9 @@ const MonthlyBreakdownChart: React.FC<Props> = ({
       type: "donut",
     },
     labels,
-    colors: ["#10b981", "#f59e0b", "#6366f1", "#ec4899"],
+    colors,
     legend: {
-      show: true,
-      position: "bottom",
+      show: false, // 👈 hide default legend
     },
     tooltip: {
       y: {
@@ -78,16 +79,18 @@ const MonthlyBreakdownChart: React.FC<Props> = ({
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-6 w-full max-w-[900px] h-[515px]">
+    <div className="bg-white rounded-lg shadow-md p-6 w-full max-w-[900px] h-[540px]">
       <h2 className="text-xl font-semibold text-center mb-4">
         Monthly Payment Chart
       </h2>
+
       <div
         className={`transition-opacity duration-700 ease-in-out ${
           hasResult ? "opacity-100" : "opacity-0"
         }`}
       >
         <div className="flex flex-col md:flex-row gap-6 justify-between items-start">
+          {/* Donut Chart */}
           <div className="flex-1 flex justify-center">
             <ReactApexChart
               options={options}
@@ -97,7 +100,7 @@ const MonthlyBreakdownChart: React.FC<Props> = ({
             />
           </div>
 
-          {/* Text Details */}
+          {/* Payment Info */}
           <div className="flex-1 text-sm text-gray-700 space-y-1">
             <div className="bg-green-100 border border-green-300 text-green-700 px-4 py-3 rounded-lg text-center shadow-sm text-lg font-semibold mb-4">
               Total Monthly Payment:
@@ -138,13 +141,28 @@ const MonthlyBreakdownChart: React.FC<Props> = ({
             </p>
           </div>
         </div>
+
+        {/* Custom Legend */}
+        {hasResult && (
+          <div className="flex justify-center gap-6 mt-6 flex-wrap text-sm font-medium">
+            {series.map((_, index) => (
+              <div key={index} className="flex items-center gap-2">
+                <div
+                  className="w-3 h-3 rounded-full"
+                  style={{ backgroundColor: colors[index] }}
+                ></div>
+                {labels[index]}
+              </div>
+            ))}
+          </div>
+        )}
       </div>
 
-      {/* Scroll Button inside the card */}
+      {/* Scroll Button */}
       <div className="pt-6 text-center">
         <button
           onClick={scrollToGraph}
-          className="text-gray-600 hover:text-gray-800 transition-colors text-sm underline underline-offset-4 mt-20"
+          className="text-gray-600 hover:text-gray-800 transition-colors text-sm underline underline-offset-4"
         >
           ↓ See Amortization Graph
         </button>
