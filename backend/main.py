@@ -4,6 +4,7 @@ from pydantic import BaseModel
 
 app = FastAPI()
 
+# CORS para permitir conexión con frontend
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:5173"],
@@ -12,6 +13,7 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# MODELOS
 
 class ExponentialData(BaseModel):
     initialValue: float
@@ -21,6 +23,14 @@ class ExponentialData(BaseModel):
     constantValue: float
     frequency: str  # "año" o "mes"
 
+class FixedRateData(BaseModel):
+    homePrice: float
+    downPayment: float
+    interestRate: float  # anual en %
+    duration: int  # años
+
+
+# ENDPOINT DE INTERÉS COMPUESTO
 @app.post("/compoundinterest")
 def calcular(data: ExponentialData):
     valores = [round(data.initialValue, 2)]  # Año 0
@@ -50,12 +60,7 @@ def calcular(data: ExponentialData):
         "aportesPorAño": aportes,
     }
 
-
-class FixedRateData(BaseModel):
-    homePrice: float
-    downPayment: float
-    interestRate: float  # anual en %
-    duration: int  # años
+# ENDPOINT DE HIPOTECA A TASA FIJA
 @app.post("/fixedrate")
 def calcular_fixed_rate(data: FixedRateData):
     loan_amount = data.homePrice - data.downPayment
@@ -63,15 +68,51 @@ def calcular_fixed_rate(data: FixedRateData):
     monthly_rate = annual_rate / 12
     total_payments = data.duration * 12
 
+    # Cálculo de cuota mensual
     if monthly_rate == 0:
         monthly_payment = loan_amount / total_payments
     else:
         monthly_payment = loan_amount * (monthly_rate * (1 + monthly_rate) ** total_payments) / ((1 + monthly_rate) ** total_payments - 1)
 
+    # Amortización acumulada por año
+    principal_paid = []
+    interest_paid = []
+    loan_balance = []
+
+    balance = loan_amount
+    yearly_principal = 0
+    yearly_interest = 0
+
+    # Nuevos acumuladores
+    acum_principal = 0
+    acum_interest = 0
+
+    for month in range(1, total_payments + 1):
+        interest = balance * monthly_rate
+        principal = monthly_payment - interest
+        balance -= principal
+
+        yearly_principal += principal
+        yearly_interest += interest
+
+        # Al final de cada año o al final del préstamo
+        if month % 12 == 0 or month == total_payments:
+            acum_principal += yearly_principal
+            acum_interest += yearly_interest
+
+            principal_paid.append(round(acum_principal, 2))
+            interest_paid.append(round(acum_interest, 2))
+            loan_balance.append(round(balance if balance > 0 else 0, 2))
+
+            yearly_principal = 0
+            yearly_interest = 0
+
     return {
         "monthlyPayment": round(monthly_payment, 2),
         "loanAmount": round(loan_amount, 2),
         "totalPayments": total_payments,
-        "monthlyRate": round(monthly_rate * 100, 4)
+        "monthlyRate": round(monthly_rate * 100, 4),
+        "principalPaid": principal_paid,
+        "interestPaid": interest_paid,
+        "loanBalance": loan_balance,
     }
-

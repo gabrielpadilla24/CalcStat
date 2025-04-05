@@ -16,9 +16,18 @@ interface Props {
       monthlyRate: number;
     } | null
   ) => void; // ✅ acepta null
+  setPrincipalPaid: (arr: number[]) => void;
+  setInterestPaid: (arr: number[]) => void;
+  setLoanBalance: (arr: number[]) => void;
 }
 
-const MortgageForm: React.FC<Props> = ({ setTotalPayment, setResultado }) => {
+const MortgageForm: React.FC<Props> = ({
+  setTotalPayment,
+  setResultado,
+  setPrincipalPaid,
+  setInterestPaid,
+  setLoanBalance,
+}) => {
   const [formData, setFormData] = useState({
     loanType: "",
     homePrice: "",
@@ -98,8 +107,15 @@ const MortgageForm: React.FC<Props> = ({ setTotalPayment, setResultado }) => {
           return res.json();
         })
         .then((data) => {
-          const { monthlyPayment, loanAmount, totalPayments, monthlyRate } =
-            data;
+          const {
+            monthlyPayment,
+            loanAmount,
+            totalPayments,
+            monthlyRate,
+            principalPaid,
+            interestPaid,
+            loanBalance,
+          } = data;
 
           setResultado({
             monthlyPayment,
@@ -107,7 +123,11 @@ const MortgageForm: React.FC<Props> = ({ setTotalPayment, setResultado }) => {
             totalPayments,
             monthlyRate,
           });
+
           setTotalPayment(monthlyPayment);
+          setPrincipalPaid(principalPaid);
+          setInterestPaid(interestPaid);
+          setLoanBalance(loanBalance);
         })
         .catch((err) => {
           console.error(err);
