@@ -2,33 +2,64 @@ import React from "react";
 import ReactApexChart from "react-apexcharts";
 
 interface Props {
-  totalPayment: number;
   resultado: {
     monthlyPayment: number;
     loanAmount: number;
     totalPayments: number;
     monthlyRate: number;
   } | null;
+  monthlyPropertyTax?: number;
 }
 
 const MonthlyBreakdownChart: React.FC<Props> = ({
-  totalPayment,
   resultado,
+  monthlyPropertyTax = 0,
 }) => {
-  const series = [totalPayment];
+  const hasResult = resultado !== null;
+  const basePayment = hasResult ? resultado!.monthlyPayment : 0;
+  const totalPayment = basePayment + monthlyPropertyTax;
+
+  const series =
+    hasResult && monthlyPropertyTax > 0
+      ? [basePayment, monthlyPropertyTax]
+      : hasResult
+      ? [basePayment]
+      : [0];
+
+  const labels =
+    hasResult && monthlyPropertyTax > 0
+      ? ["Principal + Interest", "Property Tax"]
+      : hasResult
+      ? ["Monthly Payment"]
+      : ["Principal + Interest"];
+
+  const formatCurrency = (val: number) =>
+    val.toLocaleString("en-US", {
+      style: "currency",
+      currency: "USD",
+      minimumFractionDigits: 2,
+    });
 
   const options: ApexCharts.ApexOptions = {
-    chart: { type: "donut" },
-    labels: ["Monthly Payment"],
-    colors: ["#10b981"],
-    legend: { show: false },
+    chart: {
+      type: "donut",
+    },
+    labels,
+    colors: ["#10b981", "#f59e0b"],
+    legend: {
+      show: true,
+      position: "bottom",
+    },
+    tooltip: {
+      y: {
+        formatter: formatCurrency,
+      },
+    },
     responsive: [
       {
         breakpoint: 480,
         options: {
-          chart: {
-            width: 250,
-          },
+          chart: { width: 250 },
         },
       },
     ],
@@ -47,16 +78,33 @@ const MonthlyBreakdownChart: React.FC<Props> = ({
         height={300}
       />
 
-      {resultado && (
-        <div className="mt-6 text-center text-green-800 bg-green-50 border border-green-400 rounded-lg p-4">
-          <p className="font-semibold">
-            Monthly Payment: ${resultado.monthlyPayment.toLocaleString()}
-          </p>
-          <p>Loan Amount: ${resultado.loanAmount.toLocaleString()}</p>
-          <p>Total Payments: {resultado.totalPayments}</p>
-          <p>Monthly Interest Rate: {resultado.monthlyRate}%</p>
-        </div>
-      )}
+      <div className="mt-6 text-sm text-gray-700">
+        <p>
+          <strong>Total Monthly Payment:</strong>{" "}
+          {hasResult ? formatCurrency(totalPayment) : "—"}
+        </p>
+        <p>
+          <strong>Principal + Interest:</strong>{" "}
+          {hasResult ? formatCurrency(basePayment) : "—"}
+        </p>
+        <p>
+          <strong>Property Tax:</strong>{" "}
+          {monthlyPropertyTax > 0 ? formatCurrency(monthlyPropertyTax) : "—"}
+        </p>
+        <hr className="my-2" />
+        <p>
+          <strong>Loan Amount:</strong>{" "}
+          {hasResult ? `$${resultado!.loanAmount.toLocaleString()}` : "—"}
+        </p>
+        <p>
+          <strong>Total Payments:</strong>{" "}
+          {hasResult ? resultado!.totalPayments : "—"} months
+        </p>
+        <p>
+          <strong>Monthly Interest Rate:</strong>{" "}
+          {hasResult ? `${resultado!.monthlyRate.toFixed(4)}%` : "—"}
+        </p>
+      </div>
     </div>
   );
 };

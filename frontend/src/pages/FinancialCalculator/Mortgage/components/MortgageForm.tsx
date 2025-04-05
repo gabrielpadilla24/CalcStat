@@ -15,10 +15,11 @@ interface Props {
       totalPayments: number;
       monthlyRate: number;
     } | null
-  ) => void; // ✅ acepta null
+  ) => void;
   setPrincipalPaid: (arr: number[]) => void;
   setInterestPaid: (arr: number[]) => void;
   setLoanBalance: (arr: number[]) => void;
+  setPropertyTaxes: (value: string) => void;
 }
 
 const MortgageForm: React.FC<Props> = ({
@@ -27,6 +28,7 @@ const MortgageForm: React.FC<Props> = ({
   setPrincipalPaid,
   setInterestPaid,
   setLoanBalance,
+  setPropertyTaxes,
 }) => {
   const [formData, setFormData] = useState({
     loanType: "",
@@ -55,6 +57,10 @@ const MortgageForm: React.FC<Props> = ({
     }));
     setResultado(null);
     setTotalPayment(0);
+
+    if (name === "propertyTaxes") {
+      setPropertyTaxes(value);
+    }
   };
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -256,7 +262,6 @@ const MortgageForm: React.FC<Props> = ({
     >
       <table style={{ width: "100%", borderSpacing: "12px" }}>
         <tbody>
-          {/* Mortgage Type */}
           <tr style={{ height: "60px" }}>
             <td align="left" style={{ width: "50%" }}>
               <label htmlFor="loanType">Mortgage Type:</label>
@@ -284,7 +289,6 @@ const MortgageForm: React.FC<Props> = ({
             </td>
           </tr>
 
-          {/* Dynamic Fields */}
           {formData.loanType === "Fixed Rate" && (
             <>
               <tr style={{ height: "60px" }}>
@@ -320,6 +324,7 @@ const MortgageForm: React.FC<Props> = ({
               />
             </>
           )}
+
           {formData.loanType === "Interest Only" && (
             <InterestOnly
               homePrice={formData.homePrice}
@@ -330,6 +335,7 @@ const MortgageForm: React.FC<Props> = ({
               onChange={handleChange}
             />
           )}
+
           {formData.loanType === "ARM" && (
             <ARM
               homePrice={formData.homePrice}
@@ -339,6 +345,7 @@ const MortgageForm: React.FC<Props> = ({
               onChange={handleChange}
             />
           )}
+
           {formData.loanType === "Balloon Payments" && (
             <Balloon
               homePrice={formData.homePrice}
@@ -349,6 +356,7 @@ const MortgageForm: React.FC<Props> = ({
               onChange={handleChange}
             />
           )}
+
           {formData.loanType === "Jumbo Loans" && (
             <Jumbo
               homePrice={formData.homePrice}
@@ -359,7 +367,6 @@ const MortgageForm: React.FC<Props> = ({
             />
           )}
 
-          {/* Optional Fields */}
           <tr style={{ height: "60px" }}>
             <td align="left">
               <label htmlFor="propertyTaxes">Property Taxes (Annual):</label>
@@ -381,6 +388,7 @@ const MortgageForm: React.FC<Props> = ({
               />
             </td>
           </tr>
+
           <tr style={{ height: "60px" }}>
             <td align="left">
               <label htmlFor="hoaFees">HOA Fees (Monthly):</label>
@@ -402,6 +410,7 @@ const MortgageForm: React.FC<Props> = ({
               />
             </td>
           </tr>
+
           <tr style={{ height: "60px" }}>
             <td align="left">
               <label htmlFor="insurance">Insurance (Annual):</label>
