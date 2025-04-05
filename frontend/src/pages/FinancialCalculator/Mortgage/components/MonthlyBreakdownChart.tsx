@@ -80,13 +80,18 @@ const MonthlyBreakdownChart: React.FC<Props> = ({
       <h2 className="text-xl font-semibold text-center mb-4">
         Monthly Payment Chart
       </h2>
-
-      <ReactApexChart
-        options={options}
-        series={series}
-        type="donut"
-        height={300}
-      />
+      <div
+        className={`transition-opacity duration-700 ease-in-out ${
+          hasResult ? "opacity-100" : "opacity-0"
+        }`}
+      >
+        <ReactApexChart
+          options={options}
+          series={series}
+          type="donut"
+          height={300}
+        />
+      </div>
 
       {/* Highlighted Total */}
       <div className="mt-6 flex justify-center">
