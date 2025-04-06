@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import SubmitButton from "@/components/SubmitButton";
 import FRM from "./FRM";
-import ARM from "./ARM";
+import ARM from "./ARMForm";
 // import InterestOnly from "./InterestOnly";
 // import Balloon from "./Balloon";
 // import Jumbo from "./Jumbo";

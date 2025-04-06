@@ -3,6 +3,7 @@ import NavBar from "@/components/NavBar";
 import MortgageForm from "./components/MortgageForm";
 import MonthlyBreakdownChart from "./components/MonthlyBreakdownChart";
 import AmortizationGraph from "./components/AmortizationGraph";
+import ARMExplanation from "./components/ARMExplanation";
 
 const MortgageCalculator = () => {
   const [resultado, setResultado] = useState<{
@@ -75,6 +76,11 @@ const MortgageCalculator = () => {
             interestPaid={interestPaid}
             loanBalance={loanBalance}
           />
+        </div>
+
+        {/* Explicación ARM como card */}
+        <div className="mt-12">
+          <ARMExplanation />
         </div>
       </div>
     </>
