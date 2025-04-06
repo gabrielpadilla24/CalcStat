@@ -7,7 +7,7 @@ interface Props {
     loanAmount: number;
     totalPayments: number;
     monthlyRate: number;
-    fixedYearsMessage?: string; // ← Nuevo
+    fixedYearsMessage?: string;
   } | null;
   monthlyPropertyTax?: number;
   monthlyHOA?: number;
@@ -25,7 +25,6 @@ const MonthlyBreakdownChart: React.FC<Props> = ({
   const hasResult = resultado !== null;
   const basePayment = hasResult ? resultado!.monthlyPayment : 0;
 
-  // Saneamiento: valores negativos se consideran 0
   const propertyTax = monthlyPropertyTax > 0 ? monthlyPropertyTax : 0;
   const hoa = monthlyHOA > 0 ? monthlyHOA : 0;
   const insurance = monthlyInsurance > 0 ? monthlyInsurance : 0;
@@ -86,20 +85,19 @@ const MonthlyBreakdownChart: React.FC<Props> = ({
   return (
     <div
       className={`bg-white rounded-lg shadow-md p-6 w-[600px] ${
-        resultado?.fixedYearsMessage ? "h-[576px]" : "h-[516px]"
-      }`}
+        resultado?.fixedYearsMessage ? "min-h-[576px]" : "min-h-[516px]"
+      } flex flex-col justify-between`}
     >
-      {" "}
       <h2 className="text-xl font-semibold text-center mb-4">
         Monthly Payment Chart
       </h2>
+
       <div
         className={`transition-opacity duration-700 ease-in-out ${
           hasResult ? "opacity-100" : "opacity-0"
         }`}
       >
         <div className="flex flex-col md:flex-row gap-6 justify-between items-start">
-          {/* Donut Chart */}
           <div className="flex-1 flex justify-center">
             <ReactApexChart
               options={options}
@@ -109,7 +107,6 @@ const MonthlyBreakdownChart: React.FC<Props> = ({
             />
           </div>
 
-          {/* Payment Info */}
           <div className="flex-1 text-sm text-gray-700 space-y-1">
             <div className="bg-green-100 border border-green-300 text-green-700 px-4 py-4 rounded-lg text-center shadow-sm mb-4">
               <div className="text-lg font-semibold leading-tight">
@@ -120,11 +117,9 @@ const MonthlyBreakdownChart: React.FC<Props> = ({
                   (first {resultado.fixedYearsMessage.match(/\d+/)?.[0]} years)
                 </div>
               )}
-
               <div className="text-2xl font-bold mt-1">
                 {hasResult ? formatCurrency(totalPayment) : "—"}
               </div>
-
               {resultado?.fixedYearsMessage && (
                 <p className="text-sm text-gray-600 mt-2 italic hover:underline cursor-pointer">
                   Learn more about ARM’s
@@ -178,11 +173,12 @@ const MonthlyBreakdownChart: React.FC<Props> = ({
           </div>
         )}
       </div>
+
       {/* Scroll Button */}
-      <div className="pt-6 text-center">
+      <div className={`pt-6 text-center`}>
         <button
           onClick={scrollToGraph}
-          className="text-gray-600 hover:text-gray-800 transition-colors text-sm underline underline-offset-4 mt-10"
+          className="text-gray-600 hover:text-gray-800 transition-colors text-sm underline underline-offset-4"
         >
           ↓ See Amortization Graph
         </button>
