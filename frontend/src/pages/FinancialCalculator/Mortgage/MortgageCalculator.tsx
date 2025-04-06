@@ -41,6 +41,12 @@ const MortgageCalculator = () => {
       armSection.scrollIntoView({ behavior: "smooth" });
     }
   };
+  const scrollToInterestOnly = () => {
+    const interestOnlySection = document.querySelector(".mt-8");
+    if (interestOnlySection) {
+      interestOnlySection.scrollIntoView({ behavior: "smooth" });
+    }
+  };
 
   const monthlyPropertyTax = propertyTaxes ? Number(propertyTaxes) / 12 : 0;
   const monthlyHOA = hoaFees ? Number(hoaFees) : 0;
@@ -79,6 +85,7 @@ const MortgageCalculator = () => {
               monthlyInsurance={monthlyInsurance}
               scrollToGraph={scrollToGraph}
               scrollToARM={scrollToARM}
+              scrollToInterestOnly={scrollToInterestOnly} // Cambiado a scrollToARM
             />
           </div>
         </div>
@@ -101,7 +108,7 @@ const MortgageCalculator = () => {
 
         {/* Explicación de Interés Solo */}
         {loanType === "Interest Only" && (
-          <div className="mt-8">
+          <div className="mt-8" id="interest-only-explanation">
             <InterestOnlyExplanation />
           </div>
         )}

@@ -15,6 +15,7 @@ interface Props {
   monthlyInsurance?: number;
   scrollToGraph: () => void;
   scrollToARM: () => void;
+  scrollToInterestOnly?: () => void;
 }
 
 const MonthlyBreakdownChart: React.FC<Props> = ({
@@ -24,6 +25,7 @@ const MonthlyBreakdownChart: React.FC<Props> = ({
   monthlyInsurance = 0,
   scrollToGraph,
   scrollToARM,
+  scrollToInterestOnly,
 }) => {
   const isInterestOnlyWithTwoPayments = resultado?.secondPayment !== undefined;
   const [selectedTab, setSelectedTab] = useState<"initial" | "after">(
@@ -147,14 +149,19 @@ const MonthlyBreakdownChart: React.FC<Props> = ({
               <div className="text-lg font-semibold leading-tight">
                 Monthly Payment
               </div>
+
+              {/* Si es ARM con mensaje */}
               {resultado?.fixedYearsMessage && selectedTab === "initial" && (
                 <div className="text-sm text-gray-600 italic">
                   (first {resultado.fixedYearsMessage.match(/\d+/)?.[0]} years)
                 </div>
               )}
+
               <div className="text-2xl font-bold mt-1">
                 {hasResult ? formatCurrency(totalPayment) : "—"}
               </div>
+
+              {/* Mostrar scrollToARM o scrollToInterestOnly según tipo */}
               {resultado?.fixedYearsMessage && selectedTab === "initial" && (
                 <div className={`pt-6 text-center`}>
                   <button
@@ -162,6 +169,17 @@ const MonthlyBreakdownChart: React.FC<Props> = ({
                     className="text-gray-600 hover:text-gray-800 transition-colors text-sm italic"
                   >
                     Learn More About ARM's
+                  </button>
+                </div>
+              )}
+
+              {isInterestOnlyWithTwoPayments && selectedTab === "initial" && (
+                <div className={`pt-6 text-center`}>
+                  <button
+                    onClick={scrollToInterestOnly}
+                    className="text-gray-600 hover:text-gray-800 transition-colors text-sm italic"
+                  >
+                    Learn More About Interest-Only Mortgages
                   </button>
                 </div>
               )}
