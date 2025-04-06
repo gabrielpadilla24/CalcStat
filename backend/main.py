@@ -136,6 +136,12 @@ def calcular_arm(data: ARMData):
     monthly_rate = annual_rate / 12
     total_payments = data.loanTerm * 12
 
+    # Obtener años fijos desde el tipo ARM (ej. "5/1", "7/6")
+    fixed_years = int(data.armType.split("/")[0])
+    fixedYearsMessage = (
+        f"The monthly payment below applies to the first {fixed_years} years only."
+    )
+
     if monthly_rate == 0:
         monthly_payment = loan_amount / total_payments
     else:
@@ -179,4 +185,5 @@ def calcular_arm(data: ARMData):
         "principalPaid": principal_paid,
         "interestPaid": interest_paid,
         "loanBalance": loan_balance,
+        "fixedYearsMessage": fixedYearsMessage,
     }

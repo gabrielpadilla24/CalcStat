@@ -7,6 +7,7 @@ interface Props {
     loanAmount: number;
     totalPayments: number;
     monthlyRate: number;
+    fixedYearsMessage?: string; // ← Nuevo
   } | null;
   monthlyPropertyTax?: number;
   monthlyHOA?: number;
@@ -106,12 +107,26 @@ const MonthlyBreakdownChart: React.FC<Props> = ({
 
           {/* Payment Info */}
           <div className="flex-1 text-sm text-gray-700 space-y-1">
-            <div className="bg-green-100 border border-green-300 text-green-700 px-4 py-3 rounded-lg text-center shadow-sm text-lg font-semibold mb-4">
-              Total Monthly Payment:
-              <span className="block text-2xl mt-1 font-bold">
+            <div className="bg-green-100 border border-green-300 text-green-700 px-4 py-3 rounded-lg text-center shadow-sm mb-4">
+              <div className="text-lg font-semibold">
+                {resultado?.fixedYearsMessage
+                  ? "Monthly Payment (first " +
+                    resultado.fixedYearsMessage.match(/\d+/)?.[0] +
+                    " years)"
+                  : "Total Monthly Payment:"}
+              </div>
+
+              <div className="text-2xl font-bold mt-1">
                 {hasResult ? formatCurrency(totalPayment) : "—"}
-              </span>
+              </div>
+
+              {resultado?.fixedYearsMessage && (
+                <p className="text-sm text-gray-600 mt-2 italic hover:underline cursor-pointer">
+                  Learn more about ARM’s
+                </p>
+              )}
             </div>
+
             <p>
               <strong>Principal + Interest:</strong>{" "}
               {hasResult ? formatCurrency(basePayment) : "—"}

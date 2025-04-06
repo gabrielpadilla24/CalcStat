@@ -14,6 +14,7 @@ interface Props {
       loanAmount: number;
       totalPayments: number;
       monthlyRate: number;
+      fixedYearsMessage?: string;
     } | null
   ) => void;
   setPrincipalPaid: (arr: number[]) => void;
@@ -201,6 +202,7 @@ const MortgageForm: React.FC<Props> = ({
             principalPaid,
             interestPaid,
             loanBalance,
+            fixedYearsMessage, // <- nuevo
           } = data;
 
           setResultado({
@@ -208,13 +210,16 @@ const MortgageForm: React.FC<Props> = ({
             loanAmount,
             totalPayments,
             monthlyRate,
+            fixedYearsMessage,
           });
 
+          console.log(fixedYearsMessage); // <- puedes mostrarlo con un `alert` o colocarlo en el UI
           setTotalPayment(monthlyPayment);
           setPrincipalPaid(principalPaid);
           setInterestPaid(interestPaid);
           setLoanBalance(loanBalance);
         })
+
         .catch((err) => {
           console.error(err);
           alert("There was an error calculating the ARM payment.");
