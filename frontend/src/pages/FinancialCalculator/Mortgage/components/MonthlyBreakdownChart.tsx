@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import ReactApexChart from "react-apexcharts";
 
 interface Props {
@@ -8,6 +8,7 @@ interface Props {
     totalPayments: number;
     monthlyRate: number;
     fixedYearsMessage?: string;
+    secondPayment?: number; // Pago mensual luego del interest-only period
   } | null;
   monthlyPropertyTax?: number;
   monthlyHOA?: number;
@@ -24,18 +25,25 @@ const MonthlyBreakdownChart: React.FC<Props> = ({
   scrollToGraph,
   scrollToARM,
 }) => {
+  const [selectedTab, setSelectedTab] = useState<"initial" | "after">(
+    "initial"
+  );
+
   const hasResult = resultado !== null;
-  const basePayment = hasResult ? resultado!.monthlyPayment : 0;
+  const paymentToDisplay =
+    selectedTab === "initial"
+      ? resultado?.monthlyPayment || 0
+      : resultado?.secondPayment || 0;
 
   const propertyTax = monthlyPropertyTax > 0 ? monthlyPropertyTax : 0;
   const hoa = monthlyHOA > 0 ? monthlyHOA : 0;
   const insurance = monthlyInsurance > 0 ? monthlyInsurance : 0;
 
-  const totalPayment = basePayment + propertyTax + hoa + insurance;
+  const totalPayment = paymentToDisplay + propertyTax + hoa + insurance;
 
   const series = hasResult
     ? [
-        basePayment,
+        paymentToDisplay,
         ...(propertyTax > 0 ? [propertyTax] : []),
         ...(hoa > 0 ? [hoa] : []),
         ...(insurance > 0 ? [insurance] : []),
@@ -84,15 +92,41 @@ const MonthlyBreakdownChart: React.FC<Props> = ({
     ],
   };
 
+  const isInterestOnlyWithTwoPayments = resultado?.secondPayment !== undefined;
+
   return (
     <div
-      className={`bg-white rounded-lg shadow-md p-6 w-[600px] ${
-        resultado?.fixedYearsMessage ? "min-h-[576px]" : "min-h-[516px]"
-      } flex flex-col justify-between`}
+      className={`bg-white rounded-lg shadow-md p-6 w-[600px] flex flex-col justify-between`}
     >
       <h2 className="text-xl font-semibold text-center mb-4">
         Monthly Payment Chart
       </h2>
+
+      {/* Tabs */}
+      {isInterestOnlyWithTwoPayments && (
+        <div className="flex justify-center mb-4">
+          <button
+            className={`px-4 py-2 rounded-l-lg border ${
+              selectedTab === "initial"
+                ? "bg-blue-600 text-white"
+                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+            }`}
+            onClick={() => setSelectedTab("initial")}
+          >
+            Interest-Only Period
+          </button>
+          <button
+            className={`px-4 py-2 rounded-r-lg border ${
+              selectedTab === "after"
+                ? "bg-blue-600 text-white"
+                : "bg-gray-100 text-gray-700 hover:bg-gray-200"
+            }`}
+            onClick={() => setSelectedTab("after")}
+          >
+            After Interest-Only
+          </button>
+        </div>
+      )}
 
       <div
         className={`transition-opacity duration-700 ease-in-out ${
@@ -114,7 +148,7 @@ const MonthlyBreakdownChart: React.FC<Props> = ({
               <div className="text-lg font-semibold leading-tight">
                 Monthly Payment
               </div>
-              {resultado?.fixedYearsMessage && (
+              {resultado?.fixedYearsMessage && selectedTab === "initial" && (
                 <div className="text-sm text-gray-600 italic">
                   (first {resultado.fixedYearsMessage.match(/\d+/)?.[0]} years)
                 </div>
@@ -122,7 +156,7 @@ const MonthlyBreakdownChart: React.FC<Props> = ({
               <div className="text-2xl font-bold mt-1">
                 {hasResult ? formatCurrency(totalPayment) : "—"}
               </div>
-              {resultado?.fixedYearsMessage && (
+              {resultado?.fixedYearsMessage && selectedTab === "initial" && (
                 <div className={`pt-6 text-center`}>
                   <button
                     onClick={scrollToARM}
@@ -136,7 +170,7 @@ const MonthlyBreakdownChart: React.FC<Props> = ({
 
             <p>
               <strong>Principal + Interest:</strong>{" "}
-              {hasResult ? formatCurrency(basePayment) : "—"}
+              {hasResult ? formatCurrency(paymentToDisplay) : "—"}
             </p>
             <p>
               <strong>Property Tax:</strong>{" "}
@@ -181,7 +215,6 @@ const MonthlyBreakdownChart: React.FC<Props> = ({
         )}
       </div>
 
-      {/* Scroll Button */}
       <div className={`pt-6 text-center`}>
         <button
           onClick={scrollToGraph}

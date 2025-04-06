@@ -13,6 +13,7 @@ interface Props {
       totalPayments: number;
       monthlyRate: number;
       fixedYearsMessage?: string;
+      secondPayment?: number;
     } | null
   ) => void;
   setPrincipalPaid: (arr: number[]) => void;
@@ -284,20 +285,20 @@ const MortgageForm: React.FC<Props> = ({
               `Monthly Payment after Interest-Only Period: $${fixedPaymentAfter}`
           );
 
-          // Para el gráfico, por ahora solo mostramos el pago de interés
           setResultado({
             monthlyPayment: interestOnlyPayment,
+            secondPayment: fixedPaymentAfter, // 👈 nuevo
             loanAmount,
             totalPayments,
             monthlyRate,
           });
 
-          // Limpiamos los gráficos anuales
           setPrincipalPaid([]);
           setInterestPaid([]);
           setLoanBalance([]);
           setTotalPayment(interestOnlyPayment);
         })
+
         .catch((err) => {
           console.error(err);
           alert("There was an error calculating the Interest Only payment.");

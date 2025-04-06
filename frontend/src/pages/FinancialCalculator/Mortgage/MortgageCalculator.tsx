@@ -12,6 +12,7 @@ const MortgageCalculator = () => {
     totalPayments: number;
     monthlyRate: number;
     fixedYearsMessage?: string;
+    secondPayment?: number;
   } | null>(null);
 
   const [, setTotalPayment] = useState(0);
