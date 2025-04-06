@@ -109,7 +109,7 @@ const MonthlyBreakdownChart: React.FC<Props> = ({
           <button
             className={`px-4 py-2 rounded-l-lg border ${
               selectedTab === "initial"
-                ? "bg-blue-600 text-white"
+                ? "bg-[#5FBA9B] text-white"
                 : "bg-gray-100 text-gray-700 hover:bg-gray-200"
             }`}
             onClick={() => setSelectedTab("initial")}
@@ -119,7 +119,7 @@ const MonthlyBreakdownChart: React.FC<Props> = ({
           <button
             className={`px-4 py-2 rounded-r-lg border ${
               selectedTab === "after"
-                ? "bg-blue-600 text-white"
+                ? "bg-[#5FBA9B] text-white"
                 : "bg-gray-100 text-gray-700 hover:bg-gray-200"
             }`}
             onClick={() => setSelectedTab("after")}
