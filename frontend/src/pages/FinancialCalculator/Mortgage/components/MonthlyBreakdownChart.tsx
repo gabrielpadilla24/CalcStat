@@ -84,11 +84,15 @@ const MonthlyBreakdownChart: React.FC<Props> = ({
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-6 w-full max-w-[900px] h-[516px]">
+    <div
+      className={`bg-white rounded-lg shadow-md p-6 w-[600px] ${
+        resultado?.fixedYearsMessage ? "h-[576px]" : "h-[516px]"
+      }`}
+    >
+      {" "}
       <h2 className="text-xl font-semibold text-center mb-4">
         Monthly Payment Chart
       </h2>
-
       <div
         className={`transition-opacity duration-700 ease-in-out ${
           hasResult ? "opacity-100" : "opacity-0"
@@ -107,14 +111,15 @@ const MonthlyBreakdownChart: React.FC<Props> = ({
 
           {/* Payment Info */}
           <div className="flex-1 text-sm text-gray-700 space-y-1">
-            <div className="bg-green-100 border border-green-300 text-green-700 px-4 py-3 rounded-lg text-center shadow-sm mb-4">
-              <div className="text-lg font-semibold">
-                {resultado?.fixedYearsMessage
-                  ? "Monthly Payment (first " +
-                    resultado.fixedYearsMessage.match(/\d+/)?.[0] +
-                    " years)"
-                  : "Total Monthly Payment:"}
+            <div className="bg-green-100 border border-green-300 text-green-700 px-4 py-4 rounded-lg text-center shadow-sm mb-4">
+              <div className="text-lg font-semibold leading-tight">
+                Monthly Payment
               </div>
+              {resultado?.fixedYearsMessage && (
+                <div className="text-sm text-gray-600 italic">
+                  (first {resultado.fixedYearsMessage.match(/\d+/)?.[0]} years)
+                </div>
+              )}
 
               <div className="text-2xl font-bold mt-1">
                 {hasResult ? formatCurrency(totalPayment) : "—"}
@@ -173,7 +178,6 @@ const MonthlyBreakdownChart: React.FC<Props> = ({
           </div>
         )}
       </div>
-
       {/* Scroll Button */}
       <div className="pt-6 text-center">
         <button
