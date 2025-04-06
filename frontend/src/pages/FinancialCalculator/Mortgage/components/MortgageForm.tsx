@@ -1,10 +1,10 @@
 import React, { useState } from "react";
 import SubmitButton from "@/components/SubmitButton";
 import FRM from "./FRM";
-//import InterestOnly from "./InterestOnly";
-//import ARM from "./ARM";
-//import Balloon from "./Balloon";
-//import Jumbo from "./Jumbo";
+import ARM from "./ARM";
+// import InterestOnly from "./InterestOnly";
+// import Balloon from "./Balloon";
+// import Jumbo from "./Jumbo";
 
 interface Props {
   setTotalPayment: (value: number) => void;
@@ -61,7 +61,6 @@ const MortgageForm: React.FC<Props> = ({
       [name]: value,
     }));
 
-    // Solo limpiar cálculo si es un campo relevante al resultado
     const shouldClear = !["propertyTaxes", "hoaFees", "insurance"].includes(
       name
     );
@@ -71,7 +70,6 @@ const MortgageForm: React.FC<Props> = ({
       setTotalPayment(0);
     }
 
-    // Actualizar estados correspondientes
     if (name === "propertyTaxes") setPropertyTaxes(value);
     if (name === "hoaFees") setHOAFees(value);
     if (name === "insurance") setInsurance(value);
@@ -82,10 +80,7 @@ const MortgageForm: React.FC<Props> = ({
 
     const homePrice = Number(formData.homePrice);
     const downPayment = Number(formData.downPayment);
-    const interestRate = Number(formData.interestRate);
-    const duration = Number(formData.duration);
 
-    // Validación general
     if (formData.loanType === "") {
       alert("Please select a mortgage type.");
       return;
@@ -106,8 +101,11 @@ const MortgageForm: React.FC<Props> = ({
       return;
     }
 
-    // Validación específica para Fixed Rate
+    // ------- Fixed Rate -------
     if (formData.loanType === "Fixed Rate") {
+      const interestRate = Number(formData.interestRate);
+      const duration = Number(formData.duration);
+
       if (!duration || isNaN(duration) || duration <= 0) {
         alert("Please select a valid mortgage duration.");
         return;
@@ -163,7 +161,68 @@ const MortgageForm: React.FC<Props> = ({
       return;
     }
 
-    // Otros tipos de hipoteca aún no implementados
+    // ------- ARM -------
+    if (formData.loanType === "ARM") {
+      const initialRate = Number(formData.initialRate);
+      const loanTerm = Number(formData.loanTerm);
+
+      if (
+        isNaN(initialRate) ||
+        initialRate <= 0 ||
+        isNaN(loanTerm) ||
+        loanTerm <= 0 ||
+        !formData.armType
+      ) {
+        alert("Please fill all ARM fields correctly.");
+        return;
+      }
+
+      fetch("http://localhost:8000/arm", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          homePrice,
+          downPayment,
+          initialRate,
+          armType: formData.armType,
+          loanTerm,
+        }),
+      })
+        .then((res) => {
+          if (!res.ok) throw new Error("Backend error");
+          return res.json();
+        })
+        .then((data) => {
+          const {
+            monthlyPayment,
+            loanAmount,
+            totalPayments,
+            monthlyRate,
+            principalPaid,
+            interestPaid,
+            loanBalance,
+          } = data;
+
+          setResultado({
+            monthlyPayment,
+            loanAmount,
+            totalPayments,
+            monthlyRate,
+          });
+
+          setTotalPayment(monthlyPayment);
+          setPrincipalPaid(principalPaid);
+          setInterestPaid(interestPaid);
+          setLoanBalance(loanBalance);
+        })
+        .catch((err) => {
+          console.error(err);
+          alert("There was an error calculating the ARM payment.");
+        });
+
+      return;
+    }
+
     alert("This mortgage type is not yet implemented.");
   };
 
@@ -224,6 +283,38 @@ const MortgageForm: React.FC<Props> = ({
                 homePrice={formData.homePrice}
                 downPayment={formData.downPayment}
                 interestRate={formData.interestRate}
+                onChange={handleChange}
+              />
+            </>
+          )}
+
+          {formData.loanType === "ARM" && (
+            <>
+              <tr>
+                <td>
+                  <label htmlFor="loanTerm">Loan Term (Years):</label>
+                </td>
+                <td>
+                  <select
+                    id="loanTerm"
+                    name="loanTerm"
+                    value={formData.loanTerm}
+                    onChange={handleChange}
+                    className="w-full p-2 border border-gray-300 rounded"
+                  >
+                    <option value="">Select</option>
+                    <option value="10">10 years</option>
+                    <option value="15">15 years</option>
+                    <option value="20">20 years</option>
+                    <option value="30">30 years</option>
+                  </select>
+                </td>
+              </tr>
+              <ARM
+                homePrice={formData.homePrice}
+                downPayment={formData.downPayment}
+                initialRate={formData.initialRate}
+                armType={formData.armType}
                 onChange={handleChange}
               />
             </>
