@@ -139,7 +139,7 @@ def calcular_arm(data: ARMData):
     # Obtener años fijos desde el tipo ARM (ej. "5/1", "7/6")
     fixed_years = int(data.armType.split("/")[0])
     fixedYearsMessage = (
-        f"The monthly payment below applies to the first {fixed_years} years only."
+        f"The monthly payment applies to the first {fixed_years} years only."
     )
 
     if monthly_rate == 0:
