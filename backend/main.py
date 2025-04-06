@@ -195,6 +195,7 @@ def calcular_arm(data: ARMData):
         "fixedYearsMessage": fixedYearsMessage,
     }
 
+
 # -----------------------------
 # ENDPOINT DE HIPOTECA INTEREST ONLY
 # -----------------------------
@@ -203,20 +204,27 @@ def calcular_interest_only(data: InterestOnlyData):
     loan_amount = data.homePrice - data.downPayment
     annual_rate = data.interestRate / 100
     monthly_rate = annual_rate / 12
+
     interest_only_months = data.interestOnlyPeriod * 12
     total_months = data.totalTerm * 12
     remaining_months = total_months - interest_only_months
 
+    # -----------------------------
     # Pago mensual durante el período de solo intereses
+    # -----------------------------
     interest_only_payment = round(loan_amount * monthly_rate, 2)
 
-    # Pago mensual después del período de solo intereses (como tasa fija)
+    # -----------------------------
+    # Pago mensual después del período de solo intereses
+    # Se comporta como una tasa fija clásica (FRM) pero con duración = remaining_months
+    # -----------------------------
     if monthly_rate == 0 or remaining_months == 0:
-        fixed_payment_after = 0
+        fixed_payment_after = loan_amount / remaining_months if remaining_months else 0
     else:
         fixed_payment_after = loan_amount * (monthly_rate * (1 + monthly_rate) ** remaining_months) / \
             ((1 + monthly_rate) ** remaining_months - 1)
-        fixed_payment_after = round(fixed_payment_after, 2)
+
+    fixed_payment_after = round(fixed_payment_after, 2)
 
     return {
         "interestOnlyPayment": interest_only_payment,

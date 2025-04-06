@@ -25,15 +25,16 @@ const MonthlyBreakdownChart: React.FC<Props> = ({
   scrollToGraph,
   scrollToARM,
 }) => {
+  const isInterestOnlyWithTwoPayments = resultado?.secondPayment !== undefined;
   const [selectedTab, setSelectedTab] = useState<"initial" | "after">(
     "initial"
   );
 
   const hasResult = resultado !== null;
   const paymentToDisplay =
-    selectedTab === "initial"
-      ? resultado?.monthlyPayment || 0
-      : resultado?.secondPayment || 0;
+    isInterestOnlyWithTwoPayments && selectedTab === "after"
+      ? resultado?.secondPayment || 0
+      : resultado?.monthlyPayment || 0;
 
   const propertyTax = monthlyPropertyTax > 0 ? monthlyPropertyTax : 0;
   const hoa = monthlyHOA > 0 ? monthlyHOA : 0;
@@ -92,8 +93,6 @@ const MonthlyBreakdownChart: React.FC<Props> = ({
     ],
   };
 
-  const isInterestOnlyWithTwoPayments = resultado?.secondPayment !== undefined;
-
   return (
     <div
       className={`bg-white rounded-lg shadow-md p-6 w-[600px] flex flex-col justify-between`}
@@ -102,7 +101,7 @@ const MonthlyBreakdownChart: React.FC<Props> = ({
         Monthly Payment Chart
       </h2>
 
-      {/* Tabs */}
+      {/* Tabs - Only show if Interest Only with two payments */}
       {isInterestOnlyWithTwoPayments && (
         <div className="flex justify-center mb-4">
           <button
