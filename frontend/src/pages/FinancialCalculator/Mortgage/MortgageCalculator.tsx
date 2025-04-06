@@ -33,6 +33,13 @@ const MortgageCalculator = () => {
     }
   };
 
+  const scrollToARM = () => {
+    const armSection = document.querySelector(".mt-12");
+    if (armSection) {
+      armSection.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   const monthlyPropertyTax = propertyTaxes ? Number(propertyTaxes) / 12 : 0;
   const monthlyHOA = hoaFees ? Number(hoaFees) : 0;
   const monthlyInsurance = insurance ? Number(insurance) / 12 : 0;
@@ -69,6 +76,7 @@ const MortgageCalculator = () => {
               monthlyHOA={monthlyHOA}
               monthlyInsurance={monthlyInsurance}
               scrollToGraph={scrollToGraph}
+              scrollToARM={scrollToARM}
             />
           </div>
         </div>

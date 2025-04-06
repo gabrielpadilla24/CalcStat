@@ -13,6 +13,7 @@ interface Props {
   monthlyHOA?: number;
   monthlyInsurance?: number;
   scrollToGraph: () => void;
+  scrollToARM: () => void;
 }
 
 const MonthlyBreakdownChart: React.FC<Props> = ({
@@ -21,6 +22,7 @@ const MonthlyBreakdownChart: React.FC<Props> = ({
   monthlyHOA = 0,
   monthlyInsurance = 0,
   scrollToGraph,
+  scrollToARM,
 }) => {
   const hasResult = resultado !== null;
   const basePayment = hasResult ? resultado!.monthlyPayment : 0;
@@ -121,9 +123,14 @@ const MonthlyBreakdownChart: React.FC<Props> = ({
                 {hasResult ? formatCurrency(totalPayment) : "—"}
               </div>
               {resultado?.fixedYearsMessage && (
-                <p className="text-sm text-gray-600 mt-2 italic hover:underline cursor-pointer">
-                  Learn more about ARM’s
-                </p>
+                <div className={`pt-6 text-center`}>
+                  <button
+                    onClick={scrollToARM}
+                    className="text-gray-600 hover:text-gray-800 transition-colors text-sm italic"
+                  >
+                    Learn More About ARM's
+                  </button>
+                </div>
               )}
             </div>
 
