@@ -210,13 +210,12 @@ def calcular_interest_only(data: InterestOnlyData):
     remaining_months = total_months - interest_only_months
 
     # -----------------------------
-    # Pago mensual durante el período de solo intereses
+    # Pago mensual durante periodo de solo intereses
     # -----------------------------
     interest_only_payment = round(loan_amount * monthly_rate, 2)
 
     # -----------------------------
-    # Pago mensual después del período de solo intereses
-    # Se comporta como una tasa fija clásica (FRM) pero con duración = remaining_months
+    # Pago mensual después del periodo de interés (como FRM con plazo reducido)
     # -----------------------------
     if monthly_rate == 0 or remaining_months == 0:
         fixed_payment_after = loan_amount / remaining_months if remaining_months else 0
@@ -226,10 +225,51 @@ def calcular_interest_only(data: InterestOnlyData):
 
     fixed_payment_after = round(fixed_payment_after, 2)
 
+    # -----------------------------
+    # Simular amortización total para gráfico
+    # -----------------------------
+    balance = loan_amount
+    principal_paid = [0.0]
+    interest_paid = [0.0]
+    loan_balance = [round(balance, 2)]
+
+    acum_principal = 0.0
+    acum_interest = 0.0
+    yearly_principal = 0.0
+    yearly_interest = 0.0
+
+    for month in range(1, total_months + 1):
+        if month <= interest_only_months:
+            interest = balance * monthly_rate
+            principal = 0.0
+        else:
+            interest = balance * monthly_rate
+            principal = fixed_payment_after - interest
+            balance -= principal
+            if balance < 0:
+                balance = 0.0
+
+        yearly_interest += interest
+        yearly_principal += principal
+
+        if month % 12 == 0 or month == total_months:
+            acum_principal += yearly_principal
+            acum_interest += yearly_interest
+
+            principal_paid.append(round(acum_principal, 2))
+            interest_paid.append(round(acum_interest, 2))
+            loan_balance.append(round(balance, 2))
+
+            yearly_interest = 0.0
+            yearly_principal = 0.0
+
     return {
         "interestOnlyPayment": interest_only_payment,
         "fixedPaymentAfter": fixed_payment_after,
         "monthlyRate": round(monthly_rate * 100, 4),
         "loanAmount": round(loan_amount, 2),
         "totalPayments": total_months,
+        "principalPaid": principal_paid,
+        "interestPaid": interest_paid,
+        "loanBalance": loan_balance,
     }

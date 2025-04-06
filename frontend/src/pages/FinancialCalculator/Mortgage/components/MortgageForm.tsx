@@ -278,24 +278,22 @@ const MortgageForm: React.FC<Props> = ({
             loanAmount,
             totalPayments,
             monthlyRate,
+            principalPaid,
+            interestPaid,
+            loanBalance,
           } = data;
-
-          alert(
-            `Monthly Payment during Interest-Only Period: $${interestOnlyPayment}\n` +
-              `Monthly Payment after Interest-Only Period: $${fixedPaymentAfter}`
-          );
 
           setResultado({
             monthlyPayment: interestOnlyPayment,
-            secondPayment: fixedPaymentAfter, // 👈 nuevo
+            secondPayment: fixedPaymentAfter,
             loanAmount,
             totalPayments,
             monthlyRate,
           });
 
-          setPrincipalPaid([]);
-          setInterestPaid([]);
-          setLoanBalance([]);
+          setPrincipalPaid(principalPaid); // ✅ usar los datos reales
+          setInterestPaid(interestPaid); // ✅ usar los datos reales
+          setLoanBalance(loanBalance); // ✅ usar los datos reales
           setTotalPayment(interestOnlyPayment);
         })
 
