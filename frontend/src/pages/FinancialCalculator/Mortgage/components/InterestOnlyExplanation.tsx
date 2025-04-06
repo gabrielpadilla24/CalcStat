@@ -1,7 +1,7 @@
 const InterestOnlyExplanation: React.FC = () => {
   return (
-    <div className="bg-white shadow-md rounded-2xl p-6 max-w-3xl mx-auto border border-gray-200">
-      <h1 className="text-4xl font-bold text-center mt-12 mb-6 text-gray-900">
+    <div className="bg-white shadow-md rounded-2xl p-6 w-[1200px] mx-auto border border-gray-200 mt-12 mb-12">
+      <h1 className="text-4xl font-bold text-center mb-6 text-gray-900">
         💰 Interest-Only Mortgage Explained
       </h1>
 
