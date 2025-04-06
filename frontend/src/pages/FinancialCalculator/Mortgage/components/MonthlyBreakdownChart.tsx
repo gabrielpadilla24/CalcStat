@@ -24,24 +24,28 @@ const MonthlyBreakdownChart: React.FC<Props> = ({
   const hasResult = resultado !== null;
   const basePayment = hasResult ? resultado!.monthlyPayment : 0;
 
-  const totalPayment =
-    basePayment + monthlyPropertyTax + monthlyHOA + monthlyInsurance;
+  // Saneamiento: valores negativos se consideran 0
+  const propertyTax = monthlyPropertyTax > 0 ? monthlyPropertyTax : 0;
+  const hoa = monthlyHOA > 0 ? monthlyHOA : 0;
+  const insurance = monthlyInsurance > 0 ? monthlyInsurance : 0;
+
+  const totalPayment = basePayment + propertyTax + hoa + insurance;
 
   const series = hasResult
     ? [
         basePayment,
-        ...(monthlyPropertyTax > 0 ? [monthlyPropertyTax] : []),
-        ...(monthlyHOA > 0 ? [monthlyHOA] : []),
-        ...(monthlyInsurance > 0 ? [monthlyInsurance] : []),
+        ...(propertyTax > 0 ? [propertyTax] : []),
+        ...(hoa > 0 ? [hoa] : []),
+        ...(insurance > 0 ? [insurance] : []),
       ]
     : [0];
 
   const labels = hasResult
     ? [
         "Principal + Interest",
-        ...(monthlyPropertyTax > 0 ? ["Property Tax"] : []),
-        ...(monthlyHOA > 0 ? ["HOA Fees"] : []),
-        ...(monthlyInsurance > 0 ? ["Insurance"] : []),
+        ...(propertyTax > 0 ? ["Property Tax"] : []),
+        ...(hoa > 0 ? ["HOA Fees"] : []),
+        ...(insurance > 0 ? ["Insurance"] : []),
       ]
     : ["Principal + Interest"];
 
@@ -61,7 +65,7 @@ const MonthlyBreakdownChart: React.FC<Props> = ({
     labels,
     colors,
     legend: {
-      show: false, // 👈 hide default legend
+      show: false,
     },
     tooltip: {
       y: {
@@ -114,17 +118,14 @@ const MonthlyBreakdownChart: React.FC<Props> = ({
             </p>
             <p>
               <strong>Property Tax:</strong>{" "}
-              {monthlyPropertyTax > 0
-                ? formatCurrency(monthlyPropertyTax)
-                : "—"}
+              {propertyTax > 0 ? formatCurrency(propertyTax) : "—"}
             </p>
             <p>
-              <strong>HOA Fees:</strong>{" "}
-              {monthlyHOA > 0 ? formatCurrency(monthlyHOA) : "—"}
+              <strong>HOA Fees:</strong> {hoa > 0 ? formatCurrency(hoa) : "—"}
             </p>
             <p>
               <strong>Insurance:</strong>{" "}
-              {monthlyInsurance > 0 ? formatCurrency(monthlyInsurance) : "—"}
+              {insurance > 0 ? formatCurrency(insurance) : "—"}
             </p>
             <hr className="my-2" />
             <p>

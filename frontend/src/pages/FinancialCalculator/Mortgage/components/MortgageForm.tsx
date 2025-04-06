@@ -82,32 +82,38 @@ const MortgageForm: React.FC<Props> = ({
 
     const homePrice = Number(formData.homePrice);
     const downPayment = Number(formData.downPayment);
+    const interestRate = Number(formData.interestRate);
+    const duration = Number(formData.duration);
 
+    // Validación general
     if (formData.loanType === "") {
       alert("Please select a mortgage type.");
       return;
     }
 
     if (isNaN(homePrice) || homePrice <= 0) {
-      alert("Please enter a valid Home Price.");
+      alert("Please enter a valid, positive Home Price.");
       return;
     }
 
     if (isNaN(downPayment) || downPayment < 0) {
-      alert("Please enter a valid Down Payment.");
+      alert("Please enter a valid Down Payment (0 or more).");
       return;
     }
 
-    if (formData.loanType === "Fixed Rate") {
-      const duration = Number(formData.duration);
-      const interestRate = Number(formData.interestRate);
+    if (downPayment > homePrice) {
+      alert("The Down Payment cannot be greater than the Home Price.");
+      return;
+    }
 
-      if (!duration || isNaN(duration)) {
+    // Validación específica para Fixed Rate
+    if (formData.loanType === "Fixed Rate") {
+      if (!duration || isNaN(duration) || duration <= 0) {
         alert("Please select a valid mortgage duration.");
         return;
       }
 
-      if (!interestRate || isNaN(interestRate)) {
+      if (!interestRate || isNaN(interestRate) || interestRate <= 0) {
         alert("Please enter a valid interest rate.");
         return;
       }
@@ -151,14 +157,14 @@ const MortgageForm: React.FC<Props> = ({
         })
         .catch((err) => {
           console.error(err);
-          alert("Hubo un error calculando la cuota mensual.");
+          alert("There was an error calculating the monthly payment.");
         });
 
       return;
     }
 
-    // Otros tipos de hipoteca (puedes adaptar lógicamente según avances)
-    alert("Este tipo de hipoteca aún no está implementado completamente.");
+    // Otros tipos de hipoteca aún no implementados
+    alert("This mortgage type is not yet implemented.");
   };
 
   return (
