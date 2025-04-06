@@ -11,6 +11,7 @@ const MortgageCalculator = () => {
     loanAmount: number;
     totalPayments: number;
     monthlyRate: number;
+    fixedYearsMessage?: string;
   } | null>(null);
 
   const [, setTotalPayment] = useState(0);
@@ -21,6 +22,8 @@ const MortgageCalculator = () => {
   const [propertyTaxes, setPropertyTaxes] = useState<string>("");
   const [hoaFees, setHOAFees] = useState<string>("");
   const [insurance, setInsurance] = useState<string>("");
+
+  const [loanType, setLoanType] = useState<string>(""); // Nuevo estado para tipo de hipoteca
 
   const amortizationRef = useRef<HTMLDivElement | null>(null);
 
@@ -54,6 +57,7 @@ const MortgageCalculator = () => {
               setPropertyTaxes={setPropertyTaxes}
               setHOAFees={setHOAFees}
               setInsurance={setInsurance}
+              setLoanType={setLoanType} // Nuevo prop
             />
           </div>
 
@@ -78,10 +82,12 @@ const MortgageCalculator = () => {
           />
         </div>
 
-        {/* Explicación ARM como card */}
-        <div className="mt-12">
-          <ARMExplanation />
-        </div>
+        {/* Explicación ARM (solo si es tipo ARM) */}
+        {loanType === "ARM" && (
+          <div className="mt-12">
+            <ARMExplanation fixedYearsMessage={resultado?.fixedYearsMessage} />
+          </div>
+        )}
       </div>
     </>
   );

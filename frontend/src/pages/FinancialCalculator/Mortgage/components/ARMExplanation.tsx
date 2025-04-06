@@ -1,4 +1,10 @@
-const ARMExplanation = () => {
+interface ARMExplanationProps {
+  fixedYearsMessage?: string;
+}
+
+const ARMExplanation: React.FC<ARMExplanationProps> = ({
+  fixedYearsMessage,
+}) => {
   return (
     <div className="bg-white shadow-md rounded-2xl p-6 max-w-3xl mx-auto border border-gray-200">
       <h1 className="text-4xl font-bold text-center mt-12 mb-6 text-gray-900">
@@ -53,10 +59,11 @@ const ARMExplanation = () => {
         <li>⬇️ Lower your payment if rates go down.</li>
       </ul>
 
-      <p className="text-gray-800 font-medium">
-        ⚠️ ARMs can help save money early on, but they come with the risk of
-        higher future payments.
-      </p>
+      {fixedYearsMessage && (
+        <p className="text-blue-700 font-medium mt-6 text-center">
+          📌 <strong>{fixedYearsMessage}</strong>
+        </p>
+      )}
     </div>
   );
 };

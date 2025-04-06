@@ -2,9 +2,6 @@ import React, { useState } from "react";
 import SubmitButton from "@/components/SubmitButton";
 import FRM from "./FRM";
 import ARM from "./ARMForm";
-// import InterestOnly from "./InterestOnly";
-// import Balloon from "./Balloon";
-// import Jumbo from "./Jumbo";
 
 interface Props {
   setTotalPayment: (value: number) => void;
@@ -23,6 +20,7 @@ interface Props {
   setPropertyTaxes: (value: string) => void;
   setHOAFees: (value: string) => void;
   setInsurance: (value: string) => void;
+  setLoanType: (type: string) => void; // <-- nuevo prop
 }
 
 const MortgageForm: React.FC<Props> = ({
@@ -34,6 +32,7 @@ const MortgageForm: React.FC<Props> = ({
   setPropertyTaxes,
   setHOAFees,
   setInsurance,
+  setLoanType,
 }) => {
   const [formData, setFormData] = useState({
     loanType: "",
@@ -61,6 +60,10 @@ const MortgageForm: React.FC<Props> = ({
       ...prev,
       [name]: value,
     }));
+
+    if (name === "loanType") {
+      setLoanType(value); // <-- notifica al componente padre
+    }
 
     const shouldClear = !["propertyTaxes", "hoaFees", "insurance"].includes(
       name
@@ -202,7 +205,7 @@ const MortgageForm: React.FC<Props> = ({
             principalPaid,
             interestPaid,
             loanBalance,
-            fixedYearsMessage, // <- nuevo
+            fixedYearsMessage,
           } = data;
 
           setResultado({
@@ -213,13 +216,11 @@ const MortgageForm: React.FC<Props> = ({
             fixedYearsMessage,
           });
 
-          console.log(fixedYearsMessage); // <- puedes mostrarlo con un `alert` o colocarlo en el UI
           setTotalPayment(monthlyPayment);
           setPrincipalPaid(principalPaid);
           setInterestPaid(interestPaid);
           setLoanBalance(loanBalance);
         })
-
         .catch((err) => {
           console.error(err);
           alert("There was an error calculating the ARM payment.");
