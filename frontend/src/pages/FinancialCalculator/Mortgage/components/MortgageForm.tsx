@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import SubmitButton from "@/components/SubmitButton";
 import FRM from "./FRM";
 import ARM from "./ARMForm";
+import InterestOnly from "./InterestOnly";
 
 interface Props {
   setTotalPayment: (value: number) => void;
@@ -20,7 +21,7 @@ interface Props {
   setPropertyTaxes: (value: string) => void;
   setHOAFees: (value: string) => void;
   setInsurance: (value: string) => void;
-  setLoanType: (type: string) => void; // <-- nuevo prop
+  setLoanType: (type: string) => void;
 }
 
 const MortgageForm: React.FC<Props> = ({
@@ -41,7 +42,6 @@ const MortgageForm: React.FC<Props> = ({
     duration: "",
     interestRate: "",
     interestOnlyPeriod: "",
-    totalTerm: "",
     initialRate: "",
     armType: "",
     loanTerm: "",
@@ -62,7 +62,7 @@ const MortgageForm: React.FC<Props> = ({
     }));
 
     if (name === "loanType") {
-      setLoanType(value); // <-- notifica al componente padre
+      setLoanType(value);
     }
 
     const shouldClear = !["propertyTaxes", "hoaFees", "insurance"].includes(
@@ -105,7 +105,9 @@ const MortgageForm: React.FC<Props> = ({
       return;
     }
 
-    // ------- Fixed Rate -------
+    // -----------------------------
+    // Fixed Rate
+    // -----------------------------
     if (formData.loanType === "Fixed Rate") {
       const interestRate = Number(formData.interestRate);
       const duration = Number(formData.duration);
@@ -151,7 +153,6 @@ const MortgageForm: React.FC<Props> = ({
             totalPayments,
             monthlyRate,
           });
-
           setTotalPayment(monthlyPayment);
           setPrincipalPaid(principalPaid);
           setInterestPaid(interestPaid);
@@ -165,7 +166,9 @@ const MortgageForm: React.FC<Props> = ({
       return;
     }
 
-    // ------- ARM -------
+    // -----------------------------
+    // ARM
+    // -----------------------------
     if (formData.loanType === "ARM") {
       const initialRate = Number(formData.initialRate);
       const loanTerm = Number(formData.loanTerm);
@@ -224,6 +227,80 @@ const MortgageForm: React.FC<Props> = ({
         .catch((err) => {
           console.error(err);
           alert("There was an error calculating the ARM payment.");
+        });
+
+      return;
+    }
+
+    // -----------------------------
+    // Interest Only
+    // -----------------------------
+    if (formData.loanType === "Interest Only") {
+      const interestRate = Number(formData.interestRate);
+      const interestOnlyPeriod = Number(formData.interestOnlyPeriod);
+      const totalTerm = Number(formData.loanTerm);
+
+      if (
+        isNaN(interestRate) ||
+        interestRate <= 0 ||
+        isNaN(interestOnlyPeriod) ||
+        interestOnlyPeriod <= 0 ||
+        isNaN(totalTerm) ||
+        totalTerm <= 0 ||
+        interestOnlyPeriod >= totalTerm
+      ) {
+        alert(
+          "Please fill all Interest Only fields correctly. Note: Interest-only period must be less than the total term."
+        );
+        return;
+      }
+
+      fetch("http://localhost:8000/interestonly", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          homePrice,
+          downPayment,
+          interestRate,
+          interestOnlyPeriod,
+          totalTerm,
+        }),
+      })
+        .then((res) => {
+          if (!res.ok) throw new Error("Backend error");
+          return res.json();
+        })
+        .then((data) => {
+          const {
+            interestOnlyPayment,
+            fixedPaymentAfter,
+            loanAmount,
+            totalPayments,
+            monthlyRate,
+          } = data;
+
+          alert(
+            `Monthly Payment during Interest-Only Period: $${interestOnlyPayment}\n` +
+              `Monthly Payment after Interest-Only Period: $${fixedPaymentAfter}`
+          );
+
+          // Para el gráfico, por ahora solo mostramos el pago de interés
+          setResultado({
+            monthlyPayment: interestOnlyPayment,
+            loanAmount,
+            totalPayments,
+            monthlyRate,
+          });
+
+          // Limpiamos los gráficos anuales
+          setPrincipalPaid([]);
+          setInterestPaid([]);
+          setLoanBalance([]);
+          setTotalPayment(interestOnlyPayment);
+        })
+        .catch((err) => {
+          console.error(err);
+          alert("There was an error calculating the Interest Only payment.");
         });
 
       return;
@@ -321,6 +398,38 @@ const MortgageForm: React.FC<Props> = ({
                 downPayment={formData.downPayment}
                 initialRate={formData.initialRate}
                 armType={formData.armType}
+                onChange={handleChange}
+              />
+            </>
+          )}
+
+          {formData.loanType === "Interest Only" && (
+            <>
+              <tr>
+                <td>
+                  <label htmlFor="loanTerm">Loan Term (Years):</label>
+                </td>
+                <td>
+                  <select
+                    id="loanTerm"
+                    name="loanTerm"
+                    value={formData.loanTerm}
+                    onChange={handleChange}
+                    className="w-full p-2 border border-gray-300 rounded"
+                  >
+                    <option value="">Select</option>
+                    <option value="10">10 years</option>
+                    <option value="15">15 years</option>
+                    <option value="20">20 years</option>
+                    <option value="30">30 years</option>
+                  </select>
+                </td>
+              </tr>
+              <InterestOnly
+                homePrice={formData.homePrice}
+                downPayment={formData.downPayment}
+                interestRate={formData.interestRate}
+                interestOnlyPeriod={formData.interestOnlyPeriod}
                 onChange={handleChange}
               />
             </>

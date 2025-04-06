@@ -6,7 +6,6 @@ interface Props {
   downPayment: string;
   interestRate: string;
   interestOnlyPeriod: string;
-  totalTerm: string;
   onChange: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
@@ -15,7 +14,6 @@ const InterestOnly: React.FC<Props> = ({
   downPayment,
   interestRate,
   interestOnlyPeriod,
-  totalTerm,
   onChange,
 }) => {
   return (
@@ -47,13 +45,6 @@ const InterestOnly: React.FC<Props> = ({
         value={interestOnlyPeriod}
         onChange={onChange}
         placeholder="Ej: 5"
-      />
-      <InputField
-        label="Total Loan Term (Years)"
-        name="totalTerm"
-        value={totalTerm}
-        onChange={onChange}
-        placeholder="Ej: 30"
       />
     </>
   );
