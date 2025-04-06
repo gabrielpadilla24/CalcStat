@@ -4,6 +4,7 @@ import MortgageForm from "./components/MortgageForm";
 import MonthlyBreakdownChart from "./components/MonthlyBreakdownChart";
 import AmortizationGraph from "./components/AmortizationGraph";
 import ARMExplanation from "./components/ARMExplanation";
+import InterestOnlyExplanation from "./components/InterestOnlyExplanation";
 
 const MortgageCalculator = () => {
   const [resultado, setResultado] = useState<{
@@ -95,6 +96,13 @@ const MortgageCalculator = () => {
         {loanType === "ARM" && (
           <div className="mt-12">
             <ARMExplanation fixedYearsMessage={resultado?.fixedYearsMessage} />
+          </div>
+        )}
+
+        {/* Explicación de Interés Solo */}
+        {loanType === "Interest Only" && (
+          <div className="mt-8">
+            <InterestOnlyExplanation />
           </div>
         )}
       </div>
