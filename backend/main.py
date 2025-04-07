@@ -311,14 +311,15 @@ def calcular_balloon_payment(data: BalloonPaymentData):
         monthly_payment = loan_amount * (monthly_rate * (1 + monthly_rate) ** total_months) / \
                           ((1 + monthly_rate) ** total_months - 1)
 
-    #monthly_payment = round(monthly_payment, 2)
+    monthly_payment = round(monthly_payment, 2)
 
     # -----------------------------
-    # Simulación de amortización solo hasta el mes del balloon
+    # Simulación de amortización hasta el balloon + pago final
     # -----------------------------
     principal_paid = [0.0]
     interest_paid = [0.0]
     loan_balance = [round(loan_amount, 2)]
+
     balance = loan_amount
     yearly_principal = 0.0
     yearly_interest = 0.0
@@ -333,19 +334,24 @@ def calcular_balloon_payment(data: BalloonPaymentData):
         yearly_principal += principal
         yearly_interest += interest
 
+        # 💰 En el último mes del balloon year: se paga todo el balance
+        if month == balloon_month:
+            yearly_principal += balance  # pagar todo lo que queda
+            balance = 0.0
+
         if month % 12 == 0 or month == balloon_month:
             acum_principal += yearly_principal
             acum_interest += yearly_interest
 
             principal_paid.append(round(acum_principal, 2))
             interest_paid.append(round(acum_interest, 2))
-            loan_balance.append(round(balance if balance > 0 else 0.0, 2))
+            loan_balance.append(round(balance, 2))
 
             yearly_principal = 0.0
             yearly_interest = 0.0
 
     return {
-        "monthlyPayment": round(monthly_payment,2),
+        "monthlyPayment": round(monthly_payment, 2),
         "loanAmount": round(loan_amount, 2),
         "monthlyRate": round(monthly_rate * 100, 4),
         "principalPaid": principal_paid,
