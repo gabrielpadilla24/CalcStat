@@ -104,23 +104,100 @@ const FinancialCalculator = () => {
         )}
 
         {showMortgage && (
-          <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] text-left">
-            <img
-              src="/img/mortgage.png"
-              alt="Mortgage Payments Calculator"
-              className="h-40 w-full object-cover mb-4 rounded"
-            />
-            <h2 className="text-xl font-bold text-gray-800 mb-2">
-              Mortgage Payments Calculator
-            </h2>
-            <p className="text-sm text-gray-600 mb-4">
-              Calculate your monthly mortgage payments. Perfect for home buyers,
-              refinancing, and long-term loan planning.
-            </p>
-            <Link to="/mortgage">
-              <SubmitButton text="Open Calculator" />
-            </Link>
-          </div>
+          <>
+            {/* General Mortgage Calculator */}
+            <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] text-left">
+              <img
+                src="/img/mortgage.png"
+                alt="Mortgage Payments Calculator"
+                className="h-40 w-full object-cover mb-4 rounded"
+              />
+              <h2 className="text-xl font-bold text-gray-800 mb-2">
+                Mortgage Payments Calculator
+              </h2>
+              <p className="text-sm text-gray-600 mb-4">
+                Calculate your monthly mortgage payments. Perfect for home
+                buyers, refinancing, and long-term loan planning.
+              </p>
+              <Link to="/mortgage">
+                <SubmitButton text="Open Calculator" />
+              </Link>
+            </div>
+
+            {/* Fixed Rate */}
+            <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] text-left">
+              <img
+                src="/img/fixedrate.png"
+                alt="Fixed Rate Mortgage Calculator"
+                className="h-40 w-full object-cover mb-4 rounded"
+              />
+              <h2 className="text-xl font-bold text-gray-800 mb-2">
+                Fixed Rate Mortgage
+              </h2>
+              <p className="text-sm text-gray-600 mb-4">
+                Calculate predictable monthly payments with fixed interest
+                rates.
+              </p>
+              <Link to="/mortgage/fixed">
+                <SubmitButton text="Open Calculator" />
+              </Link>
+            </div>
+
+            {/* ARM */}
+            <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] text-left">
+              <img
+                src="/img/arm.png"
+                alt="Adjustable Rate Mortgage Calculator"
+                className="h-40 w-full object-cover mb-4 rounded"
+              />
+              <h2 className="text-xl font-bold text-gray-800 mb-2">
+                ARM (Adjustable Rate)
+              </h2>
+              <p className="text-sm text-gray-600 mb-4">
+                Explore flexible mortgages with interest rates that may change
+                over time.
+              </p>
+              <Link to="/mortgage/arm">
+                <SubmitButton text="Open Calculator" />
+              </Link>
+            </div>
+
+            {/* Interest Only */}
+            <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] text-left">
+              <img
+                src="/img/interestonly.png"
+                alt="Interest Only Mortgage Calculator"
+                className="h-40 w-full object-cover mb-4 rounded"
+              />
+              <h2 className="text-xl font-bold text-gray-800 mb-2">
+                Interest-Only Mortgage
+              </h2>
+              <p className="text-sm text-gray-600 mb-4">
+                Calculate payments for interest-only periods and plan ahead.
+              </p>
+              <Link to="/mortgage/interest-only">
+                <SubmitButton text="Open Calculator" />
+              </Link>
+            </div>
+
+            {/* Balloon Payment */}
+            <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] text-left">
+              <img
+                src="/img/balloon.png"
+                alt="Balloon Payment Mortgage Calculator"
+                className="h-40 w-full object-cover mb-4 rounded"
+              />
+              <h2 className="text-xl font-bold text-gray-800 mb-2">
+                Balloon Payment Mortgage
+              </h2>
+              <p className="text-sm text-gray-600 mb-4">
+                See how large final payments affect your mortgage plan.
+              </p>
+              <Link to="/mortgage/balloon">
+                <SubmitButton text="Open Calculator" />
+              </Link>
+            </div>
+          </>
         )}
       </div>
 
