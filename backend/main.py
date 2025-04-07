@@ -311,7 +311,6 @@ def calcular_balloon_payment(data: BalloonPaymentData):
         monthly_payment = loan_amount * (monthly_rate * (1 + monthly_rate) ** total_months) / \
                           ((1 + monthly_rate) ** total_months - 1)
 
-    monthly_payment = round(monthly_payment, 2)
 
     # -----------------------------
     # Simulación de amortización hasta el balloon + pago final
