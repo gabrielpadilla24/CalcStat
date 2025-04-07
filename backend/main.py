@@ -46,6 +46,16 @@ class InterestOnlyData(BaseModel):
     interestOnlyPeriod: int   # años
     totalTerm: int            # años
 
+class BalloonPaymentData(BaseModel):
+    homePrice: float
+    downPayment: float
+    interestRate: float  # anual en %
+    loanTerm: int        # duración total del préstamo en años
+    balloonYear: int     # año en que se hace el pago final
+
+
+
+
 # -----------------------------
 # ENDPOINT DE INTERÉS COMPUESTO
 # -----------------------------
@@ -269,6 +279,84 @@ def calcular_interest_only(data: InterestOnlyData):
         "monthlyRate": round(monthly_rate * 100, 4),
         "loanAmount": round(loan_amount, 2),
         "totalPayments": total_months,
+        "principalPaid": principal_paid,
+        "interestPaid": interest_paid,
+        "loanBalance": loan_balance,
+    }
+
+# -----------------------------
+# ENDPOINT DE HIPOTECA BALLOON PAYMENT
+# -----------------------------
+@app.post("/balloon")
+def calcular_balloon_payment(data: BalloonPaymentData):
+    loan_amount = data.homePrice - data.downPayment
+    annual_rate = data.interestRate / 100
+    monthly_rate = annual_rate / 12
+
+    total_term_months = data.loanTerm * 12
+    payments_made = data.balloonYear * 12
+
+    if payments_made >= total_term_months:
+        return {
+            "error": "Balloon year must be less than the total loan term."
+        }
+
+    # -----------------------------
+    # 1. Calcular mensualidad como si el préstamo fuera full term
+    # -----------------------------
+    if monthly_rate == 0:
+        monthly_payment = loan_amount / total_term_months
+    else:
+        monthly_payment = (loan_amount * monthly_rate) / (1 - (1 + monthly_rate) ** -total_term_months)
+
+    monthly_payment = round(monthly_payment, 2)
+
+    # -----------------------------
+    # 2. Calcular el saldo restante (balloon amount) después de esos pagos
+    # -----------------------------
+    remaining_balance = loan_amount * (1 + monthly_rate) ** payments_made - \
+        monthly_payment * ((1 + monthly_rate) ** payments_made - 1) / monthly_rate
+
+    balloon_amount = round(remaining_balance, 2)
+    total_paid = round(monthly_payment * payments_made + balloon_amount, 2)
+
+    # -----------------------------
+    # 3. Datos anuales para gráficas
+    # -----------------------------
+    balance = loan_amount
+    principal_paid = [0.0]
+    interest_paid = [0.0]
+    loan_balance = [round(balance, 2)]
+
+    acum_principal = 0.0
+    acum_interest = 0.0
+    yearly_principal = 0.0
+    yearly_interest = 0.0
+
+    for month in range(1, payments_made + 1):
+        interest = balance * monthly_rate
+        principal = monthly_payment - interest
+        balance -= principal
+
+        yearly_interest += interest
+        yearly_principal += principal
+
+        if month % 12 == 0 or month == payments_made:
+            acum_principal += yearly_principal
+            acum_interest += yearly_interest
+            loan_balance.append(round(balance, 2))
+            principal_paid.append(round(acum_principal, 2))
+            interest_paid.append(round(acum_interest, 2))
+
+            yearly_interest = 0.0
+            yearly_principal = 0.0
+
+    return {
+        "monthlyPayment": monthly_payment,
+        "loanAmount": round(loan_amount, 2),
+        "totalPayments": total_paid,
+        "monthlyRate": round(monthly_rate * 100, 4),
+        "balloonAmount": balloon_amount,
         "principalPaid": principal_paid,
         "interestPaid": interest_paid,
         "loanBalance": loan_balance,

@@ -19,13 +19,6 @@ const BalloonPayment: React.FC<Props> = ({
   return (
     <>
       <InputField
-        label="Balloon Payment Year"
-        name="balloonYear"
-        value={balloonYear}
-        onChange={onChange}
-        placeholder="Ej: 7"
-      />
-      <InputField
         label="Home Price"
         name="homePrice"
         value={homePrice}
@@ -39,6 +32,15 @@ const BalloonPayment: React.FC<Props> = ({
         onChange={onChange}
         placeholder="Ej: 70000"
       />
+
+      <InputField
+        label="Balloon Year"
+        name="balloonYear"
+        value={balloonYear}
+        onChange={onChange}
+        placeholder="Ej: 5"
+      />
+
       <InputField
         label="Interest Rate (%)"
         name="interestRate"

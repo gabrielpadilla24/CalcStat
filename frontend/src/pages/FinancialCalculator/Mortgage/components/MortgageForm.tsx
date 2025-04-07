@@ -47,10 +47,10 @@ const MortgageForm: React.FC<Props> = ({
     initialRate: "",
     armType: "",
     loanTerm: "",
-    balloonYear: "",
     propertyTaxes: "",
     hoaFees: "",
     insurance: "",
+    balloonYear: "",
   });
 
   const handleChange = (
@@ -312,22 +312,22 @@ const MortgageForm: React.FC<Props> = ({
 
     if (formData.loanType === "Balloon Payments") {
       const interestRate = Number(formData.interestRate);
-      const balloonYear = Number(formData.balloonYear);
       const loanTerm = Number(formData.loanTerm);
+      const balloonYear = Number(formData.balloonYear);
 
       if (
         isNaN(interestRate) ||
         interestRate <= 0 ||
-        isNaN(balloonYear) ||
-        balloonYear <= 0 ||
         isNaN(loanTerm) ||
         loanTerm <= 0
       ) {
-        alert("Please fill all Balloon Payments fields correctly.");
+        alert(
+          "Please fill all Balloon Payment fields correctly. Balloon year must be less than loan term."
+        );
         return;
       }
 
-      fetch("http://localhost:8000/balloonpayment", {
+      fetch("http://localhost:8000/balloon", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -348,9 +348,7 @@ const MortgageForm: React.FC<Props> = ({
             loanAmount,
             totalPayments,
             monthlyRate,
-            principalPaid,
-            interestPaid,
-            loanBalance,
+            balloonAmount,
           } = data;
 
           setResultado({
@@ -358,13 +356,12 @@ const MortgageForm: React.FC<Props> = ({
             loanAmount,
             totalPayments,
             monthlyRate,
+            secondPayment: balloonAmount, // 👈 usamos el mismo campo que Interest Only
           });
 
-          setPrincipalPaid(principalPaid);
-          setInterestPaid(interestPaid);
-          setLoanBalance(loanBalance);
           setTotalPayment(monthlyPayment);
         })
+
         .catch((err) => {
           console.error(err);
           alert("There was an error calculating the Balloon Payment.");
@@ -525,10 +522,10 @@ const MortgageForm: React.FC<Props> = ({
                 </td>
               </tr>
               <BalloonPayment
-                balloonYear={formData.balloonYear}
                 homePrice={formData.homePrice}
                 downPayment={formData.downPayment}
                 interestRate={formData.interestRate}
+                balloonYear={formData.balloonYear}
                 onChange={handleChange}
               />
             </>

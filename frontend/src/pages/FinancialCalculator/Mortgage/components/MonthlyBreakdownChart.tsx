@@ -173,7 +173,7 @@ const MonthlyBreakdownChart: React.FC<Props> = ({
                 </div>
               )}
 
-              {isInterestOnlyWithTwoPayments && selectedTab === "initial" && (
+              {isInterestOnlyWithTwoPayments && (
                 <div className={`pt-6 text-center`}>
                   <button
                     onClick={scrollToInterestOnly}
