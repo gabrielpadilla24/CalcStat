@@ -86,7 +86,6 @@ const MortgageCalculator = () => {
               scrollToGraph={scrollToGraph}
               scrollToARM={scrollToARM}
               scrollToInterestOnly={scrollToInterestOnly}
-              //scrollToBalloon={scrollToBalloon} // ✅
               loanType={loanType} // ✅
             />
           </div>

@@ -309,7 +309,6 @@ const MortgageForm: React.FC<Props> = ({
     // -----------------------------
     // Balloon Payments
     // -----------------------------
-
     if (formData.loanType === "Balloon Payments") {
       const interestRate = Number(formData.interestRate);
       const loanTerm = Number(formData.loanTerm);
@@ -346,22 +345,24 @@ const MortgageForm: React.FC<Props> = ({
           const {
             monthlyPayment,
             loanAmount,
-            totalPayments,
             monthlyRate,
-            balloonAmount,
+            principalPaid,
+            interestPaid,
+            loanBalance,
           } = data;
 
           setResultado({
             monthlyPayment,
             loanAmount,
-            totalPayments,
+            totalPayments: balloonYear * 12,
             monthlyRate,
-            secondPayment: balloonAmount, // 👈 usamos el mismo campo que Interest Only
           });
 
           setTotalPayment(monthlyPayment);
+          setPrincipalPaid(principalPaid); // ✅ ESTO FALTABA
+          setInterestPaid(interestPaid); // ✅ ESTO FALTABA
+          setLoanBalance(loanBalance); // ✅ ESTO FALTABA
         })
-
         .catch((err) => {
           console.error(err);
           alert("There was an error calculating the Balloon Payment.");
