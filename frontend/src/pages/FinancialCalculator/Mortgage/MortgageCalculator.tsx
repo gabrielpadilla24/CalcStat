@@ -114,7 +114,8 @@ const MortgageCalculator: React.FC<MortgageCalculatorProps> = ({
               setHOAFees={setHOAFees}
               setInsurance={setInsurance}
               setLoanType={setLoanTypeState}
-              showLoanTypeSelector={isGeneralRoute} // Puedes usar este prop en el form
+              showLoanTypeSelector={isGeneralRoute}
+              loanType={loanTypeState} // Puedes usar este prop en el form
             />
           </div>
 

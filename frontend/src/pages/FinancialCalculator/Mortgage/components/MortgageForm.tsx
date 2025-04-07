@@ -25,6 +25,7 @@ interface Props {
   setInsurance: (value: string) => void;
   setLoanType: (type: string) => void;
   showLoanTypeSelector?: boolean;
+  loanType: string;
 }
 
 const MortgageForm: React.FC<Props> = ({
@@ -38,6 +39,7 @@ const MortgageForm: React.FC<Props> = ({
   setInsurance,
   setLoanType,
   showLoanTypeSelector = true,
+  loanType,
 }) => {
   const detectLoanTypeFromURL = (): string => {
     const path = window.location.pathname.toLowerCase();
@@ -406,7 +408,29 @@ const MortgageForm: React.FC<Props> = ({
   return (
     <form
       onSubmit={handleSubmit}
-      className="bg-white p-6 rounded-lg shadow-lg w-[550px]"
+      className={`
+        bg-white 
+        rounded-lg 
+        shadow-md 
+        p-6 
+        w-[600px] 
+        flex 
+        flex-col 
+        justify-between 
+        transition-all 
+        duration-300
+        ${
+          loanType === "Interest Only"
+            ? "h-[576px]"
+            : loanType === "Balloon Payments"
+            ? "h-[576px]"
+            : loanType === "Fixed Rate"
+            ? "h-[516px]"
+            : loanType === "ARM"
+            ? "h-[576px]"
+            : "h-[460px]" // Default para Fixed Rate, ARM, etc.
+        }
+      `}
     >
       <table className="w-full space-y-4">
         <tbody>
