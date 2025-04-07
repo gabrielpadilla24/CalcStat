@@ -8,7 +8,7 @@ interface Props {
     totalPayments: number;
     monthlyRate: number;
     fixedYearsMessage?: string;
-    secondPayment?: number; // Pago mensual luego del interest-only period
+    secondPayment?: number;
   } | null;
   monthlyPropertyTax?: number;
   monthlyHOA?: number;
@@ -16,6 +16,8 @@ interface Props {
   scrollToGraph: () => void;
   scrollToARM: () => void;
   scrollToInterestOnly?: () => void;
+  scrollToBalloon?: () => void;
+  loanType: string;
 }
 
 const MonthlyBreakdownChart: React.FC<Props> = ({
@@ -26,15 +28,17 @@ const MonthlyBreakdownChart: React.FC<Props> = ({
   scrollToGraph,
   scrollToARM,
   scrollToInterestOnly,
+  scrollToBalloon,
+  loanType,
 }) => {
-  const isInterestOnlyWithTwoPayments = resultado?.secondPayment !== undefined;
+  const isTwoPaymentLoan = resultado?.secondPayment !== undefined;
   const [selectedTab, setSelectedTab] = useState<"initial" | "after">(
     "initial"
   );
 
   const hasResult = resultado !== null;
   const paymentToDisplay =
-    isInterestOnlyWithTwoPayments && selectedTab === "after"
+    isTwoPaymentLoan && selectedTab === "after"
       ? resultado?.secondPayment || 0
       : resultado?.monthlyPayment || 0;
 
@@ -96,15 +100,13 @@ const MonthlyBreakdownChart: React.FC<Props> = ({
   };
 
   return (
-    <div
-      className={`bg-white rounded-lg shadow-md p-6 w-[600px] flex flex-col justify-between`}
-    >
+    <div className="bg-white rounded-lg shadow-md p-6 w-[600px] flex flex-col justify-between">
       <h2 className="text-xl font-semibold text-center mb-4">
         Monthly Payment Chart
       </h2>
 
-      {/* Tabs - Only show if Interest Only with two payments */}
-      {isInterestOnlyWithTwoPayments && (
+      {/* Tabs para Interest Only o Balloon Payments */}
+      {isTwoPaymentLoan && (
         <div className="flex justify-center mb-4">
           <button
             className={`px-4 py-2 rounded-l-lg border ${
@@ -114,7 +116,9 @@ const MonthlyBreakdownChart: React.FC<Props> = ({
             }`}
             onClick={() => setSelectedTab("initial")}
           >
-            Interest-Only Period
+            {loanType === "Interest Only"
+              ? "Interest-Only Period"
+              : "Monthly Payment"}
           </button>
           <button
             className={`px-4 py-2 rounded-r-lg border ${
@@ -124,7 +128,9 @@ const MonthlyBreakdownChart: React.FC<Props> = ({
             }`}
             onClick={() => setSelectedTab("after")}
           >
-            After Interest-Only
+            {loanType === "Interest Only"
+              ? "After Interest-Only"
+              : "Balloon Payment"}
           </button>
         </div>
       )}
@@ -150,8 +156,8 @@ const MonthlyBreakdownChart: React.FC<Props> = ({
                 Monthly Payment
               </div>
 
-              {/* Si es ARM con mensaje */}
-              {resultado?.fixedYearsMessage && selectedTab === "initial" && (
+              {/* ARM message */}
+              {loanType === "ARM" && resultado?.fixedYearsMessage && (
                 <div className="text-sm text-gray-600 italic">
                   (first {resultado.fixedYearsMessage.match(/\d+/)?.[0]} years)
                 </div>
@@ -161,25 +167,38 @@ const MonthlyBreakdownChart: React.FC<Props> = ({
                 {hasResult ? formatCurrency(totalPayment) : "—"}
               </div>
 
-              {/* Mostrar scrollToARM o scrollToInterestOnly según tipo */}
-              {resultado?.fixedYearsMessage && selectedTab === "initial" && (
-                <div className={`pt-6 text-center`}>
-                  <button
-                    onClick={scrollToARM}
-                    className="text-gray-600 hover:text-gray-800 transition-colors text-sm italic"
-                  >
-                    Learn More About ARM's
-                  </button>
-                </div>
-              )}
+              {/* Learn more buttons */}
+              {loanType === "ARM" &&
+                resultado?.fixedYearsMessage &&
+                selectedTab === "initial" && (
+                  <div className="pt-6 text-center">
+                    <button
+                      onClick={scrollToARM}
+                      className="text-gray-600 hover:text-gray-800 transition-colors text-sm italic"
+                    >
+                      Learn More About ARM's
+                    </button>
+                  </div>
+                )}
 
-              {isInterestOnlyWithTwoPayments && (
-                <div className={`pt-6 text-center`}>
+              {loanType === "Interest Only" && (
+                <div className="pt-6 text-center">
                   <button
                     onClick={scrollToInterestOnly}
                     className="text-gray-600 hover:text-gray-800 transition-colors text-sm italic"
                   >
                     Learn More About Interest-Only Mortgages
+                  </button>
+                </div>
+              )}
+
+              {loanType === "Balloon Payments" && (
+                <div className="pt-6 text-center">
+                  <button
+                    onClick={scrollToBalloon}
+                    className="text-gray-600 hover:text-gray-800 transition-colors text-sm italic"
+                  >
+                    Learn More About Balloon Payment Mortgages
                   </button>
                 </div>
               )}
@@ -232,7 +251,7 @@ const MonthlyBreakdownChart: React.FC<Props> = ({
         )}
       </div>
 
-      <div className={`pt-6 text-center`}>
+      <div className="pt-6 text-center">
         <button
           onClick={scrollToGraph}
           className="text-gray-600 hover:text-gray-800 transition-colors text-sm underline underline-offset-4"
