@@ -146,6 +146,8 @@ const MonthlyBreakdownChart: React.FC<Props> = ({
           >
             {loanType === "Interest Only"
               ? "Interest-Only Period"
+              : loanType === "Balloon Payments"
+              ? "Monthly Payment"
               : "Monthly Payment"}
           </button>
           <button
@@ -181,7 +183,9 @@ const MonthlyBreakdownChart: React.FC<Props> = ({
           <div className="flex-1 text-sm text-gray-700 space-y-1">
             <div className="bg-green-100 border border-green-300 text-green-700 px-4 py-4 rounded-lg text-center shadow-sm mb-4">
               <div className="text-lg font-semibold leading-tight">
-                Monthly Payment
+                {loanType === "Balloon Payments" && selectedTab === "after"
+                  ? "Balloon Payment"
+                  : "Monthly Payment"}
               </div>
 
               {/* ARM message */}
