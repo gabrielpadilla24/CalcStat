@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import ReactApexChart from "react-apexcharts";
 
 interface Props {
@@ -35,6 +35,10 @@ const MonthlyBreakdownChart: React.FC<Props> = ({
   const [selectedTab, setSelectedTab] = useState<"initial" | "after">(
     "initial"
   );
+
+  useEffect(() => {
+    setSelectedTab("initial");
+  }, [resultado]);
 
   const hasResult = resultado !== null;
   const paymentToDisplay =

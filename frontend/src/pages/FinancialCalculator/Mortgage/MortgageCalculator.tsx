@@ -5,6 +5,7 @@ import MonthlyBreakdownChart from "./components/MonthlyBreakdownChart";
 import AmortizationGraph from "./components/AmortizationGraph";
 import ARMExplanation from "./components/ARMExplanation";
 import InterestOnlyExplanation from "./components/InterestOnlyExplanation";
+import BalloonExplanation from "./components/BalloonExplanation"; // ✅ Importado
 
 const MortgageCalculator = () => {
   const [resultado, setResultado] = useState<{
@@ -25,7 +26,7 @@ const MortgageCalculator = () => {
   const [hoaFees, setHOAFees] = useState<string>("");
   const [insurance, setInsurance] = useState<string>("");
 
-  const [loanType, setLoanType] = useState<string>(""); // Nuevo estado para tipo de hipoteca
+  const [loanType, setLoanType] = useState<string>("");
 
   const amortizationRef = useRef<HTMLDivElement | null>(null);
 
@@ -41,6 +42,7 @@ const MortgageCalculator = () => {
       armSection.scrollIntoView({ behavior: "smooth" });
     }
   };
+
   const scrollToInterestOnly = () => {
     const interestOnlySection = document.querySelector(".mt-8");
     if (interestOnlySection) {
@@ -61,7 +63,6 @@ const MortgageCalculator = () => {
         </h1>
 
         <div className="flex justify-center items-start gap-12 flex-wrap mb-16">
-          {/* Formulario */}
           <div>
             <MortgageForm
               setResultado={setResultado}
@@ -72,11 +73,10 @@ const MortgageCalculator = () => {
               setPropertyTaxes={setPropertyTaxes}
               setHOAFees={setHOAFees}
               setInsurance={setInsurance}
-              setLoanType={setLoanType} // Nuevo prop
+              setLoanType={setLoanType}
             />
           </div>
 
-          {/* Pie Chart más amplio */}
           <div className="w-full md:w-auto">
             <MonthlyBreakdownChart
               resultado={resultado}
@@ -86,12 +86,11 @@ const MortgageCalculator = () => {
               scrollToGraph={scrollToGraph}
               scrollToARM={scrollToARM}
               scrollToInterestOnly={scrollToInterestOnly}
-              loanType={loanType} // ✅
+              loanType={loanType}
             />
           </div>
         </div>
 
-        {/* Gráfico de Amortización */}
         <div ref={amortizationRef} className="flex justify-center">
           <AmortizationGraph
             principalPaid={principalPaid}
@@ -100,17 +99,22 @@ const MortgageCalculator = () => {
           />
         </div>
 
-        {/* Explicación ARM (solo si es tipo ARM) */}
         {loanType === "ARM" && (
           <div className="mt-12">
             <ARMExplanation fixedYearsMessage={resultado?.fixedYearsMessage} />
           </div>
         )}
 
-        {/* Explicación de Interés Solo */}
         {loanType === "Interest Only" && (
           <div className="mt-8" id="interest-only-explanation">
             <InterestOnlyExplanation />
+          </div>
+        )}
+
+        {/* ✅ Explicación de Balloon */}
+        {loanType === "Balloon Payments" && (
+          <div className="mt-8" id="balloon-explanation">
+            <BalloonExplanation />
           </div>
         )}
       </div>

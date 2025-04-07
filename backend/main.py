@@ -284,7 +284,6 @@ def calcular_interest_only(data: InterestOnlyData):
         "loanBalance": loan_balance,
     }
 
-
 # -----------------------------
 # ENDPOINT DE HIPOTECA BALLOON
 # -----------------------------
@@ -302,19 +301,12 @@ def calcular_balloon_payment(data: BalloonPaymentData):
             "error": "Balloon year must be less than the total loan term."
         }
 
-    # -----------------------------
-    # Pago mensual como si fuera a término completo
-    # -----------------------------
     if monthly_rate == 0:
         monthly_payment = loan_amount / total_months
     else:
         monthly_payment = loan_amount * (monthly_rate * (1 + monthly_rate) ** total_months) / \
                           ((1 + monthly_rate) ** total_months - 1)
 
-
-    # -----------------------------
-    # Simulación de amortización hasta el balloon + pago final
-    # -----------------------------
     principal_paid = [0.0]
     interest_paid = [0.0]
     loan_balance = [round(loan_amount, 2)]
@@ -333,9 +325,8 @@ def calcular_balloon_payment(data: BalloonPaymentData):
         yearly_principal += principal
         yearly_interest += interest
 
-        # 💰 En el último mes del balloon year: se paga todo el balance
         if month == balloon_month:
-            yearly_principal += balance  # pagar todo lo que queda
+            yearly_principal += balance
             balance = 0.0
 
         if month % 12 == 0 or month == balloon_month:
@@ -349,6 +340,9 @@ def calcular_balloon_payment(data: BalloonPaymentData):
             yearly_principal = 0.0
             yearly_interest = 0.0
 
+    # 💥 Aquí sacamos el balloon payment final del último mes
+    balloon_payment = round(principal_paid[-1] - principal_paid[-2], 2)
+
     return {
         "monthlyPayment": round(monthly_payment, 2),
         "loanAmount": round(loan_amount, 2),
@@ -356,4 +350,5 @@ def calcular_balloon_payment(data: BalloonPaymentData):
         "principalPaid": principal_paid,
         "interestPaid": interest_paid,
         "loanBalance": loan_balance,
+        "secondPayment": balloon_payment  # 👈 necesario para que aparezca la pestaña
     }

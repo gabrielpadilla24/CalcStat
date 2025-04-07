@@ -318,10 +318,18 @@ const MortgageForm: React.FC<Props> = ({
         isNaN(interestRate) ||
         interestRate <= 0 ||
         isNaN(loanTerm) ||
-        loanTerm <= 0
+        loanTerm <= 0 ||
+        isNaN(balloonYear) ||
+        balloonYear <= 0
       ) {
+        alert("Please fill all Balloon Payment fields correctly.");
+        return;
+      }
+
+      // ✅ VALIDACIÓN ADICIONAL
+      if (balloonYear >= loanTerm) {
         alert(
-          "Please fill all Balloon Payment fields correctly. Balloon year must be less than loan term."
+          "Balloon Year must be less than the Loan Term. Otherwise, it's just a regular fixed-rate loan."
         );
         return;
       }
@@ -349,19 +357,21 @@ const MortgageForm: React.FC<Props> = ({
             principalPaid,
             interestPaid,
             loanBalance,
+            secondPayment, // 👈 asegúrate que esto se incluya
           } = data;
 
           setResultado({
             monthlyPayment,
+            secondPayment, // 👈 para habilitar la tab
             loanAmount,
             totalPayments: balloonYear * 12,
             monthlyRate,
           });
 
           setTotalPayment(monthlyPayment);
-          setPrincipalPaid(principalPaid); // ✅ ESTO FALTABA
-          setInterestPaid(interestPaid); // ✅ ESTO FALTABA
-          setLoanBalance(loanBalance); // ✅ ESTO FALTABA
+          setPrincipalPaid(principalPaid);
+          setInterestPaid(interestPaid);
+          setLoanBalance(loanBalance);
         })
         .catch((err) => {
           console.error(err);
