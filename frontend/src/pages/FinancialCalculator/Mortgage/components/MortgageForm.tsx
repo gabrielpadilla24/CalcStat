@@ -413,7 +413,7 @@ const MortgageForm: React.FC<Props> = ({
         rounded-lg 
         shadow-md 
         p-6 
-        w-[600px] 
+        w-[550px] 
         flex 
         flex-col 
         justify-between 
