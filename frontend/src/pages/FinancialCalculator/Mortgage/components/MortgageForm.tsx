@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import SubmitButton from "@/components/SubmitButton";
 import FRM from "./FRM";
 import ARM from "./ARMForm";
@@ -24,6 +24,7 @@ interface Props {
   setHOAFees: (value: string) => void;
   setInsurance: (value: string) => void;
   setLoanType: (type: string) => void;
+  showLoanTypeSelector?: boolean;
 }
 
 const MortgageForm: React.FC<Props> = ({
@@ -36,9 +37,19 @@ const MortgageForm: React.FC<Props> = ({
   setHOAFees,
   setInsurance,
   setLoanType,
+  showLoanTypeSelector = true,
 }) => {
+  const detectLoanTypeFromURL = (): string => {
+    const path = window.location.pathname.toLowerCase();
+    if (path.includes("fixed")) return "Fixed Rate";
+    if (path.includes("arm")) return "ARM";
+    if (path.includes("interest")) return "Interest Only";
+    if (path.includes("balloon")) return "Balloon Payments";
+    return "";
+  };
+
   const [formData, setFormData] = useState({
-    loanType: "",
+    loanType: showLoanTypeSelector ? "" : detectLoanTypeFromURL(),
     homePrice: "",
     downPayment: "",
     duration: "",
@@ -52,6 +63,14 @@ const MortgageForm: React.FC<Props> = ({
     insurance: "",
     balloonYear: "",
   });
+
+  useEffect(() => {
+    if (!showLoanTypeSelector) {
+      const autoLoanType = detectLoanTypeFromURL();
+      setFormData((prev) => ({ ...prev, loanType: autoLoanType }));
+      setLoanType(autoLoanType);
+    }
+  }, [showLoanTypeSelector, setLoanType]);
 
   const handleChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>
@@ -391,29 +410,31 @@ const MortgageForm: React.FC<Props> = ({
     >
       <table className="w-full space-y-4">
         <tbody>
-          {/* Tipo de Hipoteca */}
-          <tr>
-            <td>
-              <label htmlFor="loanType">Mortgage Type:</label>
-            </td>
-            <td>
-              <select
-                id="loanType"
-                name="loanType"
-                value={formData.loanType}
-                onChange={handleChange}
-                className="w-full p-2 border border-gray-300 rounded"
-              >
-                <option value="">Select</option>
-                <option value="Fixed Rate">Fixed Rate</option>
-                <option value="ARM">ARM</option>
-                <option value="Interest Only">Interest Only</option>
-                <option value="Balloon Payments">Balloon Payments</option>
-              </select>
-            </td>
-          </tr>
+          {/* Tipo de Hipoteca (solo si se permite seleccionar) */}
+          {showLoanTypeSelector && (
+            <tr>
+              <td>
+                <label htmlFor="loanType">Mortgage Type:</label>
+              </td>
+              <td>
+                <select
+                  id="loanType"
+                  name="loanType"
+                  value={formData.loanType}
+                  onChange={handleChange}
+                  className="w-full p-2 border border-gray-300 rounded"
+                >
+                  <option value="">Select</option>
+                  <option value="Fixed Rate">Fixed Rate</option>
+                  <option value="ARM">ARM</option>
+                  <option value="Interest Only">Interest Only</option>
+                  <option value="Balloon Payments">Balloon Payments</option>
+                </select>
+              </td>
+            </tr>
+          )}
 
-          {/* Campos dinámicos */}
+          {/* Campos dinámicos por tipo */}
           {formData.loanType === "Fixed Rate" && (
             <>
               <tr>
@@ -557,7 +578,6 @@ const MortgageForm: React.FC<Props> = ({
               />
             </td>
           </tr>
-
           <tr>
             <td>
               <label htmlFor="hoaFees">HOA Fees (Monthly):</label>
@@ -573,7 +593,6 @@ const MortgageForm: React.FC<Props> = ({
               />
             </td>
           </tr>
-
           <tr>
             <td>
               <label htmlFor="insurance">Insurance (Annual):</label>

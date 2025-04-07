@@ -1,13 +1,20 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
+import { useLocation } from "react-router-dom";
 import NavBar from "@/components/NavBar";
 import MortgageForm from "./components/MortgageForm";
 import MonthlyBreakdownChart from "./components/MonthlyBreakdownChart";
 import AmortizationGraph from "./components/AmortizationGraph";
 import ARMExplanation from "./components/ARMExplanation";
 import InterestOnlyExplanation from "./components/InterestOnlyExplanation";
-import BalloonExplanation from "./components/BalloonExplanation"; // ✅ Importado
+import BalloonExplanation from "./components/BalloonExplanation";
 
-const MortgageCalculator = () => {
+interface MortgageCalculatorProps {
+  loanType?: string;
+}
+
+const MortgageCalculator: React.FC<MortgageCalculatorProps> = ({
+  loanType,
+}) => {
   const [resultado, setResultado] = useState<{
     monthlyPayment: number;
     loanAmount: number;
@@ -26,7 +33,35 @@ const MortgageCalculator = () => {
   const [hoaFees, setHOAFees] = useState<string>("");
   const [insurance, setInsurance] = useState<string>("");
 
-  const [loanType, setLoanType] = useState<string>("");
+  const [loanTypeState, setLoanTypeState] = useState<string>(loanType || "");
+
+  const location = useLocation();
+  const isGeneralRoute = location.pathname === "/mortgage";
+
+  useEffect(() => {
+    if (loanType) {
+      setLoanTypeState(loanType);
+    }
+  }, [loanType]);
+
+  const getTitle = () => {
+    if (isGeneralRoute) return "Mortgage Calculator";
+
+    switch (loanTypeState) {
+      case "Fixed Rate":
+        return "Fixed Rate Mortgage Calculator";
+      case "ARM":
+        return "Adjustable Rate Mortgage Calculator";
+      case "Interest Only":
+        return "Interest-Only Mortgage Calculator";
+      case "Balloon Payments":
+        return "Balloon Mortgage Calculator";
+      case "Jumbo Loan":
+        return "Jumbo Loan Mortgage Calculator";
+      default:
+        return "Mortgage Calculator";
+    }
+  };
 
   const amortizationRef = useRef<HTMLDivElement | null>(null);
 
@@ -65,9 +100,7 @@ const MortgageCalculator = () => {
     <>
       <NavBar />
       <div className="min-h-screen bg-gray-100 py-10 px-4">
-        <h1 className="text-4xl font-bold text-center mb-12">
-          Mortgage Calculator
-        </h1>
+        <h1 className="text-4xl font-bold text-center mb-12">{getTitle()}</h1>
 
         <div className="flex justify-center items-start gap-12 flex-wrap mb-16">
           <div>
@@ -80,7 +113,8 @@ const MortgageCalculator = () => {
               setPropertyTaxes={setPropertyTaxes}
               setHOAFees={setHOAFees}
               setInsurance={setInsurance}
-              setLoanType={setLoanType}
+              setLoanType={setLoanTypeState}
+              showLoanTypeSelector={isGeneralRoute} // Puedes usar este prop en el form
             />
           </div>
 
@@ -94,7 +128,7 @@ const MortgageCalculator = () => {
               scrollToARM={scrollToARM}
               scrollToInterestOnly={scrollToInterestOnly}
               scrollToBalloon={scrollToBalloon}
-              loanType={loanType}
+              loanType={loanTypeState}
             />
           </div>
         </div>
@@ -107,20 +141,19 @@ const MortgageCalculator = () => {
           />
         </div>
 
-        {loanType === "ARM" && (
+        {loanTypeState === "ARM" && (
           <div className="mt-12">
             <ARMExplanation fixedYearsMessage={resultado?.fixedYearsMessage} />
           </div>
         )}
 
-        {loanType === "Interest Only" && (
+        {loanTypeState === "Interest Only" && (
           <div className="mt-8" id="interest-only-explanation">
             <InterestOnlyExplanation />
           </div>
         )}
 
-        {/* ✅ Explicación de Balloon */}
-        {loanType === "Balloon Payments" && (
+        {loanTypeState === "Balloon Payments" && (
           <div className="mt-8" id="balloon-explanation">
             <BalloonExplanation />
           </div>

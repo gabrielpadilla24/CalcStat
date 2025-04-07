@@ -17,6 +17,22 @@ const App = () => {
           element={<CompoundInterestCalculator />}
         />
         <Route path="/mortgage" element={<MortgageCalculator />} />
+        <Route
+          path="/mortgage/fixed"
+          element={<MortgageCalculator loanType="Fixed Rate" />}
+        />
+        <Route
+          path="/mortgage/arm"
+          element={<MortgageCalculator loanType="ARM" />}
+        />
+        <Route
+          path="/mortgage/interest-only"
+          element={<MortgageCalculator loanType="Interest Only" />}
+        />
+        <Route
+          path="/mortgage/balloon"
+          element={<MortgageCalculator loanType="Balloon Payments" />}
+        />
 
         <Route path="/financial" element={<FinancialCalculator />} />
         <Route path="/calculators" element={<Menu />} />
