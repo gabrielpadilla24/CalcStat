@@ -115,7 +115,7 @@ const MortgageCalculator: React.FC<MortgageCalculatorProps> = ({
               setInsurance={setInsurance}
               setLoanType={setLoanTypeState}
               showLoanTypeSelector={isGeneralRoute}
-              loanType={loanTypeState} // Puedes usar este prop en el form
+              loanType={loanTypeState}
             />
           </div>
 
@@ -160,8 +160,19 @@ const MortgageCalculator: React.FC<MortgageCalculatorProps> = ({
           </div>
         )}
       </div>
+
+      {/* Full-width CTA outside the gray container */}
+      <section className="w-full bg-[#4A9A80] py-16 text-center">
+        <h2 className="text-white text-3xl font-semibold mb-4">
+          Ready to Explore More?
+        </h2>
+        <a href="/financial">
+          <button className="bg-white text-[#4A9A80] px-6 py-3 rounded-xl font-semibold hover:bg-gray-100 transition">
+            Browse Financial
+          </button>
+        </a>
+      </section>
     </>
   );
 };
-
 export default MortgageCalculator;
