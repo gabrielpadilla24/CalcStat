@@ -3,6 +3,7 @@ import SubmitButton from "@/components/SubmitButton";
 import FRM from "./FRM";
 import ARM from "./ARMForm";
 import InterestOnly from "./InterestOnly";
+import BalloonPayment from "./BalloonPayment";
 
 interface Props {
   setTotalPayment: (value: number) => void;
@@ -305,6 +306,73 @@ const MortgageForm: React.FC<Props> = ({
       return;
     }
 
+    // -----------------------------
+    // Balloon Payments
+    // -----------------------------
+
+    if (formData.loanType === "Balloon Payments") {
+      const interestRate = Number(formData.interestRate);
+      const balloonYear = Number(formData.balloonYear);
+      const loanTerm = Number(formData.loanTerm);
+
+      if (
+        isNaN(interestRate) ||
+        interestRate <= 0 ||
+        isNaN(balloonYear) ||
+        balloonYear <= 0 ||
+        isNaN(loanTerm) ||
+        loanTerm <= 0
+      ) {
+        alert("Please fill all Balloon Payments fields correctly.");
+        return;
+      }
+
+      fetch("http://localhost:8000/balloonpayment", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          homePrice,
+          downPayment,
+          interestRate,
+          loanTerm,
+          balloonYear,
+        }),
+      })
+        .then((res) => {
+          if (!res.ok) throw new Error("Backend error");
+          return res.json();
+        })
+        .then((data) => {
+          const {
+            monthlyPayment,
+            loanAmount,
+            totalPayments,
+            monthlyRate,
+            principalPaid,
+            interestPaid,
+            loanBalance,
+          } = data;
+
+          setResultado({
+            monthlyPayment,
+            loanAmount,
+            totalPayments,
+            monthlyRate,
+          });
+
+          setPrincipalPaid(principalPaid);
+          setInterestPaid(interestPaid);
+          setLoanBalance(loanBalance);
+          setTotalPayment(monthlyPayment);
+        })
+        .catch((err) => {
+          console.error(err);
+          alert("There was an error calculating the Balloon Payment.");
+        });
+
+      return;
+    }
+
     alert("This mortgage type is not yet implemented.");
   };
 
@@ -429,6 +497,38 @@ const MortgageForm: React.FC<Props> = ({
                 downPayment={formData.downPayment}
                 interestRate={formData.interestRate}
                 interestOnlyPeriod={formData.interestOnlyPeriod}
+                onChange={handleChange}
+              />
+            </>
+          )}
+
+          {formData.loanType === "Balloon Payments" && (
+            <>
+              <tr>
+                <td>
+                  <label htmlFor="loanTerm">Loan Term (Years):</label>
+                </td>
+                <td>
+                  <select
+                    id="loanTerm"
+                    name="loanTerm"
+                    value={formData.loanTerm}
+                    onChange={handleChange}
+                    className="w-full p-2 border border-gray-300 rounded"
+                  >
+                    <option value="">Select</option>
+                    <option value="10">10 years</option>
+                    <option value="15">15 years</option>
+                    <option value="20">20 years</option>
+                    <option value="30">30 years</option>
+                  </select>
+                </td>
+              </tr>
+              <BalloonPayment
+                balloonYear={formData.balloonYear}
+                homePrice={formData.homePrice}
+                downPayment={formData.downPayment}
+                interestRate={formData.interestRate}
                 onChange={handleChange}
               />
             </>
