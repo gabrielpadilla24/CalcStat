@@ -409,7 +409,6 @@ const MortgageForm: React.FC<Props> = ({
                 <option value="ARM">ARM</option>
                 <option value="Interest Only">Interest Only</option>
                 <option value="Balloon Payments">Balloon Payments</option>
-                <option value="Jumbo Loans">Jumbo Loans</option>
               </select>
             </td>
           </tr>

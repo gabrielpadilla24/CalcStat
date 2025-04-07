@@ -104,7 +104,31 @@ const MonthlyBreakdownChart: React.FC<Props> = ({
   };
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-6 w-[600px] flex flex-col justify-between">
+    <div
+      className={`
+    bg-white 
+    rounded-lg 
+    shadow-md 
+    p-6 
+    w-[600px] 
+    flex 
+    flex-col 
+    justify-between 
+    transition-all 
+    duration-300
+    ${
+      loanType === "Interest Only"
+        ? "h-[576px]"
+        : loanType === "Balloon Payments"
+        ? "h-[576px]"
+        : loanType === "Fixed Rate"
+        ? "h-[516px]"
+        : loanType === "ARM"
+        ? "h-[576px]"
+        : "h-[460px]" // Default para Fixed Rate, ARM, etc.
+    }
+  `}
+    >
       <h2 className="text-xl font-semibold text-center mb-4">
         Monthly Payment Chart
       </h2>
