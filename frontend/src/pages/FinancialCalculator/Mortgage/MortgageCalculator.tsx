@@ -50,6 +50,13 @@ const MortgageCalculator = () => {
     }
   };
 
+  const scrollToBalloon = () => {
+    const balloonSection = document.querySelector("#balloon-explanation");
+    if (balloonSection) {
+      balloonSection.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   const monthlyPropertyTax = propertyTaxes ? Number(propertyTaxes) / 12 : 0;
   const monthlyHOA = hoaFees ? Number(hoaFees) : 0;
   const monthlyInsurance = insurance ? Number(insurance) / 12 : 0;
@@ -86,6 +93,7 @@ const MortgageCalculator = () => {
               scrollToGraph={scrollToGraph}
               scrollToARM={scrollToARM}
               scrollToInterestOnly={scrollToInterestOnly}
+              scrollToBalloon={scrollToBalloon}
               loanType={loanType}
             />
           </div>
