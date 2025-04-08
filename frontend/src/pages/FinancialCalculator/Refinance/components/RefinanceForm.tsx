@@ -1,5 +1,6 @@
 import React, { useState, useRef } from "react";
 import RefinanceBreakEvenChart from "./RefinanceBreakEvenChart";
+import ScoreMeter from "./ScoreMeter";
 
 type RefinanceResult = {
   newMonthlyPayment: number;
@@ -233,6 +234,8 @@ const RefinanceForm = () => {
               </div>
             </div>
           </div>
+
+          <ScoreMeter value={78} />
 
           <RefinanceBreakEvenChart
             groupedOriginal={result.groupedOriginal}
