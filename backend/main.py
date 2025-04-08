@@ -381,12 +381,14 @@ def calcular_refinance(data: RefinanceData):
     remaining_original_cost = data.currentMonthlyPayment * n_remaining
 
     new_monthly_payment = balance * (r_new * pow(1 + r_new, n_new)) / (pow(1 + r_new, n_new) - 1)
+
     total_cost_refinanced = new_monthly_payment * n_new + closing_costs
 
     difference_in_interest = remaining_original_cost - total_cost_refinanced
     monthly_savings = data.currentMonthlyPayment - new_monthly_payment
     months_to_recoup = closing_costs / monthly_savings if monthly_savings > 0 else None
 
+    # Pagos acumulados mensuales
     cumulative_original = [
         round(data.currentMonthlyPayment * (i + 1), 2) for i in range(n_remaining)
     ]
@@ -395,16 +397,14 @@ def calcular_refinance(data: RefinanceData):
     ]
 
     # Agrupar por año (cada 12 meses)
-    def agrupar_por_anio(data: list) -> list:
-        return [round(data[i * 12 + 11], 2) for i in range(len(data) // 12)]
+    def agrupar_por_anio(array):
+        return [
+            round(array[min((i + 1) * 12 - 1, len(array) - 1)], 2)
+            for i in range((len(array) + 11) // 12)
+        ]
 
     grouped_original = agrupar_por_anio(cumulative_original)
     grouped_refinanced = agrupar_por_anio(cumulative_refinanced)
-
-    # 👇 Normalizar longitud para el gráfico y los tooltips
-    max_len = max(len(grouped_original), len(grouped_refinanced))
-    grouped_original += [None] * (max_len - len(grouped_original))
-    grouped_refinanced += [None] * (max_len - len(grouped_refinanced))
 
     return {
         "newMonthlyPayment": round(new_monthly_payment, 2),
@@ -415,5 +415,5 @@ def calcular_refinance(data: RefinanceData):
         "cumulativeOriginal": cumulative_original,
         "cumulativeRefinanced": cumulative_refinanced,
         "groupedOriginal": grouped_original,
-        "groupedRefinanced": grouped_refinanced
+        "groupedRefinanced": grouped_refinanced,
     }
