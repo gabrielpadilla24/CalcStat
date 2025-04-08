@@ -62,6 +62,7 @@ class RefinanceData(BaseModel):
     currentRate: float
     newRate: float
     newTermYears: int
+    closingCosts: float
 
 
 
@@ -371,17 +372,6 @@ def calcular_balloon_payment(data: BalloonPaymentData):
 # -----------------------------
 # ENDPOINT DE REFINANCE MORTGAGE
 # -----------------------------
-from pydantic import BaseModel
-from math import pow
-
-class RefinanceData(BaseModel):
-    currentMonthlyPayment: float
-    balanceLeft: float
-    remainingTermYears: int
-    currentRate: float
-    newRate: float
-    newTermYears: int
-    closingCosts: float
 
 @app.post("/refinance")
 def calcular_refinance(data: RefinanceData):
@@ -404,12 +394,16 @@ def calcular_refinance(data: RefinanceData):
     # Ahorro
     difference_in_interest = remaining_original_cost - total_cost_refinanced
     monthly_savings = data.currentMonthlyPayment - new_monthly_payment
-    months_to_recoup = closing_costs / monthly_savings if monthly_savings > 0 else float("inf")
+
+    # ✅ Evitar float('inf') que rompe JSON
+    months_to_recoup = (
+        closing_costs / monthly_savings if monthly_savings > 0 else None
+    )
 
     return {
         "newMonthlyPayment": round(new_monthly_payment, 2),
         "monthlySavings": round(monthly_savings, 2),
         "differenceInInterest": round(difference_in_interest, 2),
         "totalCost": round(closing_costs, 2),
-        "monthsToRecoupCosts": round(months_to_recoup, 2)
+        "monthsToRecoupCosts": round(months_to_recoup, 2) if months_to_recoup is not None else None
     }

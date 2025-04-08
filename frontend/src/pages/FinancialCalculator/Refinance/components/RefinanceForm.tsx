@@ -5,7 +5,7 @@ type RefinanceResult = {
   monthlySavings: number;
   differenceInInterest: number;
   totalCost: number;
-  monthsToRecoupCosts: number;
+  monthsToRecoupCosts: number | null;
 };
 
 const RefinanceForm = () => {
@@ -63,6 +63,7 @@ const RefinanceForm = () => {
         onSubmit={handleSubmit}
         className="grid grid-cols-1 md:grid-cols-2 gap-6"
       >
+        {/* Inputs */}
         <div>
           <label className="block font-medium mb-1">
             Current monthly payment
@@ -170,7 +171,8 @@ const RefinanceForm = () => {
         </div>
       </form>
 
-      {result !== null && (
+      {/* Result Section */}
+      {result && (
         <div className="mt-10 bg-gray-100 p-6 rounded-lg">
           <h3 className="text-2xl font-bold text-center mb-6">
             New Monthly Payment
@@ -197,19 +199,26 @@ const RefinanceForm = () => {
                 ${result.monthlySavings.toFixed(2)}
               </p>
             </div>
+
             <div className="border-t pt-4">
               <p className="font-semibold text-sm">Difference in Interest</p>
               <p className="text-lg">
                 ${result.differenceInInterest.toFixed(2)}
               </p>
             </div>
+
             <div className="border-t pt-4">
               <p className="font-semibold text-sm">Total Cost</p>
               <p className="text-lg">${result.totalCost.toFixed(2)}</p>
             </div>
+
             <div className="border-t pt-4">
               <p className="font-semibold text-sm">Months to Recoup Costs</p>
-              <p className="text-lg">{result.monthsToRecoupCosts.toFixed(2)}</p>
+              <p className="text-lg">
+                {result.monthsToRecoupCosts !== null
+                  ? result.monthsToRecoupCosts.toFixed(2)
+                  : "N/A"}
+              </p>
             </div>
           </div>
         </div>
