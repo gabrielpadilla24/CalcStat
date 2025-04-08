@@ -2,6 +2,7 @@ import { useState } from "react";
 import NavBar from "@/components/NavBar";
 import { Link } from "react-router-dom";
 import SubmitButton from "@/components/SubmitButton";
+import BottomCTA from "@/components/BottomCTA";
 
 const FinancialCalculator = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
@@ -201,17 +202,7 @@ const FinancialCalculator = () => {
         )}
       </div>
 
-      {/* Call to Action */}
-      <div className="bg-[#4A9A80] py-16 text-center px-4">
-        <h2 className="text-white text-3xl font-semibold mb-4">
-          Ready to Explore More?
-        </h2>
-        <Link to="/calculators">
-          <button className="bg-white text-[#4A9A80] px-6 py-3 rounded-xl font-semibold hover:bg-gray-100 transition">
-            Browse All Calculators
-          </button>
-        </Link>
-      </div>
+      <BottomCTA buttonText="Browse All Calculators" href="/calculators" />
     </div>
   );
 };

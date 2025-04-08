@@ -3,6 +3,7 @@ import ExponentialForm from "./components/ExponentialForm";
 import ExponentialGraph from "./components/ExponentialGraph";
 import ExponentialFormula from "./components/ExponentialFormula";
 import NavBar from "@/components/NavBar";
+import BottomCTA from "@/components/BottomCTA";
 
 const ExponentialCalculator = () => {
   const [valoresPorAño, setValoresPorAño] = useState<number[]>([]);
@@ -63,6 +64,7 @@ const ExponentialCalculator = () => {
           />
         </div>
       </div>
+      <BottomCTA buttonText="Browse Financial" href="/financial" />
     </>
   );
 };
