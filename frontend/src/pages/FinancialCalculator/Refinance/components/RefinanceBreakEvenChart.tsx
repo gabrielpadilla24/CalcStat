@@ -36,7 +36,7 @@ const RefinanceBreakEvenChart: React.FC<RefinanceBreakEvenChartProps> = ({
       style: { fontSize: "20px", fontWeight: "bold" },
     },
     stroke: {
-      curve: "smooth" as const,
+      curve: "straight" as const,
       width: 3,
     },
     tooltip: {
