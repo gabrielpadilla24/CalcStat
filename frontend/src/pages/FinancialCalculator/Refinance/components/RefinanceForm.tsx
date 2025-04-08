@@ -28,6 +28,8 @@ const RefinanceForm = () => {
 
   const resultRef = useRef<HTMLDivElement | null>(null);
 
+  const [score, setScore] = useState<number | null>(null);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -51,6 +53,7 @@ const RefinanceForm = () => {
 
       const data = await response.json();
       setResult(data);
+      setScore(data.refinanceScore);
 
       // Scroll hacia los resultados
       setTimeout(() => {
@@ -235,7 +238,7 @@ const RefinanceForm = () => {
             </div>
           </div>
 
-          <ScoreMeter value={78} />
+          {score !== null && <ScoreMeter value={score} />}
 
           <RefinanceBreakEvenChart
             groupedOriginal={result.groupedOriginal}

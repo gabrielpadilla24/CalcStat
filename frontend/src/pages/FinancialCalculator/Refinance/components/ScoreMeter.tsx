@@ -29,45 +29,8 @@ const ScoreMeter: React.FC<ScoreMeterProps> = ({ value }) => {
           needleColor="gray"
           ringWidth={30}
         />
-      </div>
-
-      {/* Priority Options */}
-      <div className="text-left">
-        <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-2">
-          What’s your priority?
-        </h2>
-        <div className="flex items-center mb-4">
-          <input
-            id="priority-debt"
-            type="radio"
-            value="debt"
-            name="refinance-priority"
-            className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 dark:bg-gray-700 dark:border-gray-600"
-          />
-
-          <label
-            htmlFor="priority-debt"
-            className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-          >
-            Debt Free ASAP
-          </label>
-        </div>
-        <div className="flex items-center">
-          <input
-            id="priority-monthly"
-            type="radio"
-            value="monthly"
-            name="refinance-priority"
-            defaultChecked
-            className="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 dark:bg-gray-700 dark:border-gray-600"
-          />
-
-          <label
-            htmlFor="priority-monthly"
-            className="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-          >
-            Lower Monthly Payments
-          </label>
+        <div className="text-center text-xs text-gray-500">
+          For educational purposes only, not financial advice.
         </div>
       </div>
     </div>

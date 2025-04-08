@@ -380,6 +380,8 @@ def calcular_balloon_payment(data: BalloonPaymentData):
 
 @app.post("/refinance")
 def calcular_refinance(data: RefinanceData):
+    from math import pow
+
     r_current = data.currentRate / 100 / 12
     r_new = data.newRate / 100 / 12
     n_remaining = data.remainingTermYears * 12
@@ -410,10 +412,27 @@ def calcular_refinance(data: RefinanceData):
     grouped_original = agrupar_por_anio(cumulative_original)
     grouped_refinanced = agrupar_por_anio(cumulative_refinanced)
 
-    # 👇 Normalizar longitud para el gráfico y los tooltips
     max_len = max(len(grouped_original), len(grouped_refinanced))
     grouped_original += [None] * (max_len - len(grouped_original))
     grouped_refinanced += [None] * (max_len - len(grouped_refinanced))
+
+    # ✅ Calcular refinanceScore simple balanceando factores
+    def calculate_refinance_score(ms, is_, ot, nt, original_better):
+        if original_better:
+            return 5
+        term_factor = max(0, (ot - nt) / ot)
+        interest_factor = max(0, is_ / 50000)
+        monthly_saving_factor = max(0, ms / 500)
+        score = 30 * term_factor + 35 * interest_factor + 35 * monthly_saving_factor
+        return round(min(100, max(0, score)))
+
+    refinance_score = calculate_refinance_score(
+        monthly_savings,
+        difference_in_interest,
+        n_remaining,
+        n_new,
+        monthly_savings < 0 or difference_in_interest < 0
+    )
 
     return {
         "newMonthlyPayment": round(new_monthly_payment, 2),
@@ -424,44 +443,6 @@ def calcular_refinance(data: RefinanceData):
         "cumulativeOriginal": cumulative_original,
         "cumulativeRefinanced": cumulative_refinanced,
         "groupedOriginal": grouped_original,
-        "groupedRefinanced": grouped_refinanced
+        "groupedRefinanced": grouped_refinanced,
+        "refinanceScore": refinance_score  # ✅ agregado aquí
     }
-
-@app.post("/refinance/score")
-def calcular_score(data: RefinanceScoreData):
-    def calculate_score_debt_free_asap(ms, is_, ot, nt, original_better):
-        if original_better:
-            return 5
-        term_ratio = max(0, (ot - nt) / ot)
-        int_savings_ratio = max(0, is_ / 50000)
-        small_monthly_bonus = min(1, max(0, ms / 100))
-        score = 50 * term_ratio + 40 * int_savings_ratio + 10 * small_monthly_bonus
-        return round(min(100, score))
-
-    def calculate_score_lower_monthly(ms, is_, ot, nt, original_better):
-        if original_better:
-            return 5
-        monthly_ratio = max(0, ms / 500)
-        int_savings_ratio = max(0, is_ / 50000)
-        term_penalty = max(0, (nt - ot) / ot)
-        score = 60 * monthly_ratio + 30 * int_savings_ratio - 20 * term_penalty
-        return round(min(100, max(0, score)))
-
-    if data.priority == "debt":
-        score = calculate_score_debt_free_asap(
-            data.monthlySavings,
-            data.interestSavings,
-            data.oldTermMonths,
-            data.newTermMonths,
-            data.originalWasBetter
-        )
-    else:
-        score = calculate_score_lower_monthly(
-            data.monthlySavings,
-            data.interestSavings,
-            data.oldTermMonths,
-            data.newTermMonths,
-            data.originalWasBetter
-        )
-
-    return {"score": score}
