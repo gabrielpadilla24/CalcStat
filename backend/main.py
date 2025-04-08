@@ -64,6 +64,15 @@ class RefinanceData(BaseModel):
     newTermYears: int
     closingCosts: float
 
+class RefinanceScoreData(BaseModel):
+    monthlySavings: float
+    interestSavings: float
+    oldTermMonths: int
+    newTermMonths: int
+    originalWasBetter: bool
+    priority: str  # "debt" o "monthly"
+
+
 
 
 
@@ -417,3 +426,42 @@ def calcular_refinance(data: RefinanceData):
         "groupedOriginal": grouped_original,
         "groupedRefinanced": grouped_refinanced
     }
+
+@app.post("/refinance/score")
+def calcular_score(data: RefinanceScoreData):
+    def calculate_score_debt_free_asap(ms, is_, ot, nt, original_better):
+        if original_better:
+            return 5
+        term_ratio = max(0, (ot - nt) / ot)
+        int_savings_ratio = max(0, is_ / 50000)
+        small_monthly_bonus = min(1, max(0, ms / 100))
+        score = 50 * term_ratio + 40 * int_savings_ratio + 10 * small_monthly_bonus
+        return round(min(100, score))
+
+    def calculate_score_lower_monthly(ms, is_, ot, nt, original_better):
+        if original_better:
+            return 5
+        monthly_ratio = max(0, ms / 500)
+        int_savings_ratio = max(0, is_ / 50000)
+        term_penalty = max(0, (nt - ot) / ot)
+        score = 60 * monthly_ratio + 30 * int_savings_ratio - 20 * term_penalty
+        return round(min(100, max(0, score)))
+
+    if data.priority == "debt":
+        score = calculate_score_debt_free_asap(
+            data.monthlySavings,
+            data.interestSavings,
+            data.oldTermMonths,
+            data.newTermMonths,
+            data.originalWasBetter
+        )
+    else:
+        score = calculate_score_lower_monthly(
+            data.monthlySavings,
+            data.interestSavings,
+            data.oldTermMonths,
+            data.newTermMonths,
+            data.originalWasBetter
+        )
+
+    return {"score": score}
