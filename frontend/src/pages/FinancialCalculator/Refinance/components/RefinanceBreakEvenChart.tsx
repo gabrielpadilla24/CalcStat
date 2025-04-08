@@ -2,15 +2,20 @@ import React from "react";
 import ReactApexChart from "react-apexcharts";
 
 interface RefinanceBreakEvenChartProps {
-  currentCumulativePayments: number[]; // acumulado actual
-  refinanceCumulativePayments: number[]; // acumulado refinanciado
+  groupedOriginal: number[]; // acumulado original por año
+  groupedRefinanced: number[]; // acumulado refinanciado por año
 }
 
 const RefinanceBreakEvenChart: React.FC<RefinanceBreakEvenChartProps> = ({
-  currentCumulativePayments,
-  refinanceCumulativePayments,
+  groupedOriginal,
+  groupedRefinanced,
 }) => {
-  const categories = currentCumulativePayments.map((_, i) => `Month ${i + 1}`);
+  // Elegimos la longitud máxima para alinear bien los labels
+  const maxYears = Math.max(groupedOriginal.length, groupedRefinanced.length);
+  const categories = Array.from(
+    { length: maxYears },
+    (_, i) => `Year ${i + 1}`
+  );
 
   const formatearNumero = (valor: number): string => {
     return valor.toLocaleString("en-US", {
@@ -26,7 +31,7 @@ const RefinanceBreakEvenChart: React.FC<RefinanceBreakEvenChartProps> = ({
       zoom: { enabled: false },
     },
     title: {
-      text: "Cumulative Payments: Original vs Refinance",
+      text: "Cumulative Payments (Yearly): Original vs Refinance",
       align: "center" as const,
       style: { fontSize: "20px", fontWeight: "bold" },
     },
@@ -42,7 +47,7 @@ const RefinanceBreakEvenChart: React.FC<RefinanceBreakEvenChartProps> = ({
     xaxis: {
       categories,
       title: {
-        text: "Time (Months)",
+        text: "Time (Years)",
       },
     },
     yaxis: {
@@ -61,11 +66,11 @@ const RefinanceBreakEvenChart: React.FC<RefinanceBreakEvenChartProps> = ({
   const series = [
     {
       name: "Original Loan",
-      data: currentCumulativePayments,
+      data: groupedOriginal,
     },
     {
       name: "Refinanced Loan",
-      data: refinanceCumulativePayments,
+      data: groupedRefinanced,
     },
   ];
 

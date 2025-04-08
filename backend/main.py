@@ -369,10 +369,6 @@ def calcular_balloon_payment(data: BalloonPaymentData):
 # ENDPOINT DE REFINANCE MORTGAGE
 # ------------------------------
 
-# -----------------------------
-# ENDPOINT DE REFINANCE MORTGAGE
-# -----------------------------
-
 @app.post("/refinance")
 def calcular_refinance(data: RefinanceData):
     r_current = data.currentRate / 100 / 12
@@ -390,8 +386,6 @@ def calcular_refinance(data: RefinanceData):
 
     difference_in_interest = remaining_original_cost - total_cost_refinanced
     monthly_savings = data.currentMonthlyPayment - new_monthly_payment
-
-    # 👇 Cambio importante aquí
     months_to_recoup = closing_costs / monthly_savings if monthly_savings > 0 else None
 
     cumulative_original = [
@@ -401,12 +395,21 @@ def calcular_refinance(data: RefinanceData):
         round(new_monthly_payment * (i + 1), 2) for i in range(n_new)
     ]
 
+    # ✅ Agrupar por años tomando el último valor del año
+    def agrupar_por_años(array: list[float]) -> list[float]:
+        return [array[min((i + 1) * 12 - 1, len(array) - 1)] for i in range((len(array) + 11) // 12)]
+
+    grouped_original = agrupar_por_años(cumulative_original)
+    grouped_refinanced = agrupar_por_años(cumulative_refinanced)
+
     return {
         "newMonthlyPayment": round(new_monthly_payment, 2),
         "monthlySavings": round(monthly_savings, 2),
         "differenceInInterest": round(difference_in_interest, 2),
         "totalCost": round(closing_costs, 2),
-        "monthsToRecoupCosts": months_to_recoup,  # 👈 directamente None si no aplica
+        "monthsToRecoupCosts": months_to_recoup,
         "cumulativeOriginal": cumulative_original,
-        "cumulativeRefinanced": cumulative_refinanced
+        "cumulativeRefinanced": cumulative_refinanced,
+        "groupedOriginal": grouped_original,
+        "groupedRefinanced": grouped_refinanced
     }

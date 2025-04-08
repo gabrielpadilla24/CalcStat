@@ -9,6 +9,8 @@ type RefinanceResult = {
   monthsToRecoupCosts: number | null;
   cumulativeOriginal: number[];
   cumulativeRefinanced: number[];
+  groupedOriginal: number[];
+  groupedRefinanced: number[];
 };
 
 const RefinanceForm = () => {
@@ -228,8 +230,8 @@ const RefinanceForm = () => {
           </div>
 
           <RefinanceBreakEvenChart
-            currentCumulativePayments={result.cumulativeOriginal}
-            refinanceCumulativePayments={result.cumulativeRefinanced}
+            groupedOriginal={result.groupedOriginal}
+            groupedRefinanced={result.groupedRefinanced}
           />
         </>
       )}
