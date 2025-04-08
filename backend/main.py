@@ -394,16 +394,22 @@ def calcular_refinance(data: RefinanceData):
     # Ahorro
     difference_in_interest = remaining_original_cost - total_cost_refinanced
     monthly_savings = data.currentMonthlyPayment - new_monthly_payment
+    months_to_recoup = closing_costs / monthly_savings if monthly_savings > 0 else float("inf")
 
-    # ✅ Evitar float('inf') que rompe JSON
-    months_to_recoup = (
-        closing_costs / monthly_savings if monthly_savings > 0 else None
-    )
+    # Crear arrays de pagos acumulados
+    cumulative_original = [
+        round(data.currentMonthlyPayment * (i + 1), 2) for i in range(n_remaining)
+    ]
+    cumulative_refinanced = [
+        round(new_monthly_payment * (i + 1), 2) for i in range(n_new)
+    ]
 
     return {
         "newMonthlyPayment": round(new_monthly_payment, 2),
         "monthlySavings": round(monthly_savings, 2),
         "differenceInInterest": round(difference_in_interest, 2),
         "totalCost": round(closing_costs, 2),
-        "monthsToRecoupCosts": round(months_to_recoup, 2) if months_to_recoup is not None else None
+        "monthsToRecoupCosts": round(months_to_recoup, 2),
+        "cumulativeOriginal": cumulative_original,
+        "cumulativeRefinanced": cumulative_refinanced
     }

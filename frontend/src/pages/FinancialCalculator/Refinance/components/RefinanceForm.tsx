@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import RefinanceBreakEvenChart from "./RefinanceBreakEvenChart"; // Asegúrate de que la ruta sea correcta
 
 type RefinanceResult = {
   newMonthlyPayment: number;
@@ -6,6 +7,8 @@ type RefinanceResult = {
   differenceInInterest: number;
   totalCost: number;
   monthsToRecoupCosts: number | null;
+  cumulativeOriginal: number[];
+  cumulativeRefinanced: number[];
 };
 
 const RefinanceForm = () => {
@@ -173,55 +176,62 @@ const RefinanceForm = () => {
 
       {/* Result Section */}
       {result && (
-        <div className="mt-10 bg-gray-100 p-6 rounded-lg">
-          <h3 className="text-2xl font-bold text-center mb-6">
-            New Monthly Payment
-          </h3>
-          <p
-            className={`text-4xl font-bold text-center mb-2 ${
-              isWorseDeal ? "text-red-600" : "text-green-600"
-            }`}
-          >
-            ${result.newMonthlyPayment.toFixed(2)}
-          </p>
-
-          {isWorseDeal && (
-            <p className="text-center text-red-600 font-medium mb-4">
-              ⚠️ Refinancing increases your monthly payment. Consider keeping
-              your current loan.
+        <>
+          <div className="mt-10 bg-gray-100 p-6 rounded-lg">
+            <h3 className="text-2xl font-bold text-center mb-6">
+              New Monthly Payment
+            </h3>
+            <p
+              className={`text-4xl font-bold text-center mb-2 ${
+                isWorseDeal ? "text-red-600" : "text-green-600"
+              }`}
+            >
+              ${result.newMonthlyPayment.toFixed(2)}
             </p>
-          )}
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-center text-gray-800">
-            <div className="border-t pt-4">
-              <p className="font-semibold text-sm">Monthly Savings</p>
-              <p className={`text-lg ${isWorseDeal ? "text-red-600" : ""}`}>
-                ${result.monthlySavings.toFixed(2)}
+            {isWorseDeal && (
+              <p className="text-center text-red-600 font-medium mb-4">
+                ⚠️ Refinancing increases your monthly payment. Consider keeping
+                your current loan.
               </p>
-            </div>
+            )}
 
-            <div className="border-t pt-4">
-              <p className="font-semibold text-sm">Difference in Interest</p>
-              <p className="text-lg">
-                ${result.differenceInInterest.toFixed(2)}
-              </p>
-            </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-center text-gray-800">
+              <div className="border-t pt-4">
+                <p className="font-semibold text-sm">Monthly Savings</p>
+                <p className={`text-lg ${isWorseDeal ? "text-red-600" : ""}`}>
+                  ${result.monthlySavings.toFixed(2)}
+                </p>
+              </div>
 
-            <div className="border-t pt-4">
-              <p className="font-semibold text-sm">Total Cost</p>
-              <p className="text-lg">${result.totalCost.toFixed(2)}</p>
-            </div>
+              <div className="border-t pt-4">
+                <p className="font-semibold text-sm">Difference in Interest</p>
+                <p className="text-lg">
+                  ${result.differenceInInterest.toFixed(2)}
+                </p>
+              </div>
 
-            <div className="border-t pt-4">
-              <p className="font-semibold text-sm">Months to Recoup Costs</p>
-              <p className="text-lg">
-                {result.monthsToRecoupCosts !== null
-                  ? result.monthsToRecoupCosts.toFixed(2)
-                  : "N/A"}
-              </p>
+              <div className="border-t pt-4">
+                <p className="font-semibold text-sm">Total Cost</p>
+                <p className="text-lg">${result.totalCost.toFixed(2)}</p>
+              </div>
+
+              <div className="border-t pt-4">
+                <p className="font-semibold text-sm">Months to Recoup Costs</p>
+                <p className="text-lg">
+                  {result.monthsToRecoupCosts !== null
+                    ? result.monthsToRecoupCosts.toFixed(2)
+                    : "N/A"}
+                </p>
+              </div>
             </div>
           </div>
-        </div>
+
+          <RefinanceBreakEvenChart
+            currentCumulativePayments={result.cumulativeOriginal}
+            refinanceCumulativePayments={result.cumulativeRefinanced}
+          />
+        </>
       )}
     </div>
   );
