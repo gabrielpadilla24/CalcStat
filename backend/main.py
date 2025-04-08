@@ -382,21 +382,18 @@ def calcular_refinance(data: RefinanceData):
     balance = data.balanceLeft
     closing_costs = data.closingCosts
 
-    # Costo restante del préstamo actual
     remaining_original_cost = data.currentMonthlyPayment * n_remaining
 
-    # Cálculo del nuevo pago mensual
     new_monthly_payment = balance * (r_new * pow(1 + r_new, n_new)) / (pow(1 + r_new, n_new) - 1)
 
-    # Costo total refinanciado
     total_cost_refinanced = new_monthly_payment * n_new + closing_costs
 
-    # Ahorro
     difference_in_interest = remaining_original_cost - total_cost_refinanced
     monthly_savings = data.currentMonthlyPayment - new_monthly_payment
-    months_to_recoup = closing_costs / monthly_savings if monthly_savings > 0 else float("inf")
 
-    # Crear arrays de pagos acumulados
+    # 👇 Cambio importante aquí
+    months_to_recoup = closing_costs / monthly_savings if monthly_savings > 0 else None
+
     cumulative_original = [
         round(data.currentMonthlyPayment * (i + 1), 2) for i in range(n_remaining)
     ]
@@ -409,7 +406,7 @@ def calcular_refinance(data: RefinanceData):
         "monthlySavings": round(monthly_savings, 2),
         "differenceInInterest": round(difference_in_interest, 2),
         "totalCost": round(closing_costs, 2),
-        "monthsToRecoupCosts": round(months_to_recoup, 2),
+        "monthsToRecoupCosts": months_to_recoup,  # 👈 directamente None si no aplica
         "cumulativeOriginal": cumulative_original,
         "cumulativeRefinanced": cumulative_refinanced
     }
