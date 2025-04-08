@@ -198,26 +198,26 @@ const FinancialCalculator = () => {
                 <SubmitButton text="Open Calculator" />
               </Link>
             </div>
+
+            {/* Refinance Mortgage */}
+            <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] text-left">
+              <img
+                src="/img/refinance.png"
+                alt="Refinance Mortgage Calculator"
+                className="h-40 w-full object-cover mb-4 rounded"
+              />
+              <h2 className="text-xl font-bold text-gray-800 mb-2">
+                Refinance Mortgage
+              </h2>
+              <p className="text-sm text-gray-600 mb-4">
+                Explore if refinancing your current mortgage can save you money.
+              </p>
+              <Link to="/mortgage/refinance">
+                <SubmitButton text="Open Calculator" />
+              </Link>
+            </div>
           </>
         )}
-
-        {/* Refinance Mortgage */}
-        <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] text-left">
-          <img
-            src="/img/refinance.png"
-            alt="Refinance Mortgage Calculator"
-            className="h-40 w-full object-cover mb-4 rounded"
-          />
-          <h2 className="text-xl font-bold text-gray-800 mb-2">
-            Refinance Mortgage
-          </h2>
-          <p className="text-sm text-gray-600 mb-4">
-            Explore if refinancing your current mortgage can save you money.
-          </p>
-          <Link to="/mortgage/refinance">
-            <SubmitButton text="Open Calculator" />
-          </Link>
-        </div>
       </div>
 
       <BottomCTA buttonText="Browse All Calculators" href="/calculators" />
