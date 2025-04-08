@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import RefinanceBreakEvenChart from "./RefinanceBreakEvenChart"; // Asegúrate de que la ruta sea correcta
+import React, { useState, useRef } from "react";
+import RefinanceBreakEvenChart from "./RefinanceBreakEvenChart";
 
 type RefinanceResult = {
   newMonthlyPayment: number;
@@ -25,6 +25,8 @@ const RefinanceForm = () => {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<RefinanceResult | null>(null);
 
+  const resultRef = useRef<HTMLDivElement | null>(null);
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -48,6 +50,11 @@ const RefinanceForm = () => {
 
       const data = await response.json();
       setResult(data);
+
+      // Scroll hacia los resultados
+      setTimeout(() => {
+        resultRef.current?.scrollIntoView({ behavior: "smooth" });
+      }, 100);
     } catch (error) {
       console.error("Error submitting refinance form:", error);
     } finally {
@@ -68,7 +75,6 @@ const RefinanceForm = () => {
         onSubmit={handleSubmit}
         className="grid grid-cols-1 md:grid-cols-2 gap-6"
       >
-        {/* Inputs */}
         <div>
           <label className="block font-medium mb-1">
             Current monthly payment
@@ -176,10 +182,9 @@ const RefinanceForm = () => {
         </div>
       </form>
 
-      {/* Result Section */}
       {result && (
         <>
-          <div className="mt-10 bg-gray-100 p-6 rounded-lg">
+          <div ref={resultRef} className="mt-10 bg-gray-100 p-6 rounded-lg">
             <h3 className="text-2xl font-bold text-center mb-6">
               New Monthly Payment
             </h3>
