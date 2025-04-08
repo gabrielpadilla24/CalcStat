@@ -1,18 +1,18 @@
 import React, { useState } from "react";
 
 type RefinanceResult = {
-  remainingOriginalCost: number;
   newMonthlyPayment: number;
-  totalCostRefinanced: number;
-  netSavings: number;
+  monthlySavings: number;
+  differenceInInterest: number;
+  totalCost: number;
+  monthsToRecoupCosts: number;
 };
 
 const RefinanceForm = () => {
-  const [originalLoanAmount, setOriginalLoanAmount] = useState("");
-  const [originalRate, setOriginalRate] = useState("");
-  const [originalTermYears, setOriginalTermYears] = useState("");
-  const [paymentsMade, setPaymentsMade] = useState("");
-
+  const [currentMonthlyPayment, setCurrentMonthlyPayment] = useState("");
+  const [balanceLeft, setBalanceLeft] = useState("");
+  const [remainingTermYears, setRemainingTermYears] = useState("");
+  const [currentRate, setCurrentRate] = useState("");
   const [newRate, setNewRate] = useState("");
   const [newTermYears, setNewTermYears] = useState("");
   const [closingCosts, setClosingCosts] = useState("");
@@ -25,10 +25,10 @@ const RefinanceForm = () => {
     setLoading(true);
 
     const payload = {
-      originalLoanAmount: parseFloat(originalLoanAmount),
-      originalRate: parseFloat(originalRate),
-      originalTermYears: parseInt(originalTermYears),
-      paymentsMade: parseInt(paymentsMade),
+      currentMonthlyPayment: parseFloat(currentMonthlyPayment),
+      balanceLeft: parseFloat(balanceLeft),
+      remainingTermYears: parseInt(remainingTermYears),
+      currentRate: parseFloat(currentRate),
       newRate: parseFloat(newRate),
       newTermYears: parseInt(newTermYears),
       closingCosts: parseFloat(closingCosts),
@@ -50,110 +50,168 @@ const RefinanceForm = () => {
     }
   };
 
+  const isWorseDeal =
+    result?.monthlySavings !== undefined && result.monthlySavings < 0;
+
   return (
-    <div className="max-w-3xl mx-auto p-6 bg-white shadow-md rounded-2xl">
-      <form onSubmit={handleSubmit} className="space-y-6">
+    <div className="max-w-4xl mx-auto p-6 bg-white shadow-md rounded-2xl">
+      <h2 className="text-2xl font-bold mb-4 text-center">
+        Refinance Mortgage Calculator
+      </h2>
+
+      <form
+        onSubmit={handleSubmit}
+        className="grid grid-cols-1 md:grid-cols-2 gap-6"
+      >
         <div>
-          <h3 className="text-lg font-semibold mb-2">Original Mortgage</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <input
-              type="number"
-              step="0.01"
-              placeholder="Original Loan Amount ($)"
-              value={originalLoanAmount}
-              onChange={(e) => setOriginalLoanAmount(e.target.value)}
-              className="border border-gray-300 rounded-lg p-2 w-full"
-              required
-            />
-            <input
-              type="number"
-              step="0.01"
-              placeholder="Original Interest Rate (%)"
-              value={originalRate}
-              onChange={(e) => setOriginalRate(e.target.value)}
-              className="border border-gray-300 rounded-lg p-2 w-full"
-              required
-            />
-            <input
-              type="number"
-              placeholder="Original Term (years)"
-              value={originalTermYears}
-              onChange={(e) => setOriginalTermYears(e.target.value)}
-              className="border border-gray-300 rounded-lg p-2 w-full"
-              required
-            />
-            <input
-              type="number"
-              placeholder="Years Already Paid"
-              value={paymentsMade}
-              onChange={(e) => setPaymentsMade(e.target.value)}
-              className="border border-gray-300 rounded-lg p-2 w-full"
-              required
-            />
-          </div>
+          <label className="block font-medium mb-1">
+            Current monthly payment
+          </label>
+          <input
+            type="number"
+            step="0.01"
+            placeholder="$"
+            value={currentMonthlyPayment}
+            onChange={(e) => setCurrentMonthlyPayment(e.target.value)}
+            className="border border-gray-300 rounded-lg p-2 w-full"
+            required
+          />
         </div>
 
         <div>
-          <h3 className="text-lg font-semibold mb-2">New Refinance Loan</h3>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <input
-              type="number"
-              step="0.01"
-              placeholder="New Interest Rate (%)"
-              value={newRate}
-              onChange={(e) => setNewRate(e.target.value)}
-              className="border border-gray-300 rounded-lg p-2 w-full"
-              required
-            />
-            <input
-              type="number"
-              placeholder="New Term (years)"
-              value={newTermYears}
-              onChange={(e) => setNewTermYears(e.target.value)}
-              className="border border-gray-300 rounded-lg p-2 w-full"
-              required
-            />
-            <input
-              type="number"
-              step="0.01"
-              placeholder="Closing Costs ($)"
-              value={closingCosts}
-              onChange={(e) => setClosingCosts(e.target.value)}
-              className="border border-gray-300 rounded-lg p-2 w-full"
-              required
-            />
-          </div>
+          <label className="block font-medium mb-1">
+            Current loan interest rate (%)
+          </label>
+          <input
+            type="number"
+            step="0.01"
+            value={currentRate}
+            onChange={(e) => setCurrentRate(e.target.value)}
+            className="border border-gray-300 rounded-lg p-2 w-full"
+            required
+          />
         </div>
 
-        <button
-          type="submit"
-          className="w-full bg-[#5FBA9B] hover:bg-[#54a58a] text-white font-semibold py-3 rounded-lg transition duration-200"
-          disabled={loading}
-        >
-          {loading ? "Calculating..." : "Calculate Refinance"}
-        </button>
+        <div>
+          <label className="block font-medium mb-1">
+            Balance left on mortgage
+          </label>
+          <input
+            type="number"
+            step="0.01"
+            placeholder="$"
+            value={balanceLeft}
+            onChange={(e) => setBalanceLeft(e.target.value)}
+            className="border border-gray-300 rounded-lg p-2 w-full"
+            required
+          />
+        </div>
+
+        <div>
+          <label className="block font-medium mb-1">
+            New interest rate (%)
+          </label>
+          <input
+            type="number"
+            step="0.01"
+            value={newRate}
+            onChange={(e) => setNewRate(e.target.value)}
+            className="border border-gray-300 rounded-lg p-2 w-full"
+            required
+          />
+        </div>
+
+        <div>
+          <label className="block font-medium mb-1">
+            Remaining loan term (years)
+          </label>
+          <input
+            type="number"
+            value={remainingTermYears}
+            onChange={(e) => setRemainingTermYears(e.target.value)}
+            className="border border-gray-300 rounded-lg p-2 w-full"
+            required
+          />
+        </div>
+
+        <div>
+          <label className="block font-medium mb-1">
+            New loan term (years)
+          </label>
+          <input
+            type="number"
+            value={newTermYears}
+            onChange={(e) => setNewTermYears(e.target.value)}
+            className="border border-gray-300 rounded-lg p-2 w-full"
+            required
+          />
+        </div>
+
+        <div className="md:col-span-2">
+          <label className="block font-medium mb-1">Closing Costs ($)</label>
+          <input
+            type="number"
+            step="0.01"
+            value={closingCosts}
+            onChange={(e) => setClosingCosts(e.target.value)}
+            className="border border-gray-300 rounded-lg p-2 w-full"
+            required
+          />
+        </div>
+
+        <div className="md:col-span-2">
+          <button
+            type="submit"
+            className="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 rounded-lg transition duration-200"
+            disabled={loading}
+          >
+            {loading ? "Calculating..." : "Calculate Refinance"}
+          </button>
+        </div>
       </form>
 
-      {result && (
-        <div className="mt-8 bg-gray-100 p-6 rounded-lg">
-          <h3 className="text-xl font-bold mb-2">Refinance Summary</h3>
-          <ul className="space-y-1">
-            <li>
-              <strong>Remaining Original Cost:</strong> $
-              {result.remainingOriginalCost.toFixed(2)}
-            </li>
-            <li>
-              <strong>New Monthly Payment:</strong> $
-              {result.newMonthlyPayment.toFixed(2)}
-            </li>
-            <li>
-              <strong>Total Cost of Refinance:</strong> $
-              {result.totalCostRefinanced.toFixed(2)}
-            </li>
-            <li>
-              <strong>Net Savings:</strong> ${result.netSavings.toFixed(2)}
-            </li>
-          </ul>
+      {result !== null && (
+        <div className="mt-10 bg-gray-100 p-6 rounded-lg">
+          <h3 className="text-2xl font-bold text-center mb-6">
+            New Monthly Payment
+          </h3>
+          <p
+            className={`text-4xl font-bold text-center mb-2 ${
+              isWorseDeal ? "text-red-600" : "text-green-600"
+            }`}
+          >
+            ${result.newMonthlyPayment.toFixed(2)}
+          </p>
+
+          {isWorseDeal && (
+            <p className="text-center text-red-600 font-medium mb-4">
+              ⚠️ Refinancing increases your monthly payment. Consider keeping
+              your current loan.
+            </p>
+          )}
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-center text-gray-800">
+            <div className="border-t pt-4">
+              <p className="font-semibold text-sm">Monthly Savings</p>
+              <p className={`text-lg ${isWorseDeal ? "text-red-600" : ""}`}>
+                ${result.monthlySavings.toFixed(2)}
+              </p>
+            </div>
+            <div className="border-t pt-4">
+              <p className="font-semibold text-sm">Difference in Interest</p>
+              <p className="text-lg">
+                ${result.differenceInInterest.toFixed(2)}
+              </p>
+            </div>
+            <div className="border-t pt-4">
+              <p className="font-semibold text-sm">Total Cost</p>
+              <p className="text-lg">${result.totalCost.toFixed(2)}</p>
+            </div>
+            <div className="border-t pt-4">
+              <p className="font-semibold text-sm">Months to Recoup Costs</p>
+              <p className="text-lg">{result.monthsToRecoupCosts.toFixed(2)}</p>
+            </div>
+          </div>
         </div>
       )}
     </div>

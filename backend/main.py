@@ -1,6 +1,7 @@
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
+from math import pow
 
 app = FastAPI()
 
@@ -52,6 +53,15 @@ class BalloonPaymentData(BaseModel):
     interestRate: float  # anual en %
     loanTerm: int        # duración total del préstamo en años
     balloonYear: int     # año en que se hace el pago final
+
+
+class RefinanceData(BaseModel):
+    currentMonthlyPayment: float
+    balanceLeft: float
+    remainingTermYears: int
+    currentRate: float
+    newRate: float
+    newTermYears: int
 
 
 
@@ -351,4 +361,55 @@ def calcular_balloon_payment(data: BalloonPaymentData):
         "interestPaid": interest_paid,
         "loanBalance": loan_balance,
         "secondPayment": balloon_payment  # 👈 necesario para que aparezca la pestaña
+    }
+
+
+# ------------------------------
+# ENDPOINT DE REFINANCE MORTGAGE
+# ------------------------------
+
+# -----------------------------
+# ENDPOINT DE REFINANCE MORTGAGE
+# -----------------------------
+from pydantic import BaseModel
+from math import pow
+
+class RefinanceData(BaseModel):
+    currentMonthlyPayment: float
+    balanceLeft: float
+    remainingTermYears: int
+    currentRate: float
+    newRate: float
+    newTermYears: int
+    closingCosts: float
+
+@app.post("/refinance")
+def calcular_refinance(data: RefinanceData):
+    r_current = data.currentRate / 100 / 12
+    r_new = data.newRate / 100 / 12
+    n_remaining = data.remainingTermYears * 12
+    n_new = data.newTermYears * 12
+    balance = data.balanceLeft
+    closing_costs = data.closingCosts
+
+    # Costo restante del préstamo actual
+    remaining_original_cost = data.currentMonthlyPayment * n_remaining
+
+    # Cálculo del nuevo pago mensual
+    new_monthly_payment = balance * (r_new * pow(1 + r_new, n_new)) / (pow(1 + r_new, n_new) - 1)
+
+    # Costo total refinanciado
+    total_cost_refinanced = new_monthly_payment * n_new + closing_costs
+
+    # Ahorro
+    difference_in_interest = remaining_original_cost - total_cost_refinanced
+    monthly_savings = data.currentMonthlyPayment - new_monthly_payment
+    months_to_recoup = closing_costs / monthly_savings if monthly_savings > 0 else float("inf")
+
+    return {
+        "newMonthlyPayment": round(new_monthly_payment, 2),
+        "monthlySavings": round(monthly_savings, 2),
+        "differenceInInterest": round(difference_in_interest, 2),
+        "totalCost": round(closing_costs, 2),
+        "monthsToRecoupCosts": round(months_to_recoup, 2)
     }
