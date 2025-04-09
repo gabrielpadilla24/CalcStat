@@ -41,7 +41,10 @@ const RefinanceBreakEvenChart: React.FC<RefinanceBreakEvenChartProps> = ({
     },
     tooltip: {
       y: {
-        formatter: (val: number) => `$${formatearNumero(val)}`,
+        formatter: (val: number | null) =>
+          val !== null && val !== undefined
+            ? `$${val.toLocaleString()}`
+            : "N/A",
       },
     },
     xaxis: {
