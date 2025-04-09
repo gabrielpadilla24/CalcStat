@@ -2,6 +2,9 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel
 from math import pow
+import numpy_financial as npf
+import numpy as np
+
 
 app = FastAPI()
 
@@ -378,6 +381,79 @@ def calcular_balloon_payment(data: BalloonPaymentData):
 # ENDPOINT DE REFINANCE MORTGAGE
 # ------------------------------
 
+def calculate_advanced_refinance_score(
+    monthly_savings,
+    difference_in_interest,
+    n_remaining,
+    n_new,
+    balance_left,
+    closing_costs,
+    current_monthly_payment,
+    new_monthly_payment,
+    months_to_recoup
+):
+    # -------- NPV ----------
+    discount_rate = 0.004  # ~4.8% anual
+    npv = sum([
+        monthly_savings / ((1 + discount_rate) ** t)
+        for t in range(1, n_new + 1)
+    ]) - closing_costs
+
+    if npv <= 0:
+        score_npv = 0
+    elif npv < 0.2 * balance_left:
+        score_npv = (npv / (0.2 * balance_left)) * 100
+    else:
+        score_npv = 100
+
+    # -------- IRR ----------
+    cash_flows = [-closing_costs] + [monthly_savings] * n_new
+    irr_value = npf.irr(cash_flows)  # mensual
+
+    if irr_value is None or np.isnan(irr_value) or irr_value <= 0:
+        irr_annual = -1
+    
+    else:
+        irr_annual = (1 + irr_value) ** 12 - 1
+
+    if irr_annual <= 0:
+        score_irr = 0
+    elif irr_annual < 0.08:
+        score_irr = (irr_annual / 0.08) * 100
+    else:
+        score_irr = 100
+
+
+    valor_financiero_total = 0.5 * score_npv + 0.5 * score_irr
+
+
+    # -------- Liquidez Mensual ----------
+    delta_m = (new_monthly_payment - current_monthly_payment) / current_monthly_payment
+
+    if delta_m >= 0.10:
+        score_liquidez = 0
+    elif delta_m <= -0.20:
+        score_liquidez = 100
+    else:
+        score_liquidez = (abs(delta_m) / 0.20) * 100
+
+    # -------- Eficiencia Temporal ----------
+    delta_term_years = (n_new - n_remaining) / 12
+    break_even_years = months_to_recoup / 12 if months_to_recoup else float('inf')
+
+    score_eficiencia = 100 - 10 * delta_term_years - 5 * max(0, break_even_years - 2)
+    score_eficiencia = max(0, score_eficiencia)
+
+    # -------- Score Final ----------
+    refinance_score = (
+        0.4 * valor_financiero_total +
+        0.3 * score_liquidez +
+        0.3 * score_eficiencia
+    )
+
+    return round(refinance_score, 2)
+
+
 @app.post("/refinance")
 def calcular_refinance(data: RefinanceData):
     from math import pow
@@ -417,22 +493,18 @@ def calcular_refinance(data: RefinanceData):
     grouped_refinanced += [None] * (max_len - len(grouped_refinanced))
 
     # ✅ Calcular refinanceScore simple balanceando factores
-    def calculate_refinance_score(ms, is_, ot, nt, original_better):
-        if original_better:
-            return 5
-        term_factor = max(0, (ot - nt) / ot)
-        interest_factor = max(0, is_ / 50000)
-        monthly_saving_factor = max(0, ms / 500)
-        score = 30 * term_factor + 35 * interest_factor + 35 * monthly_saving_factor
-        return round(min(100, max(0, score)))
-
-    refinance_score = calculate_refinance_score(
+    refinance_score = calculate_advanced_refinance_score(
         monthly_savings,
         difference_in_interest,
         n_remaining,
         n_new,
-        monthly_savings < 0 or difference_in_interest < 0
+        balance,
+        closing_costs,
+        data.currentMonthlyPayment,
+        new_monthly_payment,
+        months_to_recoup
     )
+
 
     return {
         "newMonthlyPayment": round(new_monthly_payment, 2),
