@@ -456,7 +456,7 @@ def calculate_advanced_refinance_score(
 
 @app.post("/refinance")
 def calcular_refinance(data: RefinanceData):
-    from math import pow
+
 
     r_current = data.currentRate / 100 / 12
     r_new = data.newRate / 100 / 12
