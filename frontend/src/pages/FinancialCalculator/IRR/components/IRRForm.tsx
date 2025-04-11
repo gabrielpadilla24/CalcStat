@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import IRRResults from "./IRRResults";
+import IRRChart from "./IRRChart";
 
 type CashFlow = {
   year: number;
@@ -129,7 +129,31 @@ const IRRForm = () => {
         </button>
       </form>
 
-      {result && <IRRResults irr={result.irr} cashFlows={result.cashFlows} />}
+      {result && (
+        <>
+          <div className="mt-8 bg-green-50 border border-green-200 text-green-800 rounded-xl p-4 text-center font-medium">
+            <p>
+              Cash Flows:{" "}
+              <strong>
+                {result.cashFlows
+                  .map((cf) =>
+                    cf >= 0
+                      ? `$${cf.toLocaleString()}`
+                      : `-$${Math.abs(cf).toLocaleString()}`
+                  )
+                  .join(", ")}
+              </strong>
+            </p>
+            <p className="text-2xl mt-2">
+              IRR: <strong>{result.irr.toFixed(2)}%</strong>
+            </p>
+          </div>
+
+          <div className="mt-10">
+            <IRRChart irr={result.irr} cashFlows={result.cashFlows} />
+          </div>
+        </>
+      )}
 
       {error && (
         <div className="mt-6 bg-red-50 border border-red-300 p-4 rounded-xl text-red-700 text-center">
