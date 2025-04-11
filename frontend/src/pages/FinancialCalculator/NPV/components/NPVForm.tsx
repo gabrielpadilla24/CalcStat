@@ -107,15 +107,26 @@ const NPVForm = () => {
 
         const data = await response.json();
 
-        if (Array.isArray(data.cashFlows)) {
-          const output = data.cashFlows
-            .map(
-              (cf: { year: number; value: number }) => `${cf.year}, ${cf.value}`
-            )
-            .join("\n");
-          alert("Cash Flows:\n" + output);
+        if (
+          typeof data.npv === "number" &&
+          typeof data.interestRate === "number" &&
+          Array.isArray(data.cashFlows)
+        ) {
+          setResult({
+            npv: data.npv,
+            futureValue: data.cashFlows.reduce(
+              (acc: number, cf: { value: number }) => acc + cf.value,
+              0
+            ),
+            years: data.cashFlows.length - 1,
+            interestRate: data.interestRate,
+          });
+
+          setTimeout(() => {
+            resultsRef.current?.scrollIntoView({ behavior: "smooth" });
+          }, 100);
         } else {
-          setError("No cash flow data returned from the server.");
+          setError("Invalid response from the server.");
         }
       } catch (err) {
         console.error("Error fetching cash flow sequence:", err);

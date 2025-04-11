@@ -602,12 +602,18 @@ def calcular_npv(data:NPVData):
     }
 
 @app.post("/npv-sequence")
-def imprimir_cashflow(data: NPVSequenceData):
-    flujo_por_anio = [
-        {"year": i, "value": round(cf, 2)}
-        for i, cf in enumerate(data.cashFlows)
-    ]
+def calcular_npv_sequence(data: NPVSequenceData):
+    rate = data.interestRate / 100
+    npv = 0.0
+
+    for year, amount in enumerate(data.cashFlows):
+        discounted = amount / ((1 + rate) ** year)
+        npv += discounted
+
     return {
-        "cashFlows": flujo_por_anio,
+        "npv": round(npv, 2),
+        "cashFlows": [
+            {"year": i, "value": round(cf, 2)} for i, cf in enumerate(data.cashFlows)
+        ],
         "interestRate": data.interestRate
     }
