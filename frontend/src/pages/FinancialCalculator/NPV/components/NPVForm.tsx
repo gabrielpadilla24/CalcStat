@@ -171,7 +171,7 @@ const NPVForm = () => {
                   className="flex items-center gap-4 w-full max-w-md"
                 >
                   <label className="w-24 text-right font-medium">
-                    {cf.year === 0 ? "Year 0" : `Year ${cf.year}`}
+                    {`Year ${cf.year}`}
                   </label>
                   <input
                     type="number"
@@ -181,7 +181,8 @@ const NPVForm = () => {
                     className="border border-gray-300 rounded-lg p-2 w-full"
                     required
                   />
-                  {cf.year !== 0 && (
+                  {/* Maintain space for symmetry even if no remove button */}
+                  {cf.year !== 0 ? (
                     <button
                       type="button"
                       className="text-red-500 hover:text-red-700 text-sm"
@@ -189,6 +190,8 @@ const NPVForm = () => {
                     >
                       Remove
                     </button>
+                  ) : (
+                    <div className="w-[60px]" /> // matches Remove button space
                   )}
                 </div>
               ))}
