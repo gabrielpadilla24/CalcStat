@@ -1,11 +1,13 @@
 import React, { useState, useRef } from "react";
 import NPVResults from "./NPVResults";
+import NPVChart from "./NPVChart";
 
 type NPVResponse = {
   npv: number;
   years: number;
   interestRate: number;
   futureValue?: number;
+  cashFlows?: { year: number; value: number }[];
 };
 
 type CashFlow = {
@@ -116,6 +118,7 @@ const NPVForm = () => {
             npv: data.npv,
             years: data.cashFlows.length - 1,
             interestRate: data.interestRate,
+            cashFlows: data.cashFlows,
           });
 
           setTimeout(() => {
@@ -277,6 +280,7 @@ const NPVForm = () => {
       {result && (
         <div ref={resultsRef}>
           <NPVResults {...result} />
+          {result.cashFlows && <NPVChart cashFlows={result.cashFlows} />}
         </div>
       )}
 
