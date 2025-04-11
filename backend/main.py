@@ -4,6 +4,8 @@ from pydantic import BaseModel
 from math import pow
 import numpy_financial as npf
 import numpy as np
+from typing import Literal, Optional
+
 
 
 app = FastAPI()
@@ -75,7 +77,13 @@ class RefinanceScoreData(BaseModel):
     originalWasBetter: bool
     priority: str  # "debt" o "monthly"
 
-
+class ReverseMortgageData(BaseModel):
+    homeEquity: float
+    years: int
+    interestRate: float  # porcentaje anual
+    type: Literal["Lump Sum", "Monthly Advance"]
+    lumpSum: Optional[float] = None
+    monthlyAdvance: Optional[float] = None
 
 
 
@@ -453,7 +461,6 @@ def calculate_advanced_refinance_score(
 
     return round(refinance_score, 2)
 
-
 @app.post("/refinance")
 def calcular_refinance(data: RefinanceData):
 
@@ -517,4 +524,37 @@ def calcular_refinance(data: RefinanceData):
         "groupedOriginal": grouped_original,
         "groupedRefinanced": grouped_refinanced,
         "refinanceScore": refinance_score  # ✅ agregado aquí
+    }
+
+
+#---------------------------------
+# ENDPOINT DE REVERSE MORTGAGE
+#---------------------------------
+
+@app.post("/reverse-mortgage")
+def calcular_reverse_mortgage(data: ReverseMortgageData):
+    annual_rate = data.interestRate / 100
+    years = data.years
+
+    if data.type == "Lump Sum":
+        if data.lumpSum is None:
+            return {"error": "Missing 'lumpSum' value for Lump Sum type."}
+        amount_owed = data.lumpSum * (1 + annual_rate) ** years
+
+    elif data.type == "Monthly Advance":
+        if data.monthlyAdvance is None:
+            return {"error": "Missing 'monthlyAdvance' value for Monthly Advance type."}
+        amount_owed = 0
+        for t in range(years):
+            yearly_payment = data.monthlyAdvance * 12
+            amount_owed += yearly_payment * (1 + annual_rate) ** (years - t - 1)
+
+    else:
+        return {"error": "Invalid payout type."}
+
+    return {
+        "amountOwedAtEnd": round(amount_owed, 2),
+        "type": data.type,
+        "years": years,
+        "interestRate": data.interestRate,
     }
