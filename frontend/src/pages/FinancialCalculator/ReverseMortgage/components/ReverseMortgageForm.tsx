@@ -185,7 +185,7 @@ const ReverseMortgageForm = () => {
             className="w-full bg-[#0BB489] hover:bg-[#0AA47A] text-white font-semibold py-3 rounded-lg transition duration-200"
             disabled={loading}
           >
-            {loading ? "Calculating..." : "Calculate Reverse Mortgage"}
+            Calculate Reverse Mortgage
           </button>
         </div>
       </form>

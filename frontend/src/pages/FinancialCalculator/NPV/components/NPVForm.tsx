@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import NPVResults from "./NPVResults";
 import NPVChart from "./NPVChart";
 
@@ -27,6 +27,9 @@ const NPVForm = () => {
   const [result, setResult] = useState<NPVResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
   const resultsRef = useRef<HTMLDivElement>(null);
+  useEffect(() => {
+    setResult(null); // clear result when switching modes
+  }, [mode]);
 
   const handleAddYear = () => {
     const nextYear =
@@ -272,23 +275,30 @@ const NPVForm = () => {
             className="w-full bg-[#0BB489] hover:bg-[#0AA47A] text-white font-semibold py-3 rounded-lg transition duration-200 mt-5"
             disabled={loading}
           >
-            {loading ? "Calculating..." : "Calculate NPV"}
+            Calculate NPV
           </button>
         </div>
       </form>
 
-      {result && (
-        <div ref={resultsRef}>
-          <NPVResults {...result} />
-          {result.cashFlows && <NPVChart cashFlows={result.cashFlows} />}
-        </div>
-      )}
+      <div
+        ref={resultsRef}
+        className={`transition-opacity duration-500 ${
+          result ? "opacity-100 mt-8" : "opacity-0 h-0 overflow-hidden"
+        }`}
+      >
+        {result && (
+          <div ref={resultsRef}>
+            <NPVResults {...result} />
+            {result.cashFlows && <NPVChart cashFlows={result.cashFlows} />}
+          </div>
+        )}
 
-      {error && (
-        <div className="mt-6 bg-red-50 border border-red-300 p-4 rounded-xl text-red-700 text-center">
-          <p>{error}</p>
-        </div>
-      )}
+        {error && (
+          <div className="mt-6 bg-red-50 border border-red-300 p-4 rounded-xl text-red-700 text-center">
+            <p>{error}</p>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
