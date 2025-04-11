@@ -13,6 +13,9 @@ const FinancialCalculator = () => {
   const showMortgage =
     selectedCategory === "All" || selectedCategory === "Loan";
 
+  const showInvestment =
+    selectedCategory === "All" || selectedCategory === "Investment";
+
   return (
     <div className="bg-gray-100 min-h-screen">
       <NavBar />
@@ -121,6 +124,35 @@ const FinancialCalculator = () => {
               desc: "Estimate how much you can borrow using your home equity with a reverse mortgage.",
               img: "/img/reverse.png",
               path: "/mortgage/reversemortgage",
+            },
+          ].map(({ title, desc, img, path }) => (
+            <div
+              key={title}
+              className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] text-left flex flex-col justify-between"
+            >
+              <img
+                src={img}
+                alt={title}
+                className="h-40 w-full object-cover mb-4 rounded"
+              />
+              <h2 className="text-xl font-bold text-gray-800 mb-2">{title}</h2>
+              <div className="flex flex-col justify-between h-full">
+                <p className="text-sm text-gray-600 mb-4">{desc}</p>
+                <Link to={path}>
+                  <SubmitButton text="Open Calculator" />
+                </Link>
+              </div>
+            </div>
+          ))}
+
+        {/* Investment-related cards */}
+        {showInvestment &&
+          [
+            {
+              title: "Net Present Value Calculator",
+              desc: "Calculate the Net Present Value of any investment. Ideal for project evaluation, cash flow analysis, and financial decision-making.",
+              img: "/img/npv.png",
+              path: "/financial/npv",
             },
           ].map(({ title, desc, img, path }) => (
             <div

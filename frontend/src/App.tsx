@@ -7,6 +7,7 @@ import ScrollToTop from "./components/ScrollToTop";
 import MortgageCalculator from "./pages/FinancialCalculator/Mortgage/MortgageCalculator";
 import RefinanceCalculator from "./pages/FinancialCalculator/Refinance/RefinanceCalculator";
 import ReverseMortgageCalculator from "./pages/FinancialCalculator/ReverseMortgage/ReverseMortgageCalculator";
+import NPVCalculator from "./pages/FinancialCalculator/NPV/NPVCalculator";
 
 const App = () => {
   return (
@@ -43,6 +44,8 @@ const App = () => {
           path="/mortgage/reversemortgage"
           element={<ReverseMortgageCalculator />}
         />
+
+        <Route path="/financial/npv" element={<NPVCalculator />} />
 
         <Route path="/financial" element={<FinancialCalculator />} />
         <Route path="/calculators" element={<Menu />} />
