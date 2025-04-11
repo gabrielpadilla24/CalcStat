@@ -80,7 +80,7 @@ const IRRForm = () => {
         className="flex flex-col items-center w-full"
       >
         <h2 className="text-2xl font-semibold mb-6 text-center w-full">
-          Internal Rate of Return (IRR)
+          Enter the Yearly Cashflow for the Project{" "}
         </h2>
 
         <div className="space-y-4 mb-6 w-full flex flex-col items-center">

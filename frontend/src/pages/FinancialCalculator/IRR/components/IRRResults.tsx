@@ -1,9 +1,18 @@
+import { useEffect, useState } from "react";
+
 type IRRResultProps = {
   irr: number;
   cashFlows: number[];
 };
 
 const IRRResults = ({ irr, cashFlows }: IRRResultProps) => {
+  const [visible, setVisible] = useState(false);
+
+  useEffect(() => {
+    const timer = setTimeout(() => setVisible(true), 40); // Delay para transición
+    return () => clearTimeout(timer);
+  }, []);
+
   if (typeof irr !== "number" || !Array.isArray(cashFlows)) {
     return (
       <div className="text-red-600 text-center mt-4">
@@ -13,7 +22,11 @@ const IRRResults = ({ irr, cashFlows }: IRRResultProps) => {
   }
 
   return (
-    <div className="mt-10 bg-green-50 border border-green-200 p-6 rounded-xl shadow-inner text-center">
+    <div
+      className={`mt-10 bg-green-50 border border-green-200 p-6 rounded-xl shadow-inner text-center transition-opacity duration-700 ${
+        visible ? "opacity-100" : "opacity-0"
+      }`}
+    >
       <h2 className="text-2xl font-bold text-green-800 mb-4">
         Internal Rate of Return Summary
       </h2>
@@ -29,7 +42,7 @@ const IRRResults = ({ irr, cashFlows }: IRRResultProps) => {
       </p>
 
       <p className="text-xl font-bold text-gray-900 mt-4">
-        IRR: {irr.toFixed(4)}%
+        IRR: {irr.toFixed(2)}%
       </p>
     </div>
   );
