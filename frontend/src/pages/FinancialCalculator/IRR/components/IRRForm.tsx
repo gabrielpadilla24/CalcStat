@@ -9,6 +9,8 @@ type CashFlow = {
 type IRRResponse = {
   irr: number;
   cashFlows: number[];
+  discountRates: number[];
+  npvs: number[];
 };
 
 const IRRForm = () => {
@@ -60,7 +62,12 @@ const IRRForm = () => {
 
       const data = await response.json();
 
-      if (typeof data.irr === "number") {
+      if (
+        typeof data.irr === "number" &&
+        Array.isArray(data.cashFlows) &&
+        Array.isArray(data.discountRates) &&
+        Array.isArray(data.npvs)
+      ) {
         setResult(data);
       } else if (data.error) {
         setError(data.error);
@@ -80,7 +87,7 @@ const IRRForm = () => {
         className="flex flex-col items-center w-full"
       >
         <h2 className="text-2xl font-semibold mb-6 text-center w-full">
-          Enter the Yearly Cashflow for the Project{" "}
+          Enter the Yearly Cashflow for the Project
         </h2>
 
         <div className="space-y-4 mb-6 w-full flex flex-col items-center">
@@ -150,7 +157,11 @@ const IRRForm = () => {
           </div>
 
           <div className="mt-10">
-            <IRRChart irr={result.irr} cashFlows={result.cashFlows} />
+            <IRRChart
+              irr={result.irr}
+              discountRates={result.discountRates}
+              npvs={result.npvs}
+            />
           </div>
         </>
       )}

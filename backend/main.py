@@ -639,9 +639,25 @@ def calcular_irr(data: IRRData):
                 "error": "To calculate IRR, cash flows must include at least one positive and one negative value."
             }
 
+        irr_percentage = irr_result * 100
+        max_rate = irr_result * 2
+        steps = 20
+        step_size = max_rate / steps
+
+        discount_rates = []
+        npvs = []
+
+        for i in range(steps + 1):
+            rate = i * step_size
+            npv = sum(cf / (1 + rate) ** t for t, cf in enumerate(data.cashFlows))
+            discount_rates.append(round(rate * 100, 4))
+            npvs.append(round(npv, 2))
+
         return {
-            "irr": round(irr_result * 100, 2),
-            "cashFlows": data.cashFlows
+            "irr": round(irr_percentage, 2),
+            "cashFlows": data.cashFlows,
+            "discountRates": discount_rates,
+            "npvs": npvs,
         }
 
     except Exception as e:

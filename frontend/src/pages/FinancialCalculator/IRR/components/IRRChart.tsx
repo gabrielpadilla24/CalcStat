@@ -2,32 +2,17 @@ import React from "react";
 import ReactApexChart from "react-apexcharts";
 
 interface IRRChartProps {
-  irr: number; // porcentaje, ej. 10 = 10%
-  cashFlows: number[];
+  irr: number; // porcentaje
+  discountRates: number[]; // array de tasas en %
+  npvs: number[]; // array de NPV por tasa
 }
 
-const IRRChart: React.FC<IRRChartProps> = ({ irr, cashFlows }) => {
-  const irrDecimal = irr / 100;
-  const step = irrDecimal / 10;
-
-  const rateLabels: string[] = [];
-  const npvs: number[] = [];
-  const irrMarkerIndex = 10; // siempre en la mitad (donde está el IRR real)
-
-  for (let i = 0; i <= 20; i++) {
-    const rate = i * step;
-    const npv = cashFlows.reduce(
-      (acc, cf, t) => acc + cf / Math.pow(1 + rate, t),
-      0
-    );
-    rateLabels.push((rate * 100).toFixed(2));
-    npvs.push(Number(npv.toFixed(2)));
-  }
-
+const IRRChart: React.FC<IRRChartProps> = ({ irr, discountRates, npvs }) => {
   const options = {
     chart: {
       type: "line" as const,
       zoom: { enabled: false },
+      toolbar: { show: true },
     },
     dataLabels: { enabled: false },
     stroke: { curve: "straight" as const, width: 3 },
@@ -37,13 +22,32 @@ const IRRChart: React.FC<IRRChartProps> = ({ irr, cashFlows }) => {
       style: { fontWeight: "bold", fontSize: "20px" },
     },
     xaxis: {
-      categories: rateLabels,
-      title: { text: "Discount Rate (%)", style: { fontWeight: 600 } },
+      categories: discountRates.map((rate) => rate.toFixed(2)),
+      title: {
+        text: "Discount Rate (%)",
+        style: { fontWeight: 600 },
+      },
+      labels: {
+        rotate: -45,
+        style: { fontSize: "12px" },
+      },
     },
     yaxis: {
-      title: { text: "Net Present Value ($)", style: { fontWeight: 600 } },
+      title: {
+        text: "Net Present Value ($)",
+        style: { fontWeight: 600 },
+      },
+      labels: {
+        formatter: (val: number) =>
+          val.toLocaleString("en-US", {
+            minimumFractionDigits: 2,
+            maximumFractionDigits: 2,
+          }),
+      },
     },
     tooltip: {
+      shared: false,
+      intersect: false,
       y: {
         formatter: (val: number) =>
           val.toLocaleString("en-US", {
@@ -52,17 +56,33 @@ const IRRChart: React.FC<IRRChartProps> = ({ irr, cashFlows }) => {
           }),
       },
     },
-    markers: {
-      size: [
-        0,
-        ...Array(20)
-          .fill(0)
-          .map((_, i) => (i === irrMarkerIndex ? 6 : 0)),
+    annotations: {
+      xaxis: [
+        {
+          x: irr.toFixed(2),
+          borderColor: "#00E396",
+          label: {
+            style: {
+              color: "#fff",
+              background: "#00E396",
+              fontWeight: 600,
+            },
+            text: `IRR = ${irr.toFixed(2)}%`,
+          },
+        },
       ],
-      colors: "#00E396",
-      strokeColors: "#000",
-      strokeWidth: 2,
-      shape: "circle",
+    },
+    grid: {
+      padding: {
+        top: 20,
+        bottom: 30,
+        left: 30,
+        right: 30,
+      },
+      row: {
+        colors: ["#f3f3f3", "transparent"],
+        opacity: 0.5,
+      },
     },
   };
 
