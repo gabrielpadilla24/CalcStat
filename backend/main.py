@@ -636,27 +636,29 @@ def calcular_irr(data: IRRData):
 
         if irr_result is None or np.isnan(irr_result):
             return {
-                "error": "To calculate IRR, cash flows must include at least one positive and one negative value."
+                "error": "IRR could not be calculated. Ensure the cash flows include both negative and positive values."
             }
 
         irr_percentage = irr_result * 100
-        max_rate = irr_result * 2
-        steps = 20
-        step_size = max_rate / steps
 
-        discount_rates = []
+        # ✅ Si el IRR es 0 o negativo, usamos un rango fijo (0% a 20%)
+        if irr_result <= 0:
+            discount_rates = [i for i in range(0, 21)]  # 0% a 20%
+        else:
+            max_rate = irr_result * 2
+            step_size = max_rate / 20
+            discount_rates = [(i * step_size) * 100 for i in range(21)]  # porcentaje
+
         npvs = []
-
-        for i in range(steps + 1):
-            rate = i * step_size
+        for rate_pct in discount_rates:
+            rate = rate_pct / 100
             npv = sum(cf / (1 + rate) ** t for t, cf in enumerate(data.cashFlows))
-            discount_rates.append(round(rate * 100, 4))
             npvs.append(round(npv, 2))
 
         return {
             "irr": round(irr_percentage, 2),
             "cashFlows": data.cashFlows,
-            "discountRates": discount_rates,
+            "discountRates": [round(r, 2) for r in discount_rates],
             "npvs": npvs,
         }
 

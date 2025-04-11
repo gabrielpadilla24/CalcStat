@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import IRRChart from "./IRRChart";
+import IRRResults from "./IRRResults";
 
 type CashFlow = {
   year: number;
@@ -13,7 +13,11 @@ type IRRResponse = {
   npvs: number[];
 };
 
-const IRRForm = () => {
+type IRRFormProps = {
+  onResult: (result: IRRResponse) => void;
+};
+
+const IRRForm: React.FC<IRRFormProps> = ({ onResult }) => {
   const [cashFlows, setCashFlows] = useState<CashFlow[]>([
     { year: 0, amount: "" },
   ]);
@@ -69,6 +73,7 @@ const IRRForm = () => {
         Array.isArray(data.npvs)
       ) {
         setResult(data);
+        onResult(data); // 🔁 enviamos al padre
       } else if (data.error) {
         setError(data.error);
       } else {
@@ -81,98 +86,66 @@ const IRRForm = () => {
   };
 
   return (
-    <div className="flex flex-col items-center gap-12">
-      {/* FORM CARD */}
-      <div className="bg-white p-6 rounded-2xl shadow-lg w-full max-w-3xl mx-auto mt-8">
-        <form
-          onSubmit={handleSubmit}
-          className="flex flex-col items-center w-full"
+    <div className="bg-white p-6 rounded-2xl shadow-lg w-full max-w-3xl mx-auto mt-8">
+      <form
+        onSubmit={handleSubmit}
+        className="flex flex-col items-center w-full"
+      >
+        <h2 className="text-2xl font-semibold mb-6 text-center w-full">
+          Enter the Yearly Cashflow for the Project
+        </h2>
+
+        <div className="space-y-4 mb-6 w-full flex flex-col items-center">
+          {cashFlows.map((cf, index) => (
+            <div
+              key={cf.year}
+              className="grid grid-cols-[80px_200px_60px] gap-2 max-w-md mx-auto items-center"
+            >
+              <label className="text-right font-medium">{`Year ${cf.year}`}</label>
+              <input
+                type="number"
+                step="0.01"
+                value={cf.amount}
+                onChange={(e) => handleChangeAmount(index, e.target.value)}
+                className="border border-gray-300 rounded-lg p-2 w-[200px] mx-auto"
+                required
+              />
+              {cf.year !== 0 ? (
+                <button
+                  type="button"
+                  className="text-red-500 hover:text-red-700 text-sm"
+                  onClick={() => handleRemoveYear(cf.year)}
+                >
+                  Remove
+                </button>
+              ) : (
+                <div className="w-[51px]" />
+              )}
+            </div>
+          ))}
+        </div>
+
+        <button
+          type="button"
+          onClick={handleAddYear}
+          className="mb-6 text-sm text-blue-600 hover:underline"
         >
-          <h2 className="text-2xl font-semibold mb-6 text-center w-full">
-            Enter the Yearly Cashflow for the Project
-          </h2>
+          + Add Year
+        </button>
 
-          <div className="space-y-4 mb-6 w-full flex flex-col items-center">
-            {cashFlows.map((cf, index) => (
-              <div
-                key={cf.year}
-                className="grid grid-cols-[80px_200px_60px] gap-2 max-w-md mx-auto items-center"
-              >
-                <label className="text-right font-medium">{`Year ${cf.year}`}</label>
-                <input
-                  type="number"
-                  step="0.01"
-                  value={cf.amount}
-                  onChange={(e) => handleChangeAmount(index, e.target.value)}
-                  className="border border-gray-300 rounded-lg p-2 w-[200px] mx-auto"
-                  required
-                />
-                {cf.year !== 0 ? (
-                  <button
-                    type="button"
-                    className="text-red-500 hover:text-red-700 text-sm"
-                    onClick={() => handleRemoveYear(cf.year)}
-                  >
-                    Remove
-                  </button>
-                ) : (
-                  <div className="w-[51px]" />
-                )}
-              </div>
-            ))}
-          </div>
+        <button
+          type="submit"
+          className="w-full bg-[#0BB489] hover:bg-[#0AA47A] text-white font-semibold py-3 rounded-lg transition duration-200"
+        >
+          Calculate IRR
+        </button>
+      </form>
 
-          <button
-            type="button"
-            onClick={handleAddYear}
-            className="mb-6 text-sm text-blue-600 hover:underline"
-          >
-            + Add Year
-          </button>
+      {result && <IRRResults irr={result.irr} cashFlows={result.cashFlows} />}
 
-          <button
-            type="submit"
-            className="w-full bg-[#0BB489] hover:bg-[#0AA47A] text-white font-semibold py-3 rounded-lg transition duration-200"
-          >
-            Calculate IRR
-          </button>
-        </form>
-
-        {result && (
-          <div className="mt-8 bg-green-50 border border-green-200 text-green-800 rounded-xl p-4 text-center font-medium">
-            <p>
-              Cash Flows:{" "}
-              <strong>
-                {result.cashFlows
-                  .map((cf) =>
-                    cf >= 0
-                      ? `$${cf.toLocaleString()}`
-                      : `-$${Math.abs(cf).toLocaleString()}`
-                  )
-                  .join(", ")}
-              </strong>
-            </p>
-            <p className="text-2xl mt-2">
-              IRR: <strong>{result.irr.toFixed(2)}%</strong>
-            </p>
-          </div>
-        )}
-
-        {error && (
-          <div className="mt-6 bg-red-50 border border-red-300 p-4 rounded-xl text-red-700 text-center">
-            <p>{error}</p>
-          </div>
-        )}
-      </div>
-
-      {/* GRAPH CARD */}
-      {result && (
-        <div className="bg-white p-6 rounded-2xl shadow-lg w-full max-w-5xl mx-auto">
-          <IRRChart
-            irr={result.irr}
-            discountRates={result.discountRates}
-            npvs={result.npvs}
-          />
+      {error && (
+        <div className="mt-6 bg-red-50 border border-red-300 p-4 rounded-xl text-red-700 text-center">
+          <p>{error}</p>
         </div>
       )}
     </div>
