@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import IRRResults from "./IRRResults";
 
 type CashFlow = {
   year: number;
@@ -128,11 +129,7 @@ const IRRForm = () => {
         </button>
       </form>
 
-      {result && (
-        <div className="mt-8 bg-green-50 border border-green-200 text-green-800 rounded-xl p-4 text-center font-medium">
-          IRR: <strong>{result.irr.toFixed(4)}%</strong>
-        </div>
-      )}
+      {result && <IRRResults irr={result.irr} cashFlows={result.cashFlows} />}
 
       {error && (
         <div className="mt-6 bg-red-50 border border-red-300 p-4 rounded-xl text-red-700 text-center">

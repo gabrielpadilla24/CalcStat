@@ -640,7 +640,7 @@ def calcular_irr(data: IRRData):
             }
 
         return {
-            "irr": round(irr_result * 100, 4),
+            "irr": round(irr_result * 100, 2),
             "cashFlows": data.cashFlows
         }
 
