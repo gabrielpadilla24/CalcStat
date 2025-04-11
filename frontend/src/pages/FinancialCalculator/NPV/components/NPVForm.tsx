@@ -162,31 +162,30 @@ const NPVForm = () => {
 
         {mode === "sequence" && (
           <div>
-            {/* Year 0 + Discount Rate */}
-            <div className="space-y-4">
-              <div className="flex items-center gap-4">
-                <label className="w-48 font-medium">Year 0</label>
-                <input
-                  type="number"
-                  step="0.01"
-                  value={cashFlows[0].amount}
-                  onChange={(e) => handleChangeAmount(0, e.target.value)}
-                  className="border border-gray-300 rounded-lg p-2 w-full max-w-xs"
-                  required
-                />
-              </div>
+            {/* Discount Rate */}
+            <div className="flex items-center gap-4 mb-4">
+              <label className="w-48 font-medium">Discount Rate (%)</label>
+              <input
+                type="number"
+                step="0.01"
+                value={interestRate}
+                onChange={(e) => setInterestRate(e.target.value)}
+                className="border border-gray-300 rounded-lg p-2 w-full max-w-xs"
+                required
+              />
+            </div>
 
-              <div className="flex items-center gap-4">
-                <label className="w-48 font-medium">Discount Rate (%)</label>
-                <input
-                  type="number"
-                  step="0.01"
-                  value={interestRate}
-                  onChange={(e) => setInterestRate(e.target.value)}
-                  className="border border-gray-300 rounded-lg p-2 w-full max-w-xs"
-                  required
-                />
-              </div>
+            {/* Year 0 */}
+            <div className="flex items-center gap-4 mb-4">
+              <label className="w-48 font-medium">Year 0</label>
+              <input
+                type="number"
+                step="0.01"
+                value={cashFlows[0].amount}
+                onChange={(e) => handleChangeAmount(0, e.target.value)}
+                className="border border-gray-300 rounded-lg p-2 w-full max-w-xs"
+                required
+              />
             </div>
 
             {/* Other Years */}
