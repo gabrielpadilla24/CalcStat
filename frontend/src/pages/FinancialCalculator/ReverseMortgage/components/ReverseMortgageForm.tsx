@@ -27,7 +27,6 @@ const ReverseMortgageForm = () => {
   const [type, setType] = useState<"Lump Sum" | "Monthly Advance">("Lump Sum");
   const [lumpSum, setLumpSum] = useState("");
   const [monthlyAdvance, setMonthlyAdvance] = useState("");
-  const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<ReverseMortgageResult | null>(null);
   const [error, setError] = useState<string | null>(null);
   const resultsRef = useRef<HTMLDivElement>(null);
@@ -39,7 +38,6 @@ const ReverseMortgageForm = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
     setError(null);
     setErrorDetails(null);
     setResult(null);
@@ -85,8 +83,6 @@ const ReverseMortgageForm = () => {
     } catch (error) {
       console.error("Error submitting reverse mortgage form:", error);
       setError("There was a problem connecting to the server.");
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -183,7 +179,6 @@ const ReverseMortgageForm = () => {
           <button
             type="submit"
             className="w-full bg-[#0BB489] hover:bg-[#0AA47A] text-white font-semibold py-3 rounded-lg transition duration-200"
-            disabled={loading}
           >
             Calculate Reverse Mortgage
           </button>
