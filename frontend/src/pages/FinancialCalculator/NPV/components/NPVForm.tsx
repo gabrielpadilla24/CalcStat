@@ -168,25 +168,20 @@ const NPVForm = () => {
               {cashFlows.map((cf, index) => (
                 <div
                   key={cf.year}
-                  className="flex items-center gap-4 w-full max-w-md"
+                  className="grid grid-cols-[auto_minmax(0,1fr)_auto] gap-4 w-full max-w-md mx-auto items-center"
                 >
-                  <label className="w-24 text-right font-medium">
+                  <label className="text-right font-medium">
                     {`Year ${cf.year}`}
                   </label>
 
-                  {/* Wrap the input to enforce the same structure & width for all years */}
-                  <div className="flex-1">
-                    <input
-                      type="number"
-                      step="0.01"
-                      value={cf.amount}
-                      onChange={(e) =>
-                        handleChangeAmount(index, e.target.value)
-                      }
-                      className="border border-gray-300 rounded-lg p-2 w-full"
-                      required
-                    />
-                  </div>
+                  <input
+                    type="number"
+                    step="0.01"
+                    value={cf.amount}
+                    onChange={(e) => handleChangeAmount(index, e.target.value)}
+                    className="border border-gray-300 rounded-lg p-2 w-full"
+                    required
+                  />
 
                   {cf.year !== 0 ? (
                     <button
@@ -197,7 +192,6 @@ const NPVForm = () => {
                       Remove
                     </button>
                   ) : (
-                    // Invisible spacer to keep alignment
                     <div className="w-[51px]" />
                   )}
                 </div>
