@@ -168,7 +168,7 @@ const NPVForm = () => {
               {cashFlows.map((cf, index) => (
                 <div
                   key={cf.year}
-                  className="grid grid-cols-[auto_minmax(0,1fr)_auto] gap-4 w-full max-w-md mx-auto items-center"
+                  className="grid grid-cols-[80px_200px_60px] gap-2  max-w-md mx-auto items-center"
                 >
                   <label className="text-right font-medium">
                     {`Year ${cf.year}`}
@@ -179,7 +179,7 @@ const NPVForm = () => {
                     step="0.01"
                     value={cf.amount}
                     onChange={(e) => handleChangeAmount(index, e.target.value)}
-                    className="border border-gray-300 rounded-lg p-2 w-full"
+                    className="border border-gray-300 rounded-lg p-2 w-[200px] mx-auto"
                     required
                   />
 
