@@ -173,6 +173,8 @@ const NPVForm = () => {
                   <label className="w-24 text-right font-medium">
                     {`Year ${cf.year}`}
                   </label>
+
+                  {/* Wrap the input to enforce the same structure & width for all years */}
                   <div className="flex-1">
                     <input
                       type="number"
@@ -185,6 +187,7 @@ const NPVForm = () => {
                       required
                     />
                   </div>
+
                   {cf.year !== 0 ? (
                     <button
                       type="button"
@@ -194,7 +197,8 @@ const NPVForm = () => {
                       Remove
                     </button>
                   ) : (
-                    <div className="w-[60px]" /> // Invisible spacer to match "Remove" button
+                    // Invisible spacer to keep alignment
+                    <div className="w-[51px]" />
                   )}
                 </div>
               ))}
