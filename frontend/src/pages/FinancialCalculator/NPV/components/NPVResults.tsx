@@ -25,24 +25,22 @@ const NPVResults = ({
   }
 
   return (
-    <div className="flex justify-center mt-10">
-      <div className="bg-green-50 border border-green-300 p-6 rounded-2xl shadow w-full max-w-2xl text-center">
-        <h2 className="text-2xl font-bold text-green-800 mb-4">
-          Net Present Value Summary
-        </h2>
-        <p className="text-gray-700 mb-1">
-          <strong>Future Value:</strong> ${futureValue.toLocaleString()}
-        </p>
-        <p className="text-gray-700 mb-1">
-          <strong>Years:</strong> {years}
-        </p>
-        <p className="text-gray-700 mb-4">
-          <strong>Discount Rate:</strong> {interestRate}%
-        </p>
-        <p className="text-xl font-bold text-gray-900">
-          Net Present Value: ${npv.toLocaleString()}
-        </p>
-      </div>
+    <div className="mt-10 bg-green-50 border border-green-200 p-6 rounded-xl shadow-inner text-center">
+      <h2 className="text-2xl font-bold text-green-800 mb-4">
+        Net Present Value Summary
+      </h2>
+      <p className="text-gray-700 mb-1">
+        <strong>Future Value:</strong> ${futureValue.toLocaleString()}
+      </p>
+      <p className="text-gray-700 mb-1">
+        <strong>Years:</strong> {years}
+      </p>
+      <p className="text-gray-700 mb-4">
+        <strong>Discount Rate:</strong> {interestRate}%
+      </p>
+      <p className="text-xl font-bold text-gray-900">
+        Net Present Value: ${npv.toLocaleString()}
+      </p>
     </div>
   );
 };

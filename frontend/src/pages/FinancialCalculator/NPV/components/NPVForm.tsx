@@ -60,7 +60,7 @@ const NPVForm = () => {
   };
 
   return (
-    <>
+    <div className="bg-white p-6 rounded-2xl shadow-lg w-full max-w-5xl mx-auto mt-8">
       <form
         onSubmit={handleSubmit}
         className="grid grid-cols-1 md:grid-cols-3 gap-6"
@@ -111,6 +111,7 @@ const NPVForm = () => {
         </div>
       </form>
 
+      {/* 🔽 Resultados debajo del form, en la misma tarjeta */}
       {result && (
         <div ref={resultsRef}>
           <NPVResults {...result} />
@@ -118,12 +119,11 @@ const NPVForm = () => {
       )}
 
       {error && (
-        <div className="mt-8 bg-red-50 border border-red-300 p-6 rounded-xl shadow text-red-800">
-          <h2 className="text-xl font-semibold mb-2">Error</h2>
+        <div className="mt-6 bg-red-50 border border-red-300 p-4 rounded-xl text-red-700">
           <p>{error}</p>
         </div>
       )}
-    </>
+    </div>
   );
 };
 
