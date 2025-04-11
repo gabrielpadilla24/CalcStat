@@ -24,7 +24,6 @@ const RefinanceForm = () => {
   const [newTermYears, setNewTermYears] = useState("");
   const [closingCosts, setClosingCosts] = useState("");
 
-  const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<RefinanceResult | null>(null);
 
   const resultRef = useRef<HTMLDivElement | null>(null);
@@ -33,7 +32,6 @@ const RefinanceForm = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
 
     const payload = {
       currentMonthlyPayment: parseFloat(currentMonthlyPayment),
@@ -62,8 +60,6 @@ const RefinanceForm = () => {
       }, 100);
     } catch (error) {
       console.error("Error submitting refinance form:", error);
-    } finally {
-      setLoading(false);
     }
   };
 
@@ -176,9 +172,8 @@ const RefinanceForm = () => {
           <button
             type="submit"
             className="w-full bg-[#0BB489] hover:bg-[#0AA47A] text-white font-semibold py-3 rounded-lg transition duration-200"
-            disabled={loading}
           >
-            {loading ? "Calculating..." : "Calculate Refinance"}
+            Calculate Refinance
           </button>
         </div>
       </form>
