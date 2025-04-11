@@ -115,7 +115,7 @@ const NPVForm = () => {
               }`}
               onClick={() => setMode("sequence")}
             >
-              Cash Flow Sequence
+              Cash Flow
             </button>
           </div>
         </div>
