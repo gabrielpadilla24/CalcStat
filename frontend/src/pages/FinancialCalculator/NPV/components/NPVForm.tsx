@@ -23,7 +23,6 @@ const NPVForm = () => {
   const [cashFlows, setCashFlows] = useState<CashFlow[]>([
     { year: 0, amount: "" },
   ]);
-  const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<NPVResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
   const resultsRef = useRef<HTMLDivElement>(null);
@@ -50,7 +49,6 @@ const NPVForm = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setLoading(true);
     setError(null);
     setResult(null);
 
@@ -86,15 +84,12 @@ const NPVForm = () => {
       } catch (err) {
         console.error("Error calculating NPV:", err);
         setError("There was a problem connecting to the server.");
-      } finally {
-        setLoading(false);
       }
     } else {
       const amountsAreValid = cashFlows.every((cf) => cf.amount.trim() !== "");
 
       if (!amountsAreValid) {
         setError("Please fill in all cash flow values before submitting.");
-        setLoading(false);
         return;
       }
 
@@ -273,7 +268,6 @@ const NPVForm = () => {
           <button
             type="submit"
             className="w-full bg-[#0BB489] hover:bg-[#0AA47A] text-white font-semibold py-3 rounded-lg transition duration-200 mt-5"
-            disabled={loading}
           >
             Calculate NPV
           </button>
