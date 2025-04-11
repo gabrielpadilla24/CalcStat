@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useRef } from "react";
 import ReverseMortgageResults from "./ReverseMortgageResults";
 import ReverseMortgageChart from "./ReverseMortgageChart";
 import ReverseMortgageInfo from "./ReverseMortgageInfo";
@@ -30,6 +30,8 @@ const ReverseMortgageForm = () => {
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<ReverseMortgageResult | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const resultsRef = useRef<HTMLDivElement>(null);
+
   const [errorDetails, setErrorDetails] = useState<{
     homeEquity?: number;
     amountOwedAtEnd?: number;
@@ -74,6 +76,11 @@ const ReverseMortgageForm = () => {
         }
       } else {
         setResult(data);
+
+        // 👉 Scroll suave hacia el resultado
+        setTimeout(() => {
+          resultsRef.current?.scrollIntoView({ behavior: "smooth" });
+        }, 100);
       }
     } catch (error) {
       console.error("Error submitting reverse mortgage form:", error);
@@ -184,11 +191,11 @@ const ReverseMortgageForm = () => {
       </form>
 
       {result && (
-        <>
+        <div ref={resultsRef}>
           <ReverseMortgageResults {...result} />
           <ReverseMortgageChart yearlyDebt={result.yearlyDebt} />
           <ReverseMortgageInfo />
-        </>
+        </div>
       )}
 
       {error && (
