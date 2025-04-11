@@ -27,6 +27,7 @@ const NPVForm = () => {
   const [result, setResult] = useState<NPVResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
   const resultsRef = useRef<HTMLDivElement>(null);
+  const formulaRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     setResult(null);
@@ -304,18 +305,29 @@ const NPVForm = () => {
         )}
       </div>
 
-      {mode === "single" &&
-        result &&
-        typeof result.futureValue === "number" &&
-        typeof result.years === "number" &&
-        typeof result.interestRate === "number" && (
-          <NPVInfo
-            showSubstituted={true}
-            futureValue={result.futureValue}
-            years={result.years}
-            interestRate={result.interestRate}
-          />
-        )}
+      {result && (
+        <>
+          <div
+            onClick={() =>
+              formulaRef.current?.scrollIntoView({ behavior: "smooth" })
+            }
+            className="mt-4 text-center text-sm text-gray-500 flex justify-center items-center gap-1 cursor-pointer hover:text-gray-700 transition-colors"
+          >
+            <span className="text-lg">↓</span>
+            <span>See how it was calculated</span>
+          </div>
+
+          <div ref={formulaRef}>
+            <NPVInfo
+              mode={mode}
+              showSubstituted={mode === "single"}
+              futureValue={result.futureValue}
+              years={result.years}
+              interestRate={result.interestRate}
+            />
+          </div>
+        </>
+      )}
     </div>
   );
 };
