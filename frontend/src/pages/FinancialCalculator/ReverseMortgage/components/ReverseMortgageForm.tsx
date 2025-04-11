@@ -26,11 +26,18 @@ const ReverseMortgageForm = () => {
   const [monthlyAdvance, setMonthlyAdvance] = useState("");
   const [loading, setLoading] = useState(false);
   const [result, setResult] = useState<ReverseMortgageResult | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [errorDetails, setErrorDetails] = useState<{
+    homeEquity?: number;
+    amountOwedAtEnd?: number;
+  } | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    setResult(null); // limpiar resultados anteriores
+    setError(null);
+    setErrorDetails(null);
+    setResult(null);
 
     const payload: ReverseMortgagePayload = {
       homeEquity: parseFloat(homeEquity),
@@ -53,14 +60,21 @@ const ReverseMortgageForm = () => {
       });
 
       const data = await response.json();
+
       if (data.error) {
-        alert(data.error);
+        setError(data.error);
+        if (data.homeEquity && data.amountOwedAtEnd) {
+          setErrorDetails({
+            homeEquity: data.homeEquity,
+            amountOwedAtEnd: data.amountOwedAtEnd,
+          });
+        }
       } else {
         setResult(data);
       }
     } catch (error) {
       console.error("Error submitting reverse mortgage form:", error);
-      alert("There was an error submitting the form.");
+      setError("There was a problem connecting to the server.");
     } finally {
       setLoading(false);
     }
@@ -167,6 +181,27 @@ const ReverseMortgageForm = () => {
       </form>
 
       {result && <ReverseMortgageResults {...result} />}
+
+      {error && (
+        <div className="mt-8 bg-red-50 border border-red-300 p-6 rounded-xl shadow text-red-800">
+          <h2 className="text-xl font-semibold mb-2">
+            Reverse Mortgage Not Feasible
+          </h2>
+          <p className="mb-2">{error}</p>
+          {errorDetails && (
+            <div className="text-sm text-gray-800">
+              <p>
+                <strong>Home Equity:</strong> $
+                {errorDetails.homeEquity?.toLocaleString()}
+              </p>
+              <p>
+                <strong>Projected Owed Amount:</strong> $
+                {errorDetails.amountOwedAtEnd?.toLocaleString()}
+              </p>
+            </div>
+          )}
+        </div>
+      )}
     </>
   );
 };

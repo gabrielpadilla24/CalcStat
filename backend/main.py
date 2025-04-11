@@ -535,6 +535,7 @@ def calcular_refinance(data: RefinanceData):
 def calcular_reverse_mortgage(data: ReverseMortgageData):
     annual_rate = data.interestRate / 100
     years = data.years
+    home_equity = data.homeEquity
 
     if data.type == "Lump Sum":
         if data.lumpSum is None:
@@ -552,9 +553,18 @@ def calcular_reverse_mortgage(data: ReverseMortgageData):
     else:
         return {"error": "Invalid payout type."}
 
+    # 💥 Verificación: ¿se excede el home equity?
+    if amount_owed > home_equity:
+        return {
+            "error": "Projected owed amount exceeds home equity.",
+            "homeEquity": round(home_equity, 2),
+            "amountOwedAtEnd": round(amount_owed, 2),
+            "note": "This reverse mortgage is not feasible."
+        }
+
     return {
         "amountOwedAtEnd": round(amount_owed, 2),
         "type": data.type,
         "years": years,
-        "interestRate": data.interestRate,
+        "interestRate": data.interestRate
     }
