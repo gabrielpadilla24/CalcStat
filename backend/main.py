@@ -4,7 +4,7 @@ from pydantic import BaseModel
 from math import pow
 import numpy_financial as npf
 import numpy as np
-from typing import Literal, Optional
+from typing import Literal, Optional, List
 
 
 
@@ -76,6 +76,7 @@ class RefinanceScoreData(BaseModel):
     newTermMonths: int
     originalWasBetter: bool
     priority: str  # "debt" o "monthly"
+
 
 class ReverseMortgageData(BaseModel):
     homeEquity: float
@@ -536,35 +537,42 @@ def calcular_reverse_mortgage(data: ReverseMortgageData):
     annual_rate = data.interestRate / 100
     years = data.years
     home_equity = data.homeEquity
+    yearly_debt: List[float] = []
+    amount_owed = 0.0
 
     if data.type == "Lump Sum":
         if data.lumpSum is None:
             return {"error": "Missing 'lumpSum' value for Lump Sum type."}
-        amount_owed = data.lumpSum * (1 + annual_rate) ** years
+        amount_owed = data.lumpSum
+        for _ in range(years):
+            amount_owed *= (1 + annual_rate)
+            yearly_debt.append(round(amount_owed, 2))
 
     elif data.type == "Monthly Advance":
         if data.monthlyAdvance is None:
             return {"error": "Missing 'monthlyAdvance' value for Monthly Advance type."}
-        amount_owed = 0
-        for t in range(years):
-            yearly_payment = data.monthlyAdvance * 12
-            amount_owed += yearly_payment * (1 + annual_rate) ** (years - t - 1)
+        for year in range(1, years + 1):
+            debt = 0.0
+            for t in range(year):
+                payment = data.monthlyAdvance * 12
+                debt += payment * ((1 + annual_rate) ** (year - t - 1))
+            yearly_debt.append(round(debt, 2))
+        amount_owed = yearly_debt[-1]
 
     else:
         return {"error": "Invalid payout type."}
 
-    # 💥 Verificación: ¿se excede el home equity?
     if amount_owed > home_equity:
         return {
             "error": "Projected owed amount exceeds home equity.",
             "homeEquity": round(home_equity, 2),
             "amountOwedAtEnd": round(amount_owed, 2),
-            "note": "This reverse mortgage is not feasible."
         }
 
     return {
         "amountOwedAtEnd": round(amount_owed, 2),
+        "yearlyDebt": yearly_debt,
         "type": data.type,
-        "years": years,
-        "interestRate": data.interestRate
+        "years": data.years,
+        "interestRate": data.interestRate,
     }

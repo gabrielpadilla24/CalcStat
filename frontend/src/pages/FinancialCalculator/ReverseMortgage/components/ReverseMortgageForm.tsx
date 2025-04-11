@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import ReverseMortgageResults from "./ReverseMortgageResults";
+import ReverseMortgageChart from "./ReverseMortgageChart";
 
 type ReverseMortgagePayload = {
   homeEquity: number;
@@ -15,6 +16,7 @@ type ReverseMortgageResult = {
   type: "Lump Sum" | "Monthly Advance";
   years: number;
   interestRate: number;
+  yearlyDebt: number[]; // <-- nuevo campo para graficar
 };
 
 const ReverseMortgageForm = () => {
@@ -180,7 +182,12 @@ const ReverseMortgageForm = () => {
         </div>
       </form>
 
-      {result && <ReverseMortgageResults {...result} />}
+      {result && (
+        <>
+          <ReverseMortgageResults {...result} />
+          <ReverseMortgageChart yearlyDebt={result.yearlyDebt} />
+        </>
+      )}
 
       {error && (
         <div className="mt-8 bg-red-50 border border-red-300 p-6 rounded-xl shadow text-red-800">
