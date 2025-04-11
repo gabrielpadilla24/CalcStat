@@ -36,7 +36,7 @@ const NPVForm = () => {
   };
 
   const handleRemoveYear = (year: number) => {
-    if (year === 0) return; // Prevent removing year 0
+    if (year === 0) return;
     setCashFlows(cashFlows.filter((cf) => cf.year !== year));
   };
 
@@ -88,7 +88,6 @@ const NPVForm = () => {
         setLoading(false);
       }
     } else {
-      // En una próxima fase se enviará esta lógica al backend
       console.log("Sequence cash flows (preview):", cashFlows);
     }
   };
@@ -163,41 +162,38 @@ const NPVForm = () => {
 
         {mode === "sequence" && (
           <div>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-end">
-              <div>
-                <label className="block font-medium mb-1">
-                  Year 0 (Initial Investment)
-                </label>
+            {/* Year 0 + Discount Rate */}
+            <div className="space-y-4">
+              <div className="flex items-center gap-4">
+                <label className="w-48 font-medium">Year 0</label>
                 <input
                   type="number"
                   step="0.01"
                   value={cashFlows[0].amount}
                   onChange={(e) => handleChangeAmount(0, e.target.value)}
-                  className="border border-gray-300 rounded-lg p-2 w-full"
+                  className="border border-gray-300 rounded-lg p-2 w-full max-w-xs"
                   required
                 />
               </div>
 
-              <div>
-                <label className="block font-medium mb-1">
-                  Discount Rate (%)
-                </label>
+              <div className="flex items-center gap-4">
+                <label className="w-48 font-medium">Discount Rate (%)</label>
                 <input
                   type="number"
                   step="0.01"
                   value={interestRate}
                   onChange={(e) => setInterestRate(e.target.value)}
-                  className="border border-gray-300 rounded-lg p-2 w-full"
+                  className="border border-gray-300 rounded-lg p-2 w-full max-w-xs"
                   required
                 />
               </div>
             </div>
 
-            {/* Year > 0 flows */}
+            {/* Other Years */}
             <div className="space-y-4 mt-6">
               {cashFlows.slice(1).map((cf, index) => (
                 <div key={cf.year} className="flex items-center gap-4">
-                  <label className="w-20 font-medium">Year {cf.year}</label>
+                  <label className="w-48 font-medium">{`Year ${cf.year}`}</label>
                   <input
                     type="number"
                     step="0.01"
