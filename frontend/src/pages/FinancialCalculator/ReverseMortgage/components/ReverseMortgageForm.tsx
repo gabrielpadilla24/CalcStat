@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import ReverseMortgageResults from "./ReverseMortgageResults";
 import ReverseMortgageChart from "./ReverseMortgageChart";
+import ReverseMortgageInfo from "./ReverseMortgageInfo";
 
 type ReverseMortgagePayload = {
   homeEquity: number;
@@ -186,6 +187,7 @@ const ReverseMortgageForm = () => {
         <>
           <ReverseMortgageResults {...result} />
           <ReverseMortgageChart yearlyDebt={result.yearlyDebt} />
+          <ReverseMortgageInfo />
         </>
       )}
 
