@@ -101,7 +101,7 @@ const NPVForm = () => {
           <button
             type="button"
             className={`px-4 py-2 rounded-lg font-medium ${
-              mode === "single" ? "bg-green-600 text-white" : "bg-gray-200"
+              mode === "single" ? "bg-[#0BB489] text-white" : "bg-gray-200"
             }`}
             onClick={() => setMode("single")}
           >
@@ -110,7 +110,7 @@ const NPVForm = () => {
           <button
             type="button"
             className={`px-4 py-2 rounded-lg font-medium ${
-              mode === "sequence" ? "bg-green-600 text-white" : "bg-gray-200"
+              mode === "sequence" ? "bg-[#0BB489] text-white" : "bg-gray-200"
             }`}
             onClick={() => setMode("sequence")}
           >
@@ -163,41 +163,58 @@ const NPVForm = () => {
 
         {mode === "sequence" && (
           <div>
-            <div className="mb-4">
-              <label className="block font-medium mb-1">
-                Discount Rate (%)
-              </label>
-              <input
-                type="number"
-                step="0.01"
-                value={interestRate}
-                onChange={(e) => setInterestRate(e.target.value)}
-                className="border border-gray-300 rounded-lg p-2 w-full max-w-sm"
-                required
-              />
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 items-end">
+              <div>
+                <label className="block font-medium mb-1">
+                  Year 0 (Initial Investment)
+                </label>
+                <input
+                  type="number"
+                  step="0.01"
+                  value={cashFlows[0].amount}
+                  onChange={(e) => handleChangeAmount(0, e.target.value)}
+                  className="border border-gray-300 rounded-lg p-2 w-full"
+                  required
+                />
+              </div>
+
+              <div>
+                <label className="block font-medium mb-1">
+                  Discount Rate (%)
+                </label>
+                <input
+                  type="number"
+                  step="0.01"
+                  value={interestRate}
+                  onChange={(e) => setInterestRate(e.target.value)}
+                  className="border border-gray-300 rounded-lg p-2 w-full"
+                  required
+                />
+              </div>
             </div>
 
-            <div className="space-y-4">
-              {cashFlows.map((cf, index) => (
+            {/* Year > 0 flows */}
+            <div className="space-y-4 mt-6">
+              {cashFlows.slice(1).map((cf, index) => (
                 <div key={cf.year} className="flex items-center gap-4">
                   <label className="w-20 font-medium">Year {cf.year}</label>
                   <input
                     type="number"
                     step="0.01"
                     value={cf.amount}
-                    onChange={(e) => handleChangeAmount(index, e.target.value)}
+                    onChange={(e) =>
+                      handleChangeAmount(index + 1, e.target.value)
+                    }
                     className="border border-gray-300 rounded-lg p-2 w-full max-w-xs"
                     required
                   />
-                  {cf.year !== 0 && (
-                    <button
-                      type="button"
-                      className="text-red-500 hover:text-red-700 text-sm"
-                      onClick={() => handleRemoveYear(cf.year)}
-                    >
-                      Remove
-                    </button>
-                  )}
+                  <button
+                    type="button"
+                    className="text-red-500 hover:text-red-700 text-sm"
+                    onClick={() => handleRemoveYear(cf.year)}
+                  >
+                    Remove
+                  </button>
                 </div>
               ))}
             </div>
