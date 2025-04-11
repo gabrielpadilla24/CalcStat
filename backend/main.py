@@ -91,6 +91,10 @@ class NPVData(BaseModel):
     years: int
     interestRate: float  # porcentaje anual
 
+class NPVSequenceData(BaseModel):
+    cashFlows: List[float]
+    interestRate: float  # porcentaje anual
+
 
 
 # -----------------------------
@@ -595,4 +599,15 @@ def calcular_npv(data:NPVData):
         "futureValue": round(future_value, 2),
         "years": years,
         "interestRate": data.interestRate,
+    }
+
+@app.post("/npv-sequence")
+def imprimir_cashflow(data: NPVSequenceData):
+    flujo_por_anio = [
+        {"year": i, "value": round(cf, 2)}
+        for i, cf in enumerate(data.cashFlows)
+    ]
+    return {
+        "cashFlows": flujo_por_anio,
+        "interestRate": data.interestRate
     }

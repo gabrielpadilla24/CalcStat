@@ -85,7 +85,44 @@ const NPVForm = () => {
         setLoading(false);
       }
     } else {
-      console.log("Sequence cash flows (preview):", cashFlows);
+      const amountsAreValid = cashFlows.every((cf) => cf.amount.trim() !== "");
+
+      if (!amountsAreValid) {
+        setError("Please fill in all cash flow values before submitting.");
+        setLoading(false);
+        return;
+      }
+
+      const payload = {
+        cashFlows: cashFlows.map((cf) => parseFloat(cf.amount)),
+        interestRate: parseFloat(interestRate),
+      };
+
+      try {
+        const response = await fetch("http://localhost:8000/npv-sequence", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+
+        const data = await response.json();
+
+        if (Array.isArray(data.cashFlows)) {
+          const output = data.cashFlows
+            .map(
+              (cf: { year: number; value: number }) => `${cf.year}, ${cf.value}`
+            )
+            .join("\n");
+          alert("Cash Flows:\n" + output);
+        } else {
+          setError("No cash flow data returned from the server.");
+        }
+      } catch (err) {
+        console.error("Error fetching cash flow sequence:", err);
+        setError("There was a problem connecting to the server.");
+      } finally {
+        setLoading(false);
+      }
     }
   };
 
@@ -95,7 +132,6 @@ const NPVForm = () => {
         onSubmit={handleSubmit}
         className="flex flex-col items-center w-full"
       >
-        {/* Subtitle */}
         <div className="mb-6 text-center w-full">
           <h2 className="text-2xl font-semibold mb-3">Calculation Mode</h2>
           <div className="flex justify-center gap-4">
@@ -120,7 +156,6 @@ const NPVForm = () => {
           </div>
         </div>
 
-        {/* Single Value Mode */}
         {mode === "single" && (
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
             <div>
@@ -160,10 +195,8 @@ const NPVForm = () => {
           </div>
         )}
 
-        {/* Cash Flow Sequence Mode */}
         {mode === "sequence" && (
           <>
-            {/* All Years Aligned Center */}
             <div className="space-y-4 mb-6 w-full flex flex-col items-center">
               {cashFlows.map((cf, index) => (
                 <div
@@ -206,7 +239,6 @@ const NPVForm = () => {
               + Add Year
             </button>
 
-            {/* Discount Rate Centered */}
             <div className="grid grid-cols-[80px_200px_60px] gap-2 mb-6 max-w-md mx-auto items-center">
               <label className="text-right font-medium">
                 Discount Rate (%)
