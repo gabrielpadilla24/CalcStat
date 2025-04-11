@@ -101,7 +101,7 @@ const NPVForm = () => {
           <div className="flex justify-center gap-4">
             <button
               type="button"
-              className={`px-4 py-2 rounded-lg font-medium ${
+              className={`px-4 py-2 rounded-lg font-medium w-[130px] ${
                 mode === "single" ? "bg-[#0BB489] text-white" : "bg-gray-200"
               }`}
               onClick={() => setMode("single")}
@@ -110,7 +110,7 @@ const NPVForm = () => {
             </button>
             <button
               type="button"
-              className={`px-4 py-2 rounded-lg font-medium ${
+              className={`px-4 py-2 rounded-lg font-medium w-[130px] ${
                 mode === "sequence" ? "bg-[#0BB489] text-white" : "bg-gray-200"
               }`}
               onClick={() => setMode("sequence")}
@@ -232,7 +232,7 @@ const NPVForm = () => {
         <div className="mt-2 w-full">
           <button
             type="submit"
-            className="w-full bg-[#0BB489] hover:bg-[#0AA47A] text-white font-semibold py-3 rounded-lg transition duration-200"
+            className="w-full bg-[#0BB489] hover:bg-[#0AA47A] text-white font-semibold py-3 rounded-lg transition duration-200 mt-5"
             disabled={loading}
           >
             {loading ? "Calculating..." : "Calculate NPV"}
