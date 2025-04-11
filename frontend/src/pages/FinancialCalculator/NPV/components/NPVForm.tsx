@@ -207,8 +207,8 @@ const NPVForm = () => {
             </button>
 
             {/* Discount Rate Centered */}
-            <div className="mb-6 text-center flex flex-col items-center justify-center">
-              <label className="block font-medium mb-1">
+            <div className="grid grid-cols-[80px_200px_60px] gap-2 mb-6 max-w-md mx-auto items-center">
+              <label className="text-right font-medium">
                 Discount Rate (%)
               </label>
               <input
@@ -216,9 +216,10 @@ const NPVForm = () => {
                 step="0.01"
                 value={interestRate}
                 onChange={(e) => setInterestRate(e.target.value)}
-                className="border border-gray-300 rounded-lg p-2 w-[200px] text-center"
+                className="border border-gray-300 rounded-lg p-2 w-[200px] mx-auto"
                 required
               />
+              <div className="w-[51px]" />
             </div>
           </>
         )}
