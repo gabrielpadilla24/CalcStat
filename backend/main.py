@@ -95,6 +95,9 @@ class NPVSequenceData(BaseModel):
     cashFlows: List[float]
     interestRate: float  # porcentaje anual
 
+class IRRData(BaseModel):
+    cashFlows: List[int]
+
 
 
 # -----------------------------
@@ -245,7 +248,6 @@ def calcular_arm(data: ARMData):
         "loanBalance": loan_balance,
         "fixedYearsMessage": fixedYearsMessage,
     }
-
 
 # -----------------------------
 # ENDPOINT DE HIPOTECA INTEREST ONLY
@@ -587,6 +589,10 @@ def calcular_reverse_mortgage(data: ReverseMortgageData):
     }
 
 
+#---------------------------------
+# ENDPOINT DE NPV
+#---------------------------------
+
 @app.post("/npv")
 def calcular_npv(data:NPVData):
     future_value = data.futureValue
@@ -617,3 +623,26 @@ def calcular_npv_sequence(data: NPVSequenceData):
         ],
         "interestRate": data.interestRate
     }
+
+
+#---------------------------------
+# ENDPOINT DE IRR
+#---------------------------------
+
+@app.post("/irr")
+def calcular_irr(data: IRRData):
+    try:
+        irr_result = npf.irr(data.cashFlows)
+
+        if irr_result is None or np.isnan(irr_result):
+            return {
+                "error": "To calculate IRR, cash flows must include at least one positive and one negative value."
+            }
+
+        return {
+            "irr": round(irr_result * 100, 4),
+            "cashFlows": data.cashFlows
+        }
+
+    except Exception as e:
+        return {"error": str(e)}

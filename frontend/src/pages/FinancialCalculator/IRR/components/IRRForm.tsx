@@ -59,8 +59,10 @@ const IRRForm = () => {
 
       const data = await response.json();
 
-      if (typeof data.irr === "number" && Array.isArray(data.cashFlows)) {
+      if (typeof data.irr === "number") {
         setResult(data);
+      } else if (data.error) {
+        setError(data.error);
       } else {
         setError("Invalid response from the server.");
       }
@@ -128,7 +130,7 @@ const IRRForm = () => {
 
       {result && (
         <div className="mt-8 bg-green-50 border border-green-200 text-green-800 rounded-xl p-4 text-center font-medium">
-          Estimated IRR: <strong>{(result.irr * 100).toFixed(2)}%</strong>
+          IRR: <strong>{result.irr.toFixed(4)}%</strong>
         </div>
       )}
 
