@@ -173,15 +173,18 @@ const NPVForm = () => {
                   <label className="w-24 text-right font-medium">
                     {`Year ${cf.year}`}
                   </label>
-                  <input
-                    type="number"
-                    step="0.01"
-                    value={cf.amount}
-                    onChange={(e) => handleChangeAmount(index, e.target.value)}
-                    className="border border-gray-300 rounded-lg p-2 w-full"
-                    required
-                  />
-                  {/* Maintain space for symmetry even if no remove button */}
+                  <div className="flex-1">
+                    <input
+                      type="number"
+                      step="0.01"
+                      value={cf.amount}
+                      onChange={(e) =>
+                        handleChangeAmount(index, e.target.value)
+                      }
+                      className="border border-gray-300 rounded-lg p-2 w-full"
+                      required
+                    />
+                  </div>
                   {cf.year !== 0 ? (
                     <button
                       type="button"
@@ -191,7 +194,7 @@ const NPVForm = () => {
                       Remove
                     </button>
                   ) : (
-                    <div className="w-[60px]" /> // matches Remove button space
+                    <div className="w-[60px]" /> // Invisible spacer to match "Remove" button
                   )}
                 </div>
               ))}
