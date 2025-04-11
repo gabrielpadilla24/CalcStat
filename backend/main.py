@@ -86,6 +86,11 @@ class ReverseMortgageData(BaseModel):
     lumpSum: Optional[float] = None
     monthlyAdvance: Optional[float] = None
 
+class NPVData(BaseModel):
+    futureValue: float
+    years: int
+    interestRate: float  # porcentaje anual
+
 
 
 # -----------------------------
@@ -574,5 +579,20 @@ def calcular_reverse_mortgage(data: ReverseMortgageData):
         "yearlyDebt": yearly_debt,
         "type": data.type,
         "years": data.years,
+        "interestRate": data.interestRate,
+    }
+
+
+@app.post("/npv")
+def calcular_npv(data:NPVData):
+    future_value = data.futureValue
+    years = data.years
+    interest_rate = data.interestRate / 100
+
+    npv = future_value / ((1 + interest_rate) ** years)
+    return {
+        "npv": round(npv, 2),
+        "futureValue": round(future_value, 2),
+        "years": years,
         "interestRate": data.interestRate,
     }
