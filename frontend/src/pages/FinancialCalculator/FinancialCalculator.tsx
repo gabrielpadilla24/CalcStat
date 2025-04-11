@@ -154,6 +154,13 @@ const FinancialCalculator = () => {
               img: "/img/npv.png",
               path: "/financial/npv",
             },
+
+            {
+              title: "Internal Rate of Return Calculator",
+              desc: "Calculate the Internal Rate of Return for any investment. Perfect for evaluating profitability, comparing projects, and guiding smart investment choices.",
+              img: "/img/irr.png",
+              path: "/financial/irr",
+            },
           ].map(({ title, desc, img, path }) => (
             <div
               key={title}
