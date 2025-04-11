@@ -1,8 +1,8 @@
 type NPVResultProps = {
   npv: number;
-  futureValue: number;
   years: number;
   interestRate: number;
+  futureValue?: number;
 };
 
 const NPVResults = ({
@@ -13,7 +13,6 @@ const NPVResults = ({
 }: NPVResultProps) => {
   if (
     typeof npv !== "number" ||
-    typeof futureValue !== "number" ||
     typeof years !== "number" ||
     typeof interestRate !== "number"
   ) {
@@ -29,9 +28,11 @@ const NPVResults = ({
       <h2 className="text-2xl font-bold text-green-800 mb-4">
         Net Present Value Summary
       </h2>
-      <p className="text-gray-700 mb-1">
-        <strong>Future Value:</strong> ${futureValue.toLocaleString()}
-      </p>
+      {futureValue !== undefined && (
+        <p className="text-gray-700 mb-1">
+          <strong>Future Value:</strong> ${futureValue.toLocaleString()}
+        </p>
+      )}
       <p className="text-gray-700 mb-1">
         <strong>Years:</strong> {years}
       </p>

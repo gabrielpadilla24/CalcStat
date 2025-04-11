@@ -3,9 +3,9 @@ import NPVResults from "./NPVResults";
 
 type NPVResponse = {
   npv: number;
-  futureValue: number;
   years: number;
   interestRate: number;
+  futureValue?: number;
 };
 
 type CashFlow = {
@@ -114,10 +114,6 @@ const NPVForm = () => {
         ) {
           setResult({
             npv: data.npv,
-            futureValue: data.cashFlows.reduce(
-              (acc: number, cf: { value: number }) => acc + cf.value,
-              0
-            ),
             years: data.cashFlows.length - 1,
             interestRate: data.interestRate,
           });
