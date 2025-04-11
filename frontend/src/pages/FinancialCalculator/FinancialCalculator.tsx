@@ -115,6 +115,13 @@ const FinancialCalculator = () => {
               img: "/img/refinance.png",
               path: "/mortgage/refinance",
             },
+
+            {
+              title: "Reverse Mortgage",
+              desc: "Estimate how much you can borrow using your home equity with a reverse mortgage.",
+              img: "/img/reverse.png",
+              path: "/mortgage/reversemortgage",
+            },
           ].map(({ title, desc, img, path }) => (
             <div
               key={title}
