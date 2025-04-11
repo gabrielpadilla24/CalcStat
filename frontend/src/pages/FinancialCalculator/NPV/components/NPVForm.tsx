@@ -27,7 +27,17 @@ const NPVForm = () => {
   const [error, setError] = useState<string | null>(null);
   const resultsRef = useRef<HTMLDivElement>(null);
   useEffect(() => {
-    setResult(null); // clear result when switching modes
+    setResult(null);
+    setError(null);
+
+    if (mode === "single") {
+      setFutureValue("");
+      setYears("");
+      setInterestRate("");
+    } else if (mode === "sequence") {
+      setCashFlows([{ year: 0, amount: "" }]);
+      setInterestRate("");
+    }
   }, [mode]);
 
   const handleAddYear = () => {
