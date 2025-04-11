@@ -1,6 +1,7 @@
 import React, { useState, useRef, useEffect } from "react";
 import NPVResults from "./NPVResults";
 import NPVChart from "./NPVChart";
+import NPVInfo from "./NPVInfo";
 
 type NPVResponse = {
   npv: number;
@@ -26,6 +27,7 @@ const NPVForm = () => {
   const [result, setResult] = useState<NPVResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
   const resultsRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     setResult(null);
     setError(null);
@@ -66,7 +68,7 @@ const NPVForm = () => {
       const payload = {
         futureValue: parseFloat(futureValue),
         years: parseInt(years),
-        interestRate: parseFloat(interestRate),
+        interestRate: parseFloat(interestRate) / 100,
       };
 
       try {
@@ -105,7 +107,7 @@ const NPVForm = () => {
 
       const payload = {
         cashFlows: cashFlows.map((cf) => parseFloat(cf.amount)),
-        interestRate: parseFloat(interestRate),
+        interestRate: parseFloat(interestRate) / 100,
       };
 
       try {
@@ -138,8 +140,6 @@ const NPVForm = () => {
       } catch (err) {
         console.error("Error fetching cash flow sequence:", err);
         setError("There was a problem connecting to the server.");
-      } finally {
-        setLoading(false);
       }
     }
   };
@@ -303,6 +303,19 @@ const NPVForm = () => {
           </div>
         )}
       </div>
+
+      {mode === "single" &&
+        result &&
+        typeof result.futureValue === "number" &&
+        typeof result.years === "number" &&
+        typeof result.interestRate === "number" && (
+          <NPVInfo
+            showSubstituted={true}
+            futureValue={result.futureValue}
+            years={result.years}
+            interestRate={result.interestRate}
+          />
+        )}
     </div>
   );
 };
