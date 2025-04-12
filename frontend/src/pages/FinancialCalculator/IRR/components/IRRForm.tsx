@@ -86,7 +86,7 @@ const IRRForm: React.FC<IRRFormProps> = ({ onResult }) => {
   };
 
   return (
-    <div className="bg-white p-6 rounded-2xl shadow-lg w-full max-w-3xl mx-auto mt-8">
+    <div className="bg-white p-6 rounded-2xl shadow-lg w-[500px] mx-auto mt-8">
       <form
         onSubmit={handleSubmit}
         className="flex flex-col items-center w-full"

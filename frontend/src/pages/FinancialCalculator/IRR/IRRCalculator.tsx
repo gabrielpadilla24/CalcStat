@@ -26,7 +26,7 @@ const IRRCalculator = () => {
         <div className="flex flex-col items-center gap-12">
           <IRRForm onResult={setResult} />
 
-          <div className="bg-white p-6 rounded-2xl shadow-lg w-full max-w-5xl mx-auto">
+          <div className="bg-white p-6 rounded-2xl shadow-lg w-[800px] mx-auto">
             <IRRChart
               irr={result?.irr ?? 0}
               discountRates={result?.discountRates ?? []}
