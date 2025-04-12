@@ -23,8 +23,8 @@ const IRRResults = ({ irr, cashFlows }: IRRResultProps) => {
 
   return (
     <div
-      className={`mt-10 bg-green-50 border border-green-200 p-6 rounded-xl shadow-inner text-center transition-opacity duration-700 ${
-        visible ? "opacity-100" : "opacity-0"
+      className={`mt-10 bg-green-50 border border-green-200 p-6 rounded-xl shadow-inner text-center transform transition-all duration-700 ease-out ${
+        visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
       }`}
     >
       <h2 className="text-2xl font-bold text-green-800 mb-4">
