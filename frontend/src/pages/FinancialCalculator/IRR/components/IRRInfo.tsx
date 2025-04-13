@@ -2,8 +2,8 @@ import React from "react";
 
 const IRRInfo = () => {
   return (
-    <div className="bg-white rounded-2xl shadow-md p-6 text-gray-800 max-w-3xl mx-auto mt-8">
-      <h2 className="text-2xl font-bold text-[#0BB489] mb-4 text-center">
+    <div className="bg-white rounded-2xl shadow-md p-6 text-gray-800 w-[1270px] mx-auto mt-8">
+      <h2 className="text-2xl font-bold text-black mb-4 text-center">
         📈 Understanding the Internal Rate of Return (IRR)
       </h2>
 
