@@ -16,6 +16,9 @@ const FinancialCalculator = () => {
   const showInvestment =
     selectedCategory === "All" || selectedCategory === "Investment";
 
+  const showSavings =
+    selectedCategory === "All" || selectedCategory === "Savings";
+
   return (
     <div className="bg-gray-100 min-h-screen">
       <NavBar />
@@ -160,6 +163,35 @@ const FinancialCalculator = () => {
               desc: "Calculate the Internal Rate of Return for any investment. Perfect for evaluating profitability, comparing projects, and guiding smart investment choices.",
               img: "/img/irr.png",
               path: "/financial/irr",
+            },
+          ].map(({ title, desc, img, path }) => (
+            <div
+              key={title}
+              className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] text-left flex flex-col justify-between"
+            >
+              <img
+                src={img}
+                alt={title}
+                className="h-40 w-full object-cover mb-4 rounded"
+              />
+              <h2 className="text-xl font-bold text-gray-800 mb-2">{title}</h2>
+              <div className="flex flex-col justify-between h-full">
+                <p className="text-sm text-gray-600 mb-4">{desc}</p>
+                <Link to={path}>
+                  <SubmitButton text="Open Calculator" />
+                </Link>
+              </div>
+            </div>
+          ))}
+
+        {/* Savings-related cards */}
+        {showSavings &&
+          [
+            {
+              title: "Savings Calculator",
+              desc: "Plan your savings to reach any goal. Ideal for retirement, education, or big purchases — find out how much you need to save monthly or yearly to hit your target on time.",
+              img: "/img/savings.png",
+              path: "/financial/savings",
             },
           ].map(({ title, desc, img, path }) => (
             <div

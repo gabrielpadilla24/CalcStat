@@ -9,6 +9,7 @@ import RefinanceCalculator from "./pages/FinancialCalculator/Refinance/Refinance
 import ReverseMortgageCalculator from "./pages/FinancialCalculator/ReverseMortgage/ReverseMortgageCalculator";
 import NPVCalculator from "./pages/FinancialCalculator/NPV/NPVCalculator";
 import IRRCalculator from "./pages/FinancialCalculator/IRR/IRRCalculator";
+import SavingsCalculator from "./pages/FinancialCalculator/Savings/SavingsCalculator";
 
 const App = () => {
   return (
@@ -48,6 +49,8 @@ const App = () => {
 
         <Route path="/financial/npv" element={<NPVCalculator />} />
         <Route path="/financial/irr" element={<IRRCalculator />} />
+
+        <Route path="/financial/savings" element={<SavingsCalculator />} />
 
         <Route path="/financial" element={<FinancialCalculator />} />
         <Route path="/calculators" element={<Menu />} />
