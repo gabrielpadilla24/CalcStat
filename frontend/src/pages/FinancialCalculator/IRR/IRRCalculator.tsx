@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import NavBar from "@/components/NavBar";
 import BottomCTA from "@/components/BottomCTA";
 import IRRForm from "./components/IRRForm";
@@ -14,6 +14,11 @@ type IRRResponse = {
 
 const IRRCalculator = () => {
   const [result, setResult] = useState<IRRResponse | null>(null);
+  const infoRef = useRef<HTMLDivElement>(null);
+
+  const handleScrollToInfo = () => {
+    infoRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
 
   return (
     <>
@@ -24,11 +29,11 @@ const IRRCalculator = () => {
           Internal Rate of Return Calculator
         </h1>
 
-        {/* CENTERED FLEX CONTAINER */}
+        {/* FLEX CONTAINER */}
         <div className="max-w-[1440px] mx-auto flex flex-col lg:flex-row items-start justify-center gap-4 px-6">
           {/* FORM */}
           <div className="flex-1 max-w-[500px]">
-            <IRRForm onResult={setResult} />
+            <IRRForm onResult={setResult} onLearnMore={handleScrollToInfo} />
           </div>
 
           {/* CHART */}
@@ -42,7 +47,9 @@ const IRRCalculator = () => {
         </div>
 
         {/* INFO */}
-        <IRRInfo />
+        <div ref={infoRef} className="mt-16">
+          <IRRInfo />
+        </div>
       </div>
 
       <BottomCTA buttonText="Browse Financial" href="/financial" />

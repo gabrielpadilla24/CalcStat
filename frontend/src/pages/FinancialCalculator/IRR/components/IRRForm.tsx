@@ -15,9 +15,10 @@ type IRRResponse = {
 
 type IRRFormProps = {
   onResult: (result: IRRResponse) => void;
+  onLearnMore: () => void;
 };
 
-const IRRForm: React.FC<IRRFormProps> = ({ onResult }) => {
+const IRRForm: React.FC<IRRFormProps> = ({ onResult, onLearnMore }) => {
   const [cashFlows, setCashFlows] = useState<CashFlow[]>([
     { year: 0, amount: "" },
   ]);
@@ -73,7 +74,7 @@ const IRRForm: React.FC<IRRFormProps> = ({ onResult }) => {
         Array.isArray(data.npvs)
       ) {
         setResult(data);
-        onResult(data); // 🔁 enviamos al padre
+        onResult(data);
       } else if (data.error) {
         setError(data.error);
       } else {
@@ -95,9 +96,9 @@ const IRRForm: React.FC<IRRFormProps> = ({ onResult }) => {
           Cashflow of the Project
         </h2>
 
-        {/* ✅ Scroll only this section */}
+        {/* ✅ Scrollable input box section */}
         <div
-          className="overflow-y-auto space-y-4 mb-6 w-full flex flex-col items-center px-2"
+          className="overflow-y-scroll scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent space-y-4 mb-6 w-full flex flex-col items-center px-2"
           style={{ maxHeight: "160px" }}
         >
           {cashFlows.map((cf, index) => (
@@ -143,9 +144,18 @@ const IRRForm: React.FC<IRRFormProps> = ({ onResult }) => {
         >
           Calculate IRR
         </button>
+
+        <button
+          type="button"
+          onClick={onLearnMore}
+          className="mt-4 text-gray-500 hover:text-gray-700 flex items-center gap-2 text-sm"
+        >
+          <span className="text-lg">↓</span>
+          <span>Learn More About IRR</span>
+        </button>
       </form>
 
-      {/* Resultado */}
+      {/* ✅ Result */}
       {result && <IRRResults irr={result.irr} cashFlows={result.cashFlows} />}
 
       {error && (
