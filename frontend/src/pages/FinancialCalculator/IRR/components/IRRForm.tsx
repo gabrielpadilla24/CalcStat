@@ -86,16 +86,20 @@ const IRRForm: React.FC<IRRFormProps> = ({ onResult }) => {
   };
 
   return (
-    <div className="bg-white p-6 rounded-2xl shadow-lg w-[500px] mx-auto mt-8">
+    <div className="bg-white p-6 rounded-2xl shadow-lg w-[500px] h-[600px] mx-auto flex flex-col">
       <form
         onSubmit={handleSubmit}
-        className="flex flex-col items-center w-full"
+        className="flex flex-col items-center w-full flex-grow"
       >
-        <h2 className="text-2xl font-semibold mb-6 text-center w-full">
+        <h2 className="text-2xl font-semibold mb-4 text-center w-full">
           Enter the Yearly Cashflow for the Project
         </h2>
 
-        <div className="space-y-4 mb-6 w-full flex flex-col items-center">
+        {/* ✅ Scroll only this section */}
+        <div
+          className="overflow-y-auto space-y-4 mb-6 w-full flex flex-col items-center px-2"
+          style={{ maxHeight: "180px" }}
+        >
           {cashFlows.map((cf, index) => (
             <div
               key={cf.year}
@@ -141,10 +145,11 @@ const IRRForm: React.FC<IRRFormProps> = ({ onResult }) => {
         </button>
       </form>
 
+      {/* Resultado */}
       {result && <IRRResults irr={result.irr} cashFlows={result.cashFlows} />}
 
       {error && (
-        <div className="mt-6 bg-red-50 border border-red-300 p-4 rounded-xl text-red-700 text-center">
+        <div className="mt-4 bg-red-50 border border-red-300 p-4 rounded-xl text-red-700 text-center">
           <p>{error}</p>
         </div>
       )}
