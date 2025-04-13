@@ -91,14 +91,14 @@ const IRRForm: React.FC<IRRFormProps> = ({ onResult }) => {
         onSubmit={handleSubmit}
         className="flex flex-col items-center w-full flex-grow"
       >
-        <h2 className="text-2xl font-semibold mb-4 text-center w-full">
-          Enter the Yearly Cashflow for the Project
+        <h2 className="text-2xl font-semibold mb-10 text-center w-full">
+          Cashflow of the Project
         </h2>
 
         {/* ✅ Scroll only this section */}
         <div
           className="overflow-y-auto space-y-4 mb-6 w-full flex flex-col items-center px-2"
-          style={{ maxHeight: "180px" }}
+          style={{ maxHeight: "160px" }}
         >
           {cashFlows.map((cf, index) => (
             <div
