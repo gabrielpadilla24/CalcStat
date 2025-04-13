@@ -3,6 +3,7 @@ import NavBar from "@/components/NavBar";
 import BottomCTA from "@/components/BottomCTA";
 import IRRForm from "./components/IRRForm";
 import IRRChart from "./components/IRRChart";
+import IRRInfo from "./components/IRRInfo";
 
 type IRRResponse = {
   irr: number;
@@ -39,6 +40,9 @@ const IRRCalculator = () => {
             />
           </div>
         </div>
+
+        {/* INFO */}
+        <IRRInfo />
       </div>
 
       <BottomCTA buttonText="Browse Financial" href="/financial" />
