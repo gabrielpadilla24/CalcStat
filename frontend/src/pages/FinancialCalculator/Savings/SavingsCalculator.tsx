@@ -1,6 +1,6 @@
 import NavBar from "@/components/NavBar";
 import BottomCTA from "@/components/BottomCTA";
-// import SavingsForm from "./components/SavingsForm";
+import SavingsForm from "./components/SavingsForm";
 
 const SavingsCalculator = () => {
   return (
@@ -13,10 +13,7 @@ const SavingsCalculator = () => {
         </h1>
 
         <div className="flex justify-center">
-          {/* <SavingsForm /> */}
-          <div className="text-center text-gray-600 text-lg">
-            Coming soon...
-          </div>
+          <SavingsForm />
         </div>
       </div>
 

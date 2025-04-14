@@ -1,0 +1,126 @@
+import React, { useState, useRef } from "react";
+//import SavingsResults from "./SavingsResults";
+
+type SavingsResponse = {
+  contribution: number;
+};
+
+const SavingsForm = () => {
+  const [goalAmount, setGoalAmount] = useState("");
+  const [years, setYears] = useState("");
+  const [interestRate, setInterestRate] = useState("");
+  const [result, setResult] = useState<SavingsResponse | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const resultsRef = useRef<HTMLDivElement>(null);
+
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setError(null);
+    setResult(null);
+
+    const payload = {
+      goal: parseFloat(goalAmount),
+      years: parseInt(years),
+      interest_rate: parseFloat(interestRate),
+    };
+
+    try {
+      const response = await fetch("http://localhost:8000/savings", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
+
+      const data = await response.json();
+
+      if (typeof data.contribution === "number") {
+        setResult(data);
+        setTimeout(() => {
+          resultsRef.current?.scrollIntoView({ behavior: "smooth" });
+        }, 100);
+      } else if (data.error) {
+        setError(data.error);
+      } else {
+        setError("Invalid response from the server.");
+      }
+    } catch (err) {
+      console.error("Error calculating savings contribution:", err);
+      setError("There was a problem connecting to the server.");
+    }
+  };
+
+  return (
+    <div className="bg-white p-6 rounded-2xl shadow-lg w-full max-w-3xl mx-auto mt-8">
+      <form
+        onSubmit={handleSubmit}
+        className="flex flex-col items-center w-full"
+      >
+        <div className="mb-6 text-center w-full">
+          <h2 className="text-2xl font-semibold mb-3">
+            Plan Your Savings Goal
+          </h2>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
+          <div>
+            <label className="block font-medium mb-1">Target Amount ($)</label>
+            <input
+              type="number"
+              step="0.01"
+              value={goalAmount}
+              onChange={(e) => setGoalAmount(e.target.value)}
+              className="border border-gray-300 rounded-lg p-2 w-full"
+              required
+            />
+          </div>
+          <div>
+            <label className="block font-medium mb-1">Years</label>
+            <input
+              type="number"
+              value={years}
+              onChange={(e) => setYears(e.target.value)}
+              className="border border-gray-300 rounded-lg p-2 w-full"
+              required
+            />
+          </div>
+          <div>
+            <label className="block font-medium mb-1">Interest Rate (%)</label>
+            <input
+              type="number"
+              step="0.01"
+              value={interestRate}
+              onChange={(e) => setInterestRate(e.target.value)}
+              className="border border-gray-300 rounded-lg p-2 w-full"
+              required
+            />
+          </div>
+        </div>
+
+        <div className="mt-8 w-full">
+          <button
+            type="submit"
+            className="w-full bg-[#0BB489] hover:bg-[#0AA47A] text-white font-semibold py-3 rounded-lg transition duration-200"
+          >
+            Calculate Monthly Savings
+          </button>
+        </div>
+      </form>
+
+      <div
+        ref={resultsRef}
+        className={`transition-opacity duration-500 ${
+          result ? "opacity-100 mt-8" : "opacity-0 h-0 overflow-hidden"
+        }`}
+      >
+        {result && <SavingsResults contribution={result.contribution} />}
+        {error && (
+          <div className="mt-6 bg-red-50 border border-red-300 p-4 rounded-xl text-red-700 text-center">
+            <p>{error}</p>
+          </div>
+        )}
+      </div>
+    </div>
+  );
+};
+
+export default SavingsForm;
