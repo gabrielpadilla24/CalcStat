@@ -50,7 +50,7 @@ const SavingsForm = () => {
   };
 
   return (
-    <div className="bg-white p-6 rounded-2xl shadow-lg w-full max-w-3xl mx-auto mt-8">
+    <div className="bg-white p-6 rounded-2xl shadow-lg w-full max-w-md mx-auto mt-8">
       <form
         onSubmit={handleSubmit}
         className="flex flex-col items-center w-full"
@@ -61,49 +61,54 @@ const SavingsForm = () => {
           </h2>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 w-full">
+        <div className="w-full space-y-4">
           <div>
-            <label className="block font-medium mb-1">Target Amount ($)</label>
+            <label className="block font-medium mb-1">Target Amount:</label>
             <input
               type="number"
               step="0.01"
               value={goalAmount}
+              placeholder="Ej: 10000"
               onChange={(e) => setGoalAmount(e.target.value)}
               className="border border-gray-300 rounded-lg p-2 w-full"
               required
             />
           </div>
+
           <div>
-            <label className="block font-medium mb-1">Years</label>
-            <input
-              type="number"
-              value={years}
-              onChange={(e) => setYears(e.target.value)}
-              className="border border-gray-300 rounded-lg p-2 w-full"
-              required
-            />
-          </div>
-          <div>
-            <label className="block font-medium mb-1">Interest Rate (%)</label>
+            <label className="block font-medium mb-1">Interest Rate (%):</label>
             <input
               type="number"
               step="0.01"
               value={interestRate}
+              placeholder="Ej: 5"
               onChange={(e) => setInterestRate(e.target.value)}
+              className="border border-gray-300 rounded-lg p-2 w-full"
+              required
+            />
+          </div>
+
+          <div>
+            <label className="block font-medium mb-1">
+              Time Period (Years):
+            </label>
+            <input
+              type="number"
+              value={years}
+              placeholder="Ej: 10"
+              onChange={(e) => setYears(e.target.value)}
               className="border border-gray-300 rounded-lg p-2 w-full"
               required
             />
           </div>
         </div>
 
-        <div className="mt-8 w-full">
-          <button
-            type="submit"
-            className="w-full bg-[#0BB489] hover:bg-[#0AA47A] text-white font-semibold py-3 rounded-lg transition duration-200"
-          >
-            Calculate Monthly Savings
-          </button>
-        </div>
+        <button
+          type="submit"
+          className="w-full mt-6 bg-[#0BB489] hover:bg-[#0AA47A] text-white font-semibold py-3 rounded-lg transition duration-200"
+        >
+          Calculate
+        </button>
       </form>
 
       <div
