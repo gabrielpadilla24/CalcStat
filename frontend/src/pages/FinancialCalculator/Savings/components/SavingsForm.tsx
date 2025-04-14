@@ -1,5 +1,6 @@
 import React, { useState, useRef } from "react";
 import SavingsResults from "./SavingsResults";
+import SavingsChart from "./SavingsChart";
 
 type SavingsResponse = {
   contribution: number;
@@ -114,6 +115,15 @@ const SavingsForm = () => {
         }`}
       >
         {result && <SavingsResults contribution={result.contribution} />}
+        {result && (
+          <SavingsChart
+            contribution={result.contribution}
+            interestRate={parseFloat(interestRate)}
+            years={parseInt(years)}
+            goal={parseFloat(goalAmount)}
+          />
+        )}
+
         {error && (
           <div className="mt-6 bg-red-50 border border-red-300 p-4 rounded-xl text-red-700 text-center">
             <p>{error}</p>
