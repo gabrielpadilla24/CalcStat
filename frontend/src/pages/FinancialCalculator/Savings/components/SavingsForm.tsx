@@ -16,7 +16,6 @@ const SavingsForm = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError(null);
-    setResult(null);
 
     const payload = {
       goal: parseFloat(goalAmount),
