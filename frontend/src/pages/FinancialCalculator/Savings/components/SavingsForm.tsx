@@ -1,5 +1,5 @@
 import React, { useState, useRef } from "react";
-//import SavingsResults from "./SavingsResults";
+import SavingsResults from "./SavingsResults";
 
 type SavingsResponse = {
   contribution: number;
@@ -35,9 +35,6 @@ const SavingsForm = () => {
 
       if (typeof data.contribution === "number") {
         setResult(data);
-        setTimeout(() => {
-          resultsRef.current?.scrollIntoView({ behavior: "smooth" });
-        }, 100);
       } else if (data.error) {
         setError(data.error);
       } else {

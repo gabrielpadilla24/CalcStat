@@ -98,6 +98,12 @@ class NPVSequenceData(BaseModel):
 class IRRData(BaseModel):
     cashFlows: List[int]
 
+class SavingsData(BaseModel):
+    goal: float
+    years: int
+    interest_rate: float  # porcentaje anual
+
+
 
 
 # -----------------------------
@@ -664,3 +670,27 @@ def calcular_irr(data: IRRData):
 
     except Exception as e:
         return {"error": str(e)}
+
+
+#---------------------------------
+# ENDPOINT DE SAVINGS
+#---------------------------------
+
+@app.post("/savings")
+def calcular_savings_contribution(data: SavingsData):
+    goal = data.goal
+    r_annual = data.interest_rate / 100
+    n_years = data.years
+
+    # Convertimos a mensual
+    r_monthly = r_annual / 12
+    total_periods = n_years * 12
+
+    if r_monthly == 0:
+        contribution = goal / total_periods
+    else:
+        contribution = (goal * r_monthly) / ((1 + r_monthly) ** total_periods - 1)
+
+    return {
+        "contribution": round(contribution, 2)
+    }
