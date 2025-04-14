@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState } from "react";
 import SavingsResults from "./SavingsResults";
 import SavingsChart from "./SavingsChart";
 
@@ -12,7 +12,7 @@ const SavingsForm = () => {
   const [interestRate, setInterestRate] = useState("");
   const [result, setResult] = useState<SavingsResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const resultsRef = useRef<HTMLDivElement>(null);
+  const [hasSubmitted, setHasSubmitted] = useState(false); // ✅ solo mostramos el gráfico si se calculó
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,19 +35,23 @@ const SavingsForm = () => {
 
       if (typeof data.contribution === "number") {
         setResult(data);
+        setHasSubmitted(true); // ✅ solo después de un cálculo exitoso
       } else if (data.error) {
         setError(data.error);
+        setHasSubmitted(false);
       } else {
         setError("Invalid response from the server.");
+        setHasSubmitted(false);
       }
     } catch (err) {
       console.error("Error calculating savings contribution:", err);
       setError("There was a problem connecting to the server.");
+      setHasSubmitted(false);
     }
   };
 
   return (
-    <div className="bg-white p-6 rounded-2xl shadow-lg w-full max-w-md mx-auto mt-8">
+    <div className="bg-white p-6 rounded-2xl shadow-lg w-full max-w-3xl mx-auto mt-8">
       <form
         onSubmit={handleSubmit}
         className="flex flex-col items-center w-full"
@@ -108,28 +112,29 @@ const SavingsForm = () => {
         </button>
       </form>
 
-      <div
-        ref={resultsRef}
-        className={`transition-opacity duration-500 ${
-          result ? "opacity-100 mt-8" : "opacity-0 h-0 overflow-hidden"
-        }`}
-      >
-        {result && <SavingsResults contribution={result.contribution} />}
-        {result && (
+      {/* ✅ Result always visible */}
+      <div className="transition-opacity duration-500 mt-8">
+        <SavingsResults contribution={result?.contribution ?? null} />
+      </div>
+
+      {/* ✅ Chart only if submitted successfully */}
+      {hasSubmitted && result && (
+        <div className="mt-10">
           <SavingsChart
             contribution={result.contribution}
             interestRate={parseFloat(interestRate)}
             years={parseInt(years)}
             goal={parseFloat(goalAmount)}
           />
-        )}
+        </div>
+      )}
 
-        {error && (
-          <div className="mt-6 bg-red-50 border border-red-300 p-4 rounded-xl text-red-700 text-center">
-            <p>{error}</p>
-          </div>
-        )}
-      </div>
+      {/* Error */}
+      {error && (
+        <div className="mt-6 bg-red-50 border border-red-300 p-4 rounded-xl text-red-700 text-center">
+          <p>{error}</p>
+        </div>
+      )}
     </div>
   );
 };
