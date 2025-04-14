@@ -12,7 +12,12 @@ const SavingsForm = () => {
   const [interestRate, setInterestRate] = useState("");
   const [result, setResult] = useState<SavingsResponse | null>(null);
   const [error, setError] = useState<string | null>(null);
-  const [hasSubmitted, setHasSubmitted] = useState(false); // ✅ solo mostramos el gráfico si se calculó
+
+  const [chartInputs, setChartInputs] = useState<{
+    goal: number;
+    years: number;
+    interestRate: number;
+  } | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -35,18 +40,21 @@ const SavingsForm = () => {
 
       if (typeof data.contribution === "number") {
         setResult(data);
-        setHasSubmitted(true); // ✅ solo después de un cálculo exitoso
+
+        // ✅ Solo actualizamos inputs del gráfico cuando se hace submit
+        setChartInputs({
+          goal: payload.goal,
+          years: payload.years,
+          interestRate: payload.interest_rate,
+        });
       } else if (data.error) {
         setError(data.error);
-        setHasSubmitted(false);
       } else {
         setError("Invalid response from the server.");
-        setHasSubmitted(false);
       }
     } catch (err) {
       console.error("Error calculating savings contribution:", err);
       setError("There was a problem connecting to the server.");
-      setHasSubmitted(false);
     }
   };
 
@@ -112,24 +120,24 @@ const SavingsForm = () => {
         </button>
       </form>
 
-      {/* ✅ Result always visible */}
-      <div className="transition-opacity duration-500 mt-8">
+      {/* ✅ Resultado siempre visible */}
+      <div className="mt-8">
         <SavingsResults contribution={result?.contribution ?? null} />
       </div>
 
-      {/* ✅ Chart only if submitted successfully */}
-      {hasSubmitted && result && (
+      {/* ✅ Solo muestra el gráfico al hacer submit */}
+      {chartInputs && result && (
         <div className="mt-10">
           <SavingsChart
             contribution={result.contribution}
-            interestRate={parseFloat(interestRate)}
-            years={parseInt(years)}
-            goal={parseFloat(goalAmount)}
+            interestRate={chartInputs.interestRate}
+            years={chartInputs.years}
+            goal={chartInputs.goal}
           />
         </div>
       )}
 
-      {/* Error */}
+      {/* Errores */}
       {error && (
         <div className="mt-6 bg-red-50 border border-red-300 p-4 rounded-xl text-red-700 text-center">
           <p>{error}</p>
