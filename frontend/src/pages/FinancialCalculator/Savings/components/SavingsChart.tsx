@@ -2,87 +2,62 @@ import React from "react";
 import ReactApexChart from "react-apexcharts";
 
 interface SavingsChartProps {
-  contribution: number;
-  interestRate: number; // anual (%)
-  years: number;
+  valores: number[];
+  aportes: number[];
   goal: number;
 }
 
 const SavingsChart: React.FC<SavingsChartProps> = ({
-  contribution,
-  interestRate,
-  years,
+  valores,
+  aportes,
   goal,
 }) => {
-  const valores: number[] = [];
-  const aportes: number[] = [];
+  const categories = valores.map((_, i) => `Year ${i}`);
 
-  const r = interestRate / 100 / 12;
-  let acumulado = 0;
-  let totalAportado = 0;
-
-  for (let year = 0; year <= years; year++) {
-    if (year === 0) {
-      valores.push(0);
-      aportes.push(0);
-    } else {
-      for (let i = 0; i < 12; i++) {
-        acumulado = acumulado * (1 + r) + contribution;
-        totalAportado += contribution;
-      }
-      valores.push(parseFloat(acumulado.toFixed(2)));
-      aportes.push(parseFloat(totalAportado.toFixed(2)));
-    }
-  }
-
-  const categories = valores.map((_, index) => `Year ${index}`);
-
-  const formatearNumero = (valor: number): string => {
-    return valor.toLocaleString("en-US", {
-      minimumFractionDigits: 1,
+  const formatCurrency = (val: number): string =>
+    val.toLocaleString("en-US", {
+      minimumFractionDigits: 2,
       maximumFractionDigits: 2,
     });
-  };
 
   const options = {
     chart: {
-      height: 350,
       type: "line" as const,
-      zoom: {
-        enabled: false,
-      },
+      zoom: { enabled: false },
+      toolbar: { show: true },
     },
-    dataLabels: {
-      enabled: false,
-    },
-    stroke: {
-      curve: "straight" as const,
-    },
+    dataLabels: { enabled: false },
+    stroke: { curve: "straight" as const, width: 3 },
     title: {
-      text: "Accumulated Savings vs Goal",
-      style: {
-        fontWeight: "bold",
-        fontSize: "20px",
-      },
+      text: "Accumulated Savings vs. Goal",
       align: "center" as const,
+      style: { fontWeight: "bold", fontSize: "20px" },
+    },
+    xaxis: {
+      categories,
+      title: {
+        text: "Year",
+        style: { fontWeight: 600 },
+      },
+    },
+    yaxis: {
+      title: {
+        text: "Amount ($)",
+        style: { fontWeight: 600 },
+      },
+      labels: {
+        formatter: formatCurrency,
+      },
+    },
+    tooltip: {
+      y: {
+        formatter: formatCurrency,
+      },
     },
     grid: {
       row: {
         colors: ["#f3f3f3", "transparent"],
         opacity: 0.5,
-      },
-    },
-    xaxis: {
-      categories,
-    },
-    yaxis: {
-      labels: {
-        formatter: (val: number) => `$${formatearNumero(val)}`,
-      },
-    },
-    tooltip: {
-      y: {
-        formatter: (val: number) => `$${formatearNumero(val)}`,
       },
     },
   };
@@ -98,7 +73,7 @@ const SavingsChart: React.FC<SavingsChartProps> = ({
     },
     {
       name: "Savings Goal",
-      data: Array(years + 1).fill(goal),
+      data: Array(valores.length).fill(goal),
     },
   ];
 
@@ -110,7 +85,8 @@ const SavingsChart: React.FC<SavingsChartProps> = ({
         borderRadius: "8px",
         boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
         width: "750px",
-        height: "600px",
+        height: "608px",
+        margin: "0 auto",
       }}
     >
       <ReactApexChart

@@ -686,11 +686,27 @@ def calcular_savings_contribution(data: SavingsData):
     r_monthly = r_annual / 12
     total_periods = n_years * 12
 
+    # Calcular contribución mensual necesaria
     if r_monthly == 0:
         contribution = goal / total_periods
     else:
         contribution = (goal * r_monthly) / ((1 + r_monthly) ** total_periods - 1)
 
+    # Calcular evolución anual para gráfico
+    valores = [0.0]
+    aportes = [0.0]
+    acumulado = 0.0
+    total_aportado = 0.0
+
+    for year in range(1, n_years + 1):
+        for _ in range(12):
+            acumulado = acumulado * (1 + r_monthly) + contribution
+            total_aportado += contribution
+        valores.append(round(acumulado, 2))
+        aportes.append(round(total_aportado, 2))
+
     return {
-        "contribution": round(contribution, 2)
+        "contribution": round(contribution, 2),
+        "valores": valores,
+        "aportes": aportes
     }

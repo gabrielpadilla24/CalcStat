@@ -1,27 +1,21 @@
 import React, { useState } from "react";
 import SavingsResults from "./SavingsResults";
 
-type SavingsFormProps = {
-  goalAmount: string;
-  setGoalAmount: (value: string) => void;
-  years: string;
-  setYears: (value: string) => void;
-  interestRate: string;
-  setInterestRate: (value: string) => void;
-  onResult: (contribution: number) => void;
-  contribution: number | null;
+export type SavingsResponse = {
+  contribution: number;
+  valores: number[];
+  aportes: number[];
 };
 
-const SavingsForm: React.FC<SavingsFormProps> = ({
-  goalAmount,
-  setGoalAmount,
-  years,
-  setYears,
-  interestRate,
-  setInterestRate,
-  onResult,
-  contribution,
-}) => {
+export type SavingsFormProps = {
+  onResult: (result: SavingsResponse) => void;
+};
+
+const SavingsForm: React.FC<SavingsFormProps> = ({ onResult }) => {
+  const [goalAmount, setGoalAmount] = useState<string>("");
+  const [years, setYears] = useState<string>("");
+  const [interestRate, setInterestRate] = useState<string>("");
+  const [contribution, setContribution] = useState<number | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -41,12 +35,17 @@ const SavingsForm: React.FC<SavingsFormProps> = ({
         body: JSON.stringify(payload),
       });
 
-      const data = await response.json();
+      const data: SavingsResponse = await response.json();
 
-      if (typeof data.contribution === "number") {
-        onResult(data.contribution);
-      } else if (data.error) {
-        setError(data.error);
+      if (
+        typeof data.contribution === "number" &&
+        Array.isArray(data.valores) &&
+        Array.isArray(data.aportes)
+      ) {
+        setContribution(data.contribution);
+        onResult(data);
+      } else if ((data as { error?: string }).error) {
+        setError((data as { error: string }).error);
       } else {
         setError("Invalid response from the server.");
       }
@@ -76,6 +75,7 @@ const SavingsForm: React.FC<SavingsFormProps> = ({
               step="0.01"
               value={goalAmount}
               onChange={(e) => setGoalAmount(e.target.value)}
+              placeholder="Ej: 10000"
               className="border border-gray-300 rounded-lg p-2 w-full"
               required
             />
@@ -88,6 +88,7 @@ const SavingsForm: React.FC<SavingsFormProps> = ({
               step="0.01"
               value={interestRate}
               onChange={(e) => setInterestRate(e.target.value)}
+              placeholder="Ej: 5"
               className="border border-gray-300 rounded-lg p-2 w-full"
               required
             />
@@ -101,6 +102,7 @@ const SavingsForm: React.FC<SavingsFormProps> = ({
               type="number"
               value={years}
               onChange={(e) => setYears(e.target.value)}
+              placeholder="Ej: 10"
               className="border border-gray-300 rounded-lg p-2 w-full"
               required
             />

@@ -4,25 +4,14 @@ import BottomCTA from "@/components/BottomCTA";
 import SavingsForm from "./components/SavingsForm";
 import SavingsChart from "./components/SavingsChart";
 
-const SavingsCalculator = () => {
-  const [goalAmount, setGoalAmount] = useState("");
-  const [years, setYears] = useState("");
-  const [interestRate, setInterestRate] = useState("");
-  const [contribution, setContribution] = useState<number | null>(null);
-  const [chartInputs, setChartInputs] = useState<{
-    goal: number;
-    years: number;
-    interestRate: number;
-  } | null>(null);
+type SavingsResult = {
+  contribution: number;
+  valores: number[];
+  aportes: number[];
+};
 
-  const handleResult = (contribution: number) => {
-    setContribution(contribution);
-    setChartInputs({
-      goal: parseFloat(goalAmount),
-      years: parseInt(years),
-      interestRate: parseFloat(interestRate),
-    });
-  };
+const SavingsCalculator = () => {
+  const [result, setResult] = useState<SavingsResult | null>(null);
 
   return (
     <>
@@ -36,27 +25,19 @@ const SavingsCalculator = () => {
         <div className="max-w-[1440px] mx-auto flex flex-col lg:flex-row items-start justify-center gap-4 px-6">
           {/* FORM */}
           <div className="flex-1 max-w-[500px]">
-            <SavingsForm
-              goalAmount={goalAmount}
-              setGoalAmount={setGoalAmount}
-              years={years}
-              setYears={setYears}
-              interestRate={interestRate}
-              setInterestRate={setInterestRate}
-              onResult={handleResult}
-              contribution={contribution}
-            />
+            <SavingsForm onResult={setResult} />
           </div>
 
           {/* CHART */}
           <div className="flex-1 max-w-[750px]">
             <SavingsChart
-              contribution={
-                chartInputs && contribution !== null ? contribution : 0
+              valores={result?.valores ?? []}
+              aportes={result?.aportes ?? []}
+              goal={
+                result?.valores?.length
+                  ? result.valores[result.valores.length - 1]
+                  : 0
               }
-              interestRate={chartInputs?.interestRate ?? 0}
-              years={chartInputs?.years ?? 0}
-              goal={chartInputs?.goal ?? 0}
             />
           </div>
         </div>
