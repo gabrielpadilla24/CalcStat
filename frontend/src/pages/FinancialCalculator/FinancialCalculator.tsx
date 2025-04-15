@@ -159,7 +159,7 @@ const FinancialCalculator = () => {
             },
 
             {
-              title: "Internal Rate of Return Calculator",
+              title: "Internal Rate of Return",
               desc: "Calculate the Internal Rate of Return for any investment. Perfect for evaluating profitability, comparing projects, and guiding smart investment choices.",
               img: "/img/irr.png",
               path: "/financial/irr",
