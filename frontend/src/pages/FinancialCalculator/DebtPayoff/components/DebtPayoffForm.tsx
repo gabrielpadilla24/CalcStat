@@ -32,7 +32,6 @@ const DebtPayoffForm = ({ onResult }: DebtPayoffFormProps) => {
     { name: "", balance: "", interestRate: "", monthlyPayment: "" },
   ]);
   const [method, setMethod] = useState<Method>("snowball");
-  const [extraPayment, setExtraPayment] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const resultsRef = useRef<HTMLDivElement>(null);
@@ -111,82 +110,87 @@ const DebtPayoffForm = ({ onResult }: DebtPayoffFormProps) => {
         </div>
 
         <div className="w-full space-y-6">
-          {debts.map((debt, index) => (
-            <div
-              key={index}
-              className="bg-gray-50 p-4 border border-gray-200 rounded-xl space-y-4"
-            >
-              <div>
-                <label className="block font-medium mb-1">Debt Name:</label>
-                <input
-                  type="text"
-                  value={debt.name}
-                  onChange={(e) =>
-                    handleDebtChange(index, "name", e.target.value)
-                  }
-                  placeholder="Ej: Visa"
-                  className="border border-gray-300 rounded-lg p-2 w-full"
-                  required
-                />
-              </div>
+          {/* Scrollable debt list */}
+          <div className="h-[400px] overflow-y-auto pr-2 space-y-6">
+            {debts.map((debt, index) => (
+              <div
+                key={index}
+                className="relative bg-gray-50 p-4 border border-gray-200 rounded-xl space-y-4"
+              >
+                {/* Remove button in top-right corner */}
+                {debts.length > 1 && (
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveDebt(index)}
+                    className="absolute top-3 right-3 text-red-500 hover:text-red-700 text-sm font-semibold"
+                    aria-label="Remove debt"
+                  >
+                    ✕
+                  </button>
+                )}
 
-              <div>
-                <label className="block font-medium mb-1">Balance ($):</label>
-                <input
-                  type="number"
-                  step="0.01"
-                  value={debt.balance}
-                  onChange={(e) =>
-                    handleDebtChange(index, "balance", e.target.value)
-                  }
-                  className="border border-gray-300 rounded-lg p-2 w-full"
-                  required
-                />
-              </div>
+                <div>
+                  <label className="block font-medium mb-1">Debt Name:</label>
+                  <input
+                    type="text"
+                    value={debt.name}
+                    onChange={(e) =>
+                      handleDebtChange(index, "name", e.target.value)
+                    }
+                    placeholder="Ej: Visa"
+                    className="border border-gray-300 rounded-lg p-2 w-full"
+                    required
+                  />
+                </div>
 
-              <div>
-                <label className="block font-medium mb-1">
-                  Interest Rate (%):
-                </label>
-                <input
-                  type="number"
-                  step="0.01"
-                  value={debt.interestRate}
-                  onChange={(e) =>
-                    handleDebtChange(index, "interestRate", e.target.value)
-                  }
-                  className="border border-gray-300 rounded-lg p-2 w-full"
-                  required
-                />
-              </div>
+                <div>
+                  <label className="block font-medium mb-1">Balance ($):</label>
+                  <input
+                    type="number"
+                    step="0.01"
+                    value={debt.balance}
+                    onChange={(e) =>
+                      handleDebtChange(index, "balance", e.target.value)
+                    }
+                    className="border border-gray-300 rounded-lg p-2 w-full"
+                    required
+                  />
+                </div>
 
-              <div>
-                <label className="block font-medium mb-1">
-                  Monthly Payment ($):
-                </label>
-                <input
-                  type="number"
-                  step="0.01"
-                  value={debt.monthlyPayment}
-                  onChange={(e) =>
-                    handleDebtChange(index, "monthlyPayment", e.target.value)
-                  }
-                  className="border border-gray-300 rounded-lg p-2 w-full"
-                  required
-                />
-              </div>
+                <div>
+                  <label className="block font-medium mb-1">
+                    Interest Rate (%):
+                  </label>
+                  <input
+                    type="number"
+                    step="0.01"
+                    value={debt.interestRate}
+                    onChange={(e) =>
+                      handleDebtChange(index, "interestRate", e.target.value)
+                    }
+                    className="border border-gray-300 rounded-lg p-2 w-full"
+                    required
+                  />
+                </div>
 
-              {debts.length > 1 && (
-                <button
-                  type="button"
-                  onClick={() => handleRemoveDebt(index)}
-                  className="text-red-600 text-sm hover:underline"
-                >
-                  Remove
-                </button>
-              )}
-            </div>
-          ))}
+                <div>
+                  <label className="block font-medium mb-1">
+                    Monthly Payment ($):
+                  </label>
+                  <input
+                    type="number"
+                    step="0.01"
+                    value={debt.monthlyPayment}
+                    onChange={(e) =>
+                      handleDebtChange(index, "monthlyPayment", e.target.value)
+                    }
+                    className="border border-gray-300 rounded-lg p-2 w-full"
+                    required
+                  />
+                </div>
+              </div>
+            ))}
+          </div>
 
           <div className="text-center">
             <button
@@ -196,19 +200,6 @@ const DebtPayoffForm = ({ onResult }: DebtPayoffFormProps) => {
             >
               ➕ Add Another Debt
             </button>
-          </div>
-
-          <div>
-            <label className="block font-medium mb-1">
-              Extra Monthly Payment (optional):
-            </label>
-            <input
-              type="number"
-              step="0.01"
-              value={extraPayment}
-              onChange={(e) => setExtraPayment(e.target.value)}
-              className="border border-gray-300 rounded-lg p-2 w-full"
-            />
           </div>
 
           <div className="text-center w-full">
