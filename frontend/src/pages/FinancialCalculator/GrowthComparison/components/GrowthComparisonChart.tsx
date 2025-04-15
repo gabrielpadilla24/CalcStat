@@ -2,15 +2,15 @@ import React from "react";
 import ReactApexChart from "react-apexcharts";
 
 interface GrowthComparisonChartProps {
-  valoresPorTasa: number[][];
-  interestRates: number[];
-  timeline: number[];
+  timeline: number[]; // [0, 1, 2, ..., n]
+  valoresPorTasa: number[][]; // [[valores tasa 1], [tasa 2], ...]
+  interestRates: number[]; // [5, 8]
 }
 
 const GrowthComparisonChart: React.FC<GrowthComparisonChartProps> = ({
+  timeline,
   valoresPorTasa,
   interestRates,
-  timeline,
 }) => {
   const categories = timeline.map((year) => `Year ${year}`);
 
@@ -45,22 +45,17 @@ const GrowthComparisonChart: React.FC<GrowthComparisonChartProps> = ({
         text: "Value ($)",
         style: { fontWeight: 600 },
       },
-      labels: {
-        formatter: formatCurrency,
-      },
+      labels: { formatter: formatCurrency },
     },
-    tooltip: {
-      y: {
-        formatter: formatCurrency,
-      },
+    tooltip: { y: { formatter: formatCurrency } },
+    legend: {
+      position: "bottom" as const,
+      horizontalAlign: "center" as const,
+      fontSize: "14px",
     },
     grid: {
-      row: {
-        colors: ["#f3f3f3", "transparent"],
-        opacity: 0.5,
-      },
+      row: { colors: ["#f3f3f3", "transparent"], opacity: 0.5 },
     },
-    colors: ["#0BB489", "#F97316", "#3B82F6", "#E11D48"], // Puedes extender para más tasas
   };
 
   const series = interestRates.map((rate, i) => ({
@@ -76,8 +71,11 @@ const GrowthComparisonChart: React.FC<GrowthComparisonChartProps> = ({
         borderRadius: "8px",
         boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
         width: "750px",
-        height: "608px",
+        height: "688px",
         margin: "0 auto",
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "center", // ✅ Centrado vertical
       }}
     >
       <ReactApexChart

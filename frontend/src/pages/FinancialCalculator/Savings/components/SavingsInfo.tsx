@@ -2,10 +2,10 @@ import React from "react";
 
 const SavingsInfo: React.FC = () => {
   return (
-    <div className="bg-white p-6 rounded-2xl shadow-lg  w-[1265px] mx-auto mt-8 text-gray-800">
-      <h2 className="text-2xl font-semibold text-center mb-4">
+    <div className="bg-white p-6 rounded-2xl shadow-lg  w-[1265px] mx-auto mt-2 text-gray-800">
+      <h1 className="text-2xl font-semibold text-center mb-4">
         📚 How This Calculator Works
-      </h2>
+      </h1>
 
       <p className="mb-4 text-base leading-relaxed">
         This calculator helps you plan monthly savings to reach a goal — whether

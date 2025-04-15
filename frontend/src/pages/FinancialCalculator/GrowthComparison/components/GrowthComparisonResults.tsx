@@ -18,8 +18,8 @@ const GrowthComparisonResults: React.FC<GrowthComparisonResultsProps> = ({
   }
 
   return (
-    <div className="animate-fade-in-up bg-blue-50 border border-blue-200 p-6 rounded-xl shadow-sm text-center mt-8">
-      <h3 className="text-xl font-semibold text-blue-800 mb-4">
+    <div className="animate-fade-in-up bg-blue-50 border border-blue-200 p-6 rounded-xl shadow-sm text-center mt-4 ">
+      <h3 className="text-xl font-semibold text-blue-800 mb-2">
         📊 Final Value Comparison
       </h3>
 

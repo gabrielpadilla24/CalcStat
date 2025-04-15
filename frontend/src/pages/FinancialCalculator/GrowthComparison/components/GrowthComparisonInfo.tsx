@@ -2,7 +2,7 @@ import React from "react";
 
 const GrowthComparisonInfo: React.FC = () => {
   return (
-    <div className="bg-white mt-12 rounded-xl shadow-md p-6 max-w-3xl mx-auto text-center">
+    <div className="bg-white mt-6 rounded-xl shadow-md p-6 w-[1260px] mx-auto text-center">
       <h3 className="text-2xl font-semibold mb-4 text-blue-800">
         📘 How This Calculator Works
       </h3>

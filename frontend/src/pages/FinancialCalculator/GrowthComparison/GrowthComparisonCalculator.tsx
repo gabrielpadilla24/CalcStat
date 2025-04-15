@@ -27,17 +27,17 @@ const GrowthComparisonCalculator = () => {
           {/* CHART */}
           <div className="flex-1 max-w-[750px]">
             <GrowthComparisonChart
-              valoresPorTasa={result?.valoresPorTasa ?? [[], []]}
+              timeline={result?.timeline ?? []}
+              valoresPorTasa={result?.valoresPorTasa ?? []}
               interestRates={result?.interestRates ?? []}
-              timeline={
-                result?.timeline ?? Array.from({ length: 11 }, (_, i) => i)
-              } // o simplemente []
             />
           </div>
         </div>
 
         {/* INFO OR ADDITIONAL SECTION */}
-        <GrowthComparisonInfo />
+        <div className="mt-2 ">
+          <GrowthComparisonInfo />
+        </div>
       </div>
 
       <BottomCTA buttonText="Browse Financial" href="/financial" />
