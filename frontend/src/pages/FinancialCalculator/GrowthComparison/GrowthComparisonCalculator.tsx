@@ -28,10 +28,10 @@ const GrowthComparisonCalculator = () => {
           <div className="flex-1 max-w-[750px]">
             <GrowthComparisonChart
               valoresPorTasa={result?.valoresPorTasa ?? [[], []]}
-              interestRates={result?.interestRates ?? [0, 0]}
+              interestRates={result?.interestRates ?? []}
               timeline={
                 result?.timeline ?? Array.from({ length: 11 }, (_, i) => i)
-              } // [0, 1, ..., 10]
+              } // o simplemente []
             />
           </div>
         </div>

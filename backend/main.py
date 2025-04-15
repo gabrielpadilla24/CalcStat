@@ -726,26 +726,25 @@ def growth_comparison(data: GrowthComparisonData):
     years = data.years
     rates = data.interest_rates
 
+    # Línea de tiempo: [0, 1, ..., years]
     timeline = list(range(0, years + 1))
-    valores_por_tasa = []
 
+    # Para cada tasa, calcula la evolución del capital año por año
+    valores_por_tasa = []
     final_values = []
 
     for rate in rates:
         r = rate / 100
         valores = []
-        capital = initial
-
         for year in timeline:
-            valor_anual = capital * ((1 + r) ** year)
-            valores.append(round(valor_anual, 2))
-
+            capital = initial * ((1 + r) ** year)
+            valores.append(round(capital, 2))
         valores_por_tasa.append(valores)
         final_values.append(round(valores[-1], 2))
 
     return {
-        "timeline": timeline,
-        "interestRates": rates,
-        "valoresPorTasa": valores_por_tasa,
-        "finalValues": final_values
+        "timeline": timeline,                  # Lista de años
+        "interestRates": rates,                # Ej. [5.0, 8.0]
+        "valoresPorTasa": valores_por_tasa,    # Lista de listas
+        "finalValues": final_values            # Último valor de cada curva
     }

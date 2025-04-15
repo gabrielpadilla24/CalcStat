@@ -2,7 +2,7 @@ import React from "react";
 import ReactApexChart from "react-apexcharts";
 
 interface GrowthComparisonChartProps {
-  valoresPorTasa: number[][]; // [[valoresRate1], [valoresRate2]]
+  valoresPorTasa: number[][];
   interestRates: number[];
   timeline: number[];
 }
@@ -54,20 +54,17 @@ const GrowthComparisonChart: React.FC<GrowthComparisonChartProps> = ({
         formatter: formatCurrency,
       },
     },
-    legend: {
-      position: "top" as const,
-    },
     grid: {
       row: {
         colors: ["#f3f3f3", "transparent"],
         opacity: 0.5,
       },
     },
-    colors: ["#0BB489", "#F97316"], // puedes agregar más si agregas más tasas
+    colors: ["#0BB489", "#F97316", "#3B82F6", "#E11D48"], // Puedes extender para más tasas
   };
 
   const series = interestRates.map((rate, i) => ({
-    name: `${rate}%`,
+    name: `${rate}% Return`,
     data: valoresPorTasa[i],
   }));
 
