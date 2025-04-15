@@ -3,7 +3,7 @@ import NavBar from "@/components/NavBar";
 import BottomCTA from "@/components/BottomCTA";
 import GrowthComparisonForm from "./components/GrowthComparisonForm";
 import GrowthComparisonChart from "./components/GrowthComparisonChart";
-//import GrowthComparisonInfo from "./components/GrowthComparisonInfo"; // opcional
+import GrowthComparisonInfo from "./components/GrowthComparisonInfo"; // opcional
 //INFO
 
 const GrowthComparisonCalculator = () => {
@@ -37,7 +37,7 @@ const GrowthComparisonCalculator = () => {
         </div>
 
         {/* INFO OR ADDITIONAL SECTION */}
-        {/* {result && <GrowthComparisonInfo />} */}
+        <GrowthComparisonInfo />
       </div>
 
       <BottomCTA buttonText="Browse Financial" href="/financial" />
