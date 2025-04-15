@@ -211,22 +211,34 @@ const DebtPayoffForm = ({ onResult }: DebtPayoffFormProps) => {
             />
           </div>
 
-          <div>
-            <label className="block font-medium mb-1">
-              Repayment Strategy:
-            </label>
-            <select
-              value={method}
-              onChange={(e) => setMethod(e.target.value as Method)}
-              className="border border-gray-300 rounded-lg p-2 w-full"
-            >
-              <option value="snowball">
-                ❄️ Snowball (Smallest Balance First)
-              </option>
-              <option value="avalanche">
-                🏔️ Avalanche (Highest Interest First)
-              </option>
-            </select>
+          <div className="text-center w-full">
+            <h3 className="text-xl font-semibold mt-6 mb-3">
+              Choose a Repayment Strategy
+            </h3>
+            <div className="flex justify-center gap-4">
+              <button
+                type="button"
+                className={`px-4 py-2 rounded-lg font-medium w-[160px] ${
+                  method === "snowball"
+                    ? "bg-[#0BB489] text-white"
+                    : "bg-gray-200"
+                }`}
+                onClick={() => setMethod("snowball")}
+              >
+                ❄️ Snowball
+              </button>
+              <button
+                type="button"
+                className={`px-4 py-2 rounded-lg font-medium w-[160px] ${
+                  method === "avalanche"
+                    ? "bg-[#0BB489] text-white"
+                    : "bg-gray-200"
+                }`}
+                onClick={() => setMethod("avalanche")}
+              >
+                🏔️ Avalanche
+              </button>
+            </div>
           </div>
         </div>
 
