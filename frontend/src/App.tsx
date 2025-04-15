@@ -10,7 +10,6 @@ import ReverseMortgageCalculator from "./pages/FinancialCalculator/ReverseMortga
 import NPVCalculator from "./pages/FinancialCalculator/NPV/NPVCalculator";
 import IRRCalculator from "./pages/FinancialCalculator/IRR/IRRCalculator";
 import SavingsCalculator from "./pages/FinancialCalculator/Savings/SavingsCalculator";
-import DebtPayoffCalculator from "./pages/FinancialCalculator/DebtPayoff/DebtPayoffCalculator";
 
 const App = () => {
   return (
@@ -52,11 +51,6 @@ const App = () => {
         <Route path="/financial/irr" element={<IRRCalculator />} />
 
         <Route path="/financial/savings" element={<SavingsCalculator />} />
-
-        <Route
-          path="/financial/debtpayoff"
-          element={<DebtPayoffCalculator />}
-        />
 
         <Route path="/financial" element={<FinancialCalculator />} />
         <Route path="/calculators" element={<Menu />} />

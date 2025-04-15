@@ -128,13 +128,6 @@ const FinancialCalculator = () => {
               img: "/img/reverse.png",
               path: "/mortgage/reversemortgage",
             },
-
-            {
-              title: "Debt Payoff",
-              desc: "Discover how long it will take to become debt-free using the Snowball or Avalanche method.",
-              img: "/img/debt.png",
-              path: "/financial/debtpayoff",
-            },
           ].map(({ title, desc, img, path }) => (
             <div
               key={title}
