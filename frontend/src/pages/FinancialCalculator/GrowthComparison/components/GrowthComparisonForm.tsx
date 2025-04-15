@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-//import GrowthComparisonResults from "./GrowthComparisonResults";
+import GrowthComparisonResults from "./GrowthComparisonResults";
 
 export type GrowthComparisonResponse = {
   finalValues: number[];
@@ -19,6 +19,8 @@ const GrowthComparisonForm: React.FC<GrowthComparisonFormProps> = ({
   const [rate1, setRate1] = useState<string>("");
   const [rate2, setRate2] = useState<string>("");
   const [years, setYears] = useState<string>("");
+  const [finalValues, setFinalValues] = useState<number[] | null>(null);
+  const [interestRates, setInterestRates] = useState<number[] | null>(null);
   const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -46,6 +48,8 @@ const GrowthComparisonForm: React.FC<GrowthComparisonFormProps> = ({
         Array.isArray(data.timeline) &&
         Array.isArray(data.valoresPorTasa)
       ) {
+        setFinalValues(data.finalValues);
+        setInterestRates(data.interestRates);
         onResult(data);
       } else if ((data as { error?: string }).error) {
         setError((data as { error: string }).error);
@@ -139,6 +143,15 @@ const GrowthComparisonForm: React.FC<GrowthComparisonFormProps> = ({
         </button>
       </form>
 
+      {/* Result Summary */}
+      <div className="mt-8">
+        <GrowthComparisonResults
+          finalValues={finalValues}
+          interestRates={interestRates}
+        />
+      </div>
+
+      {/* Error message */}
       {error && (
         <div className="mt-6 bg-red-50 border border-red-300 p-4 rounded-xl text-red-700 text-center">
           <p>{error}</p>

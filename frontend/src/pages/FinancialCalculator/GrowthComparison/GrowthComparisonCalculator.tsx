@@ -1,13 +1,13 @@
-//import { useState } from "react";
+import React, { useState } from "react";
 import NavBar from "@/components/NavBar";
 import BottomCTA from "@/components/BottomCTA";
 import GrowthComparisonForm from "./components/GrowthComparisonForm";
-//FORM
-//CHART
+import GrowthComparisonChart from "./components/GrowthComparisonChart";
+//import GrowthComparisonInfo from "./components/GrowthComparisonInfo"; // opcional
 //INFO
 
-const ComparisonCalculator = () => {
-  //const [result, setResult] = useState<SavingsResult | null>(null);
+const GrowthComparisonCalculator = () => {
+  const [result, setResult] = useState<GrowthComparisonResponse | null>(null);
 
   return (
     <>
@@ -21,28 +21,27 @@ const ComparisonCalculator = () => {
         <div className="max-w-[1440px] mx-auto flex flex-col lg:flex-row items-start justify-center gap-4 px-6">
           {/* FORM */}
           <div className="flex-1 max-w-[500px]">
-            <GrowthComparisonForm />
+            <GrowthComparisonForm onResult={setResult} />
           </div>
 
           {/* CHART */}
           <div className="flex-1 max-w-[750px]">
-            {/* <SavingsChart
-              valores={result?.valores ?? []}
-              aportes={result?.aportes ?? []}
-              goal={
-                result?.valores?.length
-                  ? result.valores[result.valores.length - 1]
-                  : 0
-              }
-            /> */}
+            <GrowthComparisonChart
+              valoresPorTasa={result?.valoresPorTasa ?? [[], []]}
+              interestRates={result?.interestRates ?? [0, 0]}
+              timeline={
+                result?.timeline ?? Array.from({ length: 11 }, (_, i) => i)
+              } // [0, 1, ..., 10]
+            />
           </div>
         </div>
-        {/* <SavingsInfo /> */}
+
+        {/* INFO OR ADDITIONAL SECTION */}
+        {/* {result && <GrowthComparisonInfo />} */}
       </div>
 
       <BottomCTA buttonText="Browse Financial" href="/financial" />
     </>
   );
 };
-
-export default ComparisonCalculator;
+export default GrowthComparisonCalculator;
