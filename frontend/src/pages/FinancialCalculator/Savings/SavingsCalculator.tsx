@@ -3,6 +3,7 @@ import NavBar from "@/components/NavBar";
 import BottomCTA from "@/components/BottomCTA";
 import SavingsForm from "./components/SavingsForm";
 import SavingsChart from "./components/SavingsChart";
+import SavingsInfo from "./components/SavingsInfo";
 
 type SavingsResult = {
   contribution: number;
@@ -41,6 +42,7 @@ const SavingsCalculator = () => {
             />
           </div>
         </div>
+        <SavingsInfo />
       </div>
 
       <BottomCTA buttonText="Browse Financial" href="/financial" />
