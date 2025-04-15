@@ -1,6 +1,7 @@
 //import { useState } from "react";
 import NavBar from "@/components/NavBar";
 import BottomCTA from "@/components/BottomCTA";
+import GrowthComparisonForm from "./components/GrowthComparisonForm";
 //FORM
 //CHART
 //INFO
@@ -20,7 +21,7 @@ const ComparisonCalculator = () => {
         <div className="max-w-[1440px] mx-auto flex flex-col lg:flex-row items-start justify-center gap-4 px-6">
           {/* FORM */}
           <div className="flex-1 max-w-[500px]">
-            {/* <SavingsForm onResult={setResult} /> */}
+            <GrowthComparisonForm />
           </div>
 
           {/* CHART */}
