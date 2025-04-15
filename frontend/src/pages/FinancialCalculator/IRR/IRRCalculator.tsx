@@ -47,7 +47,7 @@ const IRRCalculator = () => {
         </div>
 
         {/* INFO */}
-        <div ref={infoRef} className="mt-16">
+        <div ref={infoRef} className="mt-8">
           <IRRInfo />
         </div>
       </div>
