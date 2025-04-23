@@ -99,7 +99,7 @@ const LandingPage = () => {
           }}
         >
           {/* Overlapping image aligned to the left */}
-          <div className="absolute right-[600px] top-1/2 -translate-y-1/2 z-20">
+          <div className="absolute right-[670px] top-1/2 -translate-y-1/2 z-20">
             <img
               src="/img/stochasticimg.png"
               alt="Stochastic visual"
@@ -177,7 +177,7 @@ const LandingPage = () => {
           }}
         >
           {/* Overlapping image aligned to the left */}
-          <div className="absolute right-[600px] top-1/2 -translate-y-1/2 z-20">
+          <div className="absolute right-[670px] top-1/2 -translate-y-1/2 z-20">
             <img
               src="/img/linearimg.png"
               alt="Linear Algebra visual"
@@ -257,7 +257,7 @@ const LandingPage = () => {
           }}
         >
           {/* Overlapping image aligned to the left */}
-          <div className="absolute right-[600px] top-1/2 -translate-y-1/2 z-20">
+          <div className="absolute right-[670px] top-1/2 -translate-y-1/2 z-20">
             <img
               src="/img/financialimg.png"
               alt="Financial visual"
