@@ -75,19 +75,6 @@ const ExponentialForm: React.FC<Props> = ({
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!formData.initialValue || !formData.growthRate || !formData.time) {
-      alert("Please fill in the required fields.");
-      return;
-    }
-
-    if (
-      formData.addConstant &&
-      (!formData.constantValue || !formData.frequency)
-    ) {
-      alert("Please fill in the constant contribution fields.");
-      return;
-    }
-
     const payload = {
       initialValue: Number(formData.initialValue),
       growthRate: Number(formData.growthRate),
@@ -210,6 +197,7 @@ const ExponentialForm: React.FC<Props> = ({
                       borderRadius: "6px",
                       border: "1px solid #ccc",
                     }}
+                    required
                   />
                 </td>
               </tr>
@@ -231,7 +219,6 @@ const ExponentialForm: React.FC<Props> = ({
                       border: "1px solid #ccc",
                     }}
                   >
-                    <option value="">Select</option>
                     <option value="Yearly">Yearly</option>
                     <option value="Monthly">Monthly</option>
                   </select>
