@@ -1,10 +1,16 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import NavBar from "@/components/NavBar";
 import BottomCTA from "@/components/BottomCTA";
 import GrowthComparisonForm from "./components/GrowthComparisonForm";
 import GrowthComparisonChart from "./components/GrowthComparisonChart";
-import GrowthComparisonInfo from "./components/GrowthComparisonInfo"; // opcional
-//INFO
+import GrowthComparisonInfo from "./components/GrowthComparisonInfo"; // Si aún no existe, puedes comentarlo o crearlo
+
+type GrowthComparisonResponse = {
+  finalValues: number[];
+  interestRates: number[];
+  timeline: number[];
+  valoresPorTasa: number[][];
+};
 
 const GrowthComparisonCalculator = () => {
   const [result, setResult] = useState<GrowthComparisonResponse | null>(null);
@@ -34,8 +40,8 @@ const GrowthComparisonCalculator = () => {
           </div>
         </div>
 
-        {/* INFO OR ADDITIONAL SECTION */}
-        <div className="mt-2 ">
+        {/* INFO SECTION (puede ser opcional o educativa como en Savings) */}
+        <div className="mt-10">
           <GrowthComparisonInfo />
         </div>
       </div>
@@ -44,4 +50,5 @@ const GrowthComparisonCalculator = () => {
     </>
   );
 };
+
 export default GrowthComparisonCalculator;

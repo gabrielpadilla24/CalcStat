@@ -52,7 +52,7 @@ const GrowthComparisonForm: React.FC<GrowthComparisonFormProps> = ({
         setInterestRates(data.interestRates);
         onResult(data);
       } else if ((data as { error?: string }).error) {
-        setError((data as { error: string }).error);
+        setError((data as unknown as { error: string }).error);
       } else {
         setError("Invalid response from the server.");
       }
