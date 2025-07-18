@@ -50,7 +50,7 @@ To bridge mathematics, finance, and code through intuitive, educational, and pow
 - Calculates monthly payments, interest vs principal
 - Includes amortization schedule and donut chart
 
-### 🔄 Adjustable Rate Mortgage (ARM)
+### 🔄 Adjustable Rate Mortgage
 - ARM types supported: 5/1, 7/1, etc.
 - Shows initial monthly payment validity period
 
