@@ -65,12 +65,12 @@ To bridge mathematics, finance, and code through intuitive, educational, and pow
 ### 🏦 Jumbo Loan
 - High-value mortgage calculator with standard logic
 
-### 💰 Net Present Value (NPV)
+### 💰 Net Present Value
 - Handles single value and full cashflow sequences
 - Includes KaTeX-rendered dynamic formula
 - Cashflow bar chart integrated
 
-### 📈 Internal Rate of Return (IRR)
+### 📈 Internal Rate of Return
 - Finds IRR from user-provided cashflows
 - Annual chart visualization with ApexCharts
 
