@@ -6,11 +6,9 @@ import BottomCTA from "@/components/BottomCTA";
 const CalculusLandingPage = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
 
-  const showSingle =
-    selectedCategory === "All" || selectedCategory === "Single";
-  const showMulti = selectedCategory === "All" || selectedCategory === "Multi";
-  const showIntegral =
-    selectedCategory === "All" || selectedCategory === "Integrals";
+  const showSingle = selectedCategory === "All";
+  const showMulti = selectedCategory === "All";
+  const showIntegral = selectedCategory === "All";
 
   return (
     <div className="bg-gray-100 min-h-screen">
@@ -68,6 +66,27 @@ const CalculusLandingPage = () => {
             </p>
             <button onClick={() => setSelectedCategory("Single")}>
               <SubmitButton text="Explore Calculators" />
+            </button>
+          </div>
+        )}
+
+        {/* Derivatives */}
+        {showSingle && (
+          <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] flex flex-col justify-between text-left">
+            <img
+              src="/img/derivatives.png"
+              alt="Derivatives"
+              className="h-40 w-full object-cover mb-4 rounded"
+            />
+            <h2 className="text-xl font-bold text-gray-800 mb-2">
+              Derivatives
+            </h2>
+            <p className="text-sm text-gray-600 mb-4">
+              Understand the rules. Visualize the change. Learn derivatives the
+              smart way
+            </p>
+            <button onClick={() => setSelectedCategory("Single")}>
+              <SubmitButton text="Explore Derivatives" />
             </button>
           </div>
         )}
