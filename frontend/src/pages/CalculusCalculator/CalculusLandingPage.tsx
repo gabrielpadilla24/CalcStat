@@ -6,9 +6,10 @@ import BottomCTA from "@/components/BottomCTA";
 const CalculusLandingPage = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
 
-  const showSingle = selectedCategory === "All";
-  const showMulti = selectedCategory === "All";
-  const showIntegral = selectedCategory === "All";
+  const showMainCards = selectedCategory === "All";
+  const showSingle = selectedCategory === "Single";
+  //const showMulti = selectedCategory === "Multi";
+  //const showIntegral = selectedCategory === "Integrals";
 
   return (
     <div className="bg-gray-100 min-h-screen">
@@ -47,30 +48,71 @@ const CalculusLandingPage = () => {
         ))}
       </div>
 
-      {/* Calculus Cards */}
+      {/* Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto px-4 pb-20">
-        {/* Single Variable */}
-        {showSingle && (
-          <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] flex flex-col justify-between text-left">
-            <img
-              src="/img/single-variable.png"
-              alt="Single Variable"
-              className="h-40 w-full object-cover mb-4 rounded"
-            />
-            <h2 className="text-xl font-bold text-gray-800 mb-2">
-              Single Variable Calculus
-            </h2>
-            <p className="text-sm text-gray-600 mb-4">
-              Limits, derivatives, optimization, continuity, and functions of a
-              single variable.
-            </p>
-            <button onClick={() => setSelectedCategory("Single")}>
-              <SubmitButton text="Explore Calculators" />
-            </button>
-          </div>
+        {/* --- MAIN SECTION CARDS --- */}
+        {showMainCards && (
+          <>
+            {/* Single Variable Calculus */}
+            <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] flex flex-col justify-between text-left">
+              <img
+                src="/img/single-variable.png"
+                alt="Single Variable"
+                className="h-40 w-full object-cover mb-4 rounded"
+              />
+              <h2 className="text-xl font-bold text-gray-800 mb-2">
+                Single Variable Calculus
+              </h2>
+              <p className="text-sm text-gray-600 mb-4">
+                Limits, derivatives, optimization, continuity, and functions of
+                a single variable.
+              </p>
+              <button onClick={() => setSelectedCategory("Single")}>
+                <SubmitButton text="Explore Calculators" />
+              </button>
+            </div>
+
+            {/* Multivariable Calculus */}
+            <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] flex flex-col justify-between text-left">
+              <img
+                src="/img/multivariable.png"
+                alt="Multivariable"
+                className="h-40 w-full object-cover mb-4 rounded"
+              />
+              <h2 className="text-xl font-bold text-gray-800 mb-2">
+                Multivariable Calculus
+              </h2>
+              <p className="text-sm text-gray-600 mb-4">
+                Work with functions of several variables. Includes partial
+                derivatives, gradients, and surface integrals.
+              </p>
+              <button onClick={() => setSelectedCategory("Multi")}>
+                <SubmitButton text="Explore Calculators" />
+              </button>
+            </div>
+
+            {/* Integral Calculator */}
+            <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] flex flex-col justify-between text-left">
+              <img
+                src="/img/integrals.png"
+                alt="Integrals"
+                className="h-40 w-full object-cover mb-4 rounded"
+              />
+              <h2 className="text-xl font-bold text-gray-800 mb-2">
+                Integral Calculator
+              </h2>
+              <p className="text-sm text-gray-600 mb-4">
+                Compute definite and indefinite integrals. Visualize area under
+                curves and step-by-step antiderivatives.
+              </p>
+              <button onClick={() => setSelectedCategory("Integrals")}>
+                <SubmitButton text="Explore Calculators" />
+              </button>
+            </div>
+          </>
         )}
 
-        {/* Derivatives */}
+        {/* --- SINGLE VARIABLE SECTION --- */}
         {showSingle && (
           <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] flex flex-col justify-between text-left">
             <img
@@ -83,52 +125,10 @@ const CalculusLandingPage = () => {
             </h2>
             <p className="text-sm text-gray-600 mb-4">
               Understand the rules. Visualize the change. Learn derivatives the
-              smart way
+              smart way.
             </p>
-            <button onClick={() => setSelectedCategory("Single")}>
-              <SubmitButton text="Explore Derivatives" />
-            </button>
-          </div>
-        )}
-
-        {/* Multivariable */}
-        {showMulti && (
-          <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] flex flex-col justify-between text-left">
-            <img
-              src="/img/multivariable.png"
-              alt="Multivariable"
-              className="h-40 w-full object-cover mb-4 rounded"
-            />
-            <h2 className="text-xl font-bold text-gray-800 mb-2">
-              Multivariable Calculus
-            </h2>
-            <p className="text-sm text-gray-600 mb-4">
-              Work with functions of several variables. Includes partial
-              derivatives, gradients, and surface integrals.
-            </p>
-            <button onClick={() => setSelectedCategory("Multi")}>
-              <SubmitButton text="Explore Calculators" />
-            </button>
-          </div>
-        )}
-
-        {/* Integrals */}
-        {showIntegral && (
-          <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] flex flex-col justify-between text-left">
-            <img
-              src="/img/integrals.png"
-              alt="Integrals"
-              className="h-40 w-full object-cover mb-4 rounded"
-            />
-            <h2 className="text-xl font-bold text-gray-800 mb-2">
-              Integral Calculator
-            </h2>
-            <p className="text-sm text-gray-600 mb-4">
-              Compute definite and indefinite integrals. Visualize area under
-              curves and step-by-step antiderivatives.
-            </p>
-            <button onClick={() => setSelectedCategory("Integrals")}>
-              <SubmitButton text="Explore Calculators" />
+            <button>
+              <SubmitButton text="Open Calculator" />
             </button>
           </div>
         )}
