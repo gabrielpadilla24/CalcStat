@@ -11,6 +11,7 @@ import NPVCalculator from "./pages/FinancialCalculator/NPV/NPVCalculator";
 import IRRCalculator from "./pages/FinancialCalculator/IRR/IRRCalculator";
 import SavingsCalculator from "./pages/FinancialCalculator/Savings/SavingsCalculator";
 import GrowthComparisonCalculator from "./pages/FinancialCalculator/GrowthComparison/GrowthComparisonCalculator";
+import CalculusLandingPage from "./pages/CalculusCalculator/CalculusLandingPage";
 
 const App = () => {
   return (
@@ -59,6 +60,9 @@ const App = () => {
         />
 
         <Route path="/financial" element={<FinancialCalculator />} />
+        <Route path="/calculus" element={<CalculusLandingPage />} />
+
+        {/* Other routes can be added here */}
         <Route path="/calculators" element={<Menu />} />
       </Routes>
     </Router>

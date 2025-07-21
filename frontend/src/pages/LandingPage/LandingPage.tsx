@@ -153,7 +153,9 @@ const LandingPage = () => {
               vector analysis.
             </p>
             <div className="w-fit pl-5">
-              <SubmitButton text="Go to Calculus" />
+              <Link to="/calculus">
+                <SubmitButton text="Go to Calculus" />
+              </Link>
             </div>
 
             {/* Overlapping image aligned to the right */}
