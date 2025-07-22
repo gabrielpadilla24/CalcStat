@@ -2,6 +2,7 @@ import { useState } from "react";
 import NavBar from "@/components/NavBar";
 import SubmitButton from "@/components/SubmitButton";
 import BottomCTA from "@/components/BottomCTA";
+import { Link } from "react-router-dom";
 
 const CalculusLandingPage = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>("All");
@@ -127,9 +128,9 @@ const CalculusLandingPage = () => {
               Understand the rules. Visualize the change. Learn derivatives the
               smart way.
             </p>
-            <button>
+            <Link to="/calculus/derivatives">
               <SubmitButton text="Open Calculator" />
-            </button>
+            </Link>
           </div>
         )}
       </div>
