@@ -5,6 +5,13 @@ from math import pow
 import numpy_financial as npf
 import numpy as np
 from typing import Literal, Optional, List
+from sympy import symbols, sympify, diff
+from sympy.parsing.sympy_parser import (
+    parse_expr,
+    standard_transformations,
+    implicit_multiplication_application
+)
+
 
 
 
@@ -108,7 +115,8 @@ class GrowthComparisonData(BaseModel):
     years: int
     interest_rates: List[float]
 
-
+class DerivativeRequest(BaseModel):
+    equation: str
 
 # -----------------------------
 # ENDPOINT DE INTERÉS COMPUESTO
@@ -748,3 +756,34 @@ def growth_comparison(data: GrowthComparisonData):
         "valoresPorTasa": valores_por_tasa,    # Lista de listas
         "finalValues": final_values            # Último valor de cada curva
     }
+
+
+
+
+#---------------------------------# 
+# ENDPOINT DE DERIVATIVES
+#---------------------------------
+
+@app.post("/derivatives")
+async def compute_derivative(request: DerivativeRequest):
+    try:
+        # 1. Preprocesamiento: reemplazar potencias y eliminar espacios
+        cleaned = request.equation.replace("^", "**").replace(" ", "")
+
+        # 2. Crear variable simbólica localmente
+        x = symbols("x")
+
+        # 3. Permitir multiplicación implícita como 2x o 3xy
+        transformations = standard_transformations + (implicit_multiplication_application,)
+        expr = parse_expr(cleaned, transformations=transformations)
+
+        # 4. Derivar con respecto a x
+        derivative = diff(expr, x)
+
+        return {
+            "original": str(expr),
+            "derivative": str(derivative)
+        }
+
+    except Exception as e:
+        return {"error": f"Failed to compute derivative: {str(e)}"}
