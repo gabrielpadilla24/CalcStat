@@ -1,9 +1,13 @@
 import React, { useState } from "react";
 import { addStyles, EditableMathField } from "react-mathquill";
 
-addStyles(); // Importa estilos de MathQuill
+addStyles();
 
-const DerivativesInput: React.FC = () => {
+type DerivativesInputProps = {
+  onResult: (expression: string, derivative: string) => void;
+};
+
+const DerivativesInput: React.FC<DerivativesInputProps> = ({ onResult }) => {
   const [latex, setLatex] = useState("");
 
   const handleCalculate = async () => {
@@ -20,6 +24,9 @@ const DerivativesInput: React.FC = () => {
 
       const data = await response.json();
       console.log("Backend response:", data);
+
+      // Enviar datos al componente padre
+      onResult(data.original, data.tipo);
     } catch (error) {
       console.error("Error:", error);
     }
