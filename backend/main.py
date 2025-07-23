@@ -766,9 +766,8 @@ def growth_comparison(data: GrowthComparisonData):
 
 # -------- Conversión de \frac{a}{b} a (a)/(b) --------
 
-import re
-
 def mathquill_to_sympy(expr: str) -> str:
+
     # Paso 1: Potencias
     expr = expr.replace("^", "**")
 
@@ -829,11 +828,11 @@ async def compute_derivative(request: DerivativeRequest):
         x = symbols("x")
 
         # 3. Derivar con respecto a x
-        #derivative = diff(cleaned, x)
+        derivative = diff(cleaned, x)
 
         return {
             "original": str(cleaned),
-            #"tipo": str(derivative)
+            "tipo": str(derivative)
             #"derivative": str(derivative)
         }
 
