@@ -779,6 +779,8 @@ def mathquill_to_sympy(expr: str) -> str:
     expr = re.sub(r"\\\+", "+", expr)
     expr = re.sub(r"\\\-", "-", expr)
 
+    expr = expr.replace(r'\cdot', '*')
+
 
 
     # Paso 1: Potencias
