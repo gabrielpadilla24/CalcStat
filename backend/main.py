@@ -767,6 +767,19 @@ def growth_comparison(data: GrowthComparisonData):
 # -------- Conversión de \frac{a}{b} a (a)/(b) --------
 
 def mathquill_to_sympy(expr: str) -> str:
+    # Paso 0: Limpieza inicial de caracteres invisibles y espacios
+    expr = expr.replace("^", "**")
+
+    # Elimina espacios comunes y escapes invisibles
+    expr = expr.replace("\\ ", "")
+    expr = expr.replace(" ", "")
+    expr = re.sub(r"\\[:,!]+", "", expr)  # Elimina \:, \,, \! (MathQuill usa estos)
+
+    # Normaliza signos escapados
+    expr = re.sub(r"\\\+", "+", expr)
+    expr = re.sub(r"\\\-", "-", expr)
+
+
 
     # Paso 1: Potencias
     expr = expr.replace("^", "**")
