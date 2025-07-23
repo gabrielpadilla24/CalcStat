@@ -5,7 +5,7 @@ from math import pow
 import numpy_financial as npf
 import numpy as np
 from typing import Literal, Optional, List
-from sympy import symbols, diff
+from sympy import symbols, diff, sympify
 from sympy.parsing.sympy_parser import (
     parse_expr,
     standard_transformations,
@@ -765,31 +765,76 @@ def growth_comparison(data: GrowthComparisonData):
 #---------------------------------
 
 # -------- Conversión de \frac{a}{b} a (a)/(b) --------
-def convert_frac_latex_to_sympy(expr: str) -> str:
-    pattern = r'\\frac{([^{}]+)}{([^{}]+)}'
-    while re.search(pattern, expr):
-        expr = re.sub(pattern, r'(\1)/(\2)', expr)
+
+import re
+
+def mathquill_to_sympy(expr: str) -> str:
+    # Paso 1: Potencias
+    expr = expr.replace("^", "**")
+
+    # Paso 2: Fracciones LaTeX
+    expr = re.sub(r'\\frac{([^{}]+)}{([^{}]+)}', r'(\1)/(\2)', expr)
+
+    # Paso 3: Funciones comunes
+    replacements = {
+        r'\\sin\\left\((.*?)\\right\)': r'sin(\1)',
+        r'\\cos\\left\((.*?)\\right\)': r'cos(\1)',
+        r'\\tan\\left\((.*?)\\right\)': r'tan(\1)',
+        r'\\log\\left\((.*?)\\right\)': r'log(\1)',
+        r'\\exp\\left\((.*?)\\right\)': r'exp(\1)',
+        r'\\sqrt{(.*?)}': r'sqrt(\1)',
+    }
+    for pattern, repl in replacements.items():
+        expr = re.sub(pattern, repl, expr)
+
+    # Paso 4: Eliminar \left y \right
+    expr = expr.replace(r'\left(', '(').replace(r'\right)', ')')
+
+    # Paso 5: Proteger funciones → sin(x) → [[0]], etc.
+    protected_functions = ["sin", "cos", "tan", "log", "exp", "sqrt"]
+    protected_subs = {}
+    i = 0
+
+    for func in protected_functions:
+        pattern = rf'{func}\([^()]*\)'
+        for match in re.findall(pattern, expr):
+            key = f"[[{i}]]"
+            protected_subs[key] = match
+            expr = expr.replace(match, key)
+            i += 1
+
+    # Paso 6: Multiplicación implícita
+    expr = re.sub(r'(\d)([a-zA-Z])', r'\1*\2', expr)
+    expr = re.sub(r'([a-zA-Z])([a-zA-Z])', r'\1*\2', expr)
+    expr = re.sub(r'(\d|\w)\(', r'\1*(', expr)
+    expr = re.sub(r'\)(\w|\d)', r')*\1', expr)
+
+    # Paso 7: Restaurar funciones protegidas
+    for key, value in protected_subs.items():
+        expr = expr.replace(key, value)
+
     return expr
+
+
 
 # -------- ENDPOINT de derivadas --------
 @app.post("/derivatives")
 async def compute_derivative(request: DerivativeRequest):
     try:
         # 1. Limpieza inicial
-        cleaned = request.equation.replace("^", "**").replace(" ", "")
-        cleaned = convert_frac_latex_to_sympy(cleaned)
+        cleaned = mathquill_to_sympy(request.equation.strip())
+
 
         # 2. Crear símbolo y parsear la expresión
         x = symbols("x")
-        transformations = standard_transformations + (implicit_multiplication_application,)
-        expr = parse_expr(cleaned, transformations=transformations)
 
         # 3. Derivar con respecto a x
-        derivative = diff(expr, x)
+        #derivative = diff(cleaned, x)
 
         return {
-            "original": str(expr),
-            "derivative": str(derivative)
+            "original": str(cleaned),
+            #"tipo": str(derivative)
+            #"derivative": str(derivative)
         }
 
     except Exception as e:
