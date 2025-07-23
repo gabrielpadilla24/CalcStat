@@ -5,7 +5,7 @@ from math import pow
 import numpy_financial as npf
 import numpy as np
 from typing import Literal, Optional, List
-from sympy import symbols, diff, sympify
+from sympy import symbols, diff, sympify, simplify
 from sympy.parsing.sympy_parser import (
     parse_expr,
     standard_transformations,
@@ -843,7 +843,7 @@ async def compute_derivative(request: DerivativeRequest):
         x = symbols("x")
 
         # 3. Derivar con respecto a x
-        derivative = diff(cleaned, x)
+        derivative = simplify(diff(cleaned, x))
 
         return {
             "original": str(cleaned),
