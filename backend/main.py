@@ -5,13 +5,13 @@ from math import pow
 import numpy_financial as npf
 import numpy as np
 from typing import Literal, Optional, List
-from sympy import symbols, sympify, diff
+from sympy import symbols, diff
 from sympy.parsing.sympy_parser import (
     parse_expr,
     standard_transformations,
     implicit_multiplication_application
 )
-
+import re
 
 
 
@@ -764,20 +764,27 @@ def growth_comparison(data: GrowthComparisonData):
 # ENDPOINT DE DERIVATIVES
 #---------------------------------
 
+# -------- Conversión de \frac{a}{b} a (a)/(b) --------
+def convert_frac_latex_to_sympy(expr: str) -> str:
+    pattern = r'\\frac{([^{}]+)}{([^{}]+)}'
+    while re.search(pattern, expr):
+        expr = re.sub(pattern, r'(\1)/(\2)', expr)
+    return expr
+
+# -------- ENDPOINT de derivadas --------
 @app.post("/derivatives")
 async def compute_derivative(request: DerivativeRequest):
     try:
-        # 1. Preprocesamiento: reemplazar potencias y eliminar espacios
+        # 1. Limpieza inicial
         cleaned = request.equation.replace("^", "**").replace(" ", "")
+        cleaned = convert_frac_latex_to_sympy(cleaned)
 
-        # 2. Crear variable simbólica localmente
+        # 2. Crear símbolo y parsear la expresión
         x = symbols("x")
-
-        # 3. Permitir multiplicación implícita como 2x o 3xy
         transformations = standard_transformations + (implicit_multiplication_application,)
         expr = parse_expr(cleaned, transformations=transformations)
 
-        # 4. Derivar con respecto a x
+        # 3. Derivar con respecto a x
         derivative = diff(expr, x)
 
         return {

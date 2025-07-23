@@ -1,7 +1,10 @@
 import React, { useState } from "react";
+import { addStyles, EditableMathField } from "react-mathquill";
+
+addStyles(); // Importa estilos de MathQuill
 
 const DerivativesInput: React.FC = () => {
-  const [equation, setEquation] = useState("");
+  const [latex, setLatex] = useState("");
 
   const handleCalculate = async () => {
     try {
@@ -10,7 +13,7 @@ const DerivativesInput: React.FC = () => {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ equation }),
+        body: JSON.stringify({ equation: latex }),
       });
 
       if (!response.ok) throw new Error("Error sending request");
@@ -26,20 +29,16 @@ const DerivativesInput: React.FC = () => {
     <div className="max-w-[1440px] mx-auto flex flex-col items-center justify-center px-6">
       <div className="w-full max-w-[500px] bg-white rounded-xl shadow-md border border-gray-200 p-8">
         <div className="flex flex-col items-center text-center">
-          <label
-            htmlFor="equation"
-            className="text-lg font-medium text-gray-700 mb-4"
-          >
+          <label className="text-lg font-medium text-gray-700 mb-4">
             Enter a function to differentiate:
           </label>
-          <input
-            id="equation"
-            type="text"
-            value={equation}
-            onChange={(e) => setEquation(e.target.value)}
-            placeholder="e.g. 2x^2 + 3x - 5"
-            className="w-full px-4 py-2 mb-6 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-[#5FBA9B]"
+
+          <EditableMathField
+            latex={latex}
+            onChange={(mathField) => setLatex(mathField.latex())}
+            className="text-xl w-full border border-gray-300 px-4 py-2 mb-6 rounded-lg bg-white focus:outline-none"
           />
+
           <button
             onClick={handleCalculate}
             className="bg-[#5FBA9B] text-white px-6 py-2 rounded-lg font-semibold hover:bg-[#4da88a] transition"
