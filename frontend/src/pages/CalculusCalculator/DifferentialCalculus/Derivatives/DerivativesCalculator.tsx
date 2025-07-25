@@ -7,6 +7,8 @@ import DerivativesResult from "./components/DerivativesResult";
 const DerivativesCalculator = () => {
   const [expression, setExpression] = useState("");
   const [derivative, setDerivative] = useState("");
+  const [steps, setSteps] = useState<string[] | undefined>(undefined);
+  const [rule, setRule] = useState<string | undefined>(undefined); // 👈 nuevo
 
   return (
     <>
@@ -19,12 +21,24 @@ const DerivativesCalculator = () => {
 
         {/* Input and Result */}
         <DerivativesInput
-          onResult={(exp: string, der: string) => {
+          onResult={(
+            exp: string,
+            der: string,
+            stepArr?: string[],
+            tipo?: string
+          ) => {
             setExpression(exp);
             setDerivative(der);
+            setSteps(stepArr);
+            setRule(tipo); // 👈 capturamos la regla
           }}
         />
-        <DerivativesResult expression={expression} derivative={derivative} />
+        <DerivativesResult
+          expression={expression}
+          derivative={derivative}
+          steps={steps}
+          rule={rule} // 👈 se la pasamos al componente de resultado
+        />
       </div>
 
       <BottomCTA buttonText="Back to Calculus" href="/calculus" />

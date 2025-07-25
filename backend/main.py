@@ -5,12 +5,9 @@ from math import pow
 import numpy_financial as npf
 import numpy as np
 from typing import Literal, Optional, List
-from sympy import symbols, diff, sympify, simplify
-from sympy.parsing.sympy_parser import (
-    parse_expr,
-    standard_transformations,
-    implicit_multiplication_application
-)
+from sympy import symbols, diff, simplify, Mul, Pow, Function, Symbol, Add, sin, cos, tan, log, exp, sqrt
+from sympy.parsing.sympy_parser import parse_expr
+import sympy
 import re
 
 
@@ -764,32 +761,16 @@ def growth_comparison(data: GrowthComparisonData):
 # ENDPOINT DE DERIVATIVES
 #---------------------------------
 
-# -------- Conversión de \frac{a}{b} a (a)/(b) --------
-
+# --------- MATHQUILL TO SYMPY ---------
 def mathquill_to_sympy(expr: str) -> str:
-    # Paso 0: Limpieza inicial de caracteres invisibles y espacios
     expr = expr.replace("^", "**")
-
-    # Elimina espacios comunes y escapes invisibles
     expr = expr.replace("\\ ", "")
     expr = expr.replace(" ", "")
-    expr = re.sub(r"\\[:,!]+", "", expr)  # Elimina \:, \,, \! (MathQuill usa estos)
-
-    # Normaliza signos escapados
+    expr = re.sub(r"\\[:,!]+", "", expr)
     expr = re.sub(r"\\\+", "+", expr)
     expr = re.sub(r"\\\-", "-", expr)
-
     expr = expr.replace(r'\cdot', '*')
-
-
-
-    # Paso 1: Potencias
-    expr = expr.replace("^", "**")
-
-    # Paso 2: Fracciones LaTeX
     expr = re.sub(r'\\frac{([^{}]+)}{([^{}]+)}', r'(\1)/(\2)', expr)
-
-    # Paso 3: Funciones comunes
     replacements = {
         r'\\sin\\left\((.*?)\\right\)': r'sin(\1)',
         r'\\cos\\left\((.*?)\\right\)': r'cos(\1)',
@@ -800,15 +781,11 @@ def mathquill_to_sympy(expr: str) -> str:
     }
     for pattern, repl in replacements.items():
         expr = re.sub(pattern, repl, expr)
-
-    # Paso 4: Eliminar \left y \right
     expr = expr.replace(r'\left(', '(').replace(r'\right)', ')')
 
-    # Paso 5: Proteger funciones → sin(x) → [[0]], etc.
     protected_functions = ["sin", "cos", "tan", "log", "exp", "sqrt"]
     protected_subs = {}
     i = 0
-
     for func in protected_functions:
         pattern = rf'{func}\([^()]*\)'
         for match in re.findall(pattern, expr):
@@ -817,38 +794,94 @@ def mathquill_to_sympy(expr: str) -> str:
             expr = expr.replace(match, key)
             i += 1
 
-    # Paso 6: Multiplicación implícita
     expr = re.sub(r'(\d)([a-zA-Z])', r'\1*\2', expr)
     expr = re.sub(r'([a-zA-Z])([a-zA-Z])', r'\1*\2', expr)
     expr = re.sub(r'(\d|\w)\(', r'\1*(', expr)
     expr = re.sub(r'\)(\w|\d)', r')*\1', expr)
 
-    # Paso 7: Restaurar funciones protegidas
     for key, value in protected_subs.items():
         expr = expr.replace(key, value)
 
     return expr
 
 
+# --------- DERIVADA PASO A PASO ---------
+def derivar_paso_a_paso(expr, variable):
+    steps = []
+    is_product = expr.func == Mul
 
-# -------- ENDPOINT de derivadas --------
+    is_chain_candidate = False
+    if isinstance(expr, Function) and expr.args and expr.args[0] != variable and expr.args[0].has(variable):
+        is_chain_candidate = True
+    elif isinstance(expr, Pow) and expr.base != variable and expr.base.has(variable):
+        is_chain_candidate = True
+
+    if is_product:
+        f_x = expr.args[0]
+        g_x = expr.args[1]
+        df_dx = diff(f_x, variable)
+        dg_dx = diff(g_x, variable)
+        termino1 = df_dx * g_x
+        termino2 = f_x * dg_dx
+        derivada_intermedia = Add(termino1, termino2, evaluate=False)
+        derivada_final = derivada_intermedia.simplify()
+        steps.append("Regla del producto")
+        steps.append(f"f(x) = {f_x}, g(x) = {g_x}")
+        steps.append(f"f'(x) = {df_dx}, g'(x) = {dg_dx}")
+        steps.append(f"f'(x)*g(x) + f(x)*g'(x) = {termino1} + {termino2}")
+        steps.append(f"Derivada simplificada: {derivada_final}")
+        return derivada_final, steps
+
+    elif is_chain_candidate:
+        outer_func_obj = expr.func
+        inner_expr = expr.args[0] if expr.args else None
+
+        if inner_expr and inner_expr.has(variable) and inner_expr != variable:
+            dummy_u = Symbol('u')
+            outer_func_with_dummy = expr.subs(inner_expr, dummy_u)
+            dh_du = diff(outer_func_with_dummy, dummy_u)
+            h_prime_of_g_x = dh_du.subs(dummy_u, inner_expr)
+            dg_dx = diff(inner_expr, variable)
+            derivada_final = h_prime_of_g_x * dg_dx
+            derivada_final_simplificada = derivada_final.simplify()
+            steps.append("Regla de la cadena")
+            steps.append(f"h(u) = {outer_func_with_dummy}, u = {inner_expr}")
+            steps.append(f"h'(u) = {dh_du}, h'(g(x)) = {h_prime_of_g_x}")
+            steps.append(f"g'(x) = {dg_dx}")
+            steps.append(f"Derivada = h'(g(x)) * g'(x) = {derivada_final}")
+            steps.append(f"Derivada simplificada: {derivada_final_simplificada}")
+            return derivada_final_simplificada, steps
+
+    # Caso básico
+    derivada_final = diff(expr, variable)
+    steps.append("Derivada básica")
+    steps.append(f"d({expr})/dx = {derivada_final}")
+    return derivada_final, steps
+
+
+# --------- ENDPOINT PRINCIPAL ---------
 @app.post("/derivatives")
 async def compute_derivative(request: DerivativeRequest):
     try:
-        # 1. Limpieza inicial
         cleaned = mathquill_to_sympy(request.equation.strip())
-
-
-        # 2. Crear símbolo y parsear la expresión
         x = symbols("x")
-
-        # 3. Derivar con respecto a x
-        derivative = simplify(diff(cleaned, x))
+        local_dict = {
+            'x': x,
+            'sin': sin,
+            'cos': cos,
+            'tan': tan,
+            'log': log,
+            'exp': exp,
+            'sqrt': sqrt,
+            'e': sympy.E
+        }
+        expr = parse_expr(cleaned, local_dict=local_dict)
+        derivative, steps = derivar_paso_a_paso(expr, x)
 
         return {
-            "original": str(cleaned),
-            "tipo": str(derivative)
-            #"derivative": str(derivative)
+            "original": str(expr),
+            "derivative": str(derivative),
+            "steps": steps
         }
 
     except Exception as e:

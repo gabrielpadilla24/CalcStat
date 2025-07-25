@@ -4,7 +4,12 @@ import { addStyles, EditableMathField } from "react-mathquill";
 addStyles();
 
 type DerivativesInputProps = {
-  onResult: (expression: string, derivative: string) => void;
+  onResult: (
+    expression: string,
+    derivative: string,
+    steps?: string[],
+    rule?: string
+  ) => void;
 };
 
 const DerivativesInput: React.FC<DerivativesInputProps> = ({ onResult }) => {
@@ -25,8 +30,8 @@ const DerivativesInput: React.FC<DerivativesInputProps> = ({ onResult }) => {
       const data = await response.json();
       console.log("Backend response:", data);
 
-      // Enviar datos al componente padre
-      onResult(data.original, data.tipo);
+      // ✅ Llamamos a onResult con todos los datos necesarios
+      onResult(data.original, data.derivative, data.steps, data.tipo);
     } catch (error) {
       console.error("Error:", error);
     }
