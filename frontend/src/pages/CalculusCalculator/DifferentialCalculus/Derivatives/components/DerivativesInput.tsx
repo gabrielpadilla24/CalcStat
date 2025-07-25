@@ -46,6 +46,11 @@ const DerivativesInput: React.FC<DerivativesInputProps> = ({ onResult }) => {
             className="text-xl w-full border border-gray-300 px-4 py-2 mb-6 rounded-lg bg-white focus:outline-none"
           />
 
+          <p className="text-sm text-gray-500 mb-4">
+            Examples: <code>sin(x)</code>, <code>log(x)</code>, <code>1/x</code>
+            , <code>x^2</code>, <code>e^x</code>
+          </p>
+
           <button
             onClick={handleCalculate}
             className="bg-[#5FBA9B] text-white px-6 py-2 rounded-lg font-semibold hover:bg-[#4da88a] transition"

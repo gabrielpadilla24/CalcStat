@@ -9,9 +9,7 @@ type DerivativesResultProps = {
 };
 
 const toLatex = (expr: string): string => {
-  return expr
-    .replace(/\*\*/g, "^") // 2**2 → 2^2
-    .replace(/\*/g, " "); // 2*x → 2x
+  return expr.replace(/\*\*/g, "^").replace(/\*/g, " ");
 };
 
 const DerivativesResult: React.FC<DerivativesResultProps> = ({
@@ -26,15 +24,15 @@ const DerivativesResult: React.FC<DerivativesResultProps> = ({
         🧮 Derivative Result
       </h2>
 
-      <p className="mb-4">
-        <span className="font-semibold">Original Expression:</span>{" "}
+      <div className="mb-4 flex items-center gap-2">
+        <span className="font-semibold">Original Expression:</span>
         <StaticMathField>{toLatex(expression)}</StaticMathField>
-      </p>
+      </div>
 
-      <p>
-        <span className="font-semibold">Derivative:</span>{" "}
+      <div className="flex items-center gap-2">
+        <span className="font-semibold">Derivative:</span>
         <StaticMathField>{toLatex(derivative)}</StaticMathField>
-      </p>
+      </div>
     </div>
   );
 };
