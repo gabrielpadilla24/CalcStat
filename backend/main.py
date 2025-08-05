@@ -829,15 +829,19 @@ def derivar_paso_a_paso(expr, variable):
 
         steps.append("📘 In the case of a product, we use the product rule:")
         steps.append("As a part of the first step of the product rule, we define the two functions:")
-        steps.append("$f(x) = " + sympy_latex(f_x) + ",\\quad g(x) = " + sympy_latex(g_x))
+        steps.append("$f(x) = " + sympy_latex(f_x))
+        steps.append("$g(x) = " + sympy_latex(g_x))
         steps.append("Then, we compute their derivatives:")
-        steps.append("$f'(x) = " + sympy_latex(df_dx) + ",\\quad g'(x) = " + sympy_latex(dg_dx))
+        steps.append("$f'(x) = " + sympy_latex(df_dx))
+        steps.append("$g'(x) = " + sympy_latex(dg_dx))
         steps.append("Now we apply the product rule formula:")
         steps.append("$f'(x) \\cdot g(x) + f(x) \\cdot g'(x) = " + sympy_latex(termino1) + " + " + sympy_latex(termino2))
         steps.append("Finally, we simplify the expression:")
         steps.append("$" + sympy_latex(derivada_final))
 
         return derivada_final, steps
+
+
 
 
     elif is_chain_candidate:

@@ -23,7 +23,7 @@ const DerivativesResult: React.FC<DerivativesResultProps> = ({
   if (!expression || !derivative) return null;
 
   return (
-    <div className="bg-white shadow-md rounded-xl p-6 mt-8 max-w-[500px] mx-auto text-gray-800">
+    <div className="bg-white shadow-md rounded-xl p-6 mt-8 max-w-[700px] mx-auto text-gray-800">
       <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
         🧮 Derivative Result
       </h2>
@@ -45,19 +45,24 @@ const DerivativesResult: React.FC<DerivativesResultProps> = ({
       </div>
 
       {steps && steps.length > 0 && (
-        <div>
-          <h3 className="text-lg font-semibold mb-2">🪜 Steps:</h3>
-          <ul className="list-disc list-inside space-y-1">
+        <div className="mt-8">
+          <h3 className="text-lg font-semibold mb-4">🪜 Steps:</h3>
+          <div className="space-y-6">
             {steps.map((step, index) => (
-              <li key={index}>
+              <div key={index} className="pl-2">
                 {step.startsWith("$") ? (
-                  <StaticMathField>{step.slice(1)}</StaticMathField>
+                  <div className="mt-1 ml-6 text-lg text-gray-800">
+                    <StaticMathField>{step.slice(1)}</StaticMathField>
+                  </div>
                 ) : (
-                  step
+                  <div className="flex items-start gap-2 text-base text-gray-800">
+                    <span className="mt-1">•</span>
+                    <p>{step}</p>
+                  </div>
                 )}
-              </li>
+              </div>
             ))}
-          </ul>
+          </div>
         </div>
       )}
     </div>
