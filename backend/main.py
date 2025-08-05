@@ -826,11 +826,11 @@ def derivar_paso_a_paso(expr, variable):
         termino2 = f_x * dg_dx
         derivada_intermedia = Add(termino1, termino2, evaluate=False)
         derivada_final = derivada_intermedia.simplify()
-        steps.append("Regla del producto")
+        steps.append("In the case of a product, we use the product rule:")
         steps.append(f"f(x) = {f_x}, g(x) = {g_x}")
         steps.append(f"f'(x) = {df_dx}, g'(x) = {dg_dx}")
         steps.append(f"f'(x)*g(x) + f(x)*g'(x) = {termino1} + {termino2}")
-        steps.append(f"Derivada simplificada: {derivada_final}")
+        steps.append(f"Simplified Derivative: {derivada_final}")
         return derivada_final, steps
 
     elif is_chain_candidate:
@@ -845,17 +845,17 @@ def derivar_paso_a_paso(expr, variable):
             dg_dx = diff(inner_expr, variable)
             derivada_final = h_prime_of_g_x * dg_dx
             derivada_final_simplificada = derivada_final.simplify()
-            steps.append("Regla de la cadena")
+            steps.append("In the case of a chain rule, we use the following steps:")
             steps.append(f"h(u) = {outer_func_with_dummy}, u = {inner_expr}")
             steps.append(f"h'(u) = {dh_du}, h'(g(x)) = {h_prime_of_g_x}")
             steps.append(f"g'(x) = {dg_dx}")
-            steps.append(f"Derivada = h'(g(x)) * g'(x) = {derivada_final}")
-            steps.append(f"Derivada simplificada: {derivada_final_simplificada}")
+            steps.append(f"Derivative = h'(g(x)) * g'(x) = {derivada_final}")
+            steps.append(f"Simplified Derivative: {derivada_final_simplificada}")
             return derivada_final_simplificada, steps
 
     # Caso básico
     derivada_final = diff(expr, variable)
-    steps.append("Derivada básica")
+    steps.append("Basic case, we directly differentiate:")
     steps.append(f"d({expr})/dx = {derivada_final}")
     return derivada_final, steps
 
