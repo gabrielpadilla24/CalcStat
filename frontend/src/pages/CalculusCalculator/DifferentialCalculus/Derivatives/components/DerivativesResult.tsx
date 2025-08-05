@@ -50,8 +50,8 @@ const DerivativesResult: React.FC<DerivativesResultProps> = ({
           <ul className="list-disc list-inside space-y-1">
             {steps.map((step, index) => (
               <li key={index}>
-                {step.includes("^") || step.includes("*") ? (
-                  <StaticMathField>{step}</StaticMathField>
+                {step.startsWith("$") ? (
+                  <StaticMathField>{step.slice(1)}</StaticMathField>
                 ) : (
                   step
                 )}
