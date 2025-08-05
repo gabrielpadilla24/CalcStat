@@ -5,18 +5,18 @@ addStyles();
 
 type DerivativesResultProps = {
   expression: string;
+  expressionLatex?: string;
   derivative: string;
+  derivativeLatex?: string;
   steps?: string[];
-  rule?: string; // ← NUEVO
-};
-
-const toLatex = (expr: string): string => {
-  return expr.replace(/\*\*/g, "^").replace(/\*/g, " ");
+  rule?: string;
 };
 
 const DerivativesResult: React.FC<DerivativesResultProps> = ({
   expression,
+  expressionLatex,
   derivative,
+  derivativeLatex,
   steps,
   rule,
 }) => {
@@ -28,7 +28,6 @@ const DerivativesResult: React.FC<DerivativesResultProps> = ({
         🧮 Derivative Result
       </h2>
 
-      {/* Tipo de regla aplicada */}
       {rule && (
         <div className="mb-4 p-4 rounded-md bg-yellow-50 border border-yellow-300 text-yellow-800 text-sm font-medium">
           🧠 <strong>Rule Applied:</strong> {rule}
@@ -37,12 +36,12 @@ const DerivativesResult: React.FC<DerivativesResultProps> = ({
 
       <div className="mb-4 flex items-center gap-2">
         <span className="font-semibold">Original Expression:</span>
-        <StaticMathField>{toLatex(expression)}</StaticMathField>
+        <StaticMathField>{expressionLatex ?? expression}</StaticMathField>
       </div>
 
       <div className="mb-6 flex items-center gap-2">
         <span className="font-semibold">Derivative:</span>
-        <StaticMathField>{toLatex(derivative)}</StaticMathField>
+        <StaticMathField>{derivativeLatex ?? derivative}</StaticMathField>
       </div>
 
       {steps && steps.length > 0 && (
@@ -52,7 +51,7 @@ const DerivativesResult: React.FC<DerivativesResultProps> = ({
             {steps.map((step, index) => (
               <li key={index}>
                 {step.includes("^") || step.includes("*") ? (
-                  <StaticMathField>{toLatex(step)}</StaticMathField>
+                  <StaticMathField>{step}</StaticMathField>
                 ) : (
                   step
                 )}

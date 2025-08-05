@@ -8,7 +8,9 @@ type DerivativesInputProps = {
     expression: string,
     derivative: string,
     steps?: string[],
-    rule?: string
+    rule?: string,
+    expressionLatex?: string,
+    derivativeLatex?: string
   ) => void;
 };
 
@@ -31,7 +33,14 @@ const DerivativesInput: React.FC<DerivativesInputProps> = ({ onResult }) => {
       console.log("Backend response:", data);
 
       // ✅ Llamamos a onResult con todos los datos necesarios
-      onResult(data.original, data.derivative, data.steps, data.tipo);
+      onResult(
+        data.original,
+        data.derivative,
+        data.steps,
+        data.tipo,
+        data.original_latex,
+        data.derivative_latex
+      );
     } catch (error) {
       console.error("Error:", error);
     }

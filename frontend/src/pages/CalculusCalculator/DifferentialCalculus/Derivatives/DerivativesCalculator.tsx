@@ -6,9 +6,11 @@ import DerivativesResult from "./components/DerivativesResult";
 
 const DerivativesCalculator = () => {
   const [expression, setExpression] = useState("");
+  const [expressionLatex, setExpressionLatex] = useState<string | undefined>();
   const [derivative, setDerivative] = useState("");
-  const [steps, setSteps] = useState<string[] | undefined>(undefined);
-  const [rule, setRule] = useState<string | undefined>(undefined); // 👈 nuevo
+  const [derivativeLatex, setDerivativeLatex] = useState<string | undefined>();
+  const [steps, setSteps] = useState<string[] | undefined>();
+  const [rule, setRule] = useState<string | undefined>();
 
   return (
     <>
@@ -19,25 +21,31 @@ const DerivativesCalculator = () => {
           Derivatives Calculator
         </h1>
 
-        {/* Input and Result */}
         <DerivativesInput
           onResult={(
             exp: string,
             der: string,
             stepArr?: string[],
-            tipo?: string
+            tipo?: string,
+            expLatex?: string,
+            derLatex?: string
           ) => {
             setExpression(exp);
             setDerivative(der);
             setSteps(stepArr);
-            setRule(tipo); // 👈 capturamos la regla
+            setRule(tipo);
+            setExpressionLatex(expLatex);
+            setDerivativeLatex(derLatex);
           }}
         />
+
         <DerivativesResult
           expression={expression}
+          expressionLatex={expressionLatex}
           derivative={derivative}
+          derivativeLatex={derivativeLatex}
           steps={steps}
-          rule={rule} // 👈 se la pasamos al componente de resultado
+          rule={rule}
         />
       </div>
 

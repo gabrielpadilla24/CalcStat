@@ -8,6 +8,7 @@ from typing import Literal, Optional, List
 from sympy import symbols, diff, simplify, Mul, Pow, Function, Symbol, Add, sin, cos, tan, log, exp, sqrt
 from sympy.parsing.sympy_parser import parse_expr
 import sympy
+from sympy import latex as sympy_latex
 import re
 
 
@@ -879,10 +880,13 @@ async def compute_derivative(request: DerivativeRequest):
         derivative, steps = derivar_paso_a_paso(expr, x)
 
         return {
-            "original": str(expr),
-            "derivative": str(derivative),
-            "steps": steps
-        }
+    "original": str(expr),
+    "original_latex": sympy_latex(expr),
+    "derivative": str(derivative),
+    "derivative_latex": sympy_latex(derivative),
+    "steps": steps
+}
+
 
     except Exception as e:
         return {"error": f"Failed to compute derivative: {str(e)}"}
