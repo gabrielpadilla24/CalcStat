@@ -32,7 +32,7 @@ const DerivativesGraph = () => {
   }, []);
 
   return (
-    <div className="bg-white border border-gray-300 p-4 rounded-xl mt-10 shadow-md">
+    <div className="w-[600px] bg-white border border-gray-300 p-4 rounded-xl mt-10 shadow-md">
       <h2 className="text-2xl font-semibold mb-4 text-center">
         🧮 Interactive Graphing Calculator
       </h2>
