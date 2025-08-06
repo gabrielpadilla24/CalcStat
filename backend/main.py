@@ -9,6 +9,7 @@ from sympy import symbols, diff, simplify, Mul, Pow, Function, Symbol, Add, sin,
 from sympy.parsing.sympy_parser import parse_expr
 import sympy
 from sympy import latex as sympy_latex
+from sympy.parsing.latex import parse_latex
 import re
 
 
@@ -762,6 +763,38 @@ def growth_comparison(data: GrowthComparisonData):
 # ENDPOINT DE DERIVATIVES
 #---------------------------------
 
+#---------- PARSER ----------
+
+def clean_latex_input(latex_string):
+    """
+    Elimina los caracteres de barra invertida seguidos de un espacio
+    que se encuentran dentro de los corchetes {}.
+
+    Args:
+        latex_string (str): La expresión LaTeX de entrada.
+
+    Returns:
+        str: La expresión LaTeX limpia.
+    """
+    # Usa una expresión regular para encontrar y reemplazar "\ " dentro de {}
+    # La expresión regular busca:
+    # r'\{([^}]+)\}' -> Coincide con cualquier cosa dentro de {}
+    # y luego reemplaza los espacios seguidos de \
+    def replacer(match):
+        # match.group(1) es el contenido dentro de los corchetes {}
+        content = match.group(1)
+        # Reemplaza los caracteres "\ " con ""
+        cleaned_content = content.replace('\\ ', '')
+        return f'{{{cleaned_content}}}'
+
+    return re.sub(r'\{([^}]+)\}', replacer, latex_string)
+
+def latex_to_sympy(latex_string):
+    cleaned_latex_string = clean_latex_input(latex_string)
+    sympy_expr = parse_latex(cleaned_latex_string)
+    return str(sympy_expr)
+
+
 # --------- MATHQUILL TO SYMPY ---------
 def mathquill_to_sympy(expr: str) -> str:
     expr = expr.replace("^", "**")
@@ -842,8 +875,6 @@ def derivar_paso_a_paso(expr, variable):
         return derivada_final, steps
 
 
-
-
     elif is_chain_candidate:
         outer_func_obj = expr.func
         inner_expr = expr.args[0] if expr.args else None
@@ -875,29 +906,17 @@ def derivar_paso_a_paso(expr, variable):
 @app.post("/derivatives")
 async def compute_derivative(request: DerivativeRequest):
     try:
-        cleaned = mathquill_to_sympy(request.equation.strip())
         x = symbols("x")
-        local_dict = {
-            'x': x,
-            'sin': sin,
-            'cos': cos,
-            'tan': tan,
-            'log': log,
-            'exp': exp,
-            'sqrt': sqrt,
-            'e': sympy.E
-        }
-        expr = parse_expr(cleaned, local_dict=local_dict)
+        expr = parse_latex(clean_latex_input(request.equation.strip()))
         derivative, steps = derivar_paso_a_paso(expr, x)
 
         return {
-    "original": str(expr),
-    "original_latex": sympy_latex(expr),
-    "derivative": str(derivative),
-    "derivative_latex": sympy_latex(derivative),
-    "steps": steps
-}
-
+            "original": str(expr),
+            "original_latex": sympy_latex(expr),
+            "derivative": str(derivative),
+            "derivative_latex": sympy_latex(derivative),
+            "steps": steps
+        }
 
     except Exception as e:
         return {"error": f"Failed to compute derivative: {str(e)}"}
