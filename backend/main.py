@@ -795,50 +795,6 @@ def latex_to_sympy(latex_string):
     return str(sympy_expr)
 
 
-# --------- MATHQUILL TO SYMPY ---------
-def mathquill_to_sympy(expr: str) -> str:
-    expr = expr.replace("^", "**")
-    expr = expr.replace("\\ ", "")
-    expr = expr.replace(" ", "")
-    expr = re.sub(r"\\[:,!]+", "", expr)
-    expr = re.sub(r"\\\+", "+", expr)
-    expr = re.sub(r"\\\-", "-", expr)
-    expr = expr.replace(r'\cdot', '*')
-    expr = re.sub(r'\\frac{([^{}]+)}{([^{}]+)}', r'(\1)/(\2)', expr)
-    replacements = {
-        r'\\sin\\left\((.*?)\\right\)': r'sin(\1)',
-        r'\\cos\\left\((.*?)\\right\)': r'cos(\1)',
-        r'\\tan\\left\((.*?)\\right\)': r'tan(\1)',
-        r'\\log\\left\((.*?)\\right\)': r'log(\1)',
-        r'\\exp\\left\((.*?)\\right\)': r'exp(\1)',
-        r'\\sqrt{(.*?)}': r'sqrt(\1)',
-    }
-    for pattern, repl in replacements.items():
-        expr = re.sub(pattern, repl, expr)
-    expr = expr.replace(r'\left(', '(').replace(r'\right)', ')')
-
-    protected_functions = ["sin", "cos", "tan", "log", "exp", "sqrt"]
-    protected_subs = {}
-    i = 0
-    for func in protected_functions:
-        pattern = rf'{func}\([^()]*\)'
-        for match in re.findall(pattern, expr):
-            key = f"[[{i}]]"
-            protected_subs[key] = match
-            expr = expr.replace(match, key)
-            i += 1
-
-    expr = re.sub(r'(\d)([a-zA-Z])', r'\1*\2', expr)
-    expr = re.sub(r'([a-zA-Z])([a-zA-Z])', r'\1*\2', expr)
-    expr = re.sub(r'(\d|\w)\(', r'\1*(', expr)
-    expr = re.sub(r'\)(\w|\d)', r')*\1', expr)
-
-    for key, value in protected_subs.items():
-        expr = expr.replace(key, value)
-
-    return expr
-
-
 # --------- DERIVADA PASO A PASO ---------
 def derivar_paso_a_paso(expr, variable):
     steps = []
@@ -887,12 +843,23 @@ def derivar_paso_a_paso(expr, variable):
             dg_dx = diff(inner_expr, variable)
             derivada_final = h_prime_of_g_x * dg_dx
             derivada_final_simplificada = derivada_final.simplify()
-            steps.append("In the case of a chain rule, we use the following steps:")
-            steps.append(f"h(u) = {outer_func_with_dummy}, u = {inner_expr}")
-            steps.append(f"h'(u) = {dh_du}, h'(g(x)) = {h_prime_of_g_x}")
-            steps.append(f"g'(x) = {dg_dx}")
-            steps.append(f"Derivative = h'(g(x)) * g'(x) = {derivada_final}")
-            steps.append(f"Simplified Derivative: {derivada_final_simplificada}")
+            steps.append("🎯 In the case of a chain rule, we use the following steps:\n")
+
+            steps.append("1. We rewrite the function as a composition:")
+            steps.append(f"$h(u) = {sympy_latex(outer_func_with_dummy)}, \\quad u = {sympy_latex(inner_expr)}")
+
+            steps.append("\n2. We compute the derivative of the outer function with respect to u:")
+            steps.append(f"$h'(u) = {sympy_latex(dh_du)} \\Rightarrow h'(g(x)) = {sympy_latex(h_prime_of_g_x)}")
+
+            steps.append("\n3. We compute the derivative of the inner function:")
+            steps.append(f"$g'(x) = {sympy_latex(dg_dx)}")
+
+            steps.append("\n4. We apply the chain rule formula:")
+            steps.append(f"$h'(g(x)) \\cdot g'(x) = {sympy_latex(h_prime_of_g_x)} \\cdot {sympy_latex(dg_dx)}")
+
+            steps.append("\n5. Simplified Derivative:")
+            steps.append(f"$" + sympy_latex(derivada_final_simplificada))
+
             return derivada_final_simplificada, steps
 
     # Caso básico
