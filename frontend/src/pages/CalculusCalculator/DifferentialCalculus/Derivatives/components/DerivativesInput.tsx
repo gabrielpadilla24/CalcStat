@@ -48,7 +48,7 @@ const DerivativesInput: React.FC<DerivativesInputProps> = ({ onResult }) => {
 
   return (
     <div className="max-w-[1440px] mx-auto flex flex-col items-center justify-center px-6">
-      <div className="w-full max-w-[600px] bg-white rounded-xl shadow-md border border-gray-200 p-8">
+      <div className=" w-[600px] bg-white rounded-xl shadow-md border border-gray-200 p-8">
         <div className="flex flex-col items-center text-center">
           <label className="text-lg font-medium text-gray-700 mb-4">
             Enter a function to differentiate:
