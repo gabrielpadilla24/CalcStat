@@ -3,6 +3,7 @@ import NavBar from "@/components/NavBar";
 import BottomCTA from "@/components/BottomCTA";
 import DerivativesInput from "./components/DerivativesInput";
 import DerivativesResult from "./components/DerivativesResult";
+import DerivativesGraph from "./components/DerivativesGraph"; // 👈 Asegúrate de importar esto
 
 const DerivativesCalculator = () => {
   const [expression, setExpression] = useState("");
@@ -21,30 +22,38 @@ const DerivativesCalculator = () => {
           Derivatives Calculator
         </h1>
 
-        {/* Contenedor centrado simétrico */}
-        <div className="max-w-[1440px] mx-auto flex flex-col lg:flex-row justify-center items-start gap-10 px-6">
-          {/* Formulario */}
-          <div className="flex-1 w-full max-w-[600px]">
-            <DerivativesInput
-              onResult={(
-                exp: string,
-                der: string,
-                stepArr?: string[],
-                tipo?: string,
-                expLatex?: string,
-                derLatex?: string
-              ) => {
-                setExpression(exp);
-                setDerivative(der);
-                setSteps(stepArr);
-                setRule(tipo);
-                setExpressionLatex(expLatex);
-                setDerivativeLatex(derLatex);
-              }}
-            />
+        {/* Contenedor principal */}
+        <div className="max-w-[1440px] mx-auto flex flex-col lg:flex-row justify-center items-start gap-6 px-6">
+          {/* 🔹 Columna izquierda: Input + Gráfico */}
+          <div className="flex-1 max-w-[600px] w-full flex flex-col items-center">
+            {/* Input */}
+            <div className="w-full">
+              <DerivativesInput
+                onResult={(
+                  exp: string,
+                  der: string,
+                  stepArr?: string[],
+                  tipo?: string,
+                  expLatex?: string,
+                  derLatex?: string
+                ) => {
+                  setExpression(exp);
+                  setDerivative(der);
+                  setSteps(stepArr);
+                  setRule(tipo);
+                  setExpressionLatex(expLatex);
+                  setDerivativeLatex(derLatex);
+                }}
+              />
+            </div>
+
+            {/* Graph */}
+            <div className="w-full">
+              <DerivativesGraph />
+            </div>
           </div>
 
-          {/* Resultado */}
+          {/* 🔹 Columna derecha: Result */}
           <div className="flex-1 w-full max-w-[600px]">
             <DerivativesResult
               expression={expression}
