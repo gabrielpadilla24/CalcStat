@@ -1,54 +1,48 @@
-import React, { useEffect, useRef } from "react";
+import { useEffect, useRef } from "react";
 import Desmos from "desmos";
 
-interface DerivativesGraphProps {
-  original: string;
-  derivative: string;
-}
-
-const DerivativesGraph: React.FC<DerivativesGraphProps> = ({
-  original,
-  derivative,
-}) => {
+const DerivativesGraph = () => {
   const calculatorRef = useRef<HTMLDivElement>(null);
-  const desmosCalculatorRef = useRef<ReturnType<
+  const desmosInstance = useRef<ReturnType<
     typeof Desmos.GraphingCalculator
   > | null>(null);
 
   useEffect(() => {
-    if (calculatorRef.current) {
-      desmosCalculatorRef.current = Desmos.GraphingCalculator(
+    if (calculatorRef.current && !desmosInstance.current) {
+      desmosInstance.current = Desmos.GraphingCalculator(
         calculatorRef.current,
         {
           expressions: true,
-          keypad: false,
+          keypad: true,
           settingsMenu: false,
-          expressionsTopbar: false,
-          zoomButtons: false,
+          expressionsTopbar: true,
+          zoomButtons: true,
           border: false,
         }
       );
-
-      desmosCalculatorRef.current.setExpressions([
-        {
-          id: "original",
-          latex: `f(x) = ${original}`,
-          color: "#2d7ff9",
-        },
-        {
-          id: "derivative",
-          latex: `f'(x) = ${derivative}`,
-          color: "#43b69a",
-        },
-      ]);
     }
 
+    // Cleanup on unmount
     return () => {
-      desmosCalculatorRef.current?.destroy();
+      if (desmosInstance.current) {
+        desmosInstance.current.destroy();
+        desmosInstance.current = null;
+      }
     };
-  }, [original, derivative]);
+  }, []);
 
-  return <div className="w-full h-[500px] rounded-xl" ref={calculatorRef} />;
+  return (
+    <div className="bg-white border border-gray-300 p-4 rounded-xl mt-10 shadow-md">
+      <h2 className="text-2xl font-semibold mb-4 text-center">
+        🧮 Interactive Graphing Calculator
+      </h2>
+      <div
+        ref={calculatorRef}
+        className="w-full"
+        style={{ minHeight: "500px" }}
+      />
+    </div>
+  );
 };
 
 export default DerivativesGraph;
