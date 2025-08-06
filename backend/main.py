@@ -862,11 +862,21 @@ def derivar_paso_a_paso(expr, variable):
 
             return derivada_final_simplificada, steps
 
-    # Caso básico
+    # ✅ Basic case: direct differentiation
     derivada_final = diff(expr, variable)
-    steps.append("Basic case, we directly differentiate:")
-    steps.append(f"d({expr})/dx = {derivada_final}")
+
+    steps.append("🧮 Basic case: we directly differentiate the expression.")
+
+    steps.append("1. We apply standard differentiation rules to the entire expression:")
+    steps.append(f"$\\frac{{d}}{{dx}}\\left[{sympy_latex(expr)}\\right] = {sympy_latex(derivada_final)}")
+
+    steps.append("2. Final Result:")
+    steps.append(f"$ {sympy_latex(derivada_final)}")
+
     return derivada_final, steps
+
+
+
 
 
 # --------- ENDPOINT PRINCIPAL ---------
