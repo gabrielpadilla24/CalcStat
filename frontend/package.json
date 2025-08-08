@@ -14,12 +14,14 @@
     "desmos": "^1.5.4",
     "katex": "^0.16.21",
     "mathquill": "^0.10.1-a",
+    "plotly.js": "^3.0.3",
     "react": "^19.0.0",
     "react-apexcharts": "^1.7.0",
     "react-d3-speedometer": "^3.1.1",
     "react-dom": "^19.0.0",
     "react-katex": "^3.0.1",
     "react-mathquill": "^1.0.3",
+    "react-plotly.js": "^2.6.0",
     "react-router-dom": "^7.4.1"
   },
   "devDependencies": {
