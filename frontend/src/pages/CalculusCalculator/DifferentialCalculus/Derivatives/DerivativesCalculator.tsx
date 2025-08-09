@@ -3,7 +3,7 @@ import NavBar from "@/components/NavBar";
 import BottomCTA from "@/components/BottomCTA";
 import DerivativesInput from "./components/DerivativesInput";
 import DerivativesResult from "./components/DerivativesResult";
-import DerivativesGraph from "./components/DerivativesGraph"; // 👈 Asegúrate de importar esto
+import DerivativesGraph from "./components/DerivativesGraph";
 
 const DerivativesCalculator = () => {
   const [expression, setExpression] = useState("");
@@ -24,9 +24,8 @@ const DerivativesCalculator = () => {
 
         {/* Contenedor principal */}
         <div className="max-w-[1440px] mx-auto flex flex-col lg:flex-row justify-center items-start gap-6 px-6">
-          {/* 🔹 Columna izquierda: Input + Gráfico */}
+          {/* Columna izquierda: Input + Graph */}
           <div className="flex-1 max-w-[600px] w-full flex flex-col items-center">
-            {/* Input */}
             <div className="w-full">
               <DerivativesInput
                 onResult={(
@@ -47,13 +46,16 @@ const DerivativesCalculator = () => {
               />
             </div>
 
-            {/* Graph */}
+            {/* 👉 Solo invocamos el gráfico; muestra vacío si no hay expresión */}
             <div className="w-full">
-              <DerivativesGraph />
+              {/* Puedes pasar expression (string normal) o latex (del backend) */}
+              <DerivativesGraph
+                expression={expression} /* latex={expressionLatex} */
+              />
             </div>
           </div>
 
-          {/* 🔹 Columna derecha: Result */}
+          {/* Columna derecha: Result */}
           <div className="flex-1 w-full max-w-[600px]">
             <DerivativesResult
               expression={expression}

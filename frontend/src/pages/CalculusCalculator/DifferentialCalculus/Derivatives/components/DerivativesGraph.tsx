@@ -1,39 +1,122 @@
-import Plot from "react-plotly.js";
+"use client";
 
-const DerivativesGraph = () => {
-  const xValues = Array.from({ length: 100 }, (_, i) => i / 5 - 10); // [-10, 10]
-  const yValues = xValues.map((x) => Math.pow(x, 2)); // f(x) = x²
+import { useEffect, useRef, useState } from "react";
+
+// Tipos mínimos para evitar "any"
+type DesmosExpression = { id: string; latex?: string };
+type DesmosOptions = {
+  expressions?: boolean;
+  keypad?: boolean;
+  settingsMenu?: boolean;
+  zoomButtons?: boolean;
+  expressionsTopbar?: boolean;
+  border?: boolean;
+};
+type DesmosCalculator = {
+  setExpression: (expr: DesmosExpression) => void;
+  removeExpression: (expr: { id: string }) => void;
+  resize: () => void;
+  destroy: () => void;
+};
+
+declare global {
+  interface Window {
+    Desmos?: {
+      GraphingCalculator: (
+        element: HTMLElement,
+        options?: DesmosOptions
+      ) => DesmosCalculator;
+    };
+  }
+}
+
+type DerivativesGraphProps = {
+  /** Ej: "x^2 + 2x + 1" o "y=x^2+2". Si viene sin "y=", el componente lo añade. */
+  expression?: string;
+  /** Opcional: LaTeX directo listo para Desmos, ej: "y = x^{2} + 2x + 1" */
+  latex?: string;
+};
+
+const DerivativesGraph: React.FC<DerivativesGraphProps> = ({
+  expression,
+  latex,
+}) => {
+  const containerRef = useRef<HTMLDivElement>(null);
+  const calculatorRef = useRef<DesmosCalculator | null>(null);
+  const [isReady, setIsReady] = useState(false);
+
+  // Marca listo cuando el script ya está en window
+  useEffect(() => {
+    if (typeof window !== "undefined" && window.Desmos) setIsReady(true);
+  }, []);
+
+  // Inicializa Desmos una vez (panel de expresiones oculto por defecto)
+  useEffect(() => {
+    if (!isReady || !containerRef.current || calculatorRef.current) return;
+
+    calculatorRef.current = window.Desmos!.GraphingCalculator(
+      containerRef.current,
+      {
+        expressions: false, // 👈 oculta el panel izquierdo
+        expressionsTopbar: false, // (opcional) oculta la barrita superior del panel
+        keypad: false,
+        settingsMenu: false,
+        zoomButtons: true,
+        border: false,
+      }
+    );
+
+    return () => {
+      calculatorRef.current?.destroy();
+      calculatorRef.current = null;
+    };
+  }, [isReady]);
+
+  // Actualiza la expresión principal
+  useEffect(() => {
+    const calc = calculatorRef.current;
+    if (!calc || !isReady) return;
+
+    const toPlot =
+      (latex && latex.trim()) ||
+      (expression && expression.trim()
+        ? expression.trim().startsWith("y=")
+          ? expression.trim()
+          : `y=${expression.trim()}`
+        : "");
+
+    if (toPlot) {
+      calc.setExpression({ id: "main", latex: toPlot });
+    } else {
+      calc.removeExpression({ id: "main" });
+    }
+  }, [expression, latex, isReady]);
+
+  // Resize cuando cambie el tamaño del contenedor
+  useEffect(() => {
+    if (!calculatorRef.current || !containerRef.current) return;
+    const ro = new ResizeObserver(() => {
+      try {
+        calculatorRef.current?.resize();
+      } catch {
+        /* noop */
+      }
+    });
+    ro.observe(containerRef.current);
+    return () => ro.disconnect();
+  }, [isReady]);
 
   return (
     <div className="w-full bg-white border border-gray-300 p-4 rounded-xl mt-2 shadow-md overflow-hidden">
       <h2 className="text-2xl font-semibold mb-4 text-center">
         🧮 Interactive Graphing Calculator
       </h2>
-
-      {/* ✅ Contenedor centrado para el gráfico */}
-      <div className="flex justify-center w-full">
-        <Plot
-          data={[
-            {
-              x: xValues,
-              y: yValues,
-              type: "scatter",
-              mode: "lines",
-              marker: { color: "blue" },
-              name: "f(x) = x²",
-            },
-          ]}
-          layout={{
-            autosize: true,
-            margin: { l: 40, r: 40, b: 40, t: 30 }, // 👈 márgenes simétricos
-            xaxis: { title: "x", zeroline: true },
-            yaxis: { title: "f(x)", zeroline: true },
-          }}
-          useResizeHandler
-          className="w-full max-w-[600px] h-[500px]"
-          style={{ width: "100%", height: "100%" }}
-        />
-      </div>
+      <div ref={containerRef} className="w-full" style={{ height: 500 }} />
+      {!isReady && (
+        <p className="text-center text-sm text-gray-500 mt-2">
+          Cargando motor de gráficos…
+        </p>
+      )}
     </div>
   );
 };
