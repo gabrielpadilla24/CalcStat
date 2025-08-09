@@ -6,6 +6,7 @@ import { useEffect, useRef, useState } from "react";
 type DesmosExpression = { id: string; latex?: string };
 type DesmosOptions = {
   expressions?: boolean;
+  expressionsCollapsed?: boolean; // 👈 clave para mostrar solo los “»”
   keypad?: boolean;
   settingsMenu?: boolean;
   zoomButtons?: boolean;
@@ -17,6 +18,7 @@ type DesmosCalculator = {
   removeExpression: (expr: { id: string }) => void;
   resize: () => void;
   destroy: () => void;
+  updateSettings?: (opts: Partial<DesmosOptions>) => void;
 };
 
 declare global {
@@ -50,18 +52,19 @@ const DerivativesGraph: React.FC<DerivativesGraphProps> = ({
     if (typeof window !== "undefined" && window.Desmos) setIsReady(true);
   }, []);
 
-  // Inicializa Desmos una vez (panel de expresiones oculto por defecto)
+  // Inicializa Desmos una vez: panel habilitado pero colapsado
   useEffect(() => {
     if (!isReady || !containerRef.current || calculatorRef.current) return;
 
     calculatorRef.current = window.Desmos!.GraphingCalculator(
       containerRef.current,
       {
-        expressions: false, // 👈 oculta el panel izquierdo
-        expressionsTopbar: false, // (opcional) oculta la barrita superior del panel
+        expressions: true, // panel habilitado…
+        expressionsCollapsed: true, // …pero colapsado por defecto (muestra «»)
         keypad: false,
         settingsMenu: false,
         zoomButtons: true,
+        expressionsTopbar: true,
         border: false,
       }
     );
