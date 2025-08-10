@@ -115,23 +115,45 @@ const CalculusLandingPage = () => {
 
         {/* --- SINGLE VARIABLE SECTION --- */}
         {showSingle && (
-          <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] flex flex-col justify-between text-left">
-            <img
-              src="/img/derivatives.png"
-              alt="Derivatives"
-              className="h-40 w-full object-cover mb-4 rounded"
-            />
-            <h2 className="text-xl font-bold text-gray-800 mb-2">
-              Derivatives
-            </h2>
-            <p className="text-sm text-gray-600 mb-4">
-              Understand the rules. Visualize the change. Learn derivatives the
-              smart way.
-            </p>
-            <Link to="/calculus/derivatives">
-              <SubmitButton text="Open Calculator" />
-            </Link>
-          </div>
+          <>
+            {/* Card: Derivatives */}
+            <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] flex flex-col justify-between text-left">
+              <img
+                src="/img/derivatives.png"
+                alt="Derivatives"
+                className="h-40 w-full object-cover mb-4 rounded"
+              />
+              <h2 className="text-xl font-bold text-gray-800 mb-2">
+                Derivatives
+              </h2>
+              <p className="text-sm text-gray-600 mb-4">
+                Understand the rules. Visualize the change. Learn derivatives
+                the smart way.
+              </p>
+              <Link to="/calculus/derivatives">
+                <SubmitButton text="Open Calculator" />
+              </Link>
+            </div>
+
+            {/* Card: Critical Points */}
+            <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] flex flex-col justify-between text-left">
+              <img
+                src="/img/criticalpoints.png" // cambia por la imagen que quieras
+                alt="Critical Points"
+                className="h-40 w-full object-cover mb-4 rounded"
+              />
+              <h2 className="text-xl font-bold text-gray-800 mb-2">
+                Critical Points / Extrema
+              </h2>
+              <p className="text-sm text-gray-600 mb-4">
+                Find and classify maxima, minima, and saddle points of
+                functions.
+              </p>
+              <Link to="/calculus/criticalpoints">
+                <SubmitButton text="Open Calculator" />
+              </Link>
+            </div>
+          </>
         )}
       </div>
 
