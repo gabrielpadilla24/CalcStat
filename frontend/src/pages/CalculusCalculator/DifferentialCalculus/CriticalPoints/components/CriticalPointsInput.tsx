@@ -31,8 +31,8 @@ const CriticalPointsInput = ({
 }) => (
   <MathFunctionInput<CriticalPointsResponse>
     label="Enter a function to analyze critical points:"
-    endpoint="http://localhost:8000/calculus/critical-points"
-    payloadKey="function"
+    endpoint="http://localhost:8000/criticalpoints"
+    payloadKey="equation"
     buttonText="Find Critical Points"
     onSuccess={(data) =>
       onResult(

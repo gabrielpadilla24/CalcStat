@@ -117,6 +117,9 @@ class GrowthComparisonData(BaseModel):
 class DerivativeRequest(BaseModel):
     equation: str
 
+class CriticalPointsData(BaseModel):
+    equation: str
+
 # -----------------------------
 # ENDPOINT DE INTERÉS COMPUESTO
 # -----------------------------
@@ -886,3 +889,21 @@ async def compute_derivative(request: DerivativeRequest):
 
     except Exception as e:
         return {"error": f"Failed to compute derivative: {str(e)}"}
+
+
+
+#---------------------------------
+# ENDPOINT Test
+#---------------------------------
+@app.post("/criticalpoints")
+def compute_critical_points(data: CriticalPointsData):
+    # Solo devolver lo que llega, en el formato esperado por el frontend
+    return {
+        "original": data.equation,
+        "first_derivative": "",
+        "second_derivative": "",
+        "critical_points": [],
+        "inflection_points": [],
+        "second_derivative_classification": "",
+        "absolute_extrema": {"max": None, "min": None},
+    }
