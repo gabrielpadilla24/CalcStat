@@ -110,7 +110,7 @@ const DerivativesGraph: React.FC<DerivativesGraphProps> = ({
   }, [isReady]);
 
   return (
-    <div className="w-full bg-white border border-gray-300 p-4 rounded-xl mt-2 shadow-md overflow-hidden">
+    <div className="w-full bg-white border border-gray-300 p-4 rounded-xl mt-6 shadow-md overflow-hidden">
       <h2 className="text-2xl font-semibold mb-4 text-center">
         🧮 Interactive Graphing Calculator
       </h2>

@@ -17,7 +17,7 @@ const CriticalPointsGraph: React.FC<Props> = ({
   const hasInput = expression.trim().length > 0;
 
   return (
-    <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6">
+    <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6 mt-6">
       <h2 className="text-2xl font-semibold text-gray-800 mb-2">Graph</h2>
 
       {!hasInput ? (
