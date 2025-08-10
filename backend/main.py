@@ -765,29 +765,18 @@ def growth_comparison(data: GrowthComparisonData):
 
 #---------- PARSER ----------
 
-def clean_latex_input(latex_string):
-    """
-    Elimina los caracteres de barra invertida seguidos de un espacio
-    que se encuentran dentro de los corchetes {}.
+def clean_latex_input(latex_string: str) -> str:
+    # 1) Reemplazar NBSP por espacio normal
+    cleaned = latex_string.replace("\u00A0", " ")
 
-    Args:
-        latex_string (str): La expresión LaTeX de entrada.
+    # 2) Eliminar comandos de espacio (\,, \;, \:, \!, \quad, etc.)
+    cleaned = re.sub(r"\\(?:,|;|:|!|quad|qquad)\b", "", cleaned)
 
-    Returns:
-        str: La expresión LaTeX limpia.
-    """
-    # Usa una expresión regular para encontrar y reemplazar "\ " dentro de {}
-    # La expresión regular busca:
-    # r'\{([^}]+)\}' -> Coincide con cualquier cosa dentro de {}
-    # y luego reemplaza los espacios seguidos de \
-    def replacer(match):
-        # match.group(1) es el contenido dentro de los corchetes {}
-        content = match.group(1)
-        # Reemplaza los caracteres "\ " con ""
-        cleaned_content = content.replace('\\ ', '')
-        return f'{{{cleaned_content}}}'
+    # 3) Eliminar barra invertida + espacios "\ " en todo el string (no solo en {})
+    cleaned = re.sub(r"\\\s+", "", cleaned)
 
-    return re.sub(r'\{([^}]+)\}', replacer, latex_string)
+    return cleaned
+
 
 def latex_to_sympy(latex_string):
     cleaned_latex_string = clean_latex_input(latex_string)

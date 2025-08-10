@@ -7,15 +7,13 @@ const CriticalPointsCalculator = () => {
     <>
       <NavBar />
 
-      <div className="min-h-screen bg-gray-100 py-12 px-6">
-        <div className="max-w-[1200px] mx-auto text-center">
-          <h1 className="text-4xl font-bold text-gray-800 mb-4">
-            Critical Points / Extrema
-          </h1>
-          <p className="text-gray-600 text-lg">Coming Soon...</p>
-        </div>
-      </div>
+      <div className="min-h-screen bg-gray-100 py-10">
+        <h1 className="text-4xl font-bold text-center mb-12">
+          Critical Points / Extrema
+        </h1>
 
+        <p className="text-gray-600 text-lg text-center">Coming Soon...</p>
+      </div>
       <BottomCTA buttonText="Back to Calculus" href="/calculus" />
     </>
   );
