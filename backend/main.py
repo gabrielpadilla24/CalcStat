@@ -895,17 +895,38 @@ async def compute_derivative(request: DerivativeRequest):
 #---------------------------------
 # ENDPOINT Test
 #---------------------------------
+from sympy import symbols, diff, simplify, Eq, solveset, S, singularities
+from sympy.parsing.latex import parse_latex
+
+x = symbols("x")
+
 @app.post("/criticalpoints")
 def compute_critical_points(data: CriticalPointsData):
-    # Solo devolver lo que llega, en el formato esperado por el frontend
-    primera_derivada = simplify(diff(parse_latex(clean_latex_input(data.equation.strip())), symbols("x")))
-    segunda_derivada = simplify(diff(primera_derivada, symbols("x")))
-    critical_points = sympy.solve(primera_derivada, symbols("x"))
+    # Limpia y parsea
+    expr = parse_latex(clean_latex_input(data.equation.strip()))
+
+    # Derivadas
+    primera_derivada = simplify(diff(expr, x))
+    segunda_derivada = simplify(diff(primera_derivada, x))
+
+    # Puntos donde f'(x) = 0
+    crit_eq0 = solveset(Eq(primera_derivada, 0), x, domain=S.Reals)
+    crit_list = list(crit_eq0) if crit_eq0.is_FiniteSet else []
+
+    # Puntos donde f'(x) no existe
+    try:
+        nd_points = list(singularities(primera_derivada, x, domain=S.Reals))
+    except Exception:
+        nd_points = []
+
+    # Unir y ordenar
+    all_crit = sorted(set(crit_list + nd_points), key=lambda z: float(z))
+
     return {
         "original": data.equation,
         "first_derivative": str(primera_derivada),
         "second_derivative": str(segunda_derivada),
-        "critical_points": [str(cp) for cp in critical_points],
+        "critical_points": [str(cp) for cp in all_crit],
         "inflection_points": [],
         "second_derivative_classification": "",
         "absolute_extrema": {"max": None, "min": None},
