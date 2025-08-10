@@ -898,10 +898,12 @@ async def compute_derivative(request: DerivativeRequest):
 @app.post("/criticalpoints")
 def compute_critical_points(data: CriticalPointsData):
     # Solo devolver lo que llega, en el formato esperado por el frontend
+    primera_derivada = simplify(diff(parse_latex(clean_latex_input(data.equation.strip())), symbols("x")))
+    segunda_derivada = simplify(diff(primera_derivada, symbols("x")))
     return {
         "original": data.equation,
-        "first_derivative": "",
-        "second_derivative": "",
+        "first_derivative": str(primera_derivada),
+        "second_derivative": str(segunda_derivada),
         "critical_points": [],
         "inflection_points": [],
         "second_derivative_classification": "",
