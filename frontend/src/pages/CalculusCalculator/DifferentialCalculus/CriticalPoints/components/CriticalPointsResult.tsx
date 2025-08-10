@@ -1,8 +1,4 @@
-// src/pages/calculus/components/CriticalPointsResult.tsx
-type AbsoluteExtrema = {
-  max: string | null;
-  min: string | null;
-};
+import type { AbsoluteExtrema } from "./CriticalPointsInput"; // 👈 solo el tipo, y ruta correcta
 
 type Props = {
   original: string;
@@ -10,7 +6,7 @@ type Props = {
   secondDerivative: string;
   criticalPoints: string[];
   inflectionPoints: string[];
-  classification: string; // resultado de la prueba de segunda derivada (texto)
+  classification: string;
   absoluteExtrema: AbsoluteExtrema;
 };
 
