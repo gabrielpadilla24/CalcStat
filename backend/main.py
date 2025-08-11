@@ -890,10 +890,8 @@ async def compute_derivative(request: DerivativeRequest):
     except Exception as e:
         return {"error": f"Failed to compute derivative: {str(e)}"}
 
-
-
 #---------------------------------
-# ENDPOINT Test con inflection points mejorados
+# ENDPOINT Test con inflection points + clasificación 2ª derivada + absolute extrema
 #---------------------------------
 from sympy import symbols, diff, simplify, Eq, solveset, S, singularities
 from sympy.parsing.latex import parse_latex
@@ -908,38 +906,88 @@ def compute_critical_points(data: CriticalPointsData):
     primera_derivada = simplify(diff(expr, x))
     segunda_derivada = simplify(diff(primera_derivada, x))
 
-    # Puntos críticos
+    # --- Puntos críticos ---
     crit_eq0 = solveset(Eq(primera_derivada, 0), x, domain=S.Reals)
-    crit_list = list(crit_eq0) if crit_eq0.is_FiniteSet else []
+    crit_list = list(crit_eq0) if getattr(crit_eq0, "is_FiniteSet", False) else []
     try:
         nd_points = list(singularities(primera_derivada, x, domain=S.Reals))
     except Exception:
         nd_points = []
     all_crit = sorted(set(crit_list + nd_points), key=lambda z: float(z))
 
-    # Puntos de inflexión
+    # --- Puntos de inflexión (simple) ---
     infl_eq0 = solveset(Eq(segunda_derivada, 0), x, domain=S.Reals)
     infl_list = []
-    if infl_eq0.is_FiniteSet:
+    if getattr(infl_eq0, "is_FiniteSet", False):
         for pt in infl_eq0:
-            # Chequear cambio de signo de la segunda derivada
             left_val = segunda_derivada.subs(x, pt - 0.001)
             right_val = segunda_derivada.subs(x, pt + 0.001)
-            if left_val * right_val < 0:
-                infl_list.append((pt, expr.subs(x, pt)))
+            try:
+                if float(left_val) * float(right_val) < 0:
+                    infl_list.append((pt, expr.subs(x, pt)))
+            except Exception:
+                pass  # si no se puede evaluar como número, lo ignoramos
 
     # Formato de salida con redondeo a 3 decimales
     inflection_points_output = (
-        [f"({round(float(pt[0]), 3)}, {round(float(pt[1]), 3)})" for pt in infl_list]
+        [f"({round(float(px), 3)}, {round(float(py), 3)})" for px, py in infl_list]
         if infl_list else ["No inflection points"]
     )
 
+    # --- Clasificación por segunda derivada (con fallback de 1ª derivada) ---
+    def clasificar_cp(c):
+        try:
+            f2 = float(segunda_derivada.subs(x, c))
+            cx = round(float(c), 6)
+            if f2 > 0:
+                return f"x={cx}: local minimum (f''>0)"
+            elif f2 < 0:
+                return f"x={cx}: local maximum (f''<0)"
+        except Exception:
+            pass
+        try:
+            cnum = float(c); d = 1e-6
+            left = float(primera_derivada.subs(x, cnum - d))
+            right = float(primera_derivada.subs(x, cnum + d))
+            cx = round(cnum, 6)
+            if left < 0 < right:  return f"x={cx}: local minimum (sign change in f')"
+            if left > 0 > right:  return f"x={cx}: local maximum (sign change in f')"
+            return f"x={cx}: inconclusive (no sign change)"
+        except Exception:
+            try:
+                cx = round(float(c), 6)
+            except Exception:
+                cx = str(c)
+            return f"x={cx}: inconclusive"
+
+    classifications = "\n".join(clasificar_cp(c) for c in all_crit) if all_crit else "—"
+
+    # --- Absolute extrema (evaluar f en los críticos ya calculados) ---
+    vals = []
+    for c in all_crit:
+        try:
+            cx = float(c)
+            fy = float(expr.subs(x, cx))
+            vals.append((cx, fy))
+        except Exception:
+            pass
+
+    if vals:
+        vmin = min(vals, key=lambda t: t[1])
+        vmax = max(vals, key=lambda t: t[1])
+        absolute_extrema = {
+            "min": f"({round(vmin[0], 3)}, {round(vmin[1], 3)})",
+            "max": f"({round(vmax[0], 3)}, {round(vmax[1], 3)})",
+        }
+    else:
+        absolute_extrema = {"max": None, "min": None}
+
     return {
         "original": data.equation,
-        "first_derivative": str(primera_derivada),
+        "first_derivative": sympy_latex(primera_derivada),
         "second_derivative": str(segunda_derivada),
         "critical_points": [str(cp) for cp in all_crit],
         "inflection_points": inflection_points_output,
-        "second_derivative_classification": "",
-        "absolute_extrema": {"max": None, "min": None},
+        "second_derivative_classification": classifications,
+        "absolute_extrema": absolute_extrema,  # ← ahora poblado
     }
