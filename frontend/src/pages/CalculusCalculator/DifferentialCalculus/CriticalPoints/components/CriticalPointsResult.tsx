@@ -1,40 +1,26 @@
-import type { AbsoluteExtrema } from "./CriticalPointsInput"; // 👈 solo el tipo, y ruta correcta
+import React from "react";
+import { addStyles, StaticMathField } from "react-mathquill";
 
-type Props = {
+addStyles();
+
+type CriticalPointsResultProps = {
   original: string;
   firstDerivative: string;
   secondDerivative: string;
   criticalPoints: string[];
   inflectionPoints: string[];
   classification: string;
-  absoluteExtrema: AbsoluteExtrema;
+  absoluteExtrema?: {
+    max: string | null;
+    min: string | null;
+  };
 };
 
-const SectionTitle = ({ children }: { children: React.ReactNode }) => (
-  <h3 className="text-lg font-semibold text-gray-800 mb-2">{children}</h3>
-);
+const SectionTitle: React.FC<{ children: React.ReactNode }> = ({
+  children,
+}) => <h3 className="font-semibold mb-1">{children}</h3>;
 
-const Line = ({ label, value }: { label: string; value?: string }) => (
-  <div className="flex gap-2 text-gray-700">
-    <span className="font-medium">{label}</span>
-    <span className="break-all">{value?.trim() ? value : "—"}</span>
-  </div>
-);
-
-const List = ({ items }: { items: string[] }) => {
-  if (!items || items.length === 0) return <p className="text-gray-600">—</p>;
-  return (
-    <ul className="list-disc list-inside text-gray-700">
-      {items.map((it, i) => (
-        <li key={`${it}-${i}`} className="break-all">
-          {it}
-        </li>
-      ))}
-    </ul>
-  );
-};
-
-const CriticalPointsResult: React.FC<Props> = ({
+const CriticalPointsResult: React.FC<CriticalPointsResultProps> = ({
   original,
   firstDerivative,
   secondDerivative,
@@ -43,47 +29,78 @@ const CriticalPointsResult: React.FC<Props> = ({
   classification,
   absoluteExtrema,
 }) => {
-  const hasData = original.trim().length > 0;
+  const hasResult =
+    original &&
+    firstDerivative &&
+    secondDerivative &&
+    (criticalPoints.length > 0 || inflectionPoints.length > 0);
 
   return (
-    <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6">
-      <h2 className="text-2xl font-semibold text-gray-800 mb-2">Results</h2>
+    <div className="bg-white shadow-md rounded-xl p-6 w-full text-gray-800">
+      <h2 className="text-2xl font-bold mb-6">Results</h2>
 
-      {!hasData ? (
-        <p className="text-gray-600">
-          Ingresa una función y presiona “Find Critical Points”. (Coming soon…)
+      {!hasResult && (
+        <p className="text-gray-500 italic">
+          Enter a function above to compute its critical points.
         </p>
-      ) : (
-        <div className="space-y-5">
-          {/* Resumen función y derivadas */}
-          <div className="space-y-2">
+      )}
+
+      {hasResult && (
+        <>
+          {/* Function & Derivatives */}
+          <div className="mb-6">
             <SectionTitle>Function & Derivatives</SectionTitle>
-            <Line label="f(x):" value={original} />
-            <Line label="f'(x):" value={firstDerivative} />
-            <Line label="f''(x):" value={secondDerivative} />
+            <div className="flex flex-col gap-1">
+              <div className="flex items-center gap-2">
+                <span>f(x):</span>
+                <StaticMathField>{original}</StaticMathField>
+              </div>
+              <div className="flex items-center gap-2">
+                <span>f'(x):</span>
+                <StaticMathField>{firstDerivative}</StaticMathField>
+              </div>
+              <div className="flex items-center gap-2">
+                <span>f''(x):</span>
+                <StaticMathField>{secondDerivative}</StaticMathField>
+              </div>
+            </div>
           </div>
 
-          {/* Puntos críticos */}
-          <div>
-            <SectionTitle>Critical Points</SectionTitle>
-            <List items={criticalPoints} />
-          </div>
+          {/* Critical Points */}
+          {criticalPoints.length > 0 && (
+            <div className="mb-6">
+              <SectionTitle>Critical Points</SectionTitle>
+              <ul className="list-disc list-inside space-y-1">
+                {criticalPoints.map((point, idx) => (
+                  <li key={idx}>
+                    <StaticMathField>{point}</StaticMathField>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
 
-          {/* Puntos de inflexión */}
-          <div>
-            <SectionTitle>Inflection Points</SectionTitle>
-            <List items={inflectionPoints} />
-          </div>
+          {/* Inflection Points */}
+          {inflectionPoints.length > 0 && (
+            <div className="mb-6">
+              <SectionTitle>Inflection Points</SectionTitle>
+              <ul className="list-disc list-inside space-y-1">
+                {inflectionPoints.map((point, idx) => (
+                  <li key={idx}>
+                    <StaticMathField>{point}</StaticMathField>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          )}
 
-          {/* Clasificación por segunda derivada */}
-          <div>
+          {/* Second Derivative Test */}
+          <div className="mb-6">
             <SectionTitle>Second Derivative Test</SectionTitle>
-            <p className="text-gray-700">
-              {classification?.trim() ? classification : "—"}
-            </p>
+            <p className="text-gray-700">{classification || "—"}</p>
           </div>
 
-          {/* Extremos absolutos */}
+          {/* Absolute Extrema */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div className="bg-gray-50 border border-gray-200 rounded-lg p-3">
               <SectionTitle>Absolute Max</SectionTitle>
@@ -94,7 +111,7 @@ const CriticalPointsResult: React.FC<Props> = ({
               <p className="text-gray-700">{absoluteExtrema?.min ?? "—"}</p>
             </div>
           </div>
-        </div>
+        </>
       )}
     </div>
   );
