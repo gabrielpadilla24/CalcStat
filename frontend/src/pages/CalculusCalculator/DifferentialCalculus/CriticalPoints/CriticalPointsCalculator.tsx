@@ -1,10 +1,9 @@
-// src/pages/calculus/CriticalPointsCalculator.tsx
 import { useState } from "react";
 import NavBar from "@/components/NavBar";
 import BottomCTA from "@/components/BottomCTA";
 import CriticalPointsInput from "./components/CriticalPointsInput";
-import CriticalPointsGraph from "./components/CriticalPointsGraph"; // 👉 placeholder: crea este componente
-import CriticalPointsResult from "./components/CriticalPointsResult"; // 👉 placeholder: crea este componente
+import CriticalPointsGraph from "./components/CriticalPointsGraph";
+import CriticalPointsResult from "./components/CriticalPointsResult";
 
 type AbsoluteExtrema = {
   max: string | null;
@@ -16,7 +15,6 @@ const CriticalPointsCalculator = () => {
   const [firstDerivative, setFirstDerivative] = useState("");
   const [secondDerivative, setSecondDerivative] = useState("");
   const [criticalPoints, setCriticalPoints] = useState<string[]>([]);
-  const [inflectionPoints, setInflectionPoints] = useState<string[]>([]);
   const [classification, setClassification] = useState<string>("");
   const [absoluteExtrema, setAbsoluteExtrema] = useState<AbsoluteExtrema>({
     max: null,
@@ -43,7 +41,6 @@ const CriticalPointsCalculator = () => {
                   fprime: string,
                   fsecond: string,
                   crits: string[],
-                  infls: string[],
                   secondDerivClass: string,
                   extrema: AbsoluteExtrema
                 ) => {
@@ -51,21 +48,19 @@ const CriticalPointsCalculator = () => {
                   setFirstDerivative(fprime);
                   setSecondDerivative(fsecond);
                   setCriticalPoints(crits);
-                  setInflectionPoints(infls);
                   setClassification(secondDerivClass);
                   setAbsoluteExtrema(extrema);
                 }}
               />
             </div>
 
-            {/* 👉 Solo invocamos el gráfico; puede mostrar vacío si aún no hay data */}
+            {/* Gráfico */}
             <div className="w-full">
               <CriticalPointsGraph
                 expression={original}
                 firstDerivative={firstDerivative}
                 secondDerivative={secondDerivative}
                 criticalPoints={criticalPoints}
-                inflectionPoints={inflectionPoints}
               />
             </div>
           </div>
@@ -77,7 +72,6 @@ const CriticalPointsCalculator = () => {
               firstDerivative={firstDerivative}
               secondDerivative={secondDerivative}
               criticalPoints={criticalPoints}
-              inflectionPoints={inflectionPoints}
               classification={classification}
               absoluteExtrema={absoluteExtrema}
             />

@@ -890,11 +890,10 @@ async def compute_derivative(request: DerivativeRequest):
     except Exception as e:
         return {"error": f"Failed to compute derivative: {str(e)}"}
 
-
 #---------------------------------
-# ENDPOINT: criticalpoints (con LaTeX)
+# ENDPOINT: criticalpoints (con LaTeX, sin inflection points)
 #---------------------------------
-from sympy import symbols, diff, simplify, Eq, solveset, S, singularities, latex as sympy_latex, sympify
+from sympy import symbols, diff, simplify, Eq, solveset, S, singularities, latex as sympy_latex
 from sympy.parsing.latex import parse_latex
 
 x = symbols("x")
@@ -915,25 +914,6 @@ def compute_critical_points(data: CriticalPointsData):
     except Exception:
         nd_points = []
     all_crit = sorted(set(crit_list + nd_points), key=lambda z: float(z))
-
-    # --- Puntos de inflexión (simple) ---
-    infl_eq0 = solveset(Eq(segunda_derivada, 0), x, domain=S.Reals)
-    infl_syms = []
-    if getattr(infl_eq0, "is_FiniteSet", False):
-        for pt in infl_eq0:
-            left_val = segunda_derivada.subs(x, pt - 0.001)
-            right_val = segunda_derivada.subs(x, pt + 0.001)
-            try:
-                if float(left_val) * float(right_val) < 0:
-                    infl_syms.append(pt)
-            except Exception:
-                pass
-
-    # Salida “texto” que ya tenías
-    inflection_points_output = (
-        [f"({round(float(px), 3)}, {round(float(expr.subs(x, px)), 3)})" for px in infl_syms]
-        if infl_syms else ["No inflection points"]
-    )
 
     # --- Clasificación (texto) ---
     def clasificar_cp(c):
@@ -977,29 +957,16 @@ def compute_critical_points(data: CriticalPointsData):
             "max": f"({round(vmax[0], 3)}, {round(vmax[1], 3)})",
         }
     else:
-        vmin = vmax = None
         absolute_extrema = {"max": None, "min": None}
 
-    # ---------- NUEVO: versiones LaTeX ----------
+    # ---------- LaTeX ----------
     original_latex = sympy_latex(expr)
     first_derivative_latex  = sympy_latex(primera_derivada)
     second_derivative_latex = sympy_latex(segunda_derivada)
     critical_points_latex   = [sympy_latex(cp) for cp in all_crit]
-    inflection_points_latex = (
-        [r"\left(" + sympy_latex(px) + r"," + sympy_latex(expr.subs(x, px)) + r"\right)" for px in infl_syms]
-        if infl_syms else []
-    )
-
-    # -------------------------------------------
 
     return {
-        # texto “crudo” (compatibilidad)
-        # "original": str(expr),
-        # "first_derivative": str(primera_derivada),
-        # "second_derivative": str(segunda_derivada),
-        # "critical_points": [str(cp) for cp in all_crit],
-        # "inflection_points": inflection_points_output,
-         "second_derivative_classification": classifications,
+        "second_derivative_classification": classifications,
         "absolute_extrema": absolute_extrema,
 
         # LaTeX para MathQuill
@@ -1007,6 +974,4 @@ def compute_critical_points(data: CriticalPointsData):
         "first_derivative": first_derivative_latex,
         "second_derivative": second_derivative_latex,
         "critical_points": critical_points_latex,
-        "inflection_points": inflection_points_latex,
-        #"absolute_extrema": absolute_extrema_latex,
     }

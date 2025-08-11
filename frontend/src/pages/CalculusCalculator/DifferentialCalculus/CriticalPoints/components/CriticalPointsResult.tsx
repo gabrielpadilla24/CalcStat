@@ -8,7 +8,6 @@ type CriticalPointsResultProps = {
   firstDerivative: string;
   secondDerivative: string;
   criticalPoints: string[];
-  inflectionPoints: string[];
   classification: string;
   absoluteExtrema?: {
     max: string | null;
@@ -25,7 +24,6 @@ const CriticalPointsResult: React.FC<CriticalPointsResultProps> = ({
   firstDerivative,
   secondDerivative,
   criticalPoints,
-  inflectionPoints,
   classification,
   absoluteExtrema,
 }) => {
@@ -33,7 +31,7 @@ const CriticalPointsResult: React.FC<CriticalPointsResultProps> = ({
     original &&
     firstDerivative &&
     secondDerivative &&
-    (criticalPoints.length > 0 || inflectionPoints.length > 0);
+    criticalPoints.length > 0;
 
   return (
     <div className="bg-white shadow-md rounded-xl p-6 w-full text-gray-800">
@@ -80,24 +78,12 @@ const CriticalPointsResult: React.FC<CriticalPointsResultProps> = ({
             </div>
           )}
 
-          {/* Inflection Points */}
-          {inflectionPoints.length > 0 && (
-            <div className="mb-6">
-              <SectionTitle>Inflection Points</SectionTitle>
-              <ul className="list-disc list-inside space-y-1">
-                {inflectionPoints.map((point, idx) => (
-                  <li key={idx}>
-                    <StaticMathField>{point}</StaticMathField>
-                  </li>
-                ))}
-              </ul>
-            </div>
-          )}
-
           {/* Second Derivative Test */}
           <div className="mb-6">
             <SectionTitle>Second Derivative Test</SectionTitle>
-            <p className="text-gray-700">{classification || "—"}</p>
+            <p className="text-gray-700 whitespace-pre-line">
+              {classification || "—"}
+            </p>
           </div>
 
           {/* Absolute Extrema */}

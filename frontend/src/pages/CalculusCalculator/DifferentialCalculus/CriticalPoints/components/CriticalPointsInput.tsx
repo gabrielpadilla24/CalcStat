@@ -1,4 +1,3 @@
-// src/pages/calculus/components/CriticalPointsInput.tsx
 import MathFunctionInput from "@/components/MathFunctionInput";
 
 export type AbsoluteExtrema = {
@@ -11,7 +10,6 @@ export type CriticalPointsResponse = {
   first_derivative: string;
   second_derivative: string;
   critical_points: string[];
-  inflection_points: string[];
   second_derivative_classification: string;
   absolute_extrema: AbsoluteExtrema;
 };
@@ -24,7 +22,6 @@ const CriticalPointsInput = ({
     first_derivative: string,
     second_derivative: string,
     critical_points: string[],
-    inflection_points: string[],
     second_derivative_classification: string,
     absolute_extrema: AbsoluteExtrema
   ) => void;
@@ -40,7 +37,6 @@ const CriticalPointsInput = ({
         data.first_derivative,
         data.second_derivative,
         data.critical_points,
-        data.inflection_points,
         data.second_derivative_classification,
         data.absolute_extrema
       )
