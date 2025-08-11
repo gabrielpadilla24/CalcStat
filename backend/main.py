@@ -989,10 +989,7 @@ def compute_critical_points(data: CriticalPointsData):
         [r"\left(" + sympy_latex(px) + r"," + sympy_latex(expr.subs(x, px)) + r"\right)" for px in infl_syms]
         if infl_syms else []
     )
-    absolute_extrema_latex = {
-        "min": (r"\left(" + sympy_latex(sympify(vmin[0])) + r"," + sympy_latex(sympify(vmin[1])) + r"\right)") if vmin else None,
-        "max": (r"\left(" + sympy_latex(sympify(vmax[0])) + r"," + sympy_latex(sympify(vmax[1])) + r"\right)") if vmax else None,
-    }
+
     # -------------------------------------------
 
     return {
@@ -1002,7 +999,7 @@ def compute_critical_points(data: CriticalPointsData):
         # "second_derivative": str(segunda_derivada),
         # "critical_points": [str(cp) for cp in all_crit],
         # "inflection_points": inflection_points_output,
-        # "second_derivative_classification": classifications,
+         "second_derivative_classification": classifications,
         "absolute_extrema": absolute_extrema,
 
         # LaTeX para MathQuill
