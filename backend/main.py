@@ -893,7 +893,7 @@ async def compute_derivative(request: DerivativeRequest):
 
 
 #---------------------------------
-# ENDPOINT Test
+# ENDPOINT Test con inflection points mejorados
 #---------------------------------
 from sympy import symbols, diff, simplify, Eq, solveset, S, singularities
 from sympy.parsing.latex import parse_latex
@@ -902,32 +902,44 @@ x = symbols("x")
 
 @app.post("/criticalpoints")
 def compute_critical_points(data: CriticalPointsData):
-    # Limpia y parsea
     expr = parse_latex(clean_latex_input(data.equation.strip()))
 
     # Derivadas
     primera_derivada = simplify(diff(expr, x))
     segunda_derivada = simplify(diff(primera_derivada, x))
 
-    # Puntos donde f'(x) = 0
+    # Puntos críticos
     crit_eq0 = solveset(Eq(primera_derivada, 0), x, domain=S.Reals)
     crit_list = list(crit_eq0) if crit_eq0.is_FiniteSet else []
-
-    # Puntos donde f'(x) no existe
     try:
         nd_points = list(singularities(primera_derivada, x, domain=S.Reals))
     except Exception:
         nd_points = []
-
-    # Unir y ordenar
     all_crit = sorted(set(crit_list + nd_points), key=lambda z: float(z))
+
+    # Puntos de inflexión
+    infl_eq0 = solveset(Eq(segunda_derivada, 0), x, domain=S.Reals)
+    infl_list = []
+    if infl_eq0.is_FiniteSet:
+        for pt in infl_eq0:
+            # Chequear cambio de signo de la segunda derivada
+            left_val = segunda_derivada.subs(x, pt - 0.001)
+            right_val = segunda_derivada.subs(x, pt + 0.001)
+            if left_val * right_val < 0:
+                infl_list.append((pt, expr.subs(x, pt)))
+
+    # Formato de salida con redondeo a 3 decimales
+    inflection_points_output = (
+        [f"({round(float(pt[0]), 3)}, {round(float(pt[1]), 3)})" for pt in infl_list]
+        if infl_list else ["No inflection points"]
+    )
 
     return {
         "original": data.equation,
         "first_derivative": str(primera_derivada),
         "second_derivative": str(segunda_derivada),
         "critical_points": [str(cp) for cp in all_crit],
-        "inflection_points": [],
+        "inflection_points": inflection_points_output,
         "second_derivative_classification": "",
         "absolute_extrema": {"max": None, "min": None},
     }
