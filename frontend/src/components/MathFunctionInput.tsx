@@ -1,10 +1,10 @@
 // src/components/MathFunctionInput.tsx
-import { useMemo, useState } from "react";
+import { useMemo, useState, type ReactNode } from "react";
 import { addStyles, EditableMathField } from "react-mathquill";
 
-addStyles(); // o muévelo a App.tsx si prefieres cargarlo una sola vez
+addStyles();
 
-// JSON-safe type para el payload
+// JSON-safe
 type Json = string | number | boolean | null | Json[] | { [k: string]: Json };
 
 interface MathFunctionInputProps<
@@ -15,10 +15,12 @@ interface MathFunctionInputProps<
   examples?: string[];
   buttonText?: string;
   endpoint: string;
-  payloadKey?: string; // p. ej. "equation" | "function"
+  payloadKey?: string; // "equation" | "function"
   extraPayload?: TExtra;
   onSuccess: (data: TResponse, latex: string) => void;
   className?: string;
+  /** 🔹 NUEVO: contenido adicional debajo del campo de función (dentro de la misma card) */
+  extraContent?: ReactNode;
 }
 
 const MathFunctionInput = <
@@ -33,6 +35,7 @@ const MathFunctionInput = <
   extraPayload,
   onSuccess,
   className = "",
+  extraContent, // 🔹 NUEVO
 }: MathFunctionInputProps<TResponse, TExtra>) => {
   const [latex, setLatex] = useState("");
   const [loading, setLoading] = useState(false);
@@ -63,7 +66,6 @@ const MathFunctionInput = <
     } catch (e: unknown) {
       const message = e instanceof Error ? e.message : "Unexpected error";
       setErr(message);
-      // opcional: console.error(e);
     } finally {
       setLoading(false);
     }
@@ -82,10 +84,13 @@ const MathFunctionInput = <
           <EditableMathField
             latex={latex}
             onChange={(mf) => setLatex(mf.latex())}
-            className="text-xl w-full border border-gray-300 px-4 py-2 mb-6 rounded-lg bg-white focus:outline-none"
+            className="text-xl w-full border border-gray-300 px-4 py-2 mb-4 rounded-lg bg-white focus:outline-none"
           />
 
-          <p className="text-sm text-gray-500 mb-4">
+          {/* 🔹 Renderizamos el contenido extra dentro de la card */}
+          {extraContent}
+
+          <p className="text-sm text-gray-500 mb-4 mt-2">
             Examples:&nbsp;
             {examples.map((ex, i) => (
               <code key={i} className="mr-2">
