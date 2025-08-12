@@ -1,3 +1,4 @@
+// src/components/MathFunctionWithCoordinatesInput.tsx
 import { useState } from "react";
 import { addStyles, EditableMathField, StaticMathField } from "react-mathquill";
 
@@ -10,10 +11,10 @@ export interface MathFunctionWithCoordinatesInputProps<TResponse = unknown> {
   examples?: string[];
   buttonText?: string;
   endpoint: string;
-  payloadKey?: string; // por defecto "equation"
+  payloadKey?: string; // "equation" por defecto
   onSuccess: (data: TResponse, latex: string) => void;
   className?: string;
-  coordsLabel?: string; // título del bloque de coordenadas
+  coordsLabel?: string;
 }
 
 const MathFunctionWithCoordinatesInput = <TResponse,>({
@@ -27,18 +28,12 @@ const MathFunctionWithCoordinatesInput = <TResponse,>({
   coordsLabel = "Point of Tangency",
 }: MathFunctionWithCoordinatesInputProps<TResponse>) => {
   const [latex, setLatex] = useState("");
-  const [x0, setX0] = useState("");
+  // 👉 números o vacío para poder limpiar el input
+  const [x0, setX0] = useState<number | "">("");
   const [provideY0, setProvideY0] = useState(false);
-  const [y0, setY0] = useState("");
+  const [y0, setY0] = useState<number | "">("");
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState<string | null>(null);
-
-  const norm = (v: string) => v.replace(",", ".").trim();
-  const parseNum = (v: string) => {
-    if (!v.trim()) return undefined;
-    const n = Number(norm(v));
-    return Number.isFinite(n) ? n : undefined;
-  };
 
   const handleCalculate = async () => {
     setErr(null);
@@ -47,22 +42,19 @@ const MathFunctionWithCoordinatesInput = <TResponse,>({
       setErr("Please enter a function.");
       return;
     }
-    const xParsed = parseNum(x0);
-    if (x0.trim() && xParsed === undefined) {
+    // Validaciones mínimas
+    if (x0 !== "" && Number.isNaN(x0)) {
       setErr("Invalid x₀. Please enter a valid number.");
       return;
     }
-    const yParsed = provideY0 ? parseNum(y0) : undefined;
-    if (provideY0 && y0.trim() && yParsed === undefined) {
+    if (provideY0 && y0 !== "" && Number.isNaN(y0)) {
       setErr("Invalid y₀. Please enter a valid number.");
       return;
     }
 
-    const body: Record<string, Json> = {
-      [payloadKey]: latex,
-    };
-    if (typeof xParsed === "number") body.x0 = xParsed;
-    if (typeof yParsed === "number") body.y0 = yParsed;
+    const body: Record<string, Json> = { [payloadKey]: latex };
+    if (x0 !== "") body.x0 = x0; // número puro
+    if (provideY0 && y0 !== "") body.y0 = y0;
 
     try {
       setLoading(true);
@@ -85,6 +77,10 @@ const MathFunctionWithCoordinatesInput = <TResponse,>({
     }
   };
 
+  // helpers visuales para el preview
+  const sx = x0 === "" ? "x_0" : String(x0);
+  const sy = y0 === "" ? "y_0" : String(y0);
+
   return (
     <div
       className={`max-w-[1440px] mx-auto flex flex-col items-center justify-center px-6 ${className}`}
@@ -102,26 +98,33 @@ const MathFunctionWithCoordinatesInput = <TResponse,>({
             className="text-xl w-full border border-gray-300 px-4 py-2 rounded-lg bg-white focus:outline-none"
           />
 
-          {/* Coordenadas: en la misma tarjeta, debajo */}
+          {/* Coordenadas */}
           <div className="w-full text-left mt-4">
             <h3 className="text-base font-semibold mb-2">{coordsLabel}</h3>
 
             <div className="flex flex-col gap-3">
-              {/* x0 */}
-              <label className="flex items-center gap-2">
-                <span className="font-medium">x₀:</span>
-                <input
-                  type="text"
-                  inputMode="decimal"
-                  placeholder="e.g. 1.5"
-                  value={x0}
-                  onChange={(e) => setX0(e.target.value)}
-                  className="w-40 border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-400"
-                />
-              </label>
+              {/* Fila x0 + toggle a la derecha */}
+              <div className="flex items-center gap-4 flex-wrap">
+                <label className="flex items-center gap-2">
+                  <span className="font-medium">x₀:</span>
+                  <input
+                    type="number"
+                    step="any"
+                    inputMode="decimal"
+                    lang="en" // fuerza '.' como decimal
+                    placeholder="e.g. 1.5"
+                    value={x0}
+                    onChange={(e) => {
+                      const v = e.target.value;
+                      setX0(v === "" ? "" : Number(v));
+                    }}
+                    onWheel={(e) =>
+                      (e.currentTarget as HTMLInputElement).blur()
+                    } // evita scroll que cambia el valor
+                    className="w-40 border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-400"
+                  />
+                </label>
 
-              {/* toggle + y0 debajo */}
-              <div className="flex flex-col gap-2">
                 <label className="flex items-center gap-2">
                   <input
                     type="checkbox"
@@ -131,42 +134,43 @@ const MathFunctionWithCoordinatesInput = <TResponse,>({
                   />
                   <span>Also provide y₀</span>
                 </label>
-
-                {provideY0 && (
-                  <label className="flex items-center gap-2">
-                    <span className="font-medium">y₀:</span>
-                    <input
-                      type="text"
-                      inputMode="decimal"
-                      placeholder="optional"
-                      value={y0}
-                      onChange={(e) => setY0(e.target.value)}
-                      className="w-40 border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-400"
-                    />
-                  </label>
-                )}
               </div>
+
+              {/* y0 debajo si está activo */}
+              {provideY0 && (
+                <label className="flex items-center gap-2">
+                  <span className="font-medium">y₀:</span>
+                  <input
+                    type="number"
+                    step="any"
+                    inputMode="decimal"
+                    lang="en"
+                    placeholder="optional"
+                    value={y0}
+                    onChange={(e) => {
+                      const v = e.target.value;
+                      setY0(v === "" ? "" : Number(v));
+                    }}
+                    onWheel={(e) =>
+                      (e.currentTarget as HTMLInputElement).blur()
+                    }
+                    className="w-40 border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-400"
+                  />
+                </label>
+              )}
             </div>
 
             {/* Preview */}
             <div className="text-sm text-gray-600 mt-3">
-              <span className="block mb-1 font-medium text-gray-700">
-                Preview:
-              </span>
+              <p className="text-xs text-gray-500 mt-2">
+                Tip: If you don’t provide y₀, it will be computed as f(x₀).
+              </p>
               <StaticMathField>
                 {provideY0
-                  ? `\\left(${norm(x0) || "x_0"},\\;${
-                      norm(y0) || "y_0"
-                    }\\right)`
-                  : `\\left(${norm(x0) || "x_0"},\\;f(${
-                      norm(x0) || "x_0"
-                    })\\right)`}
+                  ? `\\left(${sx},\\;${sy}\\right)`
+                  : `\\left(${sx},\\;f(${sx})\\right)`}
               </StaticMathField>
             </div>
-
-            <p className="text-xs text-gray-500 mt-2">
-              Tip: If you don’t provide y₀, it will be computed as f(x₀).
-            </p>
           </div>
 
           {/* Examples */}
