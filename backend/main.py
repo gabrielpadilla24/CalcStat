@@ -990,10 +990,11 @@ def compute_critical_points(data: CriticalPointsData):
 def compute_tangent_line(data: TangentLineData):
     expr = parse_latex(clean_latex_input(data.equation.strip()))
     x0 = data.x0
+    derivative = diff(expr, x)
     return {
         "original": str(expr),
         "x0": str(x0),
         "fxTangent": "",
-        "derivative": "",
+        "derivative": str(derivative),
         "my": ""
     }
