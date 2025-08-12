@@ -122,6 +122,8 @@ class CriticalPointsData(BaseModel):
 
 class TangentLineData(BaseModel):
     equation: str
+    x0: float
+
 
 
 # -----------------------------
@@ -987,9 +989,10 @@ def compute_critical_points(data: CriticalPointsData):
 @app.post("/tangentline")
 def compute_tangent_line(data: TangentLineData):
     expr = parse_latex(clean_latex_input(data.equation.strip()))
+    x0 = data.x0
     return {
         "original": str(expr),
-        "x0": "",
+        "x0": str(x0),
         "fxTangent": "",
         "derivative": "",
         "my": ""
