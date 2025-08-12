@@ -14,6 +14,7 @@ import GrowthComparisonCalculator from "./pages/FinancialCalculator/GrowthCompar
 import CalculusLandingPage from "./pages/CalculusCalculator/CalculusCalculator";
 import DerivativesCalculator from "./pages/CalculusCalculator/DifferentialCalculus/Derivatives/DerivativesCalculator";
 import CriticalPointsCalculator from "./pages/CalculusCalculator/DifferentialCalculus/CriticalPoints/CriticalPointsCalculator";
+import TangentLineCalculator from "./pages/CalculusCalculator/DifferentialCalculus/TangentLine/TangentLineCalculator";
 
 const App = () => {
   return (
@@ -75,6 +76,11 @@ const App = () => {
         <Route
           path="/calculus/criticalpoints"
           element={<CriticalPointsCalculator />}
+        />
+
+        <Route
+          path="/calculus/tangentline"
+          element={<TangentLineCalculator />}
         />
 
         {/* Other routes can be added here */}
