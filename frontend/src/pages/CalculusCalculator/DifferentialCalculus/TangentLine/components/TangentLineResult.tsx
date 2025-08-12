@@ -11,6 +11,7 @@ type TangentLineResultProps = {
   originalLatex?: string;
   derivativeLatex?: string;
   tangentLatex?: string;
+  x0?: number | null;
 };
 
 const TangentLineResult: React.FC<TangentLineResultProps> = ({

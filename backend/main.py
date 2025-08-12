@@ -120,6 +120,10 @@ class DerivativeRequest(BaseModel):
 class CriticalPointsData(BaseModel):
     equation: str
 
+class TangentLineData(BaseModel):
+    equation: str
+
+
 # -----------------------------
 # ENDPOINT DE INTERÉS COMPUESTO
 # -----------------------------
@@ -974,4 +978,19 @@ def compute_critical_points(data: CriticalPointsData):
         "first_derivative": first_derivative_latex,
         "second_derivative": second_derivative_latex,
         "critical_points": critical_points_latex,
+    }
+
+
+#---------------------------------
+# ENDPOINT: tangentline (con LaTeX, sin inflection points)
+#---------------------------------
+@app.post("/tangentline")
+def compute_tangent_line(data: TangentLineData):
+    expr = parse_latex(clean_latex_input(data.equation.strip()))
+    return {
+        "original": str(expr),
+        "x0": "",
+        "fxTangent": "",
+        "derivative": "",
+        "my": ""
     }

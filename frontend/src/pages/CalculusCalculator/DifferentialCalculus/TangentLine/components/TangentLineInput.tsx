@@ -1,7 +1,7 @@
-import MathFunctionWithCoordinatesInput from "@/components/MathFunctionWithCoordinatesInput";
-
+import MathFunctionInput from "@/components/MathFunctionInput";
 type TangentLineResponse = {
   original: string;
+  x0: number; // x-coordinate of the point of tangency
   fxTangent: string;
   derivative: string;
   my: string;
@@ -12,20 +12,27 @@ const TangentLineInput = ({
 }: {
   onResult: (
     original: string,
-    tangentpoint: string,
+    x0: number,
+    fxTangent: string,
     derivative: string,
     my: string
   ) => void;
 }) => (
-  <MathFunctionWithCoordinatesInput<TangentLineResponse>
+  <MathFunctionInput<TangentLineResponse>
     label="Enter a function to find the tangent line:"
-    coordsLabel="Point of Tangency"
     endpoint="http://localhost:8000/tangentline"
     payloadKey="equation"
     buttonText="Calculate Tangent Line"
-    onSuccess={(data) =>
-      onResult(data.original, data.fxTangent, data.derivative, data.my)
-    }
+    onSuccess={(data) => {
+      console.log("📥 Respuesta del backend:", data); // 👈 Esto va a la consola del navegador
+      onResult(
+        data.original,
+        data.x0,
+        data.fxTangent,
+        data.derivative,
+        data.my
+      );
+    }}
   />
 );
 

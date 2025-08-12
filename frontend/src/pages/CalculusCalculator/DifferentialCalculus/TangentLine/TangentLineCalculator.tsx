@@ -10,6 +10,7 @@ const TangentLineCalculator = () => {
   const [tangent, setTangent] = useState<string>(""); // fxTangent (recta)
   const [derivative, setDerivative] = useState<string>(""); // f'(x)
   const [my, setMy] = useState<string>(""); // info extra (p.ej. m,y0)
+  const [x0, setX0] = useState<number | null>(null); // x-coordinate of the point of tangency
 
   return (
     <>
@@ -26,8 +27,9 @@ const TangentLineCalculator = () => {
           <div className="flex-1 max-w-[600px] w-full flex flex-col items-center">
             <div className="w-full">
               <TangentLineInput
-                onResult={(orig, fxTangent, der, myInfo) => {
+                onResult={(orig, x0, fxTangent, der, myInfo) => {
                   setOriginal(orig);
+                  setX0(x0);
                   setTangent(fxTangent);
                   setDerivative(der);
                   setMy(myInfo);
@@ -47,6 +49,7 @@ const TangentLineCalculator = () => {
               original={original}
               derivative={derivative}
               tangent={tangent}
+              x0={x0}
               my={my}
             />
           </div>
