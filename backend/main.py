@@ -986,20 +986,57 @@ def compute_critical_points(data: CriticalPointsData):
 #---------------------------------
 # ENDPOINT: tangentline (con LaTeX, sin inflection points)
 #---------------------------------
+def fmt_num(v: float, ndigits: int = 4) -> str:
+    """Formatea números para mostrarlos en LaTeX (sin ceros sobrantes)."""
+    s = f"{round(float(v), ndigits):.{ndigits}f}"
+    s = s.rstrip("0").rstrip(".")
+    return s if s else "0"
+
 @app.post("/tangentline")
 def compute_tangent_line(data: TangentLineData):
+    # 1) Parsear f(x) desde LaTeX
     expr = parse_latex(clean_latex_input(data.equation.strip()))
+
+    # 2) Datos base
     x0 = float(data.x0)
     derivative = diff(expr, x)
-    m = round(float(derivative.subs(x, x0)), 4)
-    y0 = round(float(expr.subs(x, x0)), 4)
-    # Ecuación de la tangente: y = m*(x - x0) + y0
-    tangent_expr = m * (x - x0) + y0
+    m_val = float(derivative.subs(x, x0))
+    y0_val = float(expr.subs(x, x0))
+    tangent_expr = m_val * (x - x0) + y0_val
+
+    # 3) Strings LaTeX “bonitos”
+    fx_ltx = sympy_latex(expr)                # f(x)
+    fprime_ltx = sympy_latex(derivative)      # f'(x)
+    x0_ltx = fmt_num(x0)
+    m_ltx = fmt_num(m_val)
+    y0_ltx = fmt_num(y0_val)
+    tangent_final_ltx = rf"y = ({sympy_latex(tangent_expr)})"
+
+    # 4) Pasos didácticos (todo en LaTeX)
+    steps = {
+        "m": {
+            # Definición + evaluación + resultado
+            "definition": r"m = f'(x_0)",
+            "evaluation": rf"m = \left.{fprime_ltx}\right|_{{x={x0_ltx}}} = {m_ltx}",
+        },
+        "y0": {
+            "definition": r"y_0 = f(x_0)",
+            "evaluation": rf"y_0 = \left.{fx_ltx}\right|_{{x={x0_ltx}}} = {y0_ltx}",
+        },
+        "tangent": {
+            "general": r"y = m\,(x - x_0) + y_0",
+            "substitution": rf"y = {m_ltx}\,(x - {x0_ltx}) + {y0_ltx}",
+            "final": tangent_final_ltx,  # ecuación final (ya simplificada por sympy)
+        },
+    }
+
+    # 5) Respuesta (LaTeX + valores numéricos)
     return {
-        "original": str(expr),
-        "x0": round(x0, 4),
-        "fxTangent": str(tangent_expr),
-        "derivative": str(derivative),
-        "m": m,
-        "y0": y0,
+        "original": fx_ltx,               # f(x) en LaTeX
+        "derivative": fprime_ltx,         # f'(x) en LaTeX
+        "x0": float(x0),                  # números crudos por si los necesitas
+        "m": float(round(m_val, 4)),
+        "y0": float(round(y0_val, 4)),
+        "fxTangent": tangent_final_ltx,   # y = ... en LaTeX
+        "steps": steps,                   # 👈 pasos listos para renderizar
     }

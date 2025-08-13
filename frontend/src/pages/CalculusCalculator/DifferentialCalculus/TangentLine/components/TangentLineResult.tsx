@@ -1,102 +1,69 @@
-// src/pages/CalculusCalculator/DifferentialCalculus/TangentLine/components/TangentLineResult.tsx
 import React from "react";
-import { addStyles, StaticMathField } from "react-mathquill";
-
-addStyles();
+import "katex/dist/katex.min.css";
+import { BlockMath } from "react-katex";
 
 type TangentLineResultProps = {
-  original: string;
-  derivative: string; // f'(x) o f'(x0) según devuelvas
-  tangent: string; // ecuación de la recta tangente
-  x0: number | null; // punto de evaluación
-  m?: number | null; // 🔹 pendiente
-  y0?: number | null; // 🔹 y del punto (f(x0) o provista)
-  originalLatex?: string;
-  derivativeLatex?: string;
-  tangentLatex?: string;
+  original: string; // ecuación original en LaTeX
+  derivative: string; // derivada en LaTeX
+  x0: number; // valor de x0
+  m: number; // pendiente
+  y0: number; // valor de y en x0
+  fxTangent: string; // ecuación final de la tangente en LaTeX
 };
 
 const TangentLineResult: React.FC<TangentLineResultProps> = ({
   original,
   derivative,
-  tangent,
   x0,
   m,
   y0,
-  originalLatex,
-  derivativeLatex,
-  tangentLatex,
+  fxTangent,
 }) => {
-  // Si tienes placeholders vacíos, puedes relajar esta condición
-  const hasResult = Boolean(original && (derivative || tangent));
-
   return (
-    <div className="bg-white shadow-md rounded-xl p-6 w-[600px] mx-auto text-gray-800">
-      <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
-        📐 Tangent Line Result
-      </h2>
+    <div className="bg-white shadow-lg rounded-lg p-6 mt-6">
+      <h2 className="text-2xl font-bold mb-4">📐 Tangent Line Result</h2>
 
-      {!hasResult && (
-        <p className="text-gray-500 italic">
-          Enter a function and compute its tangent line to see the result here.
+      {/* Función original */}
+      <p className="mb-2">
+        <strong>Function:</strong> <BlockMath math={original} />
+      </p>
+
+      {/* Derivada */}
+      <p className="mb-2">
+        <strong>Derivative:</strong> <BlockMath math={derivative} />
+      </p>
+
+      {/* Cálculo paso a paso */}
+      <div className="mt-4">
+        <h3 className="text-lg font-semibold mb-2">Step-by-Step</h3>
+
+        {/* Paso 1: fórmula de m */}
+        <p className="mb-2">
+          Formula for slope:
+          <BlockMath math={"m = f'(x_0)"} />
         </p>
-      )}
+        {/* Sustitución en m */}
+        <BlockMath math={`m = ${derivative.replace(/x/g, `(${x0})`)}`} />
+        <BlockMath math={`m = ${m}`} />
 
-      {hasResult && (
-        <>
-          {/* f(x) */}
-          <div className="mb-4 flex items-center gap-2">
-            <span className="font-semibold">Function:</span>
-            <StaticMathField>{originalLatex ?? original}</StaticMathField>
-          </div>
+        {/* Paso 2: fórmula de y₀ */}
+        <p className="mt-4 mb-2">
+          Formula for y-intercept point:
+          <BlockMath math={"y_0 = f(x_0)"} />
+        </p>
+        {/* Sustitución en y₀ */}
+        <BlockMath math={`y_0 = ${original.replace(/x/g, `(${x0})`)}`} />
+        <BlockMath math={`y_0 = ${y0}`} />
 
-          {/* f'(x) */}
-          {derivative && (
-            <div className="mb-4 flex items-center gap-2">
-              <span className="font-semibold">Derivative:</span>
-              <StaticMathField>{derivativeLatex ?? derivative}</StaticMathField>
-            </div>
-          )}
-
-          {/* Recta tangente */}
-          {tangent && (
-            <div className="mb-6 flex items-center gap-2">
-              <span className="font-semibold">Tangent Line:</span>
-              <StaticMathField>{tangentLatex ?? tangent}</StaticMathField>
-            </div>
-          )}
-
-          {/* Detalles numéricos: m y (x0, y0) */}
-          {(m != null || (x0 != null && y0 != null)) && (
-            <div className="mb-2 p-4 rounded-md bg-blue-50 border border-blue-200 text-blue-900">
-              <div className="font-semibold mb-1">Details:</div>
-              <div className="space-y-1 text-lg">
-                {m != null && (
-                  <div>
-                    <StaticMathField>{`m = ${m}`}</StaticMathField>
-                  </div>
-                )}
-                {x0 != null && y0 != null && (
-                  <div>
-                    <StaticMathField>{`(x_0, y_0) = \\left(${x0},\\; ${y0}\\right)`}</StaticMathField>
-                  </div>
-                )}
-              </div>
-            </div>
-          )}
-
-          {/* Nota educativa */}
-          <div className="mt-6 text-sm text-gray-600">
-            <p>
-              The tangent line at <em>x = x₀</em> has slope <em>m = f′(x₀)</em>{" "}
-              and passes through <em>(x₀, f(x₀))</em>:
-            </p>
-            <div className="mt-1">
-              <StaticMathField>{`y - f(x_0) = f'(x_0)\\,(x - x_0)`}</StaticMathField>
-            </div>
-          </div>
-        </>
-      )}
+        {/* Paso 3: ecuación de la tangente */}
+        <p className="mt-4 mb-2">
+          Tangent line equation:
+          <BlockMath math={"y = m(x - x_0) + y_0"} />
+        </p>
+        {/* Sustitución en la ecuación */}
+        <BlockMath math={`y = ${m}(x - ${x0}) + ${y0}`} />
+        <p>{fxTangent}</p>
+      </div>
     </div>
   );
 };

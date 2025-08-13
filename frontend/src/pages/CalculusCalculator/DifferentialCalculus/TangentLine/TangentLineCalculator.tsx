@@ -7,11 +7,13 @@ import TangentLineResult from "./components/TangentLineResult";
 
 const TangentLineCalculator = () => {
   const [original, setOriginal] = useState<string>("");
-  const [tangent, setTangent] = useState<string>(""); // fxTangent (recta)
-  const [derivative, setDerivative] = useState<string>(""); // f'(x)
-  const [x0, setX0] = useState<number | null>(null); // punto de tangencia
-  const [m, setM] = useState<number | null>(null); // 🔹 pendiente
-  const [y0, setY0] = useState<number | null>(null); // 🔹 y del punto (f(x0) o provista)
+  const [derivative, setDerivative] = useState<string>(""); // f'(x) LaTeX
+  const [fxTangentStr, setFxTangentStr] = useState<string>(""); // "y = ..." LaTeX
+
+  // 👉 Tipos estrictos: usamos NaN como valor “no inicializado” (sigue siendo number)
+  const [x0, setX0] = useState<number>(NaN);
+  const [m, setM] = useState<number>(NaN);
+  const [y0, setY0] = useState<number>(NaN);
 
   return (
     <>
@@ -29,18 +31,18 @@ const TangentLineCalculator = () => {
               <TangentLineInput
                 onResult={(orig, x0Val, fxTangent, der, mVal, y0Val) => {
                   setOriginal(orig);
-                  setX0(x0Val);
-                  setTangent(fxTangent);
                   setDerivative(der);
+                  setFxTangentStr(fxTangent);
+                  setX0(x0Val);
                   setM(mVal);
                   setY0(y0Val);
                 }}
               />
             </div>
 
-            {/* Gráfico (muestra vacío si aún no hay datos) */}
+            {/* Gráfico (opcional) */}
             <div className="w-full">
-              {/* <TangentLineGraph expression={original} tangent={tangent} pointX={x0} /> */}
+              {/* <TangentLineGraph expression={original} tangent={fxTangentStr} pointX={x0} /> */}
             </div>
           </div>
 
@@ -49,10 +51,10 @@ const TangentLineCalculator = () => {
             <TangentLineResult
               original={original}
               derivative={derivative}
-              tangent={tangent}
               x0={x0}
-              m={m} // 🔹 ahora pasamos m
-              y0={y0} // 🔹 y también y0
+              m={m}
+              y0={y0}
+              fxTangent={fxTangentStr}
             />
           </div>
         </div>
