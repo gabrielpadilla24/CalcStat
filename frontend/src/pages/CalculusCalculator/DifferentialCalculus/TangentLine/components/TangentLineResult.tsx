@@ -20,7 +20,7 @@ const TangentLineResult: React.FC<TangentLineResultProps> = ({
   fxTangent,
 }) => {
   return (
-    <div className="bg-white shadow-lg rounded-lg p-6 mt-6">
+    <div className="bg-white shadow-lg rounded-lg p-6">
       <h2 className="text-2xl font-bold mb-4">📐 Tangent Line Result</h2>
 
       {/* Función original */}
