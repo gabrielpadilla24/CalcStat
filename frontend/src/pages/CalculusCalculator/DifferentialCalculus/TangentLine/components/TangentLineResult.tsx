@@ -62,7 +62,7 @@ const TangentLineResult: React.FC<TangentLineResultProps> = ({
         </p>
         {/* Sustitución en la ecuación */}
         <BlockMath math={`y = ${m}(x - ${x0}) + ${y0}`} />
-        <p>{fxTangent}</p>
+        <p className="text-center font-bold">{fxTangent}</p>
       </div>
     </div>
   );
