@@ -1,14 +1,14 @@
-// src/.../TangentLine/components/TangentLineInput.tsx
+// src/pages/CalculusCalculator/DifferentialCalculus/TangentLine/components/TangentLineInput.tsx
 import { useState } from "react";
 import MathFunctionInput from "@/components/MathFunctionInput";
 
 type TangentLineResponse = {
   original: string;
-  x0: number; // punto donde se evalúa
-  fxTangent: string; // ecuación de la recta en LaTeX o texto
-  derivative: string; // f'(x) o f'(x0) según devuelvas
-  m: number; // 🔹 pendiente (antes "my")
-  y0: number; // 🔹 valor y del punto (antes "my")
+  x0: number; // número
+  fxTangent: string; // LaTeX o texto
+  derivative: string;
+  m: number; // número
+  y0: number; // número
 };
 
 const TangentLineInput = ({
@@ -30,8 +30,6 @@ const TangentLineInput = ({
     const n = Number(x0);
     return Number.isFinite(n) ? { x0: n } : {};
   })();
-
-  const x0Sent = !x0.trim() ? NaN : Number(x0);
 
   return (
     <MathFunctionInput<TangentLineResponse, { x0?: number }>
@@ -63,15 +61,13 @@ const TangentLineInput = ({
         </div>
       }
       onSuccess={(data) => {
-        console.log("📍 x0 enviado:", x0Sent);
-        console.log("📥 Respuesta del backend:", data);
         onResult(
           data.original,
-          x0Sent,
-          data.fxTangent,
+          data.x0, // ✅ número del backend
+          data.fxTangent, // LaTeX de la recta
           data.derivative,
-          data.m, // 🔹 ahora números separados
-          data.y0 // 🔹 ahora números separados
+          data.m, // ✅ número del backend
+          data.y0 // ✅ número del backend
         );
       }}
     />

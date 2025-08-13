@@ -997,9 +997,9 @@ def compute_tangent_line(data: TangentLineData):
     tangent_expr = m * (x - x0) + y0
     return {
         "original": str(expr),
-        "x0": str(round(x0, 4)),
+        "x0": round(x0, 4),
         "fxTangent": str(tangent_expr),
         "derivative": str(derivative),
-        "m": str(m),
-        "y0": str(y0),
+        "m": m,
+        "y0": y0,
     }
