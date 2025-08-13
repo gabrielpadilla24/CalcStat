@@ -2,15 +2,16 @@ import { useState } from "react";
 import NavBar from "@/components/NavBar";
 import BottomCTA from "@/components/BottomCTA";
 import TangentLineInput from "./components/TangentLineInput";
-//import TangentLineGraph from "./components/TangentLineGraph"; // <- crea este
-import TangentLineResult from "./components/TangentLineResult"; // <- y este
+// import TangentLineGraph from "./components/TangentLineGraph";
+import TangentLineResult from "./components/TangentLineResult";
 
 const TangentLineCalculator = () => {
   const [original, setOriginal] = useState<string>("");
   const [tangent, setTangent] = useState<string>(""); // fxTangent (recta)
   const [derivative, setDerivative] = useState<string>(""); // f'(x)
-  const [my, setMy] = useState<string>(""); // info extra (p.ej. m,y0)
-  const [x0, setX0] = useState<number | null>(null); // x-coordinate of the point of tangency
+  const [x0, setX0] = useState<number | null>(null); // punto de tangencia
+  const [m, setM] = useState<number | null>(null); // 🔹 pendiente
+  const [y0, setY0] = useState<number | null>(null); // 🔹 y del punto (f(x0) o provista)
 
   return (
     <>
@@ -21,25 +22,25 @@ const TangentLineCalculator = () => {
           Tangent Line Calculator
         </h1>
 
-        {/* Contenedor principal */}
         <div className="max-w-[1440px] mx-auto flex flex-col lg:flex-row justify-center items-start gap-6 px-6">
           {/* Columna izquierda: Input + Graph */}
           <div className="flex-1 max-w-[600px] w-full flex flex-col items-center">
             <div className="w-full">
               <TangentLineInput
-                onResult={(orig, x0, fxTangent, der, myInfo) => {
+                onResult={(orig, x0Val, fxTangent, der, mVal, y0Val) => {
                   setOriginal(orig);
-                  setX0(x0);
+                  setX0(x0Val);
                   setTangent(fxTangent);
                   setDerivative(der);
-                  setMy(myInfo);
+                  setM(mVal);
+                  setY0(y0Val);
                 }}
               />
             </div>
 
             {/* Gráfico (muestra vacío si aún no hay datos) */}
             <div className="w-full">
-              {/* <TangentLineGraph expression={original} tangent={tangent} /> */}
+              {/* <TangentLineGraph expression={original} tangent={tangent} pointX={x0} /> */}
             </div>
           </div>
 
@@ -50,7 +51,8 @@ const TangentLineCalculator = () => {
               derivative={derivative}
               tangent={tangent}
               x0={x0}
-              my={my}
+              m={m} // 🔹 ahora pasamos m
+              y0={y0} // 🔹 y también y0
             />
           </div>
         </div>

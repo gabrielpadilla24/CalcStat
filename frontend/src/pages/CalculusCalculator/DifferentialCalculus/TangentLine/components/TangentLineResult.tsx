@@ -1,3 +1,4 @@
+// src/pages/CalculusCalculator/DifferentialCalculus/TangentLine/components/TangentLineResult.tsx
 import React from "react";
 import { addStyles, StaticMathField } from "react-mathquill";
 
@@ -5,25 +6,29 @@ addStyles();
 
 type TangentLineResultProps = {
   original: string;
-  derivative: string; // f'(x) o f'(x0) según envíes
+  derivative: string; // f'(x) o f'(x0) según devuelvas
   tangent: string; // ecuación de la recta tangente
-  my?: string; // info extra (p.ej., m y y0, o (x0, y0))
+  x0: number | null; // punto de evaluación
+  m?: number | null; // 🔹 pendiente
+  y0?: number | null; // 🔹 y del punto (f(x0) o provista)
   originalLatex?: string;
   derivativeLatex?: string;
   tangentLatex?: string;
-  x0?: number | null;
 };
 
 const TangentLineResult: React.FC<TangentLineResultProps> = ({
   original,
   derivative,
   tangent,
-  my,
+  x0,
+  m,
+  y0,
   originalLatex,
   derivativeLatex,
   tangentLatex,
 }) => {
-  const hasResult = Boolean(original && derivative && tangent);
+  // Si tienes placeholders vacíos, puedes relajar esta condición
+  const hasResult = Boolean(original && (derivative || tangent));
 
   return (
     <div className="bg-white shadow-md rounded-xl p-6 w-[600px] mx-auto text-gray-800">
@@ -46,33 +51,45 @@ const TangentLineResult: React.FC<TangentLineResultProps> = ({
           </div>
 
           {/* f'(x) */}
-          <div className="mb-4 flex items-center gap-2">
-            <span className="font-semibold">Derivative:</span>
-            <StaticMathField>{derivativeLatex ?? derivative}</StaticMathField>
-          </div>
+          {derivative && (
+            <div className="mb-4 flex items-center gap-2">
+              <span className="font-semibold">Derivative:</span>
+              <StaticMathField>{derivativeLatex ?? derivative}</StaticMathField>
+            </div>
+          )}
 
           {/* Recta tangente */}
-          <div className="mb-6 flex items-center gap-2">
-            <span className="font-semibold">Tangent Line:</span>
-            <StaticMathField>{tangentLatex ?? tangent}</StaticMathField>
-          </div>
+          {tangent && (
+            <div className="mb-6 flex items-center gap-2">
+              <span className="font-semibold">Tangent Line:</span>
+              <StaticMathField>{tangentLatex ?? tangent}</StaticMathField>
+            </div>
+          )}
 
-          {/* Info extra (m, y0, x0...) */}
-          {my && (
+          {/* Detalles numéricos: m y (x0, y0) */}
+          {(m != null || (x0 != null && y0 != null)) && (
             <div className="mb-2 p-4 rounded-md bg-blue-50 border border-blue-200 text-blue-900">
-              <div className="font-semibold mb-1">Details (slope & point):</div>
-              {/* Intentamos renderizar como LaTeX; si no es LaTeX, MathQuill lo mostrará como texto */}
-              <div className="text-lg">
-                <StaticMathField>{my}</StaticMathField>
+              <div className="font-semibold mb-1">Details:</div>
+              <div className="space-y-1 text-lg">
+                {m != null && (
+                  <div>
+                    <StaticMathField>{`m = ${m}`}</StaticMathField>
+                  </div>
+                )}
+                {x0 != null && y0 != null && (
+                  <div>
+                    <StaticMathField>{`(x_0, y_0) = \\left(${x0},\\; ${y0}\\right)`}</StaticMathField>
+                  </div>
+                )}
               </div>
             </div>
           )}
 
-          {/* Nota educativa pequeña */}
+          {/* Nota educativa */}
           <div className="mt-6 text-sm text-gray-600">
             <p>
-              The tangent line at <em>x = x₀</em> has slope <em>m = f'(x₀)</em>{" "}
-              and passes through the point <em>(x₀, f(x₀))</em>, i.e.
+              The tangent line at <em>x = x₀</em> has slope <em>m = f′(x₀)</em>{" "}
+              and passes through <em>(x₀, f(x₀))</em>:
             </p>
             <div className="mt-1">
               <StaticMathField>{`y - f(x_0) = f'(x_0)\\,(x - x_0)`}</StaticMathField>

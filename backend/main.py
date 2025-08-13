@@ -989,12 +989,17 @@ def compute_critical_points(data: CriticalPointsData):
 @app.post("/tangentline")
 def compute_tangent_line(data: TangentLineData):
     expr = parse_latex(clean_latex_input(data.equation.strip()))
-    x0 = data.x0
+    x0 = float(data.x0)
     derivative = diff(expr, x)
+    m = round(float(derivative.subs(x, x0)), 4)
+    y0 = round(float(expr.subs(x, x0)), 4)
+    # Ecuación de la tangente: y = m*(x - x0) + y0
+    tangent_expr = m * (x - x0) + y0
     return {
         "original": str(expr),
-        "x0": str(x0),
-        "fxTangent": "",
+        "x0": str(round(x0, 4)),
+        "fxTangent": str(tangent_expr),
         "derivative": str(derivative),
-        "my": ""
+        "m": str(m),
+        "y0": str(y0),
     }

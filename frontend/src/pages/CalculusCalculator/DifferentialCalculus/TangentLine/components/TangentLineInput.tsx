@@ -4,10 +4,11 @@ import MathFunctionInput from "@/components/MathFunctionInput";
 
 type TangentLineResponse = {
   original: string;
-  x0: number;
-  fxTangent: string;
-  derivative: string;
-  my: string;
+  x0: number; // punto donde se evalúa
+  fxTangent: string; // ecuación de la recta en LaTeX o texto
+  derivative: string; // f'(x) o f'(x0) según devuelvas
+  m: number; // 🔹 pendiente (antes "my")
+  y0: number; // 🔹 valor y del punto (antes "my")
 };
 
 const TangentLineInput = ({
@@ -18,7 +19,8 @@ const TangentLineInput = ({
     x0: number,
     fxTangent: string,
     derivative: string,
-    my: string
+    m: number,
+    y0: number
   ) => void;
 }) => {
   const [x0, setX0] = useState<string>("");
@@ -39,7 +41,6 @@ const TangentLineInput = ({
       extraPayload={extraPayload}
       buttonText="Calculate Tangent Line"
       extraContent={
-        /* 🔹 Este bloque queda dentro de la MISMA card, debajo del campo de función */
         <div className="w-full text-left mt-2 mb-2">
           <label className="flex items-center gap-3">
             <span className="font-medium">x₀:</span>
@@ -69,7 +70,8 @@ const TangentLineInput = ({
           x0Sent,
           data.fxTangent,
           data.derivative,
-          data.my
+          data.m, // 🔹 ahora números separados
+          data.y0 // 🔹 ahora números separados
         );
       }}
     />
