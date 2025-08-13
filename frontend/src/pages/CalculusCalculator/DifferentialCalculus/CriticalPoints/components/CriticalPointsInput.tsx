@@ -31,6 +31,18 @@ const CriticalPointsInput = ({
     endpoint="http://localhost:8000/criticalpoints"
     payloadKey="equation"
     buttonText="Find Critical Points"
+    /* 🔗 Hint/link igual que en Tangent Line */
+    extraContent={
+      <div className="mt-3 text-center">
+        <a
+          href="/calculus/derivatives"
+          className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700 cursor-pointer transition-colors underline underline-offset-4 decoration-gray-300 hover:decoration-gray-500"
+        >
+          see how to calculate the derivatives
+          <span aria-hidden>›</span>
+        </a>
+      </div>
+    }
     onSuccess={(data) =>
       onResult(
         data.original,
