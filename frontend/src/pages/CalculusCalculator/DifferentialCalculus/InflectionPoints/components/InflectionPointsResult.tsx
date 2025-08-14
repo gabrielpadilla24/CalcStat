@@ -127,18 +127,22 @@ const InflectionPointsResult: React.FC<InflectionPointsResultProps> = ({
               <div className="space-y-2">
                 {inflectionPoints.map((pt, i) => {
                   const pointLatex = String.raw`\left(${pt.x},\,${pt.y}\right)`;
+                  const numericCoord =
+                    inflectionPointsCoords[i] !== undefined
+                      ? inflectionPointsCoords[i]
+                      : null;
                   return (
                     <div key={`infl-${i}`} className="flex items-center gap-2">
                       <span className="text-sm text-gray-700">P{i + 1}:</span>
                       <StaticMathField>{pointLatex}</StaticMathField>
+                      {numericCoord && (
+                        <span className="inline-flex items-center gap-1 rounded-md border border-emerald-200 bg-emerald-50 px-2 py-1">
+                          <StaticMathField>{numericCoord}</StaticMathField>
+                        </span>
+                      )}
                     </div>
                   );
                 })}
-                {inflectionPointsCoords.length > 0 && (
-                  <p className="text-xs text-gray-500 mt-2">
-                    numeric: {inflectionPointsCoords.join(", ")}
-                  </p>
-                )}
               </div>
             ) : (
               <p className="text-gray-500 text-sm italic">— none —</p>
