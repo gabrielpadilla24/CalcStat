@@ -172,6 +172,25 @@ const CalculusLandingPage = () => {
                 <SubmitButton text="Open Calculator" />
               </Link>
             </div>
+
+            {/* Card: Inflection Points */}
+            <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] flex flex-col justify-between text-left">
+              <img
+                src="/img/inflectionpoints.png"
+                alt="Inflection Points"
+                className="h-40 w-full object-cover mb-4 rounded"
+              />
+              <h2 className="text-xl font-bold text-gray-800 mb-2">
+                Inflection Points
+              </h2>
+              <p className="text-sm text-gray-600 mb-4">
+                Find where the concavity of a function changes. Identify and
+                classify inflection points step by step.
+              </p>
+              <Link to="/calculus/inflectionpoints">
+                <SubmitButton text="Open Calculator" />
+              </Link>
+            </div>
           </>
         )}
       </div>
