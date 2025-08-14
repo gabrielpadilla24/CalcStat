@@ -58,29 +58,43 @@
 // );
 
 // export default InflectionPointsInput;
-
-// src/pages/CalculusCalculator/DifferentialCalculus/InflectionPoints/components/InflectionPointsInput.tsx
+// src/pages/.../InflectionPoints/components/InflectionPointsInput.tsx
 import MathFunctionInput from "@/components/MathFunctionInput";
 
-type InflectionMiniResponse = {
-  original: string; // f(x) LaTeX
-  first_derivative: string; // f'(x) LaTeX
-  second_derivative: string; // f''(x) LaTeX
+type InflectionPointsResponse = {
+  original: string;
+  first_derivative: string;
+  second_derivative: string;
+  second_derivative_zeros: string[];
+  second_derivative_singularities: string[];
+  // (cuando amplíes) inflection_points, etc...
 };
 
 export default function InflectionPointsInput({
   onResult,
 }: {
-  onResult: (original: string, first: string, second: string) => void;
+  onResult: (
+    original: string,
+    first_derivative: string,
+    second_derivative: string,
+    second_derivative_zeros: string[],
+    second_derivative_singularities: string[]
+  ) => void;
 }) {
   return (
-    <MathFunctionInput<InflectionMiniResponse>
-      label="Enter a function to plot f, f′, f″:"
+    <MathFunctionInput<InflectionPointsResponse>
+      label="Enter a function to analyze inflection candidates:"
       endpoint="http://localhost:8000/inflectionpoints"
       payloadKey="equation"
-      buttonText="Compute"
+      buttonText="Analyze"
       onSuccess={(data) =>
-        onResult(data.original, data.first_derivative, data.second_derivative)
+        onResult(
+          data.original,
+          data.first_derivative,
+          data.second_derivative,
+          data.second_derivative_zeros,
+          data.second_derivative_singularities
+        )
       }
     />
   );

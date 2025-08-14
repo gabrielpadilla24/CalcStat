@@ -1042,21 +1042,49 @@ def compute_tangent_line(data: TangentLineData):
     }
 
 
-
-#---------------------------------
-# ENDPOINT: infelction
-#---------------------------------
 @app.post("/inflectionpoints")
 def compute_inflection_points(data: DerivativeRequest):
     try:
+        # 1) Parsear f(x)
         expr = parse_latex(clean_latex_input(data.equation.strip()))
+
+        # 2) Derivadas
         fprime  = simplify(diff(expr, x))
         fsecond = simplify(diff(fprime, x))
+
+        # 3) Candidatos a inflexión:
+        #    a) ceros de f''(x)
+        zeros_set = solveset(Eq(fsecond, 0), x, domain=S.Reals)
+        zeros = list(zeros_set) if getattr(zeros_set, "is_FiniteSet", False) else []
+
+        #    b) puntos donde f'' no existe
+        try:
+            sing_set = singularities(fsecond, x, domain=S.Reals)
+            sings = list(sing_set) if getattr(sing_set, "is_FiniteSet", False) else list(sing_set)
+        except Exception:
+            sings = []
+
+        # Ordenar “suavemente” por valor numérico cuando sea posible
+        def _key(v):
+            try:
+                return float(v)
+            except Exception:
+                return float("inf")
+
+        zeros = sorted(zeros, key=_key)
+        sings = sorted(sings, key=_key)
+
+        zeros_ltx = [sympy_latex(z) for z in zeros]
+        sings_ltx = [sympy_latex(s) for s in sings]
+
         return {
-            "original":         sympy_latex(expr),
-            "first_derivative": sympy_latex(fprime),
-            "second_derivative": sympy_latex(fsecond),
+            "original":           sympy_latex(expr),
+            "first_derivative":   sympy_latex(fprime),
+            "second_derivative":  sympy_latex(fsecond),
+
+            # ✅ candidatos de inflexión
+            "second_derivative_zeros":         zeros_ltx,   # x con f''(x)=0
+            "second_derivative_singularities": sings_ltx,   # x donde f'' no existe
         }
     except Exception as e:
-        return {"error": f"Failed to compute derivatives: {str(e)}"}
-
+        return {"error": f"Failed to compute inflection data: {str(e)}"}
