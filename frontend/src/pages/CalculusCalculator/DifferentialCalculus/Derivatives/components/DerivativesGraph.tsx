@@ -3,26 +3,21 @@
 import DesmosGraph, { DesmosExpression } from "@/components/DesmosGraph";
 
 type DerivativesGraphProps = {
-  /** Ej: "x^2 + 2x + 1" o "y=x^2+2". Si viene sin "y=", se lo añadimos. */
-  expression?: string;
-  /** LaTeX listo para Desmos, ej: "y = x^{2} + 2x + 1" */
-  latex?: string;
+  latex?: string; // LaTeX desde el backend
   height?: number;
 };
 
+function normalizeLatex(latex?: string): string {
+  if (!latex) return "";
+  const trimmed = latex.trim();
+  return trimmed.includes("=") ? trimmed : `y = ${trimmed}`;
+}
+
 export default function DerivativesGraph({
-  expression,
   latex,
   height = 500,
 }: DerivativesGraphProps) {
-  const toPlot =
-    (latex && latex.trim()) ||
-    (expression && expression.trim()
-      ? expression.trim().startsWith("y=")
-        ? expression.trim()
-        : `y=${expression.trim()}`
-      : "");
-
+  const toPlot = normalizeLatex(latex);
   const expr: DesmosExpression = { id: "main", latex: toPlot || undefined };
 
   return (
