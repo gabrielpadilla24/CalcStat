@@ -1040,3 +1040,23 @@ def compute_tangent_line(data: TangentLineData):
         "fxTangent": tangent_final_ltx,   # y = ... en LaTeX
         "steps": steps,                   # 👈 pasos listos para renderizar
     }
+
+
+
+#---------------------------------
+# ENDPOINT: infelction
+#---------------------------------
+@app.post("/inflectionpoints")
+def compute_inflection_points(data: DerivativeRequest):
+    try:
+        expr = parse_latex(clean_latex_input(data.equation.strip()))
+        fprime  = simplify(diff(expr, x))
+        fsecond = simplify(diff(fprime, x))
+        return {
+            "original":         sympy_latex(expr),
+            "first_derivative": sympy_latex(fprime),
+            "second_derivative": sympy_latex(fsecond),
+        }
+    except Exception as e:
+        return {"error": f"Failed to compute derivatives: {str(e)}"}
+
