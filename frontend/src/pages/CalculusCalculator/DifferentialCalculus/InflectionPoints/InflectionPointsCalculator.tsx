@@ -64,8 +64,8 @@ export default function InflectionPointsCalculator() {
             <div className="w-full">
               <InflectionPointsGraph
                 latex={original}
-                firstDerivativeLatex={firstDerivative}
-                secondDerivativeLatex={secondDerivative}
+                inflectionPoints={inflectionPoints}
+                inflectionPointsCoords={inflectionCoords}
                 height={500}
               />
             </div>
