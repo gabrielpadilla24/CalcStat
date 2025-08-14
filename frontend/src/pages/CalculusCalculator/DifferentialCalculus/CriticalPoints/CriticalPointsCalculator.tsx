@@ -57,10 +57,11 @@ const CriticalPointsCalculator = () => {
             {/* Gráfico */}
             <div className="w-full">
               <CriticalPointsGraph
-                expression={original}
-                firstDerivative={firstDerivative}
-                secondDerivative={secondDerivative}
-                criticalPoints={criticalPoints}
+                latex={original} // ← viene en LaTeX desde el backend
+                firstDerivativeLatex={firstDerivative}
+                secondDerivativeLatex={secondDerivative}
+                absoluteExtrema={absoluteExtrema}
+                height={500}
               />
             </div>
           </div>

@@ -1,74 +1,86 @@
-// src/pages/calculus/components/CriticalPointsGraph.tsx
-type Props = {
-  expression: string;
-  firstDerivative?: string;
-  secondDerivative?: string;
-  criticalPoints?: string[];
-  inflectionPoints?: string[];
+"use client";
+
+import DesmosGraph, { DesmosExpression } from "@/components/DesmosGraph";
+
+export type AbsoluteExtrema = {
+  max: string | null; // ej: "(1.23, 4.56)" o null
+  min: string | null; // ej: "(-2, 0.5)"  o null
 };
 
-const CriticalPointsGraph: React.FC<Props> = ({
-  expression,
-  firstDerivative,
-  secondDerivative,
-  criticalPoints,
-  inflectionPoints,
-}) => {
-  const hasInput = expression.trim().length > 0;
+type CriticalPointsGraphProps = {
+  /** LaTeX desde el backend para f(x), f'(x), f''(x) */
+  latex?: string; // original (sympy_latex)
+  firstDerivativeLatex?: string; // primera derivada
+  secondDerivativeLatex?: string; // segunda derivada
+  /** Extremos absolutos formateados como "(x, y)" o null (desde el backend) */
+  absoluteExtrema?: AbsoluteExtrema;
+  height?: number;
+};
+
+function normalizeLatexFunc(s?: string): string {
+  if (!s) return "";
+  const t = s.trim();
+  // Si no trae "=", le agregamos "y = ..."
+  return t.includes("=") ? t : `y = ${t}`;
+}
+
+/** Convierte "(x, y)" a algo que Desmos entienda como punto.
+ *  Si viene con espacios: "( 1.2 ,  3 )" lo normaliza a "(1.2, 3)".
+ *  Si no hay punto, retorna undefined.
+ */
+function toPointLatex(p?: string | null): string | undefined {
+  if (!p) return undefined;
+  const raw = p.trim();
+  // Aceptamos "(x, y)" o "x, y"
+  const match = raw.match(
+    /^\(?\s*(-?\d+(\.\d+)?)\s*,\s*(-?\d+(\.\d+)?)\s*\)?$/
+  );
+  if (!match) return undefined;
+  const x = match[1];
+  const y = match[3];
+  // Desmos acepta "(x, y)" como punto
+  return `(${x}, ${y})`;
+}
+
+export default function CriticalPointsGraph({
+  latex,
+  firstDerivativeLatex,
+  secondDerivativeLatex,
+  absoluteExtrema,
+  height = 500,
+}: CriticalPointsGraphProps) {
+  const exprs: DesmosExpression[] = [
+    { id: "f", latex: normalizeLatexFunc(latex) || undefined },
+    {
+      id: "fprime",
+      latex: normalizeLatexFunc(firstDerivativeLatex) || undefined,
+    },
+    {
+      id: "fsecond",
+      latex: normalizeLatexFunc(secondDerivativeLatex) || undefined,
+    },
+  ];
+
+  const maxPoint = toPointLatex(absoluteExtrema?.max);
+  const minPoint = toPointLatex(absoluteExtrema?.min);
+
+  if (maxPoint) exprs.push({ id: "absmax", latex: maxPoint });
+  if (minPoint) exprs.push({ id: "absmin", latex: minPoint });
 
   return (
-    <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6 mt-6">
-      <h2 className="text-2xl font-semibold text-gray-800 mb-2">Graph</h2>
-
-      {!hasInput ? (
-        <p className="text-gray-600">
-          Ingresa una función para ver el gráfico. (Coming soon…)
-        </p>
-      ) : (
-        <>
-          <p className="text-gray-600 mb-4">
-            Próximamente: render con Desmos, marcadores de críticos, puntos de
-            inflexión y visual del intervalo.
-          </p>
-
-          {/* Placeholder del canvas/gráfico */}
-          <div className="w-full h-64 rounded-lg border border-dashed border-gray-300 flex items-center justify-center">
-            <span className="text-gray-500">
-              Graph placeholder — {`f(x) = ${expression}`}
-            </span>
-          </div>
-
-          {/* Info mínima opcional */}
-          <div className="mt-4 grid grid-cols-1 sm:grid-cols-2 gap-3 text-sm text-gray-700">
-            {firstDerivative && (
-              <div>
-                <span className="font-semibold">f'(x): </span>
-                <span className="break-all">{firstDerivative}</span>
-              </div>
-            )}
-            {secondDerivative && (
-              <div>
-                <span className="font-semibold">f''(x): </span>
-                <span className="break-all">{secondDerivative}</span>
-              </div>
-            )}
-            {criticalPoints && criticalPoints.length > 0 && (
-              <div>
-                <span className="font-semibold">Critical points: </span>
-                <span className="break-all">{criticalPoints.join(", ")}</span>
-              </div>
-            )}
-            {inflectionPoints && inflectionPoints.length > 0 && (
-              <div>
-                <span className="font-semibold">Inflection points: </span>
-                <span className="break-all">{inflectionPoints.join(", ")}</span>
-              </div>
-            )}
-          </div>
-        </>
-      )}
-    </div>
+    <DesmosGraph
+      title="📎 Critical Points Graph"
+      height={height}
+      expressions={exprs}
+      ui={{
+        expressions: true,
+        expressionsCollapsed: true,
+        keypad: false,
+        settingsMenu: false,
+        zoomButtons: true,
+        expressionsTopbar: true,
+        border: false,
+      }}
+    />
   );
-};
-
-export default CriticalPointsGraph;
+}
