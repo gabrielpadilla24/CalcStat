@@ -3,28 +3,35 @@
 import DesmosGraph, { DesmosExpression } from "@/components/DesmosGraph";
 
 type DerivativesGraphProps = {
-  latex?: string; // LaTeX desde el backend
+  /** LaTeX desde el backend para f(x) */
+  latex?: string;
+  /** LaTeX desde el backend para f'(x) */
+  derivativeLatex?: string;
   height?: number;
 };
 
-function normalizeLatex(latex?: string): string {
-  if (!latex) return "";
-  const trimmed = latex.trim();
-  return trimmed.includes("=") ? trimmed : `y = ${trimmed}`;
+function normalizeLatex(s?: string): string {
+  if (!s) return "";
+  const t = s.trim();
+  return t.includes("=") ? t : `y = ${t}`;
 }
 
 export default function DerivativesGraph({
   latex,
+  derivativeLatex,
   height = 500,
 }: DerivativesGraphProps) {
-  const toPlot = normalizeLatex(latex);
-  const expr: DesmosExpression = { id: "main", latex: toPlot || undefined };
+  // Siempre enviamos ambos ids; si falta latex, el genérico lo removerá.
+  const exprs: DesmosExpression[] = [
+    { id: "f", latex: normalizeLatex(latex) || undefined },
+    { id: "fprime", latex: normalizeLatex(derivativeLatex) || undefined },
+  ];
 
   return (
     <DesmosGraph
       title="🧮 Interactive Graphing Calculator"
       height={height}
-      expressions={expr}
+      expressions={exprs}
       ui={{
         expressions: true,
         expressionsCollapsed: true,

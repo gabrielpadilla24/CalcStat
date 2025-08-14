@@ -49,7 +49,10 @@ const DerivativesCalculator = () => {
             {/* 👉 Solo invocamos el gráfico; muestra vacío si no hay expresión */}
             <div className="w-full">
               {/* Puedes pasar expression (string normal) o latex (del backend) */}
-              <DerivativesGraph latex={expressionLatex} />
+              <DerivativesGraph
+                latex={expressionLatex}
+                derivativeLatex={derivativeLatex}
+              />{" "}
             </div>
           </div>
 
