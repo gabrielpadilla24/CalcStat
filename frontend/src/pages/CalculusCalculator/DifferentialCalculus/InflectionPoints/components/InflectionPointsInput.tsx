@@ -67,6 +67,8 @@ type InflectionPointsResponse = {
   second_derivative: string;
   second_derivative_zeros: string[];
   second_derivative_singularities: string[];
+  inflection_points: { x: string; y: string }[];
+  inflection_points_coords: string[];
   // (cuando amplíes) inflection_points, etc...
 };
 
@@ -78,7 +80,9 @@ export default function InflectionPointsInput({
     first_derivative: string,
     second_derivative: string,
     second_derivative_zeros: string[],
-    second_derivative_singularities: string[]
+    second_derivative_singularities: string[],
+    inflection_points: { x: string; y: string }[],
+    inflection_points_coords: string[]
   ) => void;
 }) {
   return (
@@ -93,7 +97,9 @@ export default function InflectionPointsInput({
           data.first_derivative,
           data.second_derivative,
           data.second_derivative_zeros,
-          data.second_derivative_singularities
+          data.second_derivative_singularities,
+          data.inflection_points,
+          data.inflection_points_coords
         )
       }
     />

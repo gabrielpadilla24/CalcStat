@@ -14,12 +14,18 @@ export default function InflectionPointsCalculator() {
   const [firstDerivative, setFirstDerivative] = useState<string>("");
   const [secondDerivative, setSecondDerivative] = useState<string>("");
 
-  // 🔹 CANDIDATOS A INFLEXIÓN (estos eran los que faltaban)
+  // Candidatos a inflexión
   const [secondDerivativeZeros, setSecondDerivativeZeros] = useState<string[]>(
     []
   );
   const [secondDerivativeSingularities, setSecondDerivativeSingularities] =
     useState<string[]>([]);
+
+  // ✅ Inflexiones confirmadas
+  const [inflectionPoints, setInflectionPoints] = useState<
+    { x: string; y: string }[]
+  >([]);
+  const [inflectionCoords, setInflectionCoords] = useState<string[]>([]); // "(x, y)" para Desmos
 
   return (
     <>
@@ -35,12 +41,22 @@ export default function InflectionPointsCalculator() {
           <div className="flex-1 max-w-[600px] w-full flex flex-col items-center">
             <div className="w-full">
               <InflectionPointsInput
-                onResult={(orig, fprime, fsecond, zeros, sing) => {
+                onResult={(
+                  orig,
+                  fprime,
+                  fsecond,
+                  zeros,
+                  sing,
+                  inflPts,
+                  inflCoords
+                ) => {
                   setOriginal(orig);
                   setFirstDerivative(fprime);
                   setSecondDerivative(fsecond);
                   setSecondDerivativeZeros(zeros);
                   setSecondDerivativeSingularities(sing);
+                  setInflectionPoints(inflPts);
+                  setInflectionCoords(inflCoords ?? []);
                 }}
               />
             </div>
@@ -63,6 +79,9 @@ export default function InflectionPointsCalculator() {
               secondDerivative={secondDerivative}
               secondDerivativeZeros={secondDerivativeZeros}
               secondDerivativeSingularities={secondDerivativeSingularities}
+              // 🔹 nuevos:
+              inflectionPoints={inflectionPoints}
+              inflectionPointsCoords={inflectionCoords}
             />
           </div>
         </div>

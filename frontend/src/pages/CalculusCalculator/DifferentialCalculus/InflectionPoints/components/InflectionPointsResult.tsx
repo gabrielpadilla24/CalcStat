@@ -3,11 +3,9 @@
 
 import React from "react";
 import { addStyles, StaticMathField } from "react-mathquill";
-
 addStyles();
 
 type InflectionPointsResultProps = {
-  // fórmulas
   original: string;
   originalLatex?: string;
   firstDerivative: string;
@@ -15,9 +13,12 @@ type InflectionPointsResultProps = {
   secondDerivative: string;
   secondDerivativeLatex?: string;
 
-  // candidatos a inflexión
-  secondDerivativeZeros?: string[]; // x donde f''(x)=0 (LaTeX)
-  secondDerivativeSingularities?: string[]; // x donde f'' no existe (LaTeX)
+  secondDerivativeZeros?: string[];
+  secondDerivativeSingularities?: string[];
+
+  // 👉 confirmados
+  inflectionPoints?: { x: string; y: string }[];
+  inflectionPointsCoords?: string[];
 };
 
 const InflectionPointsResult: React.FC<InflectionPointsResultProps> = ({
@@ -29,8 +30,10 @@ const InflectionPointsResult: React.FC<InflectionPointsResultProps> = ({
   secondDerivativeLatex,
   secondDerivativeZeros = [],
   secondDerivativeSingularities = [],
+  inflectionPoints = [],
+  inflectionPointsCoords = [],
 }) => {
-  const hasResult = original && firstDerivative && secondDerivative;
+  const hasResult = Boolean(original && firstDerivative && secondDerivative);
 
   return (
     <div className="bg-white shadow-md rounded-xl p-6 w-[600px] mx-auto text-gray-800">
@@ -38,13 +41,11 @@ const InflectionPointsResult: React.FC<InflectionPointsResultProps> = ({
         📈 Inflection / Concavity Result
       </h2>
 
-      {!hasResult && (
+      {!hasResult ? (
         <p className="text-gray-500 italic">
           Enter a function above to compute its derivatives.
         </p>
-      )}
-
-      {hasResult && (
+      ) : (
         <>
           {/* f(x) */}
           <div className="mb-4 flex items-center gap-2">
@@ -68,18 +69,17 @@ const InflectionPointsResult: React.FC<InflectionPointsResultProps> = ({
             </StaticMathField>
           </div>
 
-          {/* 🔎 Candidatos a inflexión */}
+          {/* 🔎 Candidatos */}
           <div className="mt-8">
             <h3 className="text-lg font-semibold mb-3">
               🔎 Inflection Candidates
             </h3>
 
-            {/* f''(x) = 0 */}
             <div className="mb-4">
               <p className="text-sm font-medium text-gray-700">
                 Where f''(x) = 0:
               </p>
-              {secondDerivativeZeros.length > 0 ? (
+              {secondDerivativeZeros.length ? (
                 <div className="flex flex-wrap gap-3 mt-2">
                   {secondDerivativeZeros.map((z, i) => (
                     <div
@@ -96,12 +96,11 @@ const InflectionPointsResult: React.FC<InflectionPointsResultProps> = ({
               )}
             </div>
 
-            {/* f''(x) no existe */}
             <div>
               <p className="text-sm font-medium text-gray-700">
                 Where f''(x) does not exist:
               </p>
-              {secondDerivativeSingularities.length > 0 ? (
+              {secondDerivativeSingularities.length ? (
                 <div className="flex flex-wrap gap-3 mt-2">
                   {secondDerivativeSingularities.map((s, i) => (
                     <div
@@ -117,6 +116,33 @@ const InflectionPointsResult: React.FC<InflectionPointsResultProps> = ({
                 <p className="text-gray-500 text-sm italic">— none —</p>
               )}
             </div>
+          </div>
+
+          {/* ✅ Confirmados en LaTeX */}
+          <div className="mt-8">
+            <h3 className="text-lg font-semibold mb-3">
+              ✅ Inflection Points (confirmed)
+            </h3>
+            {inflectionPoints.length ? (
+              <div className="space-y-2">
+                {inflectionPoints.map((pt, i) => {
+                  const pointLatex = String.raw`\left(${pt.x},\,${pt.y}\right)`;
+                  return (
+                    <div key={`infl-${i}`} className="flex items-center gap-2">
+                      <span className="text-sm text-gray-700">P{i + 1}:</span>
+                      <StaticMathField>{pointLatex}</StaticMathField>
+                    </div>
+                  );
+                })}
+                {inflectionPointsCoords.length > 0 && (
+                  <p className="text-xs text-gray-500 mt-2">
+                    numeric: {inflectionPointsCoords.join(", ")}
+                  </p>
+                )}
+              </div>
+            ) : (
+              <p className="text-gray-500 text-sm italic">— none —</p>
+            )}
           </div>
         </>
       )}

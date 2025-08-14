@@ -1042,6 +1042,18 @@ def compute_tangent_line(data: TangentLineData):
     }
 
 
+#--------------------------------
+# ENDPOINT: inflectionpoints
+#--------------------------------
+#--------------------------------
+# ENDPOINT: inflectionpoints
+#--------------------------------
+from sympy import symbols, diff, simplify, Eq, solveset, S, singularities
+from sympy.parsing.latex import parse_latex
+from sympy import latex as sympy_latex
+
+x = symbols("x")
+
 @app.post("/inflectionpoints")
 def compute_inflection_points(data: DerivativeRequest):
     try:
@@ -1077,14 +1089,72 @@ def compute_inflection_points(data: DerivativeRequest):
         zeros_ltx = [sympy_latex(z) for z in zeros]
         sings_ltx = [sympy_latex(s) for s in sings]
 
+        # 4) Confirmar inflexiones por cambio de signo en f''(x)
+        inflection_pts_ltx = []       # [{x: "<latex>", y: "<latex>"}]
+        inflection_pts_coords = []    # ["(x, y)", ...] para graficar si lo deseas
+
+        candidates = zeros + sings
+        vistos = set()
+        for c in candidates:
+            k = sympy_latex(c)
+            if k in vistos:
+                continue
+            vistos.add(k)
+
+            # Necesitamos valor numérico para probar signos a izquierda/derecha
+            try:
+                cnum = float(c)
+            except Exception:
+                continue
+
+            d = max(1e-6, abs(cnum) * 1e-6)
+
+            def _sign(t):
+                try:
+                    v = float(fsecond.subs(x, t))
+                    if v > 0: return 1
+                    if v < 0: return -1
+                except Exception:
+                    pass
+                return 0
+
+            left  = _sign(cnum - d)
+            right = _sign(cnum + d)
+
+            # Cambio de signo estricto ⇒ inflexión
+            if left * right < 0:
+                try:
+                    y_sym = expr.subs(x, c)
+                    y_num = float(expr.subs(x, cnum))
+
+                    # Pares LaTeX
+                    inflection_pts_ltx.append({
+                        "x": sympy_latex(c),
+                        "y": sympy_latex(y_sym),
+                    })
+
+                    # Coordenadas numéricas como string (sin helper)
+                    x_str = str(round(cnum, 6)).rstrip("0").rstrip(".")
+                    y_str = str(round(y_num, 6)).rstrip("0").rstrip(".")
+                    if x_str == "": x_str = "0"
+                    if y_str == "": y_str = "0"
+                    inflection_pts_coords.append(f"({x_str}, {y_str})")
+                except Exception:
+                    # Si f(c) no existe, no devolvemos el punto (aunque cambie concavidad)
+                    pass
+
         return {
             "original":           sympy_latex(expr),
             "first_derivative":   sympy_latex(fprime),
             "second_derivative":  sympy_latex(fsecond),
 
-            # ✅ candidatos de inflexión
-            "second_derivative_zeros":         zeros_ltx,   # x con f''(x)=0
-            "second_derivative_singularities": sings_ltx,   # x donde f'' no existe
+            # candidatos
+            "second_derivative_zeros":         zeros_ltx,
+            "second_derivative_singularities": sings_ltx,
+
+            # ✅ inflection points confirmados
+            "inflection_points":        inflection_pts_ltx,      # [{x:<ltx>, y:<ltx>}]
+            "inflection_points_coords": inflection_pts_coords,   # ["(x, y)", ...]
         }
     except Exception as e:
         return {"error": f"Failed to compute inflection data: {str(e)}"}
