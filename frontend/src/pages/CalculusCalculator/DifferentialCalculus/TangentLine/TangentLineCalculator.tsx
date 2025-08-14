@@ -2,7 +2,7 @@ import { useState } from "react";
 import NavBar from "@/components/NavBar";
 import BottomCTA from "@/components/BottomCTA";
 import TangentLineInput from "./components/TangentLineInput";
-// import TangentLineGraph from "./components/TangentLineGraph";
+import TangentLineGraph from "./components/TangentLineGraph";
 import TangentLineResult from "./components/TangentLineResult";
 
 const TangentLineCalculator = () => {
@@ -42,7 +42,13 @@ const TangentLineCalculator = () => {
 
             {/* Gráfico (opcional) */}
             <div className="w-full">
-              {/* <TangentLineGraph expression={original} tangent={fxTangentStr} pointX={x0} /> */}
+              <TangentLineGraph
+                latex={original} // data.original (LaTeX de f(x))
+                tangentLatex={fxTangentStr} // ✅ usar el estado correcto
+                x0={x0}
+                y0={y0}
+                height={500}
+              />
             </div>
           </div>
 
