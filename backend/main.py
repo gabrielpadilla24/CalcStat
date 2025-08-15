@@ -1166,9 +1166,29 @@ def compute_inflection_points(data: DerivativeRequest):
 
 @app.post("/implicitdiff")
 def implicit_differentiation(data: DerivativeRequest):
-    print(f"Original: {data.equation}")
+    try:
+        x, y = symbols("x y")
+        expr = parse_latex(clean_latex_input(data.equation.strip()))
+        # Derivada implícita: diff(expr, x) + diff(expr, y) * y'
+        dy = Symbol("y'", real=True)
+        # Derivada total usando la regla de la cadena
+        d_expr = diff(expr, x) + diff(expr, y) * dy
+        # Resolver para y'
+        implicit_sol = sympy.solve(Eq(d_expr, 0), dy)
+        steps = [
+            f"1. Differentiate both sides with respect to x:",
+            f"$\\frac{{d}}{{dx}}\\left[{sympy_latex(expr)}\\right] = 0$",
+            f"2. Apply the chain rule for terms with y:",
+            f"$\\frac{{\\partial}}{{\\partial x}} + \\frac{{\\partial}}{{\\partial y}} \\cdot y'$",
+            f"3. Rearranging and solving for $y'$:",
+            f"$y' = {sympy_latex(implicit_sol[0])}$" if implicit_sol else "No solution found."
+        ]
+        implicit_latex = sympy_latex(implicit_sol[0]) if implicit_sol else ""
+    except Exception as e:
+        implicit_latex = ""
+        steps = [f"Error: {str(e)}"]
     return {
         "original": data.equation,   # reimprime lo que llegó
-        "implicit": data.equation,   # por ahora devolvemos lo mismo
-        "steps": [],                 # placeholder
+        "implicit": str(implicit_latex),   # por ahora devolvemos lo mismo
+        "steps": steps,
     }
