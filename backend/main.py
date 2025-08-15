@@ -1215,8 +1215,11 @@ def compute_limits(data: DerivativeRequest):
     # data.equation llega en LaTeX (desde MathQuill)
     latex_fx = data.equation.strip() or "f(x)"
     original_limit_latex = rf"\lim_{{x \to \infty}} \left({latex_fx}\right)"
+    # Convertir LaTeX a expresión sympy
+    expr = parse_latex(latex_fx)
+    limit = sympy.limit(expr, x, sympy.oo)
     return {
         "original": original_limit_latex,  # <- listo para KaTeX/MathQuill
-        "limit": "",                       # por ahora vacío (se calculará luego)
-        "steps": [],                       # placeholder
+        "limit": sympy.latex(limit),        # por ahora vacío (se calculará luego)
+
     }

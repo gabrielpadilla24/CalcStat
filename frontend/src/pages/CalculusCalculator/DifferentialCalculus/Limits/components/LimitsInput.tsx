@@ -4,13 +4,12 @@ import MathFunctionInput from "@/components/MathFunctionInput";
 type LimitsResponse = {
   original: string;
   limit: string;
-  steps?: string[];
 };
 
 const LimitsInput = ({
   onResult,
 }: {
-  onResult: (original: string, limit: string, steps?: string[]) => void;
+  onResult: (original: string, limit: string) => void;
 }) => (
   <MathFunctionInput<LimitsResponse>
     label="Enter a function to calculate its limit:"
@@ -26,7 +25,7 @@ const LimitsInput = ({
       />
     }
     onSuccess={(data) => {
-      onResult(data.original, data.limit, data.steps);
+      onResult(data.original, data.limit);
     }}
   />
 );
