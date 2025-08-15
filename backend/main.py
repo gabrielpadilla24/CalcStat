@@ -1207,8 +1207,16 @@ def implicit_differentiation(data: DerivativeRequest):
 # LIMITS
 #-------------------------------------
 
+#--------------------------------------
+# ENDPOINT: limits (echo con notación de límite)
+#--------------------------------------
 @app.post("/limits")
 def compute_limits(data: DerivativeRequest):
+    # data.equation llega en LaTeX (desde MathQuill)
+    latex_fx = data.equation.strip() or "f(x)"
+    original_limit_latex = rf"\lim_{{x \to \infty}} \left({latex_fx}\right)"
     return {
-        "original": data.equation
+        "original": original_limit_latex,  # <- listo para KaTeX/MathQuill
+        "limit": "",                       # por ahora vacío (se calculará luego)
+        "steps": [],                       # placeholder
     }

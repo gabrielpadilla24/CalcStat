@@ -5,8 +5,8 @@ import { addStyles, StaticMathField } from "react-mathquill";
 addStyles();
 
 type LimitsResultProps = {
-  original: string;
-  limit: string;
+  original: string; // ahora ya viene como \lim_{x\to\infty}(...)
+  limit: string; // puede venir vacío por ahora
   steps?: string[];
 };
 
@@ -15,7 +15,7 @@ const LimitsResult: React.FC<LimitsResultProps> = ({
   limit,
   steps,
 }) => {
-  const hasResult = Boolean(original && limit);
+  const hasResult = Boolean(original); // <- basta con original
 
   return (
     <div className="bg-white shadow-md rounded-xl p-6 w-[600px] mx-auto text-gray-800">
@@ -31,15 +31,19 @@ const LimitsResult: React.FC<LimitsResultProps> = ({
 
       {hasResult && (
         <>
+          {/* La función ya viene envuelta como límite */}
           <div className="mb-4 flex items-center gap-2">
             <span className="font-semibold">Function:</span>
             <StaticMathField>{original}</StaticMathField>
           </div>
 
-          <div className="mb-6 flex items-center gap-2">
-            <span className="font-semibold">Limit:</span>
-            <StaticMathField>{limit}</StaticMathField>
-          </div>
+          {/* Si aún no calculas el valor, puedes ocultar o mostrar un guion */}
+          {limit && (
+            <div className="mb-6 flex items-center gap-2">
+              <span className="font-semibold">Limit:</span>
+              <StaticMathField>{limit}</StaticMathField>
+            </div>
+          )}
 
           {steps && steps.length > 0 && (
             <div className="mt-8">
