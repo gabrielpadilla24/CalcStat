@@ -56,10 +56,8 @@ export default function IntegralsInput({ onResult }: Props) {
     const mf = mfRef.current;
     if (!mf) return;
 
-    // \int y límites si aplica
-    mf.cmd("\\int"); // equivalente a escribir \int
     if (def) {
-      mf.write(`_{{}^{}`);
+      mf.latex("\\int _{ }^{ }\\left(\\right)dx");
     }
   };
 
