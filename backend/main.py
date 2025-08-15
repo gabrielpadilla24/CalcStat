@@ -1045,9 +1045,7 @@ def compute_tangent_line(data: TangentLineData):
 #--------------------------------
 # ENDPOINT: inflectionpoints
 #--------------------------------
-#--------------------------------
-# ENDPOINT: inflectionpoints
-#--------------------------------
+
 from sympy import symbols, diff, simplify, Eq, solveset, S, singularities
 from sympy.parsing.latex import parse_latex
 from sympy import latex as sympy_latex
@@ -1158,3 +1156,19 @@ def compute_inflection_points(data: DerivativeRequest):
         }
     except Exception as e:
         return {"error": f"Failed to compute inflection data: {str(e)}"}
+
+
+
+
+#--------------------------------------
+# ENDPOINT: implicit differentiation
+#--------------------------------------
+
+@app.post("/implicitdiff")
+def implicit_differentiation(data: DerivativeRequest):
+    print(f"Original: {data.equation}")
+    return {
+        "original": data.equation,   # reimprime lo que llegó
+        "implicit": data.equation,   # por ahora devolvemos lo mismo
+        "steps": [],                 # placeholder
+    }

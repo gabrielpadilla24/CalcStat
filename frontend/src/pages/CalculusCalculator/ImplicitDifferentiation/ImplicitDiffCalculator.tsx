@@ -1,13 +1,15 @@
-// src/pages/CalculusCalculator/DifferentialCalculus/ImplicitDiff/ImplicitDiffCalculator.tsx
-//import { useState } from "react";
+// src/pages/CalculusCalculator/ImplicitDifferentiation/ImplicitDiffCalculator.tsx
+import { useState } from "react";
 import NavBar from "@/components/NavBar";
 import BottomCTA from "@/components/BottomCTA";
+import ImplicitDiffInput from "./components/ImplicitDiffInput";
+// import ImplicitDiffGraph from "./components/ImplicitDiffGraph"; // ← opcional, cuando esté listo
+import ImplicitDiffResult from "./components/ImplicitDiffResult";
 
 const ImplicitDiffCalculator = () => {
-  // 👉 Estado placeholder (ajústalo cuando conectes el backend)
-  //   const [equation, setEquation] = useState<string>("");     // F(x, y) = 0
-  //   const [dydx, setDydx] = useState<string>("");             // dy/dx result (LaTeX o texto)
-  //   const [steps, setSteps] = useState<string[] | undefined>(); // pasos opcionales
+  const [original, setOriginal] = useState<string>("");
+  const [implicit, setImplicit] = useState<string>("");
+  const [steps, setSteps] = useState<string[] | undefined>();
 
   return (
     <>
@@ -18,46 +20,33 @@ const ImplicitDiffCalculator = () => {
           Implicit Differentiation Calculator
         </h1>
 
-        {/* Contenedor principal */}
+        {/* Contenedor principal (idéntico al de Derivatives) */}
         <div className="max-w-[1440px] mx-auto flex flex-col lg:flex-row justify-center items-start gap-6 px-6">
           {/* Columna izquierda: Input + Graph */}
-          <div className="flex-1 max-w-[600px] w-full flex flex-col items-center lg:self-start">
+          <div className="flex-1 max-w-[600px] w-full flex flex-col items-center">
             <div className="w-full">
-              {/* TODO: ⬇️ Conecta tu componente de entrada
-                  <ImplicitDiffInput
-                    onResult={(eq, dy, stepArr) => {
-                      setEquation(eq);
-                      setDydx(dy);
-                      setSteps(stepArr);
-                    }}
-                  />
-              */}
+              <ImplicitDiffInput
+                onResult={(orig: string, dy: string, stepArr?: string[]) => {
+                  setOriginal(orig);
+                  setImplicit(dy);
+                  setSteps(stepArr);
+                }}
+              />
             </div>
 
+            {/* Gráfico (opcional) */}
             <div className="w-full">
-              {/* TODO: ⬇️ Conecta tu componente de gráfica (opcional)
-                  <ImplicitDiffGraph equation={equation} />
-              */}
+              {/* <ImplicitDiffGraph equation={original} implicit={implicit} /> */}
             </div>
           </div>
 
           {/* Columna derecha: Result */}
-          <div className="flex-1 w-full max-w-[600px] lg:self-start">
-            {/* TODO: ⬇️ Conecta tu componente de resultados
-                <ImplicitDiffResult
-                  equation={equation}
-                  dydx={dydx}
-                  steps={steps}
-                />
-            */}
-            {/* Placeholder visible mientras conectas */}
-            <div className="bg-white shadow-md rounded-xl p-6 text-gray-700">
-              <h2 className="text-2xl font-bold mb-4">Result</h2>
-              <p className="text-gray-500 italic">
-                Enter an implicit equation F(x, y) = 0 on the left to compute
-                dy/dx.
-              </p>
-            </div>
+          <div className="flex-1 w-full max-w-[600px]">
+            <ImplicitDiffResult
+              original={original}
+              implicit={implicit}
+              steps={steps}
+            />
           </div>
         </div>
       </div>
