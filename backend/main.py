@@ -1200,3 +1200,15 @@ def implicit_differentiation(data: DerivativeRequest):
         "implicit": implicit_latex,
         "steps": steps,
     }
+
+
+
+#-------------------------------------
+# LIMITS
+#-------------------------------------
+
+@app.post("/limits")
+def compute_limits(data: DerivativeRequest):
+    return {
+        "original": data.equation
+    }
