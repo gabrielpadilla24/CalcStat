@@ -1,11 +1,21 @@
-// src/components/MathFunctionInput.tsx
-import { useMemo, useState, ReactNode } from "react";
+"use client";
+
+import { useEffect, useMemo, useState, ReactNode } from "react";
 import { addStyles, EditableMathField } from "react-mathquill";
 
 addStyles();
 
 // JSON-safe type
 type Json = string | number | boolean | null | Json[] | { [k: string]: Json };
+
+// ✅ interfaz mínima del MathField que necesitamos (sin `any`)
+interface MathField {
+  latex: (l?: string) => string;
+  focus: () => void;
+  write: (latex: string) => void;
+  cmd: (cmd: string) => void;
+  keystroke: (keys: string) => void;
+}
 
 interface MathFunctionInputProps<
   TResponse = unknown,
@@ -19,12 +29,17 @@ interface MathFunctionInputProps<
   extraPayload?: TExtra;
   onSuccess: (data: TResponse, latex: string) => void;
   className?: string;
-
-  /** 🔥 NUEVO: adorno a la izquierda del campo (imagen, ícono, etc.) */
   inputLeft?: ReactNode;
-
-  /** (si ya lo tenías) contenido adicional debajo del campo */
   extraContent?: ReactNode;
+
+  /** (opcional) preset inicial si quieres controlar el valor */
+  presetLatex?: string;
+
+  /** (opcional) escucha cambios en LaTeX */
+  onLatexChange?: (latex: string) => void;
+
+  /** 🔥 NUEVO: te paso el MathField al montar para controlar el cursor/plantillas */
+  onMathField?: (mf: MathField | null) => void;
 }
 
 const MathFunctionInput = <
@@ -39,19 +54,32 @@ const MathFunctionInput = <
   extraPayload,
   onSuccess,
   className = "",
-  inputLeft, // <-- NUEVO
+  inputLeft,
   extraContent,
+  presetLatex,
+  onLatexChange,
+  onMathField,
 }: MathFunctionInputProps<TResponse, TExtra>) => {
-  const [latex, setLatex] = useState("");
+  const [latex, setLatex] = useState(presetLatex ?? "");
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState<string | null>(null);
 
-  const body = useMemo(() => {
-    return JSON.stringify({
-      ...(extraPayload ?? ({} as TExtra)),
-      [payloadKey]: latex,
-    });
-  }, [latex, extraPayload, payloadKey]);
+  const body = useMemo(
+    () =>
+      JSON.stringify({
+        ...(extraPayload ?? ({} as TExtra)),
+        [payloadKey]: latex,
+      }),
+    [latex, extraPayload, payloadKey]
+  );
+
+  useEffect(() => {
+    if (typeof presetLatex === "string") setLatex(presetLatex);
+  }, [presetLatex]);
+
+  useEffect(() => {
+    onLatexChange?.(latex);
+  }, [latex, onLatexChange]);
 
   const handleCalculate = async () => {
     setErr(null);
@@ -86,7 +114,6 @@ const MathFunctionInput = <
             {label}
           </label>
 
-          {/* 🔥 Campo con adorno a la izquierda */}
           <div className="w-full flex items-center gap-3 mb-6">
             {inputLeft && (
               <div className="shrink-0 flex items-center justify-center">
@@ -97,11 +124,14 @@ const MathFunctionInput = <
             <EditableMathField
               latex={latex}
               onChange={(mf) => setLatex(mf.latex())}
+              mathquillDidMount={(mf) => {
+                // expón el MathField arriba (sin perder compatibilidad)
+                onMathField?.(mf as unknown as MathField);
+              }}
               className="text-xl w-full border border-gray-300 px-4 py-2 rounded-lg bg-white focus:outline-none"
             />
           </div>
 
-          {/* (opcional) bloque extra debajo del input */}
           {extraContent}
 
           <p className="text-sm text-gray-500 mb-4">
