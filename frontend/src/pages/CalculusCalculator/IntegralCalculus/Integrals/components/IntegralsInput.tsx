@@ -1,3 +1,4 @@
+// src/pages/CalculusCalculator/IntegralCalculus/Integrals/components/IntegralsInput.tsx
 "use client";
 
 import { useMemo, useRef, useState } from "react";
@@ -26,99 +27,62 @@ type Props = {
 type MathField = {
   latex: (l?: string) => string;
   focus: () => void;
-  write: (latex: string) => void;
-  cmd: (cmd: string) => void;
   keystroke: (keys: string) => void;
 };
 
 export default function IntegralsInput({ onResult }: Props) {
   const [mode, setMode] = useState<"indef" | "def">("indef");
-  const [a, setA] = useState<string>("");
-  const [b, setB] = useState<string>("");
 
   const mfRef = useRef<MathField | null>(null);
 
-  // endpoint fijo; mandamos metadata en extraPayload
-  const endpoint = "http://localhost:8000/integrals";
-  const extraPayload = useMemo(() => {
-    const base: Record<string, string> = {
-      type: mode === "def" ? "def" : "indef",
-    };
-    if (mode === "def") {
-      base.a = a;
-      base.b = b;
-    }
-    return base;
-  }, [mode, a, b]);
+  // Plantilla sincronizada con el hijo (MathFunctionInput)
+  const [preset, setPreset] = useState<string>("");
 
-  /** 🔧 Escribe plantilla y ubica cursor dentro de los paréntesis */
-  const writeTemplate = (def: boolean) => {
+  // Para posicionar el cursor cuando el campo adopte la plantilla
+  const lastTemplateRef = useRef<string>("");
+  const needCursorRef = useRef<boolean>(false);
+
+  const endpoint = "http://localhost:8000/integrals";
+  const extraPayload = useMemo(
+    () => ({ type: mode === "def" ? "def" : "indef" }),
+    [mode]
+  );
+
+  const insertTemplate = (def: boolean) => {
+    const template = def
+      ? `\\int _{ }^{ }\\left(\\right)dx`
+      : `\\int\\left(\\right)dx`;
+
+    // 1) sincronizar con el hijo (esto es lo que se enviará al backend)
+    lastTemplateRef.current = template;
+    needCursorRef.current = true;
+    setPreset(template);
+
+    // 2) feedback inmediato en MathQuill
+    const mf = mfRef.current;
+    if (mf) {
+      mf.latex(template);
+      mf.focus();
+      // desde el final: x ← d ← ) → dentro de (...)
+      mf.keystroke("Left");
+      mf.keystroke("Left");
+      mf.keystroke("Left");
+    }
+  };
+
+  const handleLatexChange = (current: string) => {
+    if (!needCursorRef.current || current !== lastTemplateRef.current) return;
     const mf = mfRef.current;
     if (!mf) return;
-
-    if (def) {
-      mf.latex("\\int _{ }^{ }\\left(\\right)dx");
-    }
+    mf.focus();
+    mf.keystroke("Left");
+    mf.keystroke("Left");
+    mf.keystroke("Left");
+    needCursorRef.current = false;
   };
 
   return (
     <div className="w-full">
-      <div className="mb-2 flex flex-wrap items-center gap-2">
-        <span className="text-sm font-medium">Integral:</span>
-
-        {/* Botones que INSERTAN la plantilla al presionarlos */}
-        <div className="inline-flex rounded-md shadow-sm overflow-hidden border">
-          <button
-            type="button"
-            onClick={() => {
-              setMode("indef");
-              writeTemplate(false);
-            }}
-            className={`px-3 py-1 text-sm ${
-              mode === "indef" ? "bg-gray-900 text-white" : "bg-white"
-            }`}
-            title="Insert \int(...) dx"
-          >
-            Indef
-          </button>
-          <button
-            type="button"
-            onClick={() => {
-              setMode("def");
-              writeTemplate(true);
-            }}
-            className={`px-3 py-1 text-sm border-l ${
-              mode === "def" ? "bg-gray-900 text-white" : "bg-white"
-            }`}
-            title="Insert \int_{a}^{b}(...) dx"
-          >
-            Def
-          </button>
-        </div>
-
-        {/* Límites opcionales para la plantilla definida */}
-        <div className="flex items-center gap-2 ml-2">
-          <label className="text-sm">
-            a:
-            <input
-              value={a}
-              onChange={(e) => setA(e.target.value)}
-              placeholder="a"
-              className="ml-1 w-20 rounded border px-2 py-1 text-sm"
-            />
-          </label>
-          <label className="text-sm">
-            b:
-            <input
-              value={b}
-              onChange={(e) => setB(e.target.value)}
-              placeholder="b"
-              className="ml-1 w-20 rounded border px-2 py-1 text-sm"
-            />
-          </label>
-        </div>
-      </div>
-
       <MathFunctionInput<IntegralsResponse, Record<string, string>>
         label={
           mode === "def"
@@ -133,7 +97,42 @@ export default function IntegralsInput({ onResult }: Props) {
             ? "Calculate Definite Integral"
             : "Calculate Indefinite Integral"
         }
-        onMathField={(mf) => (mfRef.current = mf)} // 👈 recibimos el MathField
+        // 👉 botones DENTRO de la card (debajo del input)
+        extraContent={
+          <div className="w-full flex justify-center mb-3">
+            <div className="inline-flex rounded-md shadow-sm overflow-hidden border">
+              <button
+                type="button"
+                onClick={() => {
+                  setMode("indef");
+                  insertTemplate(false);
+                }}
+                className={`px-3 py-1 text-sm ${
+                  mode === "indef" ? "bg-gray-900 text-white" : "bg-white"
+                }`}
+                title="Insert ∫( )dx"
+              >
+                Indef
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setMode("def");
+                  insertTemplate(true);
+                }}
+                className={`px-3 py-1 text-sm border-l ${
+                  mode === "def" ? "bg-gray-900 text-white" : "bg-white"
+                }`}
+                title="Insert ∫_{ }^{ }( )dx"
+              >
+                Def
+              </button>
+            </div>
+          </div>
+        }
+        presetLatex={preset} // sincroniza valor controlado
+        onLatexChange={handleLatexChange} // coloca el cursor dentro
+        onMathField={(mf) => (mfRef.current = mf)} // referencia al MathQuill
         onSuccess={(data) =>
           onResult(
             data.original,
@@ -147,13 +146,13 @@ export default function IntegralsInput({ onResult }: Props) {
       />
 
       <p className="mt-2 text-xs text-gray-500">
-        Tip: pulsa <strong>Indef</strong> o <strong>Def</strong> para insertar
-        la plantilla
-        <code> \int(\ )\, dx</code> o{" "}
+        Tip: usa los botones dentro de la tarjeta para insertar la plantilla
+        <code> ∫( )dx</code> o{" "}
         <code>
-          \int_{"{a}"}^{"{b}"}(\ )\, dx
+          ∫<sub> </sub>
+          <sup> </sup>( )dx
         </code>
-        . Escribe solo la función dentro de los paréntesis.
+        . Escribe solo el integrando dentro de los paréntesis.
       </p>
     </div>
   );
