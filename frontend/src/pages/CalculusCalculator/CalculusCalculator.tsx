@@ -231,39 +231,20 @@ const CalculusLandingPage = () => {
         {/* --- INTEGRALS SECTION --- */}
         {showIntegral && (
           <>
-            {/* Card: Definite Integrals */}
+            {/* Card:  Integrals */}
             <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] flex flex-col justify-between text-left">
               <img
-                src="/img/definiteintegrals.png"
+                src="/img/integrals.png"
                 alt="Definite Integrals"
                 className="h-40 w-full object-cover mb-4 rounded"
               />
               <h2 className="text-xl font-bold text-gray-800 mb-2">
-                Definite Integrals
+                Integrals
               </h2>
               <p className="text-sm text-gray-600 mb-4">
-                Calculate the definite integral of a function over a specific
-                interval.
+                Calculate the integral of a function.
               </p>
-              <Link to="/calculus/definiteintegrals">
-                <SubmitButton text="Open Calculator" />
-              </Link>
-            </div>
-
-            {/* Card: Indefinite Integrals */}
-            <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] flex flex-col justify-between text-left">
-              <img
-                src="/img/indefiniteintegrals.png"
-                alt="Indefinite Integrals"
-                className="h-40 w-full object-cover mb-4 rounded"
-              />
-              <h2 className="text-xl font-bold text-gray-800 mb-2">
-                Indefinite Integrals
-              </h2>
-              <p className="text-sm text-gray-600 mb-4">
-                Find the antiderivative of a function.
-              </p>
-              <Link to="/calculus/indefiniteintegrals">
+              <Link to="/calculus/integrals">
                 <SubmitButton text="Open Calculator" />
               </Link>
             </div>

@@ -18,6 +18,7 @@ import TangentLineCalculator from "./pages/CalculusCalculator/DifferentialCalcul
 import InflectionPointsCalculator from "./pages/CalculusCalculator/DifferentialCalculus/InflectionPoints/InflectionPointsCalculator";
 import ImplicitDiffCalculator from "./pages/CalculusCalculator/DifferentialCalculus/ImplicitDifferentiation/ImplicitDiffCalculator";
 import LimitsCalculator from "./pages/CalculusCalculator/DifferentialCalculus/Limits/LimitsCalculator";
+import IntegralsCalculator from "./pages/CalculusCalculator/IntegralCalculus/Integrals/IntegralsCalculator";
 
 const App = () => {
   return (
@@ -97,6 +98,9 @@ const App = () => {
         />
 
         <Route path="/calculus/limits" element={<LimitsCalculator />} />
+
+        {/* Integral Calculus */}
+        <Route path="/calculus/integrals" element={<IntegralsCalculator />} />
 
         {/* Other routes can be added here */}
         <Route path="/calculators" element={<Menu />} />
