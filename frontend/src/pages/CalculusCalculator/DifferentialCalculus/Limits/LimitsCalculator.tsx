@@ -9,6 +9,7 @@ export default function LimitsCalculator() {
   // LaTeX devuelto por el backend
   const [original, setOriginal] = useState<string>(""); // \lim_{x\to\infty}(...)
   const [limit, setLimit] = useState<string>(""); // valor del límite en LaTeX
+  const [func, setFunc] = useState<string>(""); // función pura (sin notación de límite)
 
   return (
     <>
@@ -24,15 +25,16 @@ export default function LimitsCalculator() {
           <div className="flex-1 max-w-[600px] w-full flex flex-col items-center">
             <div className="w-full">
               <LimitsInput
-                onResult={(orig, lim) => {
+                onResult={(orig, lim, fx) => {
                   setOriginal(orig);
                   setLimit(lim);
+                  setFunc(fx); // guardamos la función pura
                 }}
               />
             </div>
-            {/* (Opcional) gráfico iría aquí */}
+
             <div className="w-full">
-              <LimitsGraph latex={original} limitLatex={limit} />
+              <LimitsGraph latex={func} limitLatex={limit} />
             </div>
           </div>
 

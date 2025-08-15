@@ -1218,8 +1218,9 @@ def compute_limits(data: DerivativeRequest):
     # Convertir LaTeX a expresión sympy
     expr = parse_latex(latex_fx)
     limit = sympy.limit(expr, x, sympy.oo)
+    fx = sympy.latex(expr)
     return {
         "original": original_limit_latex,  # <- listo para KaTeX/MathQuill
         "limit": sympy.latex(limit),        # por ahora vacío (se calculará luego)
-
+        "fx": fx
     }
