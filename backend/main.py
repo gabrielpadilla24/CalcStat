@@ -1172,7 +1172,7 @@ def implicit_differentiation(data: DerivativeRequest):
             d_expr = diff(expr, x)
             steps = [
                 "1. Differentiate with respect to x:",
-                f"$\\frac{{d}}{{dx}}\\left[{sympy_latex(expr)}\\right] = {sympy_latex(d_expr)}$"
+                f"$\\frac{{d}}{{dx}}\\left[{sympy_latex(expr)}\\right] = {sympy_latex(d_expr)}"
             ]
             implicit_latex = sympy_latex(d_expr)
         else:
@@ -1183,11 +1183,11 @@ def implicit_differentiation(data: DerivativeRequest):
             implicit_sol = sympy.solve(Eq(d_expr, 0), dy)
             steps = [
                 "1. Differentiate both sides with respect to x:",
-                f"$\\frac{{d}}{{dx}}\\left[{sympy_latex(expr)}\\right] = 0$",
+                f"$\\frac{{d}}{{dx}}\\left[{sympy_latex(expr)}\\right]",
                 "2. Apply the chain rule for terms with y:",
-                "$\\frac{\\partial}{\\partial x} + \\frac{\\partial}{\\partial y} \\cdot y'$",
-                "3. Rearranging and solving for $y'$:",
-                f"$y' = {sympy_latex(implicit_sol[0])}$" if implicit_sol else "No solution found."
+                "$\\frac{\\partial}{\\partial x} + \\frac{\\partial}{\\partial y} \\cdot y'",
+                "3. Rearranging and solving for y':",
+                f"$y' = {sympy_latex(implicit_sol[0])}" if implicit_sol else "No solution found."
             ]
             implicit_latex = sympy_latex(implicit_sol[0]) if implicit_sol else ""
 
