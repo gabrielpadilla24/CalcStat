@@ -1158,37 +1158,45 @@ def compute_inflection_points(data: DerivativeRequest):
         return {"error": f"Failed to compute inflection data: {str(e)}"}
 
 
-
-
 #--------------------------------------
 # ENDPOINT: implicit differentiation
 #--------------------------------------
-
 @app.post("/implicitdiff")
 def implicit_differentiation(data: DerivativeRequest):
     try:
         x, y = symbols("x y")
         expr = parse_latex(clean_latex_input(data.equation.strip()))
-        # Derivada implícita: diff(expr, x) + diff(expr, y) * y'
-        dy = Symbol("y'", real=True)
-        # Derivada total usando la regla de la cadena
-        d_expr = diff(expr, x) + diff(expr, y) * dy
-        # Resolver para y'
-        implicit_sol = sympy.solve(Eq(d_expr, 0), dy)
-        steps = [
-            f"1. Differentiate both sides with respect to x:",
-            f"$\\frac{{d}}{{dx}}\\left[{sympy_latex(expr)}\\right] = 0$",
-            f"2. Apply the chain rule for terms with y:",
-            f"$\\frac{{\\partial}}{{\\partial x}} + \\frac{{\\partial}}{{\\partial y}} \\cdot y'$",
-            f"3. Rearranging and solving for $y'$:",
-            f"$y' = {sympy_latex(implicit_sol[0])}$" if implicit_sol else "No solution found."
-        ]
-        implicit_latex = sympy_latex(implicit_sol[0]) if implicit_sol else ""
+
+        # Si no hay 'y' en la expresión, derivada normal
+        if y not in expr.free_symbols:
+            d_expr = diff(expr, x)
+            steps = [
+                "1. Differentiate with respect to x:",
+                f"$\\frac{{d}}{{dx}}\\left[{sympy_latex(expr)}\\right] = {sympy_latex(d_expr)}$"
+            ]
+            implicit_latex = sympy_latex(d_expr)
+        else:
+            dy = Symbol("y'", real=True)
+            # Derivada total usando la regla de la cadena
+            d_expr = diff(expr, x) + diff(expr, y) * dy
+            # Resolver para y'
+            implicit_sol = sympy.solve(Eq(d_expr, 0), dy)
+            steps = [
+                "1. Differentiate both sides with respect to x:",
+                f"$\\frac{{d}}{{dx}}\\left[{sympy_latex(expr)}\\right] = 0$",
+                "2. Apply the chain rule for terms with y:",
+                "$\\frac{\\partial}{\\partial x} + \\frac{\\partial}{\\partial y} \\cdot y'$",
+                "3. Rearranging and solving for $y'$:",
+                f"$y' = {sympy_latex(implicit_sol[0])}$" if implicit_sol else "No solution found."
+            ]
+            implicit_latex = sympy_latex(implicit_sol[0]) if implicit_sol else ""
+
     except Exception as e:
         implicit_latex = ""
         steps = [f"Error: {str(e)}"]
+
     return {
         "original": data.equation,   # reimprime lo que llegó
-        "implicit": str(implicit_latex),   # por ahora devolvemos lo mismo
+        "implicit": implicit_latex,
         "steps": steps,
     }
