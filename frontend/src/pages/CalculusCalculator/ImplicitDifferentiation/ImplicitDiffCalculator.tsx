@@ -3,12 +3,12 @@ import { useState } from "react";
 import NavBar from "@/components/NavBar";
 import BottomCTA from "@/components/BottomCTA";
 import ImplicitDiffInput from "./components/ImplicitDiffInput";
-// import ImplicitDiffGraph from "./components/ImplicitDiffGraph"; // ← opcional, cuando esté listo
 import ImplicitDiffResult from "./components/ImplicitDiffResult";
+import ImplicitDiffGraph from "./components/ImplicitDiffGraph"; // 👈 usa el gráfico con latex/implicitLatex
 
 const ImplicitDiffCalculator = () => {
-  const [original, setOriginal] = useState<string>("");
-  const [implicit, setImplicit] = useState<string>("");
+  const [original, setOriginal] = useState<string>(""); // LaTeX o texto
+  const [implicit, setImplicit] = useState<string>(""); // LaTeX o texto
   const [steps, setSteps] = useState<string[] | undefined>();
 
   return (
@@ -20,7 +20,7 @@ const ImplicitDiffCalculator = () => {
           Implicit Differentiation Calculator
         </h1>
 
-        {/* Contenedor principal (idéntico al de Derivatives) */}
+        {/* Contenedor principal (mismo patrón que Derivatives) */}
         <div className="max-w-[1440px] mx-auto flex flex-col lg:flex-row justify-center items-start gap-6 px-6">
           {/* Columna izquierda: Input + Graph */}
           <div className="flex-1 max-w-[600px] w-full flex flex-col items-center">
@@ -34,9 +34,12 @@ const ImplicitDiffCalculator = () => {
               />
             </div>
 
-            {/* Gráfico (opcional) */}
+            {/* Gráfico (igual que DerivativesGraph) */}
             <div className="w-full">
-              {/* <ImplicitDiffGraph equation={original} implicit={implicit} /> */}
+              <ImplicitDiffGraph
+                latex={original} // puede ser “x^2 + y^2 = 25” o “x^3”
+                implicitLatex={implicit} // puede ser “\\frac{dy}{dx} = …” o “3x^2”
+              />
             </div>
           </div>
 
@@ -45,7 +48,7 @@ const ImplicitDiffCalculator = () => {
             <ImplicitDiffResult
               original={original}
               implicit={implicit}
-              steps={steps}
+              steps={steps ?? []}
             />
           </div>
         </div>
