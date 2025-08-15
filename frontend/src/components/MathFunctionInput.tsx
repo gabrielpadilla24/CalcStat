@@ -1,10 +1,10 @@
 // src/components/MathFunctionInput.tsx
-import { useMemo, useState, type ReactNode } from "react";
+import { useMemo, useState, ReactNode } from "react";
 import { addStyles, EditableMathField } from "react-mathquill";
 
 addStyles();
 
-// JSON-safe
+// JSON-safe type
 type Json = string | number | boolean | null | Json[] | { [k: string]: Json };
 
 interface MathFunctionInputProps<
@@ -15,11 +15,15 @@ interface MathFunctionInputProps<
   examples?: string[];
   buttonText?: string;
   endpoint: string;
-  payloadKey?: string; // "equation" | "function"
+  payloadKey?: string;
   extraPayload?: TExtra;
   onSuccess: (data: TResponse, latex: string) => void;
   className?: string;
-  /** 🔹 NUEVO: contenido adicional debajo del campo de función (dentro de la misma card) */
+
+  /** 🔥 NUEVO: adorno a la izquierda del campo (imagen, ícono, etc.) */
+  inputLeft?: ReactNode;
+
+  /** (si ya lo tenías) contenido adicional debajo del campo */
   extraContent?: ReactNode;
 }
 
@@ -35,7 +39,8 @@ const MathFunctionInput = <
   extraPayload,
   onSuccess,
   className = "",
-  extraContent, // 🔹 NUEVO
+  inputLeft, // <-- NUEVO
+  extraContent,
 }: MathFunctionInputProps<TResponse, TExtra>) => {
   const [latex, setLatex] = useState("");
   const [loading, setLoading] = useState(false);
@@ -81,16 +86,25 @@ const MathFunctionInput = <
             {label}
           </label>
 
-          <EditableMathField
-            latex={latex}
-            onChange={(mf) => setLatex(mf.latex())}
-            className="text-xl w-full border border-gray-300 px-4 py-2 mb-4 rounded-lg bg-white focus:outline-none"
-          />
+          {/* 🔥 Campo con adorno a la izquierda */}
+          <div className="w-full flex items-center gap-3 mb-6">
+            {inputLeft && (
+              <div className="shrink-0 flex items-center justify-center">
+                {inputLeft}
+              </div>
+            )}
 
-          {/* 🔹 Renderizamos el contenido extra dentro de la card */}
+            <EditableMathField
+              latex={latex}
+              onChange={(mf) => setLatex(mf.latex())}
+              className="text-xl w-full border border-gray-300 px-4 py-2 rounded-lg bg-white focus:outline-none"
+            />
+          </div>
+
+          {/* (opcional) bloque extra debajo del input */}
           {extraContent}
 
-          <p className="text-sm text-gray-500 mb-4 mt-2">
+          <p className="text-sm text-gray-500 mb-4">
             Examples:&nbsp;
             {examples.map((ex, i) => (
               <code key={i} className="mr-2">
