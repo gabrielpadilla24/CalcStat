@@ -32,15 +32,18 @@ export default function LimitsCalculator() {
                 }}
               />
             </div>
-
-            <div className="w-full">
-              <LimitsGraph latex={func} limitLatex={limit} />
-            </div>
           </div>
 
           {/* Columna derecha: Result */}
           <div className="flex-1 w-full max-w-[600px]">
             <LimitsResult original={original} limit={limit} />
+          </div>
+        </div>
+
+        {/* Gráfico centrado debajo del input y resultado */}
+        <div className="flex justify-center mt-2">
+          <div className="w-full max-w-[1250px]">
+            <LimitsGraph latex={func} limitLatex={limit} />
           </div>
         </div>
       </div>

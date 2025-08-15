@@ -53,7 +53,7 @@ export default function LimitsGraph({
       expressions={exprs}
       ui={{
         expressions: true,
-        expressionsCollapsed: true,
+        expressionsCollapsed: false,
         keypad: false,
         settingsMenu: false,
         zoomButtons: true,

@@ -12,7 +12,7 @@ const LimitsResult: React.FC<LimitsResultProps> = ({ original, limit }) => {
   const hasResult = Boolean(original && limit);
 
   return (
-    <div className="bg-white shadow-md rounded-xl p-6 w-[600px] mx-auto text-gray-800 h-[280px]">
+    <div className="bg-white shadow-md rounded-xl p-6 w-[600px] mx-auto text-gray-800 h-[283px]">
       <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
         📏 Limit Result
       </h2>
