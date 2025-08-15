@@ -16,6 +16,7 @@ import DerivativesCalculator from "./pages/CalculusCalculator/DifferentialCalcul
 import CriticalPointsCalculator from "./pages/CalculusCalculator/DifferentialCalculus/CriticalPoints/CriticalPointsCalculator";
 import TangentLineCalculator from "./pages/CalculusCalculator/DifferentialCalculus/TangentLine/TangentLineCalculator";
 import InflectionPointsCalculator from "./pages/CalculusCalculator/DifferentialCalculus/InflectionPoints/InflectionPointsCalculator";
+import ImplicitDiffCalculator from "./pages/CalculusCalculator/ImplicitDifferentiation/ImplicitDiffCalculator";
 
 const App = () => {
   return (
@@ -87,6 +88,11 @@ const App = () => {
         <Route
           path="/calculus/inflectionpoints"
           element={<InflectionPointsCalculator />}
+        />
+
+        <Route
+          path="/calculus/implicitdiff"
+          element={<ImplicitDiffCalculator />}
         />
 
         {/* Other routes can be added here */}
