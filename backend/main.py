@@ -5,7 +5,7 @@ from math import pow
 import numpy_financial as npf
 import numpy as np
 from typing import Literal, Optional, List
-from sympy import symbols, diff, simplify, Mul, Pow, Function, Symbol, Add, sin, cos, tan, log, exp, sqrt
+from sympy import symbols, diff, simplify, Mul, Pow, Function, Symbol, Add, sin, cos, tan, log, exp, sqrt, solveset, Eq, S, singularities
 from sympy.parsing.sympy_parser import parse_expr
 import sympy
 from sympy import latex as sympy_latex
@@ -899,10 +899,9 @@ async def compute_derivative(request: DerivativeRequest):
 #---------------------------------
 # ENDPOINT: criticalpoints (con LaTeX, sin inflection points)
 #---------------------------------
-from sympy import symbols, diff, simplify, Eq, solveset, S, singularities, latex as sympy_latex
-from sympy.parsing.latex import parse_latex
 
-x = symbols("x")
+
+
 
 @app.post("/criticalpoints")
 def compute_critical_points(data: CriticalPointsData):
@@ -1045,10 +1044,6 @@ def compute_tangent_line(data: TangentLineData):
 #--------------------------------
 # ENDPOINT: inflectionpoints
 #--------------------------------
-
-from sympy import symbols, diff, simplify, Eq, solveset, S, singularities
-from sympy.parsing.latex import parse_latex
-from sympy import latex as sympy_latex
 
 x = symbols("x")
 
