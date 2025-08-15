@@ -10,7 +10,7 @@ const CalculusLandingPage = () => {
   const showMainCards = selectedCategory === "All";
   const showSingle = selectedCategory === "Single";
   //const showMulti = selectedCategory === "Multi";
-  //const showIntegral = selectedCategory === "Integrals";
+  const showIntegral = selectedCategory === "Integrals";
 
   return (
     <div className="bg-gray-100 min-h-screen">
@@ -222,6 +222,66 @@ const CalculusLandingPage = () => {
                 Calculate limits of functions at specific points.
               </p>
               <Link to="/calculus/limits">
+                <SubmitButton text="Open Calculator" />
+              </Link>
+            </div>
+          </>
+        )}
+
+        {/* --- INTEGRALS SECTION --- */}
+        {showIntegral && (
+          <>
+            {/* Card: Definite Integrals */}
+            <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] flex flex-col justify-between text-left">
+              <img
+                src="/img/definiteintegrals.png"
+                alt="Definite Integrals"
+                className="h-40 w-full object-cover mb-4 rounded"
+              />
+              <h2 className="text-xl font-bold text-gray-800 mb-2">
+                Definite Integrals
+              </h2>
+              <p className="text-sm text-gray-600 mb-4">
+                Calculate the definite integral of a function over a specific
+                interval.
+              </p>
+              <Link to="/calculus/definiteintegrals">
+                <SubmitButton text="Open Calculator" />
+              </Link>
+            </div>
+
+            {/* Card: Indefinite Integrals */}
+            <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] flex flex-col justify-between text-left">
+              <img
+                src="/img/indefiniteintegrals.png"
+                alt="Indefinite Integrals"
+                className="h-40 w-full object-cover mb-4 rounded"
+              />
+              <h2 className="text-xl font-bold text-gray-800 mb-2">
+                Indefinite Integrals
+              </h2>
+              <p className="text-sm text-gray-600 mb-4">
+                Find the antiderivative of a function.
+              </p>
+              <Link to="/calculus/indefiniteintegrals">
+                <SubmitButton text="Open Calculator" />
+              </Link>
+            </div>
+
+            {/* Card: Area Under Curve */}
+            <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] flex flex-col justify-between text-left">
+              <img
+                src="/img/areaundercurve.png"
+                alt="Area Under Curve"
+                className="h-40 w-full object-cover mb-4 rounded"
+              />
+              <h2 className="text-xl font-bold text-gray-800 mb-2">
+                Area Under Curve
+              </h2>
+              <p className="text-sm text-gray-600 mb-4">
+                Calculate the area under a curve between two points.
+              </p>
+              <Link to="/calculus/areaundercurve">
                 <SubmitButton text="Open Calculator" />
               </Link>
             </div>
