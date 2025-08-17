@@ -1,7 +1,7 @@
 // src/pages/CalculusCalculator/IntegralCalculus/Integrals/components/IntegralsInput.tsx
 "use client";
 
-import { useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import MathFunctionInput from "@/components/MathFunctionInput";
 
 type IntegralsResponse = {
@@ -31,108 +31,63 @@ type MathField = {
 };
 
 export default function IntegralsInput({ onResult }: Props) {
-  const [mode, setMode] = useState<"indef" | "def">("indef");
-
   const mfRef = useRef<MathField | null>(null);
 
-  // Plantilla sincronizada con el hijo (MathFunctionInput)
+  // plantilla mostrada/controlada por el hijo
   const [preset, setPreset] = useState<string>("");
 
-  // Para posicionar el cursor cuando el campo adopte la plantilla
-  const lastTemplateRef = useRef<string>("");
-  const needCursorRef = useRef<boolean>(false);
+  const INDEF_TEMPLATE = "\\int _{ }^{ }\\left(\\right)dx";
 
-  const endpoint = "http://localhost:8000/integrals";
-  const extraPayload = useMemo(
-    () => ({ type: mode === "def" ? "def" : "indef" }),
-    [mode]
-  );
+  // Solo enviamos "indef" al backend
+  const extraPayload = useMemo(() => ({ type: "indef" }), []);
 
-  const insertTemplate = (def: boolean) => {
-    const template = def
-      ? `\\int _{ }^{ }\\left(\\right)dx`
-      : `\\int\\left(\\right)dx`;
+  // Para recolocar el cursor si el hijo re-renderiza con el preset
+  const needsCursorRef = useRef<boolean>(true);
 
-    // 1) sincronizar con el hijo (esto es lo que se enviará al backend)
-    lastTemplateRef.current = template;
-    needCursorRef.current = true;
-    setPreset(template);
+  // Al montar: dejar la indefinida puesta y el cursor dentro de (...)
+  useEffect(() => {
+    setPreset(INDEF_TEMPLATE);
 
-    // 2) feedback inmediato en MathQuill
-    const mf = mfRef.current;
-    if (mf) {
-      mf.latex(template);
-      mf.focus();
-      // desde el final: x ← d ← ) → dentro de (...)
-      mf.keystroke("Left");
-      mf.keystroke("Left");
-      mf.keystroke("Left");
-    }
-  };
-
-  const handleLatexChange = (current: string) => {
-    if (!needCursorRef.current || current !== lastTemplateRef.current) return;
     const mf = mfRef.current;
     if (!mf) return;
+
+    mf.latex(INDEF_TEMPLATE);
+    mf.focus();
+    // Desde el final: x ← d ← (espacio \,) ← )  → queda dentro de (...)
+    mf.keystroke("Left");
+    mf.keystroke("Left");
+    mf.keystroke("Left");
+    mf.keystroke("Left");
+    needsCursorRef.current = false;
+  }, []);
+
+  // Si el hijo repinta con preset, volvemos a poner el cursor dentro
+  const handleLatexChange = (current: string) => {
+    if (!needsCursorRef.current) return;
+    if (current !== INDEF_TEMPLATE) return;
+
+    const mf = mfRef.current;
+    if (!mf) return;
+
     mf.focus();
     mf.keystroke("Left");
     mf.keystroke("Left");
     mf.keystroke("Left");
-    needCursorRef.current = false;
+    mf.keystroke("Left");
+    needsCursorRef.current = false;
   };
 
   return (
     <div className="w-full">
       <MathFunctionInput<IntegralsResponse, Record<string, string>>
-        label={
-          mode === "def"
-            ? "Enter the function to integrate (definite):"
-            : "Enter the function to integrate (indefinite):"
-        }
-        endpoint={endpoint}
+        label={"Enter the function to integrate:"}
+        endpoint={"http://localhost:8000/integrals"}
         payloadKey="equation"
         extraPayload={extraPayload}
-        buttonText={
-          mode === "def"
-            ? "Calculate Definite Integral"
-            : "Calculate Indefinite Integral"
-        }
-        // 👉 botones DENTRO de la card (debajo del input)
-        extraContent={
-          <div className="w-full flex justify-center mb-3">
-            <div className="inline-flex rounded-md shadow-sm overflow-hidden border">
-              <button
-                type="button"
-                onClick={() => {
-                  setMode("indef");
-                  insertTemplate(false);
-                }}
-                className={`px-3 py-1 text-sm ${
-                  mode === "indef" ? "bg-gray-900 text-white" : "bg-white"
-                }`}
-                title="Insert ∫( )dx"
-              >
-                Indef
-              </button>
-              <button
-                type="button"
-                onClick={() => {
-                  setMode("def");
-                  insertTemplate(true);
-                }}
-                className={`px-3 py-1 text-sm border-l ${
-                  mode === "def" ? "bg-gray-900 text-white" : "bg-white"
-                }`}
-                title="Insert ∫_{ }^{ }( )dx"
-              >
-                Def
-              </button>
-            </div>
-          </div>
-        }
-        presetLatex={preset} // sincroniza valor controlado
-        onLatexChange={handleLatexChange} // coloca el cursor dentro
-        onMathField={(mf) => (mfRef.current = mf)} // referencia al MathQuill
+        buttonText={"Calculate Indefinite Integral"}
+        presetLatex={preset}
+        onLatexChange={handleLatexChange}
+        onMathField={(mf) => (mfRef.current = mf)}
         onSuccess={(data) =>
           onResult(
             data.original,
@@ -146,13 +101,8 @@ export default function IntegralsInput({ onResult }: Props) {
       />
 
       <p className="mt-2 text-xs text-gray-500">
-        Tip: usa los botones dentro de la tarjeta para insertar la plantilla
-        <code> ∫( )dx</code> o{" "}
-        <code>
-          ∫<sub> </sub>
-          <sup> </sup>( )dx
-        </code>
-        . Escribe solo el integrando dentro de los paréntesis.
+        Tip: el campo inicia con <code>\int\,\left(\right)\,dx</code>. Escribe
+        solo el integrando dentro de los paréntesis.
       </p>
     </div>
   );
