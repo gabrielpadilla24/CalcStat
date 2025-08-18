@@ -203,7 +203,9 @@ const LandingPage = () => {
               understanding of core linear structures.
             </p>
             <div className="w-fit pr-5 ml-20">
-              <SubmitButton text="Go to Linear Algebra" />
+              <Link to="/linearalgebra">
+                <SubmitButton text="Go to Linear Algebra" />
+              </Link>
             </div>
           </div>
         </div>
