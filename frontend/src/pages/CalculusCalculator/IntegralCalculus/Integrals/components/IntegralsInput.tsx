@@ -57,7 +57,7 @@ export default function IntegralsInput({ onResult }: Props) {
         buttonText={buttonText}
         /* 👇 Todo esto aparece DENTRO de la misma card */
         extraContent={
-          <div className="w-full mt-2 mb-10">
+          <div className="w-full mt-2">
             <div className="flex flex-wrap items-center gap-3 text-sm">
               <span className="font-medium text-gray-700">Type:</span>
 
@@ -106,6 +106,12 @@ export default function IntegralsInput({ onResult }: Props) {
                 </div>
               )}
             </div>
+
+            <p className="mt-2 text-xs text-gray-500">
+              Tip: escribe solo el <em>integrando</em> (p. ej., <code>x^2</code>
+              , <code>sin(x)</code>). Asumimos integración con respecto a{" "}
+              <code>dx</code>.{mode === "def" && " Incluye los límites a y b."}
+            </p>
           </div>
         }
         onSuccess={(data) =>
