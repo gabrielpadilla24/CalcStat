@@ -63,7 +63,7 @@ const LinearAlgebraCalculator = () => {
                 Understand the rules. Visualize the change. Learn determinants
                 the smart way.
               </p>
-              <Link to="/calculus/determinant">
+              <Link to="/linearalgebra/determinant">
                 <SubmitButton text="Open Calculator" />
               </Link>
             </div>

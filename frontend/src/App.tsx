@@ -19,6 +19,7 @@ import InflectionPointsCalculator from "./pages/CalculusCalculator/DifferentialC
 import ImplicitDiffCalculator from "./pages/CalculusCalculator/DifferentialCalculus/ImplicitDifferentiation/ImplicitDiffCalculator";
 import LimitsCalculator from "./pages/CalculusCalculator/DifferentialCalculus/Limits/LimitsCalculator";
 import LinearAlgebraCalculator from "./pages/LinearAlgebra/LinearAlgebraCalculator";
+import DeterminantCalculator from "./pages/LinearAlgebra/Determinant/DeterminantCalculator";
 
 const App = () => {
   return (
@@ -101,6 +102,11 @@ const App = () => {
 
         {/*LINEAR ALGEBRA */}
         <Route path="/linearalgebra" element={<LinearAlgebraCalculator />} />
+
+        <Route
+          path="/linearalgebra/determinant"
+          element={<DeterminantCalculator />}
+        />
 
         {/* Other routes can be added here */}
         <Route path="/calculators" element={<Menu />} />
