@@ -8,7 +8,6 @@ const CalculusLandingPage = () => {
   const [selectedCategory, setSelectedCategory] = useState<string>("Single");
 
   const showSingle = selectedCategory === "Single";
-  //const showMulti = selectedCategory === "Multi";
 
   return (
     <div className="bg-gray-100 min-h-screen">
@@ -27,22 +26,21 @@ const CalculusLandingPage = () => {
 
       {/* Category Navigation */}
       <div className="flex justify-center gap-4 flex-wrap mb-10 px-4">
-        {[
-          { label: "Single Variable", value: "Single" },
-          { label: "Multivariable", value: "Multi" },
-        ].map(({ label, value }) => (
-          <button
-            key={value}
-            onClick={() => setSelectedCategory(value)}
-            className={`px-5 py-2 rounded-lg transition ${
-              selectedCategory === value
-                ? "bg-[#5FBA9B] text-white"
-                : "bg-white text-[#5FBA9B] border border-[#5FBA9B] hover:bg-[#e0f7f1]"
-            }`}
-          >
-            {label}
-          </button>
-        ))}
+        {[{ label: "Single Variable", value: "Single" }].map(
+          ({ label, value }) => (
+            <button
+              key={value}
+              onClick={() => setSelectedCategory(value)}
+              className={`px-5 py-2 rounded-lg transition ${
+                selectedCategory === value
+                  ? "bg-[#5FBA9B] text-white"
+                  : "bg-white text-[#5FBA9B] border border-[#5FBA9B] hover:bg-[#e0f7f1]"
+              }`}
+            >
+              {label}
+            </button>
+          )
+        )}
       </div>
 
       {/* Cards */}

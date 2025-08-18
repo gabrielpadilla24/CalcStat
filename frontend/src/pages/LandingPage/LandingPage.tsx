@@ -148,9 +148,8 @@ const LandingPage = () => {
               Calculus Calculator
             </h2>
             <p className="text-base text-gray-600 mb-6 pl-5 max-w-md">
-              Tackle differential, integral, and multivariable calculus with
-              ease. Our Calculus Calculator is built for single-variable and
-              vector analysis.
+              Tackle differential calculus with ease. Our Calculus Calculator is
+              built for single-variable analysis.
             </p>
             <div className="w-fit pl-5">
               <Link to="/calculus">
