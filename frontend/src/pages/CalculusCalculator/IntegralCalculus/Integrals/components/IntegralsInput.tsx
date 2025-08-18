@@ -1,7 +1,7 @@
 // src/pages/CalculusCalculator/IntegralCalculus/Integrals/components/IntegralsInput.tsx
 "use client";
 
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useMemo, useState } from "react";
 import MathFunctionInput from "@/components/MathFunctionInput";
 
 type IntegralsResponse = {
@@ -24,70 +24,90 @@ type Props = {
   ) => void;
 };
 
-type MathField = {
-  latex: (l?: string) => string;
-  focus: () => void;
-  keystroke: (keys: string) => void;
-};
+// Payload que cumple con Record<string, Json>
+type ExtraPayload = { type: "indef" } | { type: "def"; a?: number; b?: number };
 
 export default function IntegralsInput({ onResult }: Props) {
-  const mfRef = useRef<MathField | null>(null);
+  const [mode, setMode] = useState<"indef" | "def">("indef");
+  const [a, setA] = useState<string>("");
+  const [b, setB] = useState<string>("");
 
-  // plantilla mostrada/controlada por el hijo
-  const [preset, setPreset] = useState<string>("");
+  const extraPayload: ExtraPayload = useMemo(() => {
+    if (mode === "indef") return { type: "indef" };
+    const aNum = Number(a);
+    const bNum = Number(b);
+    const payload: { type: "def"; a?: number; b?: number } = { type: "def" };
+    if (Number.isFinite(aNum)) payload.a = aNum;
+    if (Number.isFinite(bNum)) payload.b = bNum;
+    return payload;
+  }, [mode, a, b]);
 
-  const INDEF_TEMPLATE = "\\int _{ }^{ }\\left(\\right)dx";
-
-  // Solo enviamos "indef" al backend
-  const extraPayload = useMemo(() => ({ type: "indef" }), []);
-
-  // Para recolocar el cursor si el hijo re-renderiza con el preset
-  const needsCursorRef = useRef<boolean>(true);
-
-  // Al montar: dejar la indefinida puesta y el cursor dentro de (...)
-  useEffect(() => {
-    setPreset(INDEF_TEMPLATE);
-
-    const mf = mfRef.current;
-    if (!mf) return;
-
-    mf.latex(INDEF_TEMPLATE);
-    mf.focus();
-    // Desde el final: x ← d ← (espacio \,) ← )  → queda dentro de (...)
-    mf.keystroke("Left");
-    mf.keystroke("Left");
-    mf.keystroke("Left");
-    mf.keystroke("Left");
-    needsCursorRef.current = false;
-  }, []);
-
-  // Si el hijo repinta con preset, volvemos a poner el cursor dentro
-  const handleLatexChange = (current: string) => {
-    if (!needsCursorRef.current) return;
-    if (current !== INDEF_TEMPLATE) return;
-
-    const mf = mfRef.current;
-    if (!mf) return;
-
-    mf.focus();
-    mf.keystroke("Left");
-    mf.keystroke("Left");
-    mf.keystroke("Left");
-    mf.keystroke("Left");
-    needsCursorRef.current = false;
-  };
+  const buttonText =
+    mode === "indef"
+      ? "Calculate Indefinite Integral"
+      : "Calculate Definite Integral";
 
   return (
     <div className="w-full">
-      <MathFunctionInput<IntegralsResponse, Record<string, string>>
-        label={"Enter the function to integrate:"}
+      <MathFunctionInput<IntegralsResponse, ExtraPayload>
+        label={"Enter the integrand f(x) (with respect to dx):"}
         endpoint={"http://localhost:8000/integrals"}
         payloadKey="equation"
         extraPayload={extraPayload}
-        buttonText={"Calculate Indefinite Integral"}
-        presetLatex={preset}
-        onLatexChange={handleLatexChange}
-        onMathField={(mf) => (mfRef.current = mf)}
+        buttonText={buttonText}
+        /* 👇 Todo esto aparece DENTRO de la misma card */
+        extraContent={
+          <div className="w-full mt-2 mb-10">
+            <div className="flex flex-wrap items-center gap-3 text-sm">
+              <span className="font-medium text-gray-700">Type:</span>
+
+              <label className="inline-flex items-center gap-2 cursor-pointer">
+                <input
+                  type="radio"
+                  name="inttype"
+                  value="indef"
+                  checked={mode === "indef"}
+                  onChange={() => setMode("indef")}
+                />
+                <span>Indefinite</span>
+              </label>
+
+              <label className="inline-flex items-center gap-2 cursor-pointer">
+                <input
+                  type="radio"
+                  name="inttype"
+                  value="def"
+                  checked={mode === "def"}
+                  onChange={() => setMode("def")}
+                />
+                <span>Definite</span>
+              </label>
+
+              {mode === "def" && (
+                <div className="ml-2 flex items-center gap-2">
+                  <span className="text-gray-600">Limits:</span>
+                  <input
+                    type="number"
+                    step="any"
+                    placeholder="a"
+                    className="w-20 border rounded-md px-2 py-1 text-sm"
+                    value={a}
+                    onChange={(e) => setA(e.target.value)}
+                  />
+                  <span className="text-gray-500">→</span>
+                  <input
+                    type="number"
+                    step="any"
+                    placeholder="b"
+                    className="w-20 border rounded-md px-2 py-1 text-sm"
+                    value={b}
+                    onChange={(e) => setB(e.target.value)}
+                  />
+                </div>
+              )}
+            </div>
+          </div>
+        }
         onSuccess={(data) =>
           onResult(
             data.original,
@@ -99,11 +119,6 @@ export default function IntegralsInput({ onResult }: Props) {
           )
         }
       />
-
-      <p className="mt-2 text-xs text-gray-500">
-        Tip: el campo inicia con <code>\int\,\left(\right)\,dx</code>. Escribe
-        solo el integrando dentro de los paréntesis.
-      </p>
     </div>
   );
 }

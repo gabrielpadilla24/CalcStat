@@ -124,6 +124,10 @@ class TangentLineData(BaseModel):
     equation: str
     x0: float
 
+class IntegralRequest(BaseModel):
+    equation: str
+
+
 
 
 # -----------------------------
@@ -1218,4 +1222,21 @@ def compute_limits(data: DerivativeRequest):
         "original": original_limit_latex,  # <- listo para KaTeX/MathQuill
         "limit": sympy.latex(limit),        # por ahora vacío (se calculará luego)
         "fx": fx
+    }
+
+
+
+
+#------------------------------------
+# ENDPOINT: integrals
+#------------------------------------
+@app.post("/integrals")
+def compute_integrals(data: IntegralRequest):
+    # Limpiamos el input LaTeX
+    equation = data.equation.strip()
+
+    # Retornar algo básico al frontend
+    return {
+        "original": equation,
+        "integral": f"Recibido en el backend: {equation}"
     }
