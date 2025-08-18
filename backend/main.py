@@ -1225,19 +1225,3 @@ def compute_limits(data: DerivativeRequest):
     }
 
 
-
-
-#------------------------------------
-# ENDPOINT: integrals
-#------------------------------------
-@app.post("/integrals")
-def compute_integrals(data: IntegralRequest):
-    # Limpiamos el input LaTeX
-    equation = data.equation.strip()
-    integral = sympy.integrate(parse_latex(equation), x)
-
-    # Retornar algo básico al frontend
-    return {
-        "original": equation,
-        "integral": sympy.latex(integral)
-    }
