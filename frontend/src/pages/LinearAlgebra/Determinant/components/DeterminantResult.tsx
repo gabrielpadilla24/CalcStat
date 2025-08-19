@@ -71,9 +71,11 @@ const DeterminantResult = ({
             {steps.map((s, idx) => (
               <div
                 key={idx}
-                className="bg-gray-50 border border-gray-200 rounded-lg p-3"
+                className="bg-gray-50 border border-gray-200 rounded-lg p-3 overflow-x-auto"
               >
-                <BlockMath math={s} />
+                <div className="whitespace-normal break-words text-center">
+                  <BlockMath math={s} />
+                </div>
               </div>
             ))}
           </div>
