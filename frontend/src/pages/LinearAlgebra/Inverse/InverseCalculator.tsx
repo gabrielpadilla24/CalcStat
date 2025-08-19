@@ -3,6 +3,7 @@
 import { useState } from "react";
 import NavBar from "@/components/NavBar";
 import BottomCTA from "@/components/BottomCTA";
+import DeterminantInput from "../Determinant/components/DeterminantInput";
 //imports
 
 type InverseResponse = {
@@ -26,7 +27,7 @@ const InverseCalculator = () => {
 
         <div className="max-w-[1440px] mx-auto flex flex-col lg:flex-row gap-6 px-6 justify-center">
           <div className="flex-1 max-w-[600px]">
-            {/* <InverseInput onResult={setResult} /> */}
+            <DeterminantInput onResult={setResult} />
           </div>
           <div className="flex-1 max-w-[600px]">
             {/* <InverseResult
