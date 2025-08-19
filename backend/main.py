@@ -1343,9 +1343,8 @@ def inverse(data: MatrixData):
             "matrix": original_formatted,
             "inverse": inverse_formatted,
             "latex": sympy_latex(inv),
-            "explanation": (
-                "The inverse of a square matrix A is the matrix A^{-1} such that "
-                "A · A^{-1} = I. It only exists if det(A) ≠ 0."
+   "explanation": r"The inverse of a square matrix $A$ is the matrix $A^{-1}$ such that $A \cdot A^{-1} = I$. It only exists if $\det(A) \neq 0$."
+
             )
         }
 
