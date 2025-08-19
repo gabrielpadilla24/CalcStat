@@ -1235,6 +1235,9 @@ def compute_limits(data: DerivativeRequest):
 #----------------------------------------
 # DETERMINANT
 #----------------------------------------
+#----------------------------------------
+# DETERMINANT
+#----------------------------------------
 def format_number(val):
     """Convierte floats a enteros si aplica o redondea a 4 decimales"""
     try:
@@ -1261,35 +1264,39 @@ def determinant(data: MatrixData):
 
     steps = []
 
-    # Casos pequeños: 2x2 y 3x3 con expansión explícita
+    # Caso 2x2
     if mat.rows == 2:
         a, b, c, d = mat[0,0], mat[0,1], mat[1,0], mat[1,1]
-        steps.append("Step 1: Formula for 2x2 determinant is ad - bc")
-        steps.append(f"= ({format_number(a)} * {format_number(d)}) - ({format_number(b)} * {format_number(c)})")
-        steps.append(f"= {format_number(a*d)} - {format_number(b*c)}")
+        steps.append(r"\text{Step 1: Formula for 2x2 determinant is } \det(A) = ad - bc")
+        steps.append(rf"= ({format_number(a)})({format_number(d)}) - ({format_number(b)})({format_number(c)})")
+        steps.append(rf"= {format_number(a*d)} - {format_number(b*c)}")
+        steps.append(rf"= {format_number(a*d - b*c)}")
         det_value = a*d - b*c
 
+    # Caso 3x3
     elif mat.rows == 3:
-        steps.append("Step 1: Apply rule of Sarrus (diagonal expansion):")
         a,b,c = mat[0,0], mat[0,1], mat[0,2]
         d,e,f = mat[1,0], mat[1,1], mat[1,2]
         g,h,i = mat[2,0], mat[2,1], mat[2,2]
-        steps.append("= (a*e*i + b*f*g + c*d*h) - (c*e*g + a*f*h + b*d*i)")
+
+        steps.append(r"\text{Step 1: Apply rule of Sarrus:}")
+        steps.append(r"\det(A) = (aei + bfg + cdh) - (ceg + afh + bdi)")
         steps.append(
-            f"= ({format_number(a)}*{format_number(e)}*{format_number(i)} + "
-            f"{format_number(b)}*{format_number(f)}*{format_number(g)} + "
-            f"{format_number(c)}*{format_number(d)}*{format_number(h)}) - "
-            f"({format_number(c)}*{format_number(e)}*{format_number(g)} + "
-            f"{format_number(a)}*{format_number(f)}*{format_number(h)} + "
-            f"{format_number(b)}*{format_number(d)}*{format_number(i)})"
+            rf"= ({format_number(a)}\cdot{format_number(e)}\cdot{format_number(i)} + "
+            rf"{format_number(b)}\cdot{format_number(f)}\cdot{format_number(g)} + "
+            rf"{format_number(c)}\cdot{format_number(d)}\cdot{format_number(h)})"
+            rf"-({format_number(c)}\cdot{format_number(e)}\cdot{format_number(g)} + "
+            rf"{format_number(a)}\cdot{format_number(f)}\cdot{format_number(h)} + "
+            rf"{format_number(b)}\cdot{format_number(d)}\cdot{format_number(i)})"
         )
         det_value = a*e*i + b*f*g + c*d*h - (c*e*g + a*f*h + b*d*i)
-        steps.append(f"= {format_number(det_value)}")
+        steps.append(rf"= {format_number(det_value)}")
 
+    # Caso general
     else:
-        steps.append("Step 1: Using Bareiss' algorithm (fraction-free Gaussian elimination).")
+        steps.append(r"\text{Step 1: Using Bareiss' algorithm (fraction-free Gaussian elimination).}")
         det_value = mat.det()
-        steps.append(f"= {format_number(det_value)}")
+        steps.append(rf"= {format_number(det_value)}")
 
     return {
         "matrix": data.matrix,

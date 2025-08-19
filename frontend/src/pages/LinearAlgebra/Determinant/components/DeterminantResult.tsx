@@ -1,5 +1,8 @@
 "use client";
 
+import "katex/dist/katex.min.css";
+import { BlockMath } from "react-katex";
+
 type DeterminantResultProps = {
   matrix?: number[][];
   determinant?: number;
@@ -64,9 +67,11 @@ const DeterminantResult = ({
       {steps && steps.length > 0 && (
         <div className="text-left mt-6">
           <h4 className="text-md font-semibold mb-2">Steps:</h4>
-          <ul className="list-disc list-inside space-y-1 text-gray-700">
+          <ul className="list-disc list-inside space-y-2 text-gray-700">
             {steps.map((s, idx) => (
-              <li key={idx}>{s}</li>
+              <li key={idx}>
+                <BlockMath math={s} />
+              </li>
             ))}
           </ul>
         </div>
