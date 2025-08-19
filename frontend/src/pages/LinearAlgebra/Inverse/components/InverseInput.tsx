@@ -4,8 +4,9 @@ import { useState, useMemo } from "react";
 import MatrixInput from "@/components/MatrixInput";
 
 type InverseResponse = {
-  inverse?: number[][];
-  steps?: string[];
+  matrix: string[][];
+  inverse?: string[][];
+  latex?: string;
   error?: string;
   explanation?: string;
 };
@@ -13,7 +14,7 @@ type InverseResponse = {
 const InverseInput = ({
   onResult,
 }: {
-  onResult: (result: InverseResponse & { matrix: number[][] }) => void;
+  onResult: (result: InverseResponse) => void;
 }) => {
   const [rows, setRows] = useState(3);
   const [cols, setCols] = useState(3);
@@ -33,9 +34,13 @@ const InverseInput = ({
       if (!res.ok) throw new Error("Request failed");
 
       const data = (await res.json()) as InverseResponse;
-      onResult({ ...data, matrix });
+      onResult(data);
     } catch {
-      onResult({ matrix, error: "Failed to calculate inverse." });
+      onResult({
+        matrix: matrix.map((row) => row.map(String)),
+        error: "Failed to calculate inverse.",
+        explanation: "Please check your input and try again.",
+      });
     }
   };
 

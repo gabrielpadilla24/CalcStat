@@ -1304,14 +1304,24 @@ def determinant(data: MatrixData):
 #----------------------------------------
 # Inverse
 #----------------------------------------
+#----------------------------------------
+# Inverse
+#----------------------------------------
 
 @app.post("/inverse")
 def inverse(data: MatrixData):
     mat = Matrix(data.matrix)
 
+    # Matriz original formateada (siempre se devuelve)
+    original_formatted = [
+        [format_number(mat[i, j]) for j in range(mat.cols)]
+        for i in range(mat.rows)
+    ]
+
     # Caso: no cuadrada
     if mat.rows != mat.cols:
         return {
+            "matrix": original_formatted,
             "error": "Inverse can only be calculated for square matrices.",
             "explanation": (
                 "The inverse is only defined for square matrices (n×n). "
@@ -1323,15 +1333,15 @@ def inverse(data: MatrixData):
     try:
         inv = mat.inv()
 
-        # Matriz formateada (numeritos bonitos)
-        formatted = [
+        # Matriz inversa formateada
+        inverse_formatted = [
             [format_number(inv[i, j]) for j in range(inv.cols)]
             for i in range(inv.rows)
         ]
 
         return {
-            "matrix": data.matrix,
-            "inverse": formatted,
+            "matrix": original_formatted,
+            "inverse": inverse_formatted,
             "latex": sympy_latex(inv),
             "explanation": (
                 "The inverse of a square matrix A is the matrix A^{-1} such that "
@@ -1341,6 +1351,7 @@ def inverse(data: MatrixData):
 
     except Exception:
         return {
+            "matrix": original_formatted,
             "error": "This matrix is singular and does not have an inverse.",
             "explanation": (
                 "A matrix is invertible if and only if its determinant is nonzero. "

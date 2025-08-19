@@ -3,12 +3,12 @@
 import { useState } from "react";
 import NavBar from "@/components/NavBar";
 import BottomCTA from "@/components/BottomCTA";
-import DeterminantInput from "../Determinant/components/DeterminantInput"; // se puede reusar
-import InverseResult from "./components/InverseResult"; // 👈 importar
+import InverseInput from "./components/InverseInput"; // 👈 usamos el input correcto
+import InverseResult from "./components/InverseResult";
 
 type InverseResponse = {
-  matrix: number[][];
-  inverse?: string[][]; // 👈 el backend devuelve strings con format_number
+  matrix: string[][]; // la original, formateada
+  inverse?: string[][]; // la inversa, formateada
   latex?: string;
   error?: string;
   explanation?: string;
@@ -28,7 +28,7 @@ const InverseCalculator = () => {
         <div className="max-w-[1440px] mx-auto flex flex-col lg:flex-row gap-6 px-6 justify-center">
           {/* Input */}
           <div className="flex-1 max-w-[600px]">
-            <DeterminantInput onResult={setResult} />
+            <InverseInput onResult={setResult} />
           </div>
 
           {/* Result */}
