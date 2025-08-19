@@ -1307,7 +1307,6 @@ def determinant(data: MatrixData):
 #----------------------------------------
 # Inverse
 #----------------------------------------
-
 @app.post("/inverse")
 def inverse(data: MatrixData):
     mat = Matrix(data.matrix)
@@ -1330,6 +1329,13 @@ def inverse(data: MatrixData):
             )
         }
 
+    def latex_matrix_rounded(mat):
+        rows = []
+        for i in range(mat.rows):
+            row = [f"{round(float(mat[i, j]), 2):g}" for j in range(mat.cols)]
+            rows.append(" & ".join(row))
+        return r"\begin{bmatrix}" + r" \\".join(rows) + r"\end{bmatrix}"
+
     try:
         inv = mat.inv()
 
@@ -1339,10 +1345,12 @@ def inverse(data: MatrixData):
             for i in range(inv.rows)
         ]
 
+        latex_inverse = latex_matrix_rounded(inv)
+
         return {
             "matrix": original_formatted,
             "inverse": inverse_formatted,
-            "latex": sympy_latex(inv),
+            "latex": latex_inverse,
             "explanation": (
                 "The inverse of a square matrix A is the matrix A^{-1} such that "
                 "A · A^{-1} = I. It only exists if det(A) ≠ 0."
