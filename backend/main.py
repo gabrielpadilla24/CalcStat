@@ -1229,12 +1229,6 @@ def compute_limits(data: DerivativeRequest):
     }
 
 
-
-
-
-#----------------------------------------
-# DETERMINANT
-#----------------------------------------
 #----------------------------------------
 # DETERMINANT
 #----------------------------------------
@@ -1303,3 +1297,53 @@ def determinant(data: MatrixData):
         "determinant": int(det_value) if float(det_value).is_integer() else round(float(det_value), 4),
         "steps": steps
     }
+
+
+
+
+#----------------------------------------
+# Inverse
+#----------------------------------------
+
+@app.post("/inverse")
+def inverse(data: MatrixData):
+    mat = Matrix(data.matrix)
+
+    # Caso: no cuadrada
+    if mat.rows != mat.cols:
+        return {
+            "error": "Inverse can only be calculated for square matrices.",
+            "explanation": (
+                "The inverse is only defined for square matrices (n×n). "
+                "Non-square matrices (n×m with n≠m) do not represent linear transformations "
+                "from R^n to R^n, so their inverse is undefined."
+            )
+        }
+
+    try:
+        inv = mat.inv()
+
+        # Matriz formateada (numeritos bonitos)
+        formatted = [
+            [format_number(inv[i, j]) for j in range(inv.cols)]
+            for i in range(inv.rows)
+        ]
+
+        return {
+            "matrix": data.matrix,
+            "inverse": formatted,
+            "latex": sympy_latex(inv),
+            "explanation": (
+                "The inverse of a square matrix A is the matrix A^{-1} such that "
+                "A · A^{-1} = I. It only exists if det(A) ≠ 0."
+            )
+        }
+
+    except Exception:
+        return {
+            "error": "This matrix is singular and does not have an inverse.",
+            "explanation": (
+                "A matrix is invertible if and only if its determinant is nonzero. "
+                "Since det(A) = 0, the matrix is singular and has no inverse."
+            )
+        }
