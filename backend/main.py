@@ -1231,14 +1231,10 @@ def compute_limits(data: DerivativeRequest):
 
 
 
-#----------------------------------------
-# DETERMINANT
-#----------------------------------------
-#----------------------------------------
-# DETERMINANT
-#----------------------------------------
-from sympy import Matrix
 
+#----------------------------------------
+# DETERMINANT
+#----------------------------------------
 def format_number(val):
     """Convierte floats a enteros si aplica o redondea a 4 decimales"""
     try:
