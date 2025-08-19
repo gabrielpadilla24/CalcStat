@@ -66,14 +66,17 @@ const DeterminantResult = ({
 
       {steps && steps.length > 0 && (
         <div className="text-left mt-6">
-          <h4 className="text-md font-semibold mb-2">Steps:</h4>
-          <ul className="list-disc list-inside space-y-2 text-gray-700">
+          <h4 className="text-md font-semibold mb-4">Step-by-Step Expansion</h4>
+          <div className="space-y-4">
             {steps.map((s, idx) => (
-              <li key={idx}>
+              <div
+                key={idx}
+                className="bg-gray-50 border border-gray-200 rounded-lg p-3"
+              >
                 <BlockMath math={s} />
-              </li>
+              </div>
             ))}
-          </ul>
+          </div>
         </div>
       )}
     </div>
