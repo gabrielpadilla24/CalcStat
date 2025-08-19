@@ -15,21 +15,27 @@ export default function MatrixInput({
   onChange,
   title = "Enter Matrix",
 }: MatrixInputProps) {
-  const [matrix, setMatrix] = useState<number[][]>(
-    Array.from({ length: rows }, () => Array(cols).fill(0))
+  // Inicializar en vacío (strings)
+  const [matrix, setMatrix] = useState<(string | number)[][]>(
+    Array.from({ length: rows }, () => Array(cols).fill(""))
   );
 
-  // Si cambian las dimensiones desde fuera, reinicializamos
+  // Reinicializar cuando cambian dimensiones
   useEffect(() => {
-    setMatrix(Array.from({ length: rows }, () => Array(cols).fill(0)));
+    setMatrix(Array.from({ length: rows }, () => Array(cols).fill("")));
   }, [rows, cols]);
 
   const handleChange = (r: number, c: number, value: string) => {
     const newMatrix = matrix.map((row, i) =>
-      row.map((val, j) => (i === r && j === c ? Number(value) : val))
+      row.map((val, j) => (i === r && j === c ? value : val))
     );
     setMatrix(newMatrix);
-    onChange(newMatrix);
+
+    // Convertimos a número ("" → 0) antes de enviarlo al backend
+    const numericMatrix = newMatrix.map((row) =>
+      row.map((v) => (v === "" ? 0 : Number(v)))
+    );
+    onChange(numericMatrix);
   };
 
   return (
