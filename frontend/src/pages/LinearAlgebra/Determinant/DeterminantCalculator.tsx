@@ -1,11 +1,20 @@
+"use client";
+
 import { useState } from "react";
 import NavBar from "@/components/NavBar";
 import BottomCTA from "@/components/BottomCTA";
 import DeterminantInput from "./components/DeterminantInput";
 import DeterminantResult from "./components/DeterminantResult";
 
+type DeterminantResponse = {
+  matrix: number[][];
+  determinant?: number;
+  error?: string;
+  explanation?: string;
+};
+
 const DeterminantCalculator = () => {
-  const [matrix, setMatrix] = useState<number[][]>([]);
+  const [result, setResult] = useState<DeterminantResponse | null>(null);
 
   return (
     <>
@@ -17,10 +26,15 @@ const DeterminantCalculator = () => {
 
         <div className="max-w-[1440px] mx-auto flex flex-col lg:flex-row gap-6 px-6 justify-center">
           <div className="flex-1 max-w-[600px]">
-            <DeterminantInput onResult={setMatrix} />
+            <DeterminantInput onResult={setResult} />
           </div>
           <div className="flex-1 max-w-[600px]">
-            <DeterminantResult matrix={matrix} />
+            <DeterminantResult
+              matrix={result?.matrix}
+              determinant={result?.determinant}
+              error={result?.error}
+              explanation={result?.explanation}
+            />
           </div>
         </div>
       </div>

@@ -4,13 +4,15 @@ import { useState, useMemo } from "react";
 import MatrixInput from "@/components/MatrixInput";
 
 type DeterminantResponse = {
-  matrix: number[][];
+  determinant?: number;
+  error?: string;
+  explanation?: string;
 };
 
 const DeterminantInput = ({
   onResult,
 }: {
-  onResult: (matrix: number[][]) => void;
+  onResult: (result: DeterminantResponse & { matrix: number[][] }) => void;
 }) => {
   const [rows, setRows] = useState(3);
   const [cols, setCols] = useState(3);
@@ -30,10 +32,10 @@ const DeterminantInput = ({
       if (!res.ok) throw new Error("Request failed");
 
       const data = (await res.json()) as DeterminantResponse;
-      onResult(data.matrix);
+      onResult({ ...data, matrix });
     } catch {
-      // 👇 Enviamos la matriz actual aunque no sea cuadrada o haya error
-      onResult(matrix);
+      // Si hay error, enviamos la matriz sin determinante
+      onResult({ matrix, error: "Failed to calculate determinant." });
     }
   };
 

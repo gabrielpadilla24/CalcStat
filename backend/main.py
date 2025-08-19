@@ -5,7 +5,7 @@ from math import pow
 import numpy_financial as npf
 import numpy as np
 from typing import Literal, Optional, List
-from sympy import symbols, diff, simplify, Mul, Pow, Function, Symbol, Add, sin, cos, tan, log, exp, sqrt, solveset, Eq, S, singularities
+from sympy import symbols, diff, simplify, Mul, Pow, Function, Symbol, Add, sin, cos, tan, log, exp, sqrt, solveset, Eq, S, singularities, Matrix
 from sympy.parsing.sympy_parser import parse_expr
 import sympy
 from sympy import latex as sympy_latex
@@ -1236,5 +1236,17 @@ def compute_limits(data: DerivativeRequest):
 #----------------------------------------
 @app.post("/determinant")
 def determinant(data: MatrixData):
-    # Por ahora solo devolver la matriz tal cual
-    return {"matrix": data.matrix}
+    mat = Matrix(data.matrix)
+
+    if mat.rows != mat.cols:
+        return {
+            "error": "Determinant can only be calculated for square matrices.",
+            "explanation": (
+                "The determinant is only defined for square matrices (n×n). "
+                "Non-square matrices (n×m with n≠m) do not represent linear transformations "
+                "from R^n to R^n, so their determinant is undefined."
+            )
+        }
+
+    det_value = mat.det()
+    return {"matrix": data.matrix, "determinant": float(det_value)}
