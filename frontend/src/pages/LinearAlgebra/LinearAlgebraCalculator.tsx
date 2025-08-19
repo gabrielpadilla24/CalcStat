@@ -67,6 +67,23 @@ const LinearAlgebraCalculator = () => {
                 <SubmitButton text="Open Calculator" />
               </Link>
             </div>
+
+            {/* INVERSE CARD */}
+            <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] flex flex-col justify-between text-left">
+              <img
+                src="/img/inverse.png"
+                alt="Inverse"
+                className="h-40 w-full object-cover mb-4 rounded"
+              />
+              <h2 className="text-xl font-bold text-gray-800 mb-2">Inverse</h2>
+              <p className="text-sm text-gray-600 mb-4">
+                Understand the rules. Visualize the change. Learn inverses the
+                smart way.
+              </p>
+              <Link to="/linearalgebra/inverse">
+                <SubmitButton text="Open Calculator" />
+              </Link>
+            </div>
           </>
         )}
       </div>

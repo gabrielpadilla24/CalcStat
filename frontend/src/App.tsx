@@ -20,6 +20,7 @@ import ImplicitDiffCalculator from "./pages/CalculusCalculator/DifferentialCalcu
 import LimitsCalculator from "./pages/CalculusCalculator/DifferentialCalculus/Limits/LimitsCalculator";
 import LinearAlgebraCalculator from "./pages/LinearAlgebra/LinearAlgebraCalculator";
 import DeterminantCalculator from "./pages/LinearAlgebra/Determinant/DeterminantCalculator";
+import InverseCalculator from "./pages/LinearAlgebra/Inverse/InverseCalculator";
 
 const App = () => {
   return (
@@ -107,6 +108,8 @@ const App = () => {
           path="/linearalgebra/determinant"
           element={<DeterminantCalculator />}
         />
+
+        <Route path="/linearalgebra/inverse" element={<InverseCalculator />} />
 
         {/* Other routes can be added here */}
         <Route path="/calculators" element={<Menu />} />
