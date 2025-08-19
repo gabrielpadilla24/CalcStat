@@ -5,6 +5,7 @@ import MatrixInput from "@/components/MatrixInput";
 
 type DeterminantResponse = {
   determinant?: number;
+  steps?: string[];
   error?: string;
   explanation?: string;
 };
@@ -34,7 +35,6 @@ const DeterminantInput = ({
       const data = (await res.json()) as DeterminantResponse;
       onResult({ ...data, matrix });
     } catch {
-      // Si hay error, enviamos la matriz sin determinante
       onResult({ matrix, error: "Failed to calculate determinant." });
     }
   };

@@ -9,6 +9,7 @@ import DeterminantResult from "./components/DeterminantResult";
 type DeterminantResponse = {
   matrix: number[][];
   determinant?: number;
+  steps?: string[];
   error?: string;
   explanation?: string;
 };
@@ -32,6 +33,7 @@ const DeterminantCalculator = () => {
             <DeterminantResult
               matrix={result?.matrix}
               determinant={result?.determinant}
+              steps={result?.steps}
               error={result?.error}
               explanation={result?.explanation}
             />

@@ -3,6 +3,7 @@
 type DeterminantResultProps = {
   matrix?: number[][];
   determinant?: number;
+  steps?: string[];
   error?: string;
   explanation?: string;
 };
@@ -10,6 +11,7 @@ type DeterminantResultProps = {
 const DeterminantResult = ({
   matrix,
   determinant,
+  steps,
   error,
   explanation,
 }: DeterminantResultProps) => {
@@ -31,24 +33,6 @@ const DeterminantResult = ({
         <h2 className="text-xl font-semibold mb-4 text-yellow-800">⚠️ Error</h2>
         <p className="text-gray-700 mb-3">{error}</p>
         {explanation && <p className="text-gray-600 mb-6">{explanation}</p>}
-
-        <h3 className="text-lg font-semibold mb-3 text-yellow-800">
-          Matrix Received ({rows} x {cols})
-        </h3>
-        <div className="inline-block">
-          {matrix.map((row, i) => (
-            <div key={i} className="flex justify-center">
-              {row.map((val, j) => (
-                <div
-                  key={j}
-                  className="w-12 h-12 flex items-center justify-center border border-gray-300 bg-white"
-                >
-                  {val}
-                </div>
-              ))}
-            </div>
-          ))}
-        </div>
       </div>
     );
   }
@@ -75,7 +59,18 @@ const DeterminantResult = ({
       </div>
 
       <h3 className="text-lg font-semibold text-green-700">Determinant</h3>
-      <p className="text-2xl font-bold text-gray-900">{determinant}</p>
+      <p className="text-2xl font-bold text-gray-900 mb-4">{determinant}</p>
+
+      {steps && steps.length > 0 && (
+        <div className="text-left mt-6">
+          <h4 className="text-md font-semibold mb-2">Steps:</h4>
+          <ul className="list-disc list-inside space-y-1 text-gray-700">
+            {steps.map((s, idx) => (
+              <li key={idx}>{s}</li>
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
   );
 };
