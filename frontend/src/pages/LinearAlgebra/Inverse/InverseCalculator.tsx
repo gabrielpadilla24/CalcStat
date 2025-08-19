@@ -3,12 +3,13 @@
 import { useState } from "react";
 import NavBar from "@/components/NavBar";
 import BottomCTA from "@/components/BottomCTA";
-import InverseInput from "./components/InverseInput"; // 👈 usamos el input correcto
+import InverseInput from "./components/InverseInput";
 import InverseResult from "./components/InverseResult";
+import InverseInfo from "./components/InverseInfo"; // 👈 importar la tarjeta educativa
 
 type InverseResponse = {
-  matrix: string[][]; // la original, formateada
-  inverse?: string[][]; // la inversa, formateada
+  matrix: string[][];
+  inverse?: string[][];
   latex?: string;
   error?: string;
   explanation?: string;
@@ -40,6 +41,9 @@ const InverseCalculator = () => {
               error={result?.error}
               explanation={result?.explanation}
             />
+
+            {/* Card educativa 👇 */}
+            <InverseInfo />
           </div>
         </div>
       </div>
