@@ -17,20 +17,10 @@ const DeterminantInput = ({
   const [matrix, setMatrix] = useState<number[][]>(
     Array.from({ length: 3 }, () => Array(3).fill(0))
   );
-  const [loading, setLoading] = useState(false);
-  const [err, setErr] = useState<string | null>(null);
 
   const body = useMemo(() => JSON.stringify({ matrix }), [matrix]);
 
   const handleCalculate = async () => {
-    setErr(null);
-
-    if (rows !== cols) {
-      setErr("⚠️ The matrix must be square to calculate a determinant.");
-      return;
-    }
-
-    setLoading(true);
     try {
       const res = await fetch("http://localhost:8000/determinant", {
         method: "POST",
@@ -42,9 +32,8 @@ const DeterminantInput = ({
       const data = (await res.json()) as DeterminantResponse;
       onResult(data.matrix);
     } catch {
-      setErr("❌ Error connecting to backend.");
-    } finally {
-      setLoading(false);
+      // 👇 Enviamos la matriz actual aunque no sea cuadrada o haya error
+      onResult(matrix);
     }
   };
 
@@ -87,14 +76,10 @@ const DeterminantInput = ({
         {/* Botón */}
         <button
           onClick={handleCalculate}
-          disabled={loading}
-          className="mt-6 bg-[#5FBA9B] disabled:opacity-60 disabled:cursor-not-allowed text-white px-6 py-2 rounded-lg font-semibold hover:bg-[#4da88a] transition w-full"
+          className="mt-6 bg-[#5FBA9B] text-white px-6 py-2 rounded-lg font-semibold hover:bg-[#4da88a] transition w-full"
         >
-          {loading ? "Calculating..." : "Calculate Determinant"}
+          Calculate Determinant
         </button>
-
-        {/* Errores */}
-        {err && <div className="mt-4 text-sm text-red-600">{err}</div>}
       </div>
     </div>
   );
