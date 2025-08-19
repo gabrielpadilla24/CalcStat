@@ -4,11 +4,14 @@ import { useState, useMemo } from "react";
 import MatrixInput from "@/components/MatrixInput";
 
 type DeterminantResponse = {
-  det: number;
-  steps?: string[];
+  matrix: number[][];
 };
 
-const DeterminantInput = () => {
+const DeterminantInput = ({
+  onResult,
+}: {
+  onResult: (matrix: number[][]) => void;
+}) => {
   const [rows, setRows] = useState(3);
   const [cols, setCols] = useState(3);
   const [matrix, setMatrix] = useState<number[][]>(
@@ -16,14 +19,11 @@ const DeterminantInput = () => {
   );
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState<string | null>(null);
-  const [result, setResult] = useState<DeterminantResponse | null>(null);
 
-  // payload dinámico
   const body = useMemo(() => JSON.stringify({ matrix }), [matrix]);
 
   const handleCalculate = async () => {
     setErr(null);
-    setResult(null);
 
     if (rows !== cols) {
       setErr("⚠️ The matrix must be square to calculate a determinant.");
@@ -40,7 +40,7 @@ const DeterminantInput = () => {
       if (!res.ok) throw new Error("Request failed");
 
       const data = (await res.json()) as DeterminantResponse;
-      setResult(data);
+      onResult(data.matrix);
     } catch {
       setErr("❌ Error connecting to backend.");
     } finally {
@@ -93,15 +93,8 @@ const DeterminantInput = () => {
           {loading ? "Calculating..." : "Calculate Determinant"}
         </button>
 
-        {/* Resultado */}
+        {/* Errores */}
         {err && <div className="mt-4 text-sm text-red-600">{err}</div>}
-        {result && !err && (
-          <div className="mt-6 bg-green-50 border border-green-300 p-4 rounded-xl text-center">
-            <p className="text-lg font-semibold">
-              ✅ Determinant: <span className="font-bold">{result.det}</span>
-            </p>
-          </div>
-        )}
       </div>
     </div>
   );

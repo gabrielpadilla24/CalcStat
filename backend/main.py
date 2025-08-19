@@ -11,6 +11,7 @@ import sympy
 from sympy import latex as sympy_latex
 from sympy.parsing.latex import parse_latex
 import re
+from typing import List
 
 
 
@@ -126,6 +127,9 @@ class TangentLineData(BaseModel):
 
 class IntegralRequest(BaseModel):
     equation: str
+
+class MatrixData(BaseModel):
+    matrix: List[List[float]]
 
 
 
@@ -1225,3 +1229,12 @@ def compute_limits(data: DerivativeRequest):
     }
 
 
+
+
+#----------------------------------------
+# DETERMINANT
+#----------------------------------------
+@app.post("/determinant")
+def determinant(data: MatrixData):
+    # Por ahora solo devolver la matriz tal cual
+    return {"matrix": data.matrix}
