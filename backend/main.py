@@ -131,6 +131,12 @@ class IntegralRequest(BaseModel):
 class MatrixData(BaseModel):
     matrix: List[List[float]]
 
+class EquationItem(BaseModel):
+    lhs: str
+    rhs: str
+
+class EquationSystemData(BaseModel):
+    equations: List[EquationItem]
 
 
 
@@ -1301,9 +1307,7 @@ def determinant(data: MatrixData):
 
 
 
-#----------------------------------------
-# Inverse
-#----------------------------------------
+
 #----------------------------------------
 # Inverse
 #----------------------------------------
@@ -1366,3 +1370,15 @@ def inverse(data: MatrixData):
                 "Since det(A) = 0, the matrix is singular and has no inverse."
             )
         }
+
+
+
+#----------------------------------------
+# LINEAR EQUATION SYSTEM
+#----------------------------------------
+@app.post("/eqsystem")
+def receive_equations(data: EquationSystemData):
+    return {
+        "received_equations": [eq.dict() for eq in data.equations],
+        "count": len(data.equations)
+    }
