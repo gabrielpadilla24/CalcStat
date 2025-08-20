@@ -3,6 +3,7 @@
 //import { useState } from "react";
 import NavBar from "@/components/NavBar";
 import BottomCTA from "@/components/BottomCTA";
+import EqSystemInput from "./components/EqSystemInput";
 
 const EqSystemCalculator = () => {
   return (
@@ -14,7 +15,9 @@ const EqSystemCalculator = () => {
         </h1>
 
         <div className="max-w-[1440px] mx-auto flex flex-col lg:flex-row gap-6 px-6 justify-center">
-          <div className="flex-1 max-w-[600px]">{/* INPUT */}</div>
+          <div className="flex-1 max-w-[600px]">
+            <EqSystemInput onResult={() => {}} />
+          </div>
           <div className="flex-1 max-w-[600px]">{/* RESULT */}</div>
         </div>
       </div>
