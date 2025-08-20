@@ -1378,45 +1378,7 @@ def inverse(data: MatrixData):
 #----------------------------------------
 @app.post("/eqsystem")
 def receive_equations(data: EquationSystemData):
-    # --- eco básico ---
-    received = [eq.dict() for eq in data.equations]
-    count = len(received)
-
-    # --- extracción de variables ---
-    variables = set()
-    for eq in data.equations:
-        variables.update(re.findall(r"[a-zA-Z]+", eq.lhs))
-    variables = sorted(list(variables))
-
-    # --- construcción de matrices ---
-    A = []
-    b = []
-    for eq in data.equations:
-        coef = [0] * len(variables)
-
-        # buscar coeficientes de cada variable en LHS
-        for i, var in enumerate(variables):
-            matches = re.findall(r"([+-]?\s*\d*\.?\d*)\s*" + var, eq.lhs)
-            total = 0
-            for m in matches:
-                m = m.replace(" ", "")
-                if m in ["", "+", "-"]:
-                    m = m + "1" if m in ["+", "-"] else "1"
-                total += float(m)
-            coef[i] = total
-
-        # RHS debe ser número
-        rhs_val = eq.rhs.strip().replace(",", ".")
-        b.append(float(rhs_val))
-        A.append(coef)
-
-    A = np.array(A).tolist()
-    b = np.array(b).tolist()
-
     return {
-        "received_equations": received,
-        "count": count,
-        "variables": variables,
-        "A": A,
-        "b": b,
+        "received_equations": [eq.dict() for eq in data.equations],
+        "count": len(data.equations)
     }
