@@ -48,19 +48,8 @@ const EqSystemResult = ({
         Equations Received ({equations.length})
       </h2>
 
-      {/* Lista de ecuaciones en formato caja (similar a la matriz) */}
-      <div className="inline-block mb-6">
-        {equations.map((eq, i) => (
-          <div key={i} className="flex justify-center items-center mb-2">
-            <div className="w-56 h-12 flex items-center justify-center border border-gray-300 px-2">
-              {eq.lhs || ""}
-            </div>
-            <span className="mx-2">=</span>
-            <div className="w-24 h-12 flex items-center justify-center border border-gray-300 px-2">
-              {eq.rhs || ""}
-            </div>
-          </div>
-        ))}
+      <div className="bg-gray-50 border border-gray-200 rounded-lg p-3 overflow-x-auto">
+        <BlockMath math={systemLatex} />
       </div>
 
       {/* ⚠️ Caso error */}
@@ -74,18 +63,6 @@ const EqSystemResult = ({
         </div>
       ) : (
         <>
-          {/* LaTeX */}
-          {systemLatex && (
-            <div className="mt-6">
-              <h4 className="text-md font-semibold mb-2">
-                LaTeX Representation
-              </h4>
-              <div className="bg-gray-50 border border-gray-200 rounded-lg p-3 overflow-x-auto">
-                <BlockMath math={systemLatex} />
-              </div>
-            </div>
-          )}
-
           {/* Explicación opcional */}
           {explanation && <p className="text-gray-600 mt-6">{explanation}</p>}
         </>
