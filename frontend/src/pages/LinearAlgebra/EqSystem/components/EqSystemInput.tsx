@@ -47,7 +47,7 @@ const EqSystemInput = ({
       onSubmit={handleSubmit}
       className="bg-white rounded-xl shadow-md border border-gray-200 p-6"
     >
-      <h2 className="text-lg font-semibold mb-4">
+      <h2 className="text-lg font-semibold mb-4 justify-center text-center">
         Enter your system of equations
       </h2>
 
@@ -89,7 +89,7 @@ const EqSystemInput = ({
         <button
           type="button"
           onClick={addRow}
-          className="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600 transition"
+          className="bg-[#5FBA9B] text-white px-6 py-2 rounded-lg font-semibold hover:bg-[#4da88a] transition"
         >
           + Add Equation
         </button>
