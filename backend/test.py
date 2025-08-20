@@ -1,40 +1,46 @@
-def aproximar_limite_a_infinito(funcion, x_inicial, pasos, factor):
-    """
-    Aproxima el límite de una función cuando x tiende a infinito.
+import re
+import numpy as np
 
+def sistema_a_matriz(sistema):
+    """
+    Convierte un sistema de ecuaciones lineales en su representación matricial (A, b).
     Args:
-        funcion: La función a evaluar (debe aceptar un solo argumento).
-        x_inicial: El valor inicial de x.
-        pasos: El número de iteraciones.
-        factor: El factor por el que se incrementa x en cada paso.
-
+        sistema (list[str]): Lista de ecuaciones como strings.
     Returns:
-        Una lista de tuplas con los valores de x y los resultados de la función.
+        tuple: (A, b) donde A es la matriz de coeficientes y b el vector de términos independientes.
     """
-    resultados = []
-    x = x_inicial
-    for i in range(pasos):
-        valor_funcion = funcion(x)
-        resultados.append((x, valor_funcion))
-        x *= factor
-    return resultados
+    # Extraer todas las variables presentes
+    variables = set()
+    for eq in sistema:
+        variables.update(re.findall(r'[a-zA-Z]+', eq.split('=')[0]))
+    variables = sorted(list(variables))
 
-# Definimos la función de ejemplo
-def mi_funcion(x):
-    return (3*x**2 + 2*x - 1) / (x**2 + 5*x + 6)
+    A = []
+    b = []
+    for eq in sistema:
+        coef = [0] * len(variables)
+        # Buscar coeficientes de cada variable
+        for i, var in enumerate(variables):
+            # Coincidencias de coeficiente y variable
+            matches = re.findall(r'([+-]?\s*\d*\.?\d*)\s*' + var, eq)
+            total = 0
+            for m in matches:
+                m = m.replace(' ', '')
+                if m in ['', '+', '-']:
+                    m = m + '1' if m in ['+', '-'] else '1'
+                total += float(m)
+            coef[i] = total
+        # Extraer término independiente
+        rhs = eq.split('=')[1]
+        b.append(float(rhs.strip()))
+        A.append(coef)
+    return np.array(A), np.array(b)
 
-# Parámetros para la aproximación
-x_inicial = 1000  # Empezamos con un valor grande
-pasos = 10        # Hacemos 10 evaluaciones
-factor = 10       # Multiplicamos x por 10 en cada paso (1000, 10000, 100000, ...)
-
-# Llamamos a la función de aproximación
-valores_aproximados = aproximar_limite_a_infinito(mi_funcion, x_inicial, pasos, factor)
-
-# Imprimimos los resultados
-print("Aproximación numérica del límite de f(x) cuando x -> ∞")
-print("-" * 50)
-for x, y in valores_aproximados:
-    print(f"Para x = {x:,.0f}, f(x) = {y:.8f}")
-print("-" * 50)
-print(f"El valor se aproxima a {valores_aproximados[-1][1]:.8f}, lo que sugiere un límite de 3.0")
+# Ejemplo de uso:
+sistema = [
+    "2x + 3y = 5",
+    "-x + 4y = 6"
+]
+A, b = sistema_a_matriz(sistema)
+print("A =", A)
+print("b =", b)
