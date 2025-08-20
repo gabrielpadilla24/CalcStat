@@ -21,6 +21,7 @@ import LimitsCalculator from "./pages/CalculusCalculator/DifferentialCalculus/Li
 import LinearAlgebraCalculator from "./pages/LinearAlgebra/LinearAlgebraCalculator";
 import DeterminantCalculator from "./pages/LinearAlgebra/Determinant/DeterminantCalculator";
 import InverseCalculator from "./pages/LinearAlgebra/Inverse/InverseCalculator";
+import EqSystemCalculator from "./pages/LinearAlgebra/EqSystem/EqSystemCalculator";
 
 const App = () => {
   return (
@@ -110,6 +111,11 @@ const App = () => {
         />
 
         <Route path="/linearalgebra/inverse" element={<InverseCalculator />} />
+
+        <Route
+          path="/linearalgebra/eqsystem"
+          element={<EqSystemCalculator />}
+        />
 
         {/* Other routes can be added here */}
         <Route path="/calculators" element={<Menu />} />
