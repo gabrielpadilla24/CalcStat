@@ -1373,6 +1373,7 @@ def inverse(data: MatrixData):
 
 
 
+import re
 
 #----------------------------------------
 # LINEAR EQUATION SYSTEM
@@ -1380,48 +1381,62 @@ def inverse(data: MatrixData):
 
 def coefmatrix(data: EquationSystemData) -> str:
     """
-    Genera LaTeX de la matriz de coeficientes A (sin la columna b),
-    con columnas en orden x, y, z (solo las que existan en el sistema).
+    Devuelve la matriz AUMENTADA [A|b] en LaTeX.
+    Columnas en orden x, y, z (solo las que existan en el sistema).
+    Cada fila corresponde a una ecuación en el orden recibido.
     """
     eqs = getattr(data, "equations", []) or []
 
-    # Variables en orden fijo x, y, z pero solo las presentes en el LHS
+    # Variables en orden fijo, solo si aparecen en el LHS
     variables = [v for v in ["x", "y", "z"] if any(v in (getattr(e, "lhs", "") or "") for e in eqs)]
     if not variables:
         return r"\left[\,\right]"
 
-    filas = []
+    rows = []
     for e in eqs:
         lhs = (getattr(e, "lhs", "") or "").replace(" ", "")
+        rhs = (getattr(e, "rhs", "") or "").replace(" ", "")
 
-        fila = []
+        # Coeficientes (sumando ocurrencias por si se repiten términos)
+        coefs = []
         for var in variables:
-            # coeficiente opcional con signo, seguido de la variable
-            pattern = rf"([+-]?\d*\.?\d*){var}(?:[^a-zA-Z]|$)"
-            m = re.search(pattern, lhs)
-            if m:
+            pattern = rf"([+-]?\d*\.?\d*){var}(?![a-zA-Z])"
+            total = 0.0
+            for m in re.finditer(pattern, lhs):
                 s = m.group(1)
                 if s in ("", "+"):
-                    coef = 1.0
+                    c = 1.0
                 elif s == "-":
-                    coef = -1.0
+                    c = -1.0
                 else:
-                    coef = float(s)
-            else:
-                coef = 0.0
-            fila.append(coef)
-        filas.append(fila)
+                    c = float(s)
+                total += c
+            coefs.append(total)
 
-    colfmt = "c" * len(variables)
-    body = " \\\\\n".join(" & ".join(f"{v:g}" for v in fila) for fila in filas)
+        # Término independiente b (asumimos numérico)
+        try:
+            b = float(rhs)
+        except ValueError:
+            raise ValueError(f"El término constante '{rhs}' debe ser numérico.")
+
+        rows.append((coefs, b))
+
+    # LaTeX para [A|b]
+    colfmt = "c" * len(variables) + "|c"
+    body_lines = []
+    for coefs, b in rows:
+        a_part = " & ".join(f"{v:g}" for v in coefs)
+        body_lines.append(f"    {a_part} & {b:g}")
+    body = " \\\\\n".join(body_lines)
+
     return "\\left[ \\begin{array}{" + colfmt + "}\n" + body + "\n\\end{array} \\right]"
 
 
 @app.post("/eqsystem")
 def receive_equations(data: EquationSystemData):
-    latex_A = coefmatrix(data)
+    latex_ab = coefmatrix(data)  # ← ahora es [A|b]
     return {
         "received_equations": [eq.dict() for eq in data.equations],
         "count": len(data.equations),
-        "coeffmatrix": latex_A,  # <- matriz de coeficientes en LaTeX (columnas en orden x, y, z si existen)
+        "coeffmatrix": latex_ab,  # ← mantenemos la misma clave que ya consume el frontend
     }

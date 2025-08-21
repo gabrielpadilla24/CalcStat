@@ -52,8 +52,8 @@ const EqSystemResult = ({
 
       {/* Matriz de coeficientes */}
       {coeffmatrix && coeffmatrix.trim().length > 0 && (
-        <div className="mt-6 text-left">
-          <h3 className="text-lg font-semibold mb-3">Coefficient Matrix (A)</h3>
+        <div className="bg-white rounded-xl  p-6 text-center">
+          <h3 className="text-xl font-semibold mb-4">Coefficient Matrix (A)</h3>
           <div className="bg-gray-50 border border-gray-200 rounded-lg p-3 overflow-x-auto">
             <BlockMath math={coeffmatrix} />
           </div>
