@@ -1373,12 +1373,55 @@ def inverse(data: MatrixData):
 
 
 
+
 #----------------------------------------
 # LINEAR EQUATION SYSTEM
 #----------------------------------------
+
+def coefmatrix(data: EquationSystemData) -> str:
+    """
+    Genera LaTeX de la matriz de coeficientes A (sin la columna b),
+    con columnas en orden x, y, z (solo las que existan en el sistema).
+    """
+    eqs = getattr(data, "equations", []) or []
+
+    # Variables en orden fijo x, y, z pero solo las presentes en el LHS
+    variables = [v for v in ["x", "y", "z"] if any(v in (getattr(e, "lhs", "") or "") for e in eqs)]
+    if not variables:
+        return r"\left[\,\right]"
+
+    filas = []
+    for e in eqs:
+        lhs = (getattr(e, "lhs", "") or "").replace(" ", "")
+
+        fila = []
+        for var in variables:
+            # coeficiente opcional con signo, seguido de la variable
+            pattern = rf"([+-]?\d*\.?\d*){var}(?:[^a-zA-Z]|$)"
+            m = re.search(pattern, lhs)
+            if m:
+                s = m.group(1)
+                if s in ("", "+"):
+                    coef = 1.0
+                elif s == "-":
+                    coef = -1.0
+                else:
+                    coef = float(s)
+            else:
+                coef = 0.0
+            fila.append(coef)
+        filas.append(fila)
+
+    colfmt = "c" * len(variables)
+    body = " \\\\\n".join(" & ".join(f"{v:g}" for v in fila) for fila in filas)
+    return "\\left[ \\begin{array}{" + colfmt + "}\n" + body + "\n\\end{array} \\right]"
+
+
 @app.post("/eqsystem")
 def receive_equations(data: EquationSystemData):
+    latex_A = coefmatrix(data)
     return {
         "received_equations": [eq.dict() for eq in data.equations],
-        "count": len(data.equations)
+        "count": len(data.equations),
+        "latex": latex_A,  # <- matriz de coeficientes en LaTeX (columnas en orden x, y, z si existen)
     }
