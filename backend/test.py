@@ -1,69 +1,86 @@
-import re
+import numpy as np
 
-def generar_matriz_latex(ecuaciones):
+def print_matrix(M, step_name):
     """
-    Convierte un sistema de ecuaciones lineales en una cadena de LaTeX para una matriz aumentada [A|b]
-    con columnas en orden x, y, z (solo las que existan) y la última columna como el término independiente b.
-    Las filas corresponden a las ecuaciones en el orden dado.
+    Prints the matrix with a descriptive header for each step.
     """
-    # 1) Variables en orden fijo x, y, z pero solo las que aparezcan
-    variables = [v for v in ['x', 'y', 'z'] if any(v in eq for eq in ecuaciones)]
-    if not variables:
-        return r"\left[\,\right]"  # vacío seguro
+    print(f"\n--- {step_name} ---")
+    print(M)
 
-    matriz = []
+def gaussian_elimination(A, b):
+    """
+    Solves a system of linear equations Ax = b using Gaussian elimination.
 
-    # 2) Extraer coeficientes por ecuación
-    for ecuacion in ecuaciones:
-        partes = ecuacion.split("=")
-        if len(partes) != 2:
-            raise ValueError(f"Ecuación inválida: '{ecuacion}' (debe tener '=')")
-        lado_izquierdo = partes[0].replace(" ", "")
-        constante_str = partes[1].strip()
+    Args:
+        A (np.ndarray): The coefficient matrix.
+        b (np.ndarray): The constant vector.
 
-        # Coeficientes en orden x, y, z (solo presentes)
-        fila = []
-        for var in variables:
-            # Busca el primer término con esa variable (coef opcional + signo)
-            pattern = rf'([+-]?\d*\.?\d*){var}(?:[^a-zA-Z]|$)'
-            match = re.search(pattern, lado_izquierdo)
-            if match:
-                coef_str = match.group(1)
-                if coef_str in ("", "+"):
-                    coef = 1.0
-                elif coef_str == "-":
-                    coef = -1.0
-                else:
-                    coef = float(coef_str)
-            else:
-                coef = 0.0
-            fila.append(coef)
+    Returns:
+        np.ndarray: The solution vector x, or None if no unique solution exists.
+    """
+    # Combine A and b into an augmented matrix
+    M = np.concatenate((A, b.reshape(-1, 1)), axis=1).astype(float)
+    n = len(M)
+    
+    print("Initial Augmented Matrix:")
+    print_matrix(M, "Step 0: Initial Setup")
 
-        # Término independiente al final (columna b)
-        try:
-            b = float(constante_str)
-        except ValueError:
-            raise ValueError(f"El término constante '{constante_str}' no es un número válido.")
-        fila.append(b)
+    # --- Phase 1: Forward Elimination ---
+    for i in range(n):
+        # Find the pivot for column i
+        max_row = i
+        for k in range(i + 1, n):
+            if abs(M[k, i]) > abs(M[max_row, i]):
+                max_row = k
+        
+        # Swap the current row with the row containing the maximum pivot
+        M[[i, max_row]] = M[[max_row, i]]
+        print_matrix(M, f"Step {i+1}.1: Pivot Row Swap (Row {i} and {max_row})")
 
-        matriz.append(fila)
+        # Check for a zero pivot, which may indicate no unique solution
+        pivot = M[i, i]
+        if pivot == 0:
+            print(f"\nNo unique solution exists for this system. The pivot in column {i} is zero.")
+            return None
+        
+        # Normalize the pivot row
+        M[i] = M[i] / pivot
+        print_matrix(M, f"Step {i+1}.2: Normalize Pivot Row {i}")
 
-    # 3) Construir LaTeX: columnas = len(variables) + 1 (b)
-    column_format = "c" * len(variables) + "|c"
-    filas_latex = []
-    for fila in matriz:
-        coefs = " & ".join(f"{v:g}" for v in fila[:-1])  # A
-        b = f"{fila[-1]:g}"                              # b
-        filas_latex.append(f"    {coefs} & {b}")
+        # Eliminate other entries in the current column
+        for j in range(n):
+            if i != j:
+                factor = M[j, i]
+                M[j] = M[j] - factor * M[i]
+                print_matrix(M, f"Step {i+1}.3: Eliminate Row {j} using Pivot Row {i}")
 
-    body = " \\\\\n".join(filas_latex)
-    latex_string = (
-        "\\left[ \\begin{array}{" + column_format + "}\n" +
-        body + "\n" +
-        "\\end{array} \\right]"
-    )
-    return latex_string
+    # --- Phase 2: Backward Substitution (Solution) ---
+    x = M[:, -1]
+    
+    print("\n--- Final Result ---")
+    print("The solved system is:")
+    for i in range(n):
+        variable = f"x{i+1}"
+        value = x[i]
+        print(f"  {variable} = {value:.4f}")
 
-# Ejemplo:
-ecuaciones = ["2x+3y=54", "x+y=5", "4x+z=10"]
-print(generar_matriz_latex(ecuaciones))
+    return x
+
+# --- Example Usage ---
+# Example 1: A solvable system
+A1 = np.array([[2, 1, -1],
+               [-3, -1, 2],
+               [-2, 1, 2]])
+b1 = np.array([8, -11, -3])
+
+print("\n--- Solving Example 1 ---")
+x1 = gaussian_elimination(A1, b1)
+
+# Example 2: A system with no unique solution
+print("\n" + "="*50)
+print("--- Solving Example 2 (No Unique Solution) ---")
+A2 = np.array([[1, 2],
+               [2, 4]])
+b2 = np.array([5, 10])
+
+x2 = gaussian_elimination(A2, b2)
