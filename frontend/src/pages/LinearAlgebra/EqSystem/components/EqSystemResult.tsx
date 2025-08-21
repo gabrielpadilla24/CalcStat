@@ -8,9 +8,10 @@ type Equation = { lhs: string; rhs: string };
 type EqSystemResultProps = {
   equations?: Equation[];
   coeffmatrix?: string; // [A|b] LaTeX
-  status?: string; // "Success" | "No unique solution"
+  status?: string;
   solution?: Record<string, number>;
-  solution_latex?: string; // vector solución en LaTeX
+  solution_latex?: string;
+  steps?: string[]; // 👈 NUEVO
   error?: string;
   explanation?: string;
 };
@@ -32,6 +33,7 @@ const EqSystemResult = ({
   status,
   solution,
   solution_latex,
+  steps, // 👈 NUEVO
   error,
   explanation,
 }: EqSystemResultProps) => {
@@ -81,12 +83,10 @@ const EqSystemResult = ({
         </div>
       )}
 
-      {/* Si no hay solución única, muestra estado igualmente */}
       {!solution_latex && status && (
         <p className="text-sm text-gray-600 mt-6">Status: {status}</p>
       )}
 
-      {/* (Opcional) Mostrar solución como texto llano */}
       {solution && !solution_latex && (
         <div className="mt-4 text-sm text-gray-700">
           {Object.entries(solution).map(([k, v]) => (
@@ -94,6 +94,28 @@ const EqSystemResult = ({
               {k} = {v}
             </div>
           ))}
+        </div>
+      )}
+
+      {/* 👇 NUEVO: Pasos de la eliminación gaussiana */}
+      {Array.isArray(steps) && steps.length > 0 && (
+        <div className="mt-8 text-left">
+          <h3 className="text-lg font-semibold mb-3">
+            Gaussian Elimination Steps
+          </h3>
+          <div className="space-y-3 max-h-96 overflow-y-auto">
+            {steps.map((s, i) => (
+              <details
+                key={i}
+                className="bg-gray-50 border border-gray-200 rounded-lg p-3"
+              >
+                <summary className="cursor-pointer font-medium">
+                  Step {i + 1}
+                </summary>
+                <pre className="whitespace-pre-wrap text-sm mt-2">{s}</pre>
+              </details>
+            ))}
+          </div>
         </div>
       )}
 

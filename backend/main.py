@@ -1376,7 +1376,7 @@ import re
 #----------------------------------------
 # LINEAR EQUATION SYSTEM
 #----------------------------------------
-solver = GaussianLinearSystem(collect_steps=False)
+solver = GaussianLinearSystem(collect_steps=True)
 
 @app.post("/eqsystem")
 def receive_equations(data: EquationSystemData) -> Dict[str, Any]:
@@ -1388,13 +1388,17 @@ def receive_equations(data: EquationSystemData) -> Dict[str, Any]:
       - status: "Success" | "No unique solution"
       - solution: dict {x: ..., y: ..., z: ...} (si única)
       - solution_latex: vector columna en LaTeX (si única)
-      - (opcional) steps: si activas collect_steps=True en el solver
+      - steps: lista de strings con los pasos de la eliminación (si collect_steps=True)
     """
+    # Limpia el buffer de pasos por request
+    if getattr(solver, "collect_steps", False):
+        solver.steps = []
+
     # Resuelve usando la clase (acepta items con attrs/dict lhs/rhs)
     result = solver.solve_from_lhs_rhs(data.equations)
 
     return {
         "received_equations": [eq.dict() for eq in data.equations],
         "count": len(data.equations),
-        **result,  # ← incluye coeffmatrix, variables, status, solution, solution_latex (+ steps si activo)
+        **result,  # incluye: coeffmatrix, variables, status, solution, solution_latex, steps
     }

@@ -6,10 +6,11 @@ type EqSystemResponse = {
   equations?: EqRow[];
   received_equations?: EqRow[];
   coeffmatrix?: string; // [A|b] LaTeX
-  status?: string; // "Success" | "No unique solution"
+  status?: string;
   solution?: Record<string, number>;
-  solution_latex?: string; // LaTeX del vector solución
+  solution_latex?: string;
   variables?: string[];
+  steps?: string[]; // 👈 NUEVO
 };
 
 const EqSystemInput = ({
@@ -22,6 +23,7 @@ const EqSystemInput = ({
     solution?: Record<string, number>;
     solution_latex?: string;
     variables?: string[];
+    steps?: string[]; // 👈 NUEVO
   }) => void;
 }) => (
   <LinearSystemInput<EqSystemResponse>
@@ -36,6 +38,7 @@ const EqSystemInput = ({
         solution: data.solution,
         solution_latex: data.solution_latex,
         variables: data.variables,
+        steps: data.steps ?? [], // 👈 NUEVO
       })
     }
   />

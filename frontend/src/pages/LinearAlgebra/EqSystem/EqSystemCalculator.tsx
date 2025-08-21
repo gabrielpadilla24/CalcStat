@@ -14,6 +14,7 @@ type EqSystemResponse = {
   solution?: Record<string, number>;
   solution_latex?: string;
   variables?: string[];
+  steps?: string[]; // 👈 NUEVO
 };
 
 const EqSystemCalculator = () => {
@@ -41,6 +42,7 @@ const EqSystemCalculator = () => {
               status={result?.status}
               solution={result?.solution}
               solution_latex={result?.solution_latex}
+              steps={result?.steps} // 👈 NUEVO
             />
           </div>
         </div>
