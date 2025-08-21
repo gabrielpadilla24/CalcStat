@@ -7,13 +7,12 @@ type Equation = { lhs: string; rhs: string };
 
 type EqSystemResultProps = {
   equations?: Equation[];
-  latex?: string; // opcional: si el backend lo manda
+  coeffmatrix?: string; // 👈 NUEVO: matriz LaTeX desde backend
   error?: string;
   explanation?: string;
 };
 
 const toLatex = (eqs: Equation[] = []) => {
-  // Genera \begin{cases} ... \end{cases} con cada "lhs = rhs"
   const lines = eqs
     .filter(
       (e) =>
@@ -26,11 +25,10 @@ const toLatex = (eqs: Equation[] = []) => {
 
 const EqSystemResult = ({
   equations,
-  latex,
+  coeffmatrix,
   error,
   explanation,
 }: EqSystemResultProps) => {
-  // Estado vacío (igual patrón que InverseResult)
   if (!equations || equations.length === 0) {
     return (
       <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6 text-center">
@@ -39,8 +37,7 @@ const EqSystemResult = ({
     );
   }
 
-  // Construir LaTeX si no vino desde el backend
-  const systemLatex = latex || toLatex(equations);
+  const systemLatex = toLatex(equations);
 
   return (
     <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6 text-center">
@@ -48,13 +45,23 @@ const EqSystemResult = ({
         Equations Received ({equations.length})
       </h2>
 
+      {/* Sistema en formato cases */}
       <div className="bg-gray-50 border border-gray-200 rounded-lg p-3 overflow-x-auto">
         <BlockMath math={systemLatex} />
       </div>
 
-      {/* ⚠️ Caso error */}
+      {/* Matriz de coeficientes */}
+      {coeffmatrix && coeffmatrix.trim().length > 0 && (
+        <div className="mt-6 text-left">
+          <h3 className="text-lg font-semibold mb-3">Coefficient Matrix (A)</h3>
+          <div className="bg-gray-50 border border-gray-200 rounded-lg p-3 overflow-x-auto">
+            <BlockMath math={coeffmatrix} />
+          </div>
+        </div>
+      )}
+
       {error ? (
-        <div className="bg-yellow-50 border border-yellow-300 rounded-xl shadow-md p-6 text-center">
+        <div className="bg-yellow-50 border border-yellow-300 rounded-xl shadow-md p-6 text-center mt-6">
           <h3 className="text-lg font-semibold mb-4 text-yellow-800">
             ⚠️ Error
           </h3>
@@ -63,7 +70,6 @@ const EqSystemResult = ({
         </div>
       ) : (
         <>
-          {/* Explicación opcional */}
           {explanation && <p className="text-gray-600 mt-6">{explanation}</p>}
         </>
       )}

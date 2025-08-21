@@ -7,7 +7,10 @@ import EqSystemInput from "./components/EqSystemInput";
 import EqSystemResult from "./components/EqSystemResult";
 
 type Equation = { lhs: string; rhs: string };
-type EqSystemResponse = { equations: Equation[] };
+type EqSystemResponse = {
+  equations: Equation[];
+  coeffmatrix?: string; // 👈 incluir en el estado
+};
 
 const EqSystemCalculator = () => {
   const [result, setResult] = useState<EqSystemResponse | null>(null);
@@ -28,7 +31,10 @@ const EqSystemCalculator = () => {
 
           {/* RESULT */}
           <div className="flex-1 max-w-[600px]">
-            <EqSystemResult equations={result?.equations} />
+            <EqSystemResult
+              equations={result?.equations}
+              coeffmatrix={result?.coeffmatrix} // 👈 ahora sí se pasa
+            />
           </div>
         </div>
       </div>

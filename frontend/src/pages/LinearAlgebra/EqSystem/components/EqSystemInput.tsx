@@ -5,13 +5,13 @@ import LinearSystemInput, { EqRow } from "@/components/LinearSystemInput";
 type EqSystemResponse = {
   equations?: EqRow[]; // si tu backend ya devuelve 'equations'
   received_equations?: EqRow[]; // o si viene como 'received_equations'
-  latex?: string; // matriz en LaTeX (A o [A|b])
+  coeffmatrix?: string; // matriz en LaTeX (A o [A|b])
 };
 
 const EqSystemInput = ({
   onResult,
 }: {
-  onResult: (result: { equations: EqRow[]; latex?: string }) => void;
+  onResult: (result: { equations: EqRow[]; coeffmatrix?: string }) => void;
 }) => (
   <LinearSystemInput<EqSystemResponse>
     label="Enter your system of equations"
@@ -20,7 +20,7 @@ const EqSystemInput = ({
     onSuccess={(data) =>
       onResult({
         equations: data.equations ?? data.received_equations ?? [],
-        latex: data.latex ?? "",
+        coeffmatrix: data.coeffmatrix ?? "",
       })
     }
   />

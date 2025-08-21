@@ -1423,5 +1423,5 @@ def receive_equations(data: EquationSystemData):
     return {
         "received_equations": [eq.dict() for eq in data.equations],
         "count": len(data.equations),
-        "latex": latex_A,  # <- matriz de coeficientes en LaTeX (columnas en orden x, y, z si existen)
+        "coeffmatrix": latex_A,  # <- matriz de coeficientes en LaTeX (columnas en orden x, y, z si existen)
     }
