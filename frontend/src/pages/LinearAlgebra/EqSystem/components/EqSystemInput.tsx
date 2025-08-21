@@ -3,15 +3,26 @@
 import LinearSystemInput, { EqRow } from "@/components/LinearSystemInput";
 
 type EqSystemResponse = {
-  equations?: EqRow[]; // si tu backend ya devuelve 'equations'
-  received_equations?: EqRow[]; // o si viene como 'received_equations'
-  coeffmatrix?: string; // matriz en LaTeX (A o [A|b])
+  equations?: EqRow[];
+  received_equations?: EqRow[];
+  coeffmatrix?: string; // [A|b] LaTeX
+  status?: string; // "Success" | "No unique solution"
+  solution?: Record<string, number>;
+  solution_latex?: string; // LaTeX del vector solución
+  variables?: string[];
 };
 
 const EqSystemInput = ({
   onResult,
 }: {
-  onResult: (result: { equations: EqRow[]; coeffmatrix?: string }) => void;
+  onResult: (result: {
+    equations: EqRow[];
+    coeffmatrix?: string;
+    status?: string;
+    solution?: Record<string, number>;
+    solution_latex?: string;
+    variables?: string[];
+  }) => void;
 }) => (
   <LinearSystemInput<EqSystemResponse>
     label="Enter your system of equations"
@@ -21,6 +32,10 @@ const EqSystemInput = ({
       onResult({
         equations: data.equations ?? data.received_equations ?? [],
         coeffmatrix: data.coeffmatrix ?? "",
+        status: data.status,
+        solution: data.solution,
+        solution_latex: data.solution_latex,
+        variables: data.variables,
       })
     }
   />

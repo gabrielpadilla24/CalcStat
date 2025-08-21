@@ -4,15 +4,14 @@ from pydantic import BaseModel
 from math import pow
 import numpy_financial as npf
 import numpy as np
-from typing import Literal, Optional, List
+from typing import Literal, Optional, List, Dict, Tuple, Iterable, Any
 from sympy import symbols, diff, simplify, Mul, Pow, Function, Symbol, Add, sin, cos, tan, log, exp, sqrt, solveset, Eq, S, singularities, Matrix
 from sympy.parsing.sympy_parser import parse_expr
 import sympy
 from sympy import latex as sympy_latex
 from sympy.parsing.latex import parse_latex
 import re
-from typing import List
-
+from GaussianLinearSystem import GaussianLinearSystem
 
 
 app = FastAPI()
@@ -1374,69 +1373,28 @@ def inverse(data: MatrixData):
 
 
 import re
-
 #----------------------------------------
 # LINEAR EQUATION SYSTEM
 #----------------------------------------
-
-def coefmatrix(data: EquationSystemData) -> str:
-    """
-    Devuelve la matriz AUMENTADA [A|b] en LaTeX.
-    Columnas en orden x, y, z (solo las que existan en el sistema).
-    Cada fila corresponde a una ecuación en el orden recibido.
-    """
-    eqs = getattr(data, "equations", []) or []
-
-    # Variables en orden fijo, solo si aparecen en el LHS
-    variables = [v for v in ["x", "y", "z"] if any(v in (getattr(e, "lhs", "") or "") for e in eqs)]
-    if not variables:
-        return r"\left[\,\right]"
-
-    rows = []
-    for e in eqs:
-        lhs = (getattr(e, "lhs", "") or "").replace(" ", "")
-        rhs = (getattr(e, "rhs", "") or "").replace(" ", "")
-
-        # Coeficientes (sumando ocurrencias por si se repiten términos)
-        coefs = []
-        for var in variables:
-            pattern = rf"([+-]?\d*\.?\d*){var}(?![a-zA-Z])"
-            total = 0.0
-            for m in re.finditer(pattern, lhs):
-                s = m.group(1)
-                if s in ("", "+"):
-                    c = 1.0
-                elif s == "-":
-                    c = -1.0
-                else:
-                    c = float(s)
-                total += c
-            coefs.append(total)
-
-        # Término independiente b (asumimos numérico)
-        try:
-            b = float(rhs)
-        except ValueError:
-            raise ValueError(f"El término constante '{rhs}' debe ser numérico.")
-
-        rows.append((coefs, b))
-
-    # LaTeX para [A|b]
-    colfmt = "c" * len(variables) + "|c"
-    body_lines = []
-    for coefs, b in rows:
-        a_part = " & ".join(f"{v:g}" for v in coefs)
-        body_lines.append(f"    {a_part} & {b:g}")
-    body = " \\\\\n".join(body_lines)
-
-    return "\\left[ \\begin{array}{" + colfmt + "}\n" + body + "\n\\end{array} \\right]"
-
+solver = GaussianLinearSystem(collect_steps=False)
 
 @app.post("/eqsystem")
-def receive_equations(data: EquationSystemData):
-    latex_ab = coefmatrix(data)  # ← ahora es [A|b]
+def receive_equations(data: EquationSystemData) -> Dict[str, Any]:
+    """
+    Recibe [{lhs, rhs}, ...], resuelve por eliminación gaussiana,
+    y devuelve:
+      - coeffmatrix: LaTeX de la matriz aumentada [A|b]
+      - variables: orden usado (x,y,z presentes)
+      - status: "Success" | "No unique solution"
+      - solution: dict {x: ..., y: ..., z: ...} (si única)
+      - solution_latex: vector columna en LaTeX (si única)
+      - (opcional) steps: si activas collect_steps=True en el solver
+    """
+    # Resuelve usando la clase (acepta items con attrs/dict lhs/rhs)
+    result = solver.solve_from_lhs_rhs(data.equations)
+
     return {
         "received_equations": [eq.dict() for eq in data.equations],
         "count": len(data.equations),
-        "coeffmatrix": latex_ab,  # ← mantenemos la misma clave que ya consume el frontend
+        **result,  # ← incluye coeffmatrix, variables, status, solution, solution_latex (+ steps si activo)
     }
