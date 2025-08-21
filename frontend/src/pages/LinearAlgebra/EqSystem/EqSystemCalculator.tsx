@@ -47,7 +47,7 @@ const EqSystemCalculator = () => {
           </div>
         </div>
       </div>
-      <BottomCTA buttonText="Back to Linear Algebra" href="/linear-algebra" />
+      <BottomCTA buttonText="Back to Linear Algebra" href="/linearalgebra" />
     </>
   );
 };
