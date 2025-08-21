@@ -35,7 +35,7 @@ class GaussianLinearSystem:
         """
         vars_present = self._present_variables(equations)
         if not vars_present:
-            raise ValueError("No se encontraron variables válidas (x, y, z) en las ecuaciones.")
+            raise ValueError("No valid variables (x, y, z) found in the equations.")
 
         A_rows: List[List[float]] = []
         b_vals: List[float] = []
@@ -44,7 +44,7 @@ class GaussianLinearSystem:
             try:
                 lhs, rhs = eq_str.split("=")
             except ValueError:
-                raise ValueError(f"Formato inválido: '{eq_str}' (usa 'ax+by= c').")
+                raise ValueError(f"Invalid Format: '{eq_str}' (use 'ax+by= c').")
 
             lhs = lhs.replace(" ", "")
             rhs = rhs.strip()
@@ -68,7 +68,7 @@ class GaussianLinearSystem:
             try:
                 b_val = float(rhs)
             except ValueError:
-                raise ValueError(f"El término constante '{rhs}' debe ser numérico.")
+                raise ValueError(f"The constant term '{rhs}' must be numeric.")
 
             A_rows.append([coeffs[v] for v in vars_present])
             b_vals.append(b_val)
@@ -97,29 +97,29 @@ class GaussianLinearSystem:
         m, n = A.shape
         pivots = min(m, n)
 
-        self._log(M, "Matriz aumentada inicial")
+        self._log(M, "Initial Augmented Matrix")
 
         for i in range(pivots):
             # elegir pivote por valor absoluto máximo en columna i
             max_row = i + np.argmax(np.abs(M[i:, i]))
             M[[i, max_row]] = M[[max_row, i]]
-            self._log(M, f"Paso {i+1}.1: Intercambio fila {i} ↔ {max_row}")
+            self._log(M, f"Step {i+1}.1: Swap row {i} ↔ {max_row}")
 
             pivot = M[i, i]
             if abs(pivot) < self.tol:
-                self._log(M, f"Pivot ~ 0 en columna {i} → sistema sin solución única")
+                self._log(M, f"Pivot ~ 0 in column {i} → system has no unique solution")
                 return "no_unique", None
 
             # normalizar fila pivote
             M[i] = M[i] / pivot
-            self._log(M, f"Paso {i+1}.2: Normalizar fila {i}")
+            self._log(M, f"Step {i+1}.2: Normalize row {i}")
 
             # anular el resto de la columna
             for j in range(m):
                 if j != i:
                     factor = M[j, i]
                     M[j] = M[j] - factor * M[i]
-            self._log(M, f"Paso {i+1}.3: Anular columna {i}")
+            self._log(M, f"Step {i+1}.3: Eliminate column {i}")
 
         # solución (tomamos las primeras n filas para n variables)
         if m < n:
@@ -172,6 +172,6 @@ class GaussianLinearSystem:
             lhs = getattr(it, "lhs", None) if not isinstance(it, dict) else it.get("lhs")
             rhs = getattr(it, "rhs", None) if not isinstance(it, dict) else it.get("rhs")
             if lhs is None or rhs is None:
-                raise ValueError("Cada item debe tener 'lhs' y 'rhs'.")
+                raise ValueError("Each item must have 'lhs' and 'rhs'.")
             eq_strings.append(f"{str(lhs)}={str(rhs)}")
         return self.solve_from_strings(eq_strings)
