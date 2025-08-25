@@ -3,16 +3,9 @@
 import { useState } from "react";
 import NavBar from "@/components/NavBar";
 import BottomCTA from "@/components/BottomCTA";
-import EigenInput from "./components/EigenInput";
+import EigenInput, { type EigenResponse } from "./components/EigenInput";
 import EigenResult from "./components/EigenResult";
-//INPUT AND RESULT
-
-type EigenResponse = {
-  matrix: number[][];
-  eigenvalues?: number[];
-  eigenvectors?: number[][];
-  steps?: string[];
-};
+import EigenInfo from "./components/EigenInfo";
 
 const EigenCalculator = () => {
   const [result, setResult] = useState<EigenResponse | null>(null);
@@ -26,14 +19,24 @@ const EigenCalculator = () => {
         </h1>
 
         <div className="max-w-[1440px] mx-auto flex flex-col lg:flex-row gap-6 px-6 justify-center">
+          {/* Input */}
           <div className="flex-1 max-w-[600px]">
             <EigenInput onResult={setResult} />
           </div>
+
+          {/* Result + Education card */}
           <div className="flex-1 max-w-[600px]">
-            <EigenResult result={result} />
+            <EigenResult
+              matrix={result?.matrix}
+              eigenvalues={result?.eigenvalues}
+              eigenvectors={result?.eigenvectors}
+              steps={result?.steps}
+            />
+            <EigenInfo />
           </div>
         </div>
       </div>
+
       <BottomCTA buttonText="Back to Linear Algebra" href="/linearalgebra" />
     </>
   );

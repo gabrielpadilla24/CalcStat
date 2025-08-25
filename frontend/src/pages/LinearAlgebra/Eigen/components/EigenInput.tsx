@@ -3,14 +3,16 @@
 import { useMemo, useState } from "react";
 import MatrixInput from "@/components/MatrixInput";
 
+export type Step = { text: string; math?: string };
+
 export type EigenResponse = {
-  matrix: number[][];
+  matrix: (string | number)[][];
   eigenvalues?: number[];
   eigenvectors?: number[][];
-  steps?: string[];
+  steps?: Step[];
 };
 
-function makeZeroMatrix(n: number): number[][] {
+function makeZeroMatrix(n: number) {
   return Array.from({ length: n }, () => Array(n).fill(0));
 }
 
@@ -26,10 +28,9 @@ function resizeSquarePreserve(M: number[][], n: number): number[][] {
 
 const EigenInput = ({ onResult }: { onResult: (r: EigenResponse) => void }) => {
   const [size, setSize] = useState<number>(3);
-  const [sizeInput, setSizeInput] = useState<string>("3"); // <- lo que se muestra en el input
+  const [sizeInput, setSizeInput] = useState<string>("3"); // permite borrar
   const [matrix, setMatrix] = useState<number[][]>(makeZeroMatrix(3));
 
-  // Normaliza al perder foco
   const commitSize = () => {
     let n = parseInt(sizeInput, 10);
     if (isNaN(n)) n = 3;
@@ -51,13 +52,17 @@ const EigenInput = ({ onResult }: { onResult: (r: EigenResponse) => void }) => {
       });
       if (!res.ok) throw new Error("Request failed");
       const data = (await res.json()) as EigenResponse;
-      onResult({ ...data, matrix: data.matrix ?? matrix });
+
+      onResult({
+        matrix: data.matrix ?? matrix,
+        eigenvalues: data.eigenvalues,
+        eigenvectors: data.eigenvectors,
+        steps: data.steps,
+      });
     } catch {
       onResult({
         matrix,
-        steps: [
-          "Failed to compute eigenvalues/eigenvectors. Check your input.",
-        ],
+        steps: [{ text: "Failed to compute eigenvalues/eigenvectors." }],
       });
     }
   };
@@ -75,8 +80,8 @@ const EigenInput = ({ onResult }: { onResult: (r: EigenResponse) => void }) => {
           <input
             type="number"
             value={sizeInput}
-            onChange={(e) => setSizeInput(e.target.value)} // solo actualiza string
-            onBlur={commitSize} // normaliza al salir
+            onChange={(e) => setSizeInput(e.target.value)}
+            onBlur={commitSize}
             className="w-24 p-2 border rounded-lg text-center"
             min={1}
             max={8}
@@ -98,6 +103,7 @@ const EigenInput = ({ onResult }: { onResult: (r: EigenResponse) => void }) => {
           title="Matrix A"
         />
 
+        {/* Botón */}
         <button
           onClick={handleCalculate}
           className="mt-6 bg-[#5FBA9B] text-white px-6 py-2 rounded-lg font-semibold hover:bg-[#4da88a] transition w-full"
