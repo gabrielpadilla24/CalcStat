@@ -1,10 +1,18 @@
 "use client";
 
+import "katex/dist/katex.min.css";
+import { BlockMath } from "react-katex";
+
+type Step = {
+  text: string;
+  math?: string;
+};
+
 type EigenResponse = {
   matrix: (string | number)[][];
   eigenvalues?: number[];
   eigenvectors?: number[][];
-  steps?: string[];
+  steps?: Step[];
 };
 
 type Props = {
@@ -74,9 +82,7 @@ const EigenResult = ({ result }: Props) => {
             ))}
           </div>
         ) : (
-          <p className="text-center text-gray-500">
-            (No calculados o no reales)
-          </p>
+          <p className="text-center text-gray-500">(Non Existent)</p>
         )}
       </div>
 
@@ -102,21 +108,26 @@ const EigenResult = ({ result }: Props) => {
             ))}
           </div>
         ) : (
-          <p className="text-center text-gray-500">
-            (No calculados o no reales)
-          </p>
+          <p className="text-center text-gray-500">(Non Existent)</p>
         )}
       </div>
 
-      {/* Steps (solo eigenvalues) */}
+      {/* Steps con texto normal + LaTeX */}
       {result?.steps && result.steps.length > 0 && (
         <div className="mt-8">
           <h3 className="text-lg font-semibold mb-2 text-center">
             Steps for Eigenvalues
           </h3>
-          <ol className="list-decimal pl-6 space-y-1 text-gray-700 text-left">
+          <ol className="list-decimal pl-6 space-y-4 text-gray-700 text-left">
             {result.steps.map((s, i) => (
-              <li key={i}>{s}</li>
+              <li key={i} className="flex flex-col gap-1">
+                <span className="text-gray-700 text-base">{s.text}</span>
+                {s.math && (
+                  <div className="ml-4 overflow-x-auto max-w-full">
+                    <BlockMath math={s.math} />
+                  </div>
+                )}
+              </li>
             ))}
           </ol>
         </div>

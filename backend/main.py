@@ -1406,63 +1406,66 @@ def receive_equations(data: EquationSystemData) -> Dict[str, Any]:
 # -----------------------------
 # Eigenvalues and Eigenvectors
 # -----------------------------
-
+from typing import Any, Dict, List
 from sympy import Matrix, symbols, Eq, solve, latex as sympy_latex, N
 
 @app.post("/eigen")
 def eigen(data: MatrixData) -> Dict[str, Any]:
     A = Matrix(data.matrix)
     n = A.rows
-    steps: List[str] = []
+    lam = symbols("λ")
 
-    # Matriz original (siempre)
+    # Matriz original
     original_formatted = [
         [format_number(A[i, j]) for j in range(A.cols)]
         for i in range(A.rows)
     ]
 
-    # Verificar cuadrada
+    # Validación
     if A.rows != A.cols:
         return {
             "matrix": original_formatted,
-            "steps": ["Error: La matriz no es cuadrada."],
+            "steps": [{"text": "Error: La matriz no es cuadrada", "math": ""}],
         }
 
-    lam = symbols("λ")
+    steps: List[Dict[str, str]] = []
 
-    # Paso 1: construir A - λI
+    # Paso 1: A - λI
     A_lambda = A - lam * Matrix.eye(n)
-    steps.append(f"Paso 1: Construir A - λI = {sympy_latex(A_lambda)}")
+    steps.append({
+        "text": "Step 1: Build A - λI =",
+        "math": sympy_latex(A_lambda)
+    })
 
     # Paso 2: determinante
     det_expr = A_lambda.det()
-    steps.append(f"Paso 2: Calcular determinante det(A - λI) = {sympy_latex(det_expr)}")
+    steps.append({
+    "text": "Step 2: Compute determinant det(A - λI) =",
+        "math": sympy_latex(det_expr)
+    })
 
-    # Paso 3: polinomio característico
-    charpoly = A.charpoly(lam)
-    steps.append(
-        "Paso 3: Polinomio característico p(λ) = "
-        + sympy_latex(charpoly.as_expr())
-    )
+    # Paso 3: polinomio característico = det(A - λI)
+    steps.append({
+        "text": "Step 3: Characteristic polynomial p(λ) =",
+        "math": sympy_latex(det_expr.expand())
+    })
 
     # Paso 4: resolver p(λ) = 0
-    roots = solve(Eq(charpoly.as_expr(), 0), lam)
-    steps.append(
-        "Paso 4: Resolver p(λ) = 0 → autovalores λ: "
-        + ", ".join(sympy_latex(r) for r in roots)
-    )
+    roots = solve(Eq(det_expr, 0), lam)
+    steps.append({
+        "text": "Step 4: Solve p(λ) = 0 → eigenvalues λ:",
+        "math": ", ".join(sympy_latex(r) for r in roots)
+    })
 
-    # Autovectores (sin pasos detallados)
+    # Autovectores (solo cálculo, sin pasos)
     eigenvalues_numeric: List[float] = []
     eigenvectors_numeric: List[List[float]] = []
-
-    for idx, val in enumerate(roots, start=1):
+    for val in roots:
         valN = N(val)
         try:
-            # Resolver (A - λI)v = 0
-            eigvecs = (A - val * Matrix.eye(n)).nullspace()
-            if eigvecs:
-                v = eigvecs[0]
+            vecs = (A - val * Matrix.eye(n)).nullspace()
+            if vecs:
+                v = vecs[0]
                 vN = [float(N(x)) for x in v]
                 eigenvalues_numeric.append(float(valN))
                 eigenvectors_numeric.append(vN)
