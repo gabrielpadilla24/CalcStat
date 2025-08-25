@@ -1480,12 +1480,20 @@ def eigen(data: MatrixData) -> Dict[str, Any]:
     }
 
 
+
+
 #------------------
 # SVD
 #------------------
 @app.post("/svd")
-def svd(data:MatrixData):
-    matrix = Matrix(data.matrix)
-    return{
-        'matrix': matrix
-    }
+def svd(data: MatrixData):
+    # Si quieres usar Matrix para validar, ok, pero NO lo devuelvas:
+    mat = Matrix(data.matrix)
+
+    # ✅ Serializa como lista de listas (números)
+    matrix_formatted = [
+        [float(mat[i, j]) for j in range(mat.cols)]
+        for i in range(mat.rows)
+    ]
+
+    return {"matrix": matrix_formatted}

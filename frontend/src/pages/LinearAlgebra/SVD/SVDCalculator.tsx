@@ -3,13 +3,22 @@
 import { useState } from "react";
 import NavBar from "@/components/NavBar";
 import BottomCTA from "@/components/BottomCTA";
-import SVDInput, { type SVDResponse } from "./components/SVDInput";
+import SVDInput from "./components/SVDInput";
 import SVDResult from "./components/SVDResult";
 
-type SVDData = SVDResponse & { matrix: number[][] };
+type SVDResponse = {
+  matrix: number[][];
+  singularValues?: number[];
+  U?: number[][];
+  Sigma?: number[][];
+  Vt?: number[][];
+  steps?: string[];
+  error?: string;
+  explanation?: string;
+};
 
 const SVDCalculator = () => {
-  const [result, setResult] = useState<SVDData | null>(null);
+  const [result, setResult] = useState<SVDResponse | null>(null);
 
   return (
     <>

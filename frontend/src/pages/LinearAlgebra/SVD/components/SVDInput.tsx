@@ -1,9 +1,9 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import MatrixInput from "@/components/MatrixInput";
 
-export type SVDResponse = {
+type SVDResponse = {
   singularValues?: number[];
   U?: number[][];
   Sigma?: number[][];
@@ -13,34 +13,6 @@ export type SVDResponse = {
   explanation?: string;
 };
 
-function makeZeroMatrix(r: number, c: number): number[][] {
-  return Array.from({ length: r }, () => Array(c).fill(0));
-}
-
-function resizePreserve(M: number[][], r: number, c: number): number[][] {
-  const out = makeZeroMatrix(r, c);
-  const rMin = Math.min(r, M.length);
-  const cMin = Math.min(c, M[0]?.length ?? 0);
-  for (let i = 0; i < rMin; i++)
-    for (let j = 0; j < cMin; j++) out[i][j] = M[i][j];
-  return out;
-}
-
-function sanitize(M: ReadonlyArray<ReadonlyArray<unknown>>): number[][] {
-  return M.map((row) =>
-    row.map((v: unknown) => {
-      if (v === null || typeof v === "undefined" || v === "") return 0;
-      if (typeof v === "number") return Number.isFinite(v) ? v : 0;
-      if (typeof v === "string") {
-        const n = parseFloat(v);
-        return Number.isFinite(n) ? n : 0;
-      }
-      // Cualquier otro tipo (boolean, objeto, etc.)
-      return 0;
-    })
-  );
-}
-
 const SVDInput = ({
   onResult,
 }: {
@@ -48,28 +20,45 @@ const SVDInput = ({
 }) => {
   const [rows, setRows] = useState(3);
   const [cols, setCols] = useState(3);
-  const [matrix, setMatrix] = useState<number[][]>(makeZeroMatrix(3, 3));
+  const [matrix, setMatrix] = useState<number[][]>(
+    Array.from({ length: 3 }, () => Array(3).fill(0))
+  );
+
+  // 👉 Saneo mínimo: convierte a número y reemplaza NaN/±Inf por 0
+  const clean = (M: (number | string)[][]): number[][] =>
+    M.map((row) =>
+      row.map((v) => {
+        const n = typeof v === "number" ? v : Number(v);
+        return Number.isFinite(n) ? n : 0;
+      })
+    );
+
+  const body = useMemo(
+    () =>
+      JSON.stringify({
+        matrix: clean(matrix as unknown as (number | string)[][]),
+      }),
+    [matrix]
+  );
 
   const handleCalculate = async () => {
-    // si está vacío, usa ceros m×n; siempre sanear
-    const safe =
-      matrix && matrix.length > 0 && (matrix[0]?.length ?? 0) > 0
-        ? sanitize(matrix)
-        : makeZeroMatrix(rows, cols);
-
     try {
       const res = await fetch("http://localhost:8000/svd", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ matrix: safe }),
+        body,
       });
       if (!res.ok) throw new Error("Request failed");
 
       const data = (await res.json()) as SVDResponse;
-      onResult({ ...data, matrix: safe });
+      // Devolvemos la matriz saneada para que el Result muestre lo que realmente se envió
+      onResult({
+        ...data,
+        matrix: clean(matrix as unknown as (number | string)[][]),
+      });
     } catch {
       onResult({
-        matrix: safe,
+        matrix: clean(matrix as unknown as (number | string)[][]),
         error: "Failed to compute SVD.",
         explanation: "Please check your input and try again.",
       });
@@ -88,31 +77,23 @@ const SVDInput = ({
           <input
             type="number"
             value={rows}
-            onChange={(e) => {
-              const r = Math.min(8, Math.max(1, Number(e.target.value || 1)));
-              setRows(r);
-              setMatrix((prev) => resizePreserve(prev, r, cols));
-            }}
+            onChange={(e) => setRows(Number(e.target.value))}
             className="w-20 p-2 border rounded-lg text-center"
             min={1}
             max={8}
           />
-          <span className="text-lg">×</span>
+          <span className="text-lg">x</span>
           <input
             type="number"
             value={cols}
-            onChange={(e) => {
-              const c = Math.min(8, Math.max(1, Number(e.target.value || 1)));
-              setCols(c);
-              setMatrix((prev) => resizePreserve(prev, rows, c));
-            }}
+            onChange={(e) => setCols(Number(e.target.value))}
             className="w-20 p-2 border rounded-lg text-center"
             min={1}
             max={8}
           />
         </div>
 
-        {/* Matrix */}
+        {/* Input de la matriz */}
         <MatrixInput
           rows={rows}
           cols={cols}
