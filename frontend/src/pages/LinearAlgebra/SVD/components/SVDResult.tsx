@@ -23,7 +23,7 @@ const fmt = (v: unknown) => {
 };
 
 const SVDResult = ({ matrix, error, explanation }: SVDResultProps) => {
-  // 1) Estado inicial: no se ha enviado nada aún (matrix es undefined)
+  // Estado inicial: no se ha enviado nada aún
   if (typeof matrix === "undefined") {
     return (
       <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6 text-center">
@@ -32,36 +32,8 @@ const SVDResult = ({ matrix, error, explanation }: SVDResultProps) => {
     );
   }
 
-  // 2) Se envió algo, pero llegó vacío → tratar como matriz de ceros
-  if (!matrix || matrix.length === 0 || (matrix[0]?.length ?? 0) === 0) {
-    return (
-      <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6 text-center">
-        <h2 className="text-xl font-semibold mb-2">Matrix Received</h2>
-        <p className="text-gray-500 mb-4">
-          Empty input → treated as zero matrix.
-        </p>
-        <div className="inline-block">
-          <div className="flex justify-center">
-            <div className="w-12 h-12 flex items-center justify-center border border-gray-300">
-              0
-            </div>
-          </div>
-        </div>
-
-        {error && (
-          <div className="bg-yellow-50 border border-yellow-300 rounded-xl shadow-md p-6 text-center mt-6">
-            <h3 className="text-lg font-semibold mb-2 text-yellow-800">
-              ⚠️ Error
-            </h3>
-            <p className="text-gray-700 mb-2">{error}</p>
-            {explanation && <p className="text-gray-600">{explanation}</p>}
-          </div>
-        )}
-      </div>
-    );
-  }
-
-  // 3) Matriz válida (incluye el caso de ceros que envía el input)
+  // A partir de aquí, siempre renderizamos la matriz recibida
+  // (si estaba vacía, el input ya la envió como matriz de ceros del tamaño adecuado)
   const rows = matrix.length;
   const cols = matrix[0]?.length ?? 0;
 
