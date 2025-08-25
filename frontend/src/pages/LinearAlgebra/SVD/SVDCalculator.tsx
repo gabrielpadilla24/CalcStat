@@ -6,25 +6,23 @@ import BottomCTA from "@/components/BottomCTA";
 import SVDInput, { type SVDResponse } from "./components/SVDInput";
 import SVDResult from "./components/SVDResult";
 
+type SVDData = SVDResponse & { matrix: number[][] };
+
 const SVDCalculator = () => {
-  const [result, setResult] = useState<SVDResponse | null>(null);
+  const [result, setResult] = useState<SVDData | null>(null);
 
   return (
     <>
       <NavBar />
-
       <div className="min-h-screen bg-gray-100 py-10">
         <h1 className="text-4xl font-bold text-center mb-12">
           Singular Value Decomposition (SVD) Calculator
         </h1>
 
         <div className="max-w-[1440px] mx-auto flex flex-col lg:flex-row gap-6 px-6 justify-center">
-          {/* Input */}
           <div className="flex-1 max-w-[600px]">
             <SVDInput onResult={setResult} />
           </div>
-
-          {/* Result */}
           <div className="flex-1 max-w-[600px]">
             <SVDResult
               matrix={result?.matrix}
@@ -39,7 +37,6 @@ const SVDCalculator = () => {
           </div>
         </div>
       </div>
-
       <BottomCTA buttonText="Back to Linear Algebra" href="/linearalgebra" />
     </>
   );

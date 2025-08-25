@@ -3,15 +3,12 @@
 import { useState } from "react";
 import MatrixInput from "@/components/MatrixInput";
 
-export type Step = { text: string; math?: string };
-
 export type SVDResponse = {
-  matrix: (string | number)[][];
   singularValues?: number[];
   U?: number[][];
   Sigma?: number[][];
   Vt?: number[][];
-  steps?: Step[];
+  steps?: string[];
   error?: string;
   explanation?: string;
 };
@@ -29,69 +26,50 @@ function resizePreserve(M: number[][], r: number, c: number): number[][] {
   return out;
 }
 
-const clamp = (v: number, min: number, max: number) =>
-  Math.max(min, Math.min(max, v));
+function sanitize(M: ReadonlyArray<ReadonlyArray<unknown>>): number[][] {
+  return M.map((row) =>
+    row.map((v: unknown) => {
+      if (v === null || typeof v === "undefined" || v === "") return 0;
+      if (typeof v === "number") return Number.isFinite(v) ? v : 0;
+      if (typeof v === "string") {
+        const n = parseFloat(v);
+        return Number.isFinite(n) ? n : 0;
+      }
+      // Cualquier otro tipo (boolean, objeto, etc.)
+      return 0;
+    })
+  );
+}
 
 const SVDInput = ({
   onResult,
 }: {
-  onResult: (result: SVDResponse) => void;
+  onResult: (result: SVDResponse & { matrix: number[][] }) => void;
 }) => {
-  // Dimensiones (permiten borrar sin forzar inmediatamente)
-  const [rows, setRows] = useState<number>(3);
-  const [cols, setCols] = useState<number>(3);
-  const [rowsInput, setRowsInput] = useState<string>("3");
-  const [colsInput, setColsInput] = useState<string>("3");
-
-  // Matriz
+  const [rows, setRows] = useState(3);
+  const [cols, setCols] = useState(3);
   const [matrix, setMatrix] = useState<number[][]>(makeZeroMatrix(3, 3));
 
-  const commitRows = () => {
-    let r = parseInt(rowsInput, 10);
-    if (isNaN(r)) r = rows;
-    r = clamp(r, 1, 8);
-    setRows(r);
-    setMatrix((prev) => resizePreserve(prev, r, cols));
-    setRowsInput(String(r));
-  };
-
-  const commitCols = () => {
-    let c = parseInt(colsInput, 10);
-    if (isNaN(c)) c = cols;
-    c = clamp(c, 1, 8);
-    setCols(c);
-    setMatrix((prev) => resizePreserve(prev, rows, c));
-    setColsInput(String(c));
-  };
-
   const handleCalculate = async () => {
-    // 🔒 Garantiza que no se envíe matriz vacía: usa zeros del tamaño actual
-    const safeMatrix =
+    // si está vacío, usa ceros m×n; siempre sanear
+    const safe =
       matrix && matrix.length > 0 && (matrix[0]?.length ?? 0) > 0
-        ? matrix
+        ? sanitize(matrix)
         : makeZeroMatrix(rows, cols);
 
     try {
       const res = await fetch("http://localhost:8000/svd", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ matrix: safeMatrix }),
-        // body, // <- opcional: si prefieres usar el memo, asegúrate que no esté vacío
+        body: JSON.stringify({ matrix: safe }),
       });
       if (!res.ok) throw new Error("Request failed");
-      const data = (await res.json()) as SVDResponse;
 
-      onResult({
-        matrix: data.matrix ?? safeMatrix,
-        singularValues: data.singularValues,
-        U: data.U,
-        Sigma: data.Sigma,
-        Vt: data.Vt,
-        steps: data.steps,
-      });
+      const data = (await res.json()) as SVDResponse;
+      onResult({ ...data, matrix: safe });
     } catch {
       onResult({
-        matrix: safeMatrix.map((row) => row.map((x) => String(x))),
+        matrix: safe,
         error: "Failed to compute SVD.",
         explanation: "Please check your input and try again.",
       });
@@ -109,9 +87,12 @@ const SVDInput = ({
         <div className="flex gap-4 justify-center mb-6">
           <input
             type="number"
-            value={rowsInput}
-            onChange={(e) => setRowsInput(e.target.value)}
-            onBlur={commitRows}
+            value={rows}
+            onChange={(e) => {
+              const r = Math.min(8, Math.max(1, Number(e.target.value || 1)));
+              setRows(r);
+              setMatrix((prev) => resizePreserve(prev, r, cols));
+            }}
             className="w-20 p-2 border rounded-lg text-center"
             min={1}
             max={8}
@@ -119,16 +100,19 @@ const SVDInput = ({
           <span className="text-lg">×</span>
           <input
             type="number"
-            value={colsInput}
-            onChange={(e) => setColsInput(e.target.value)}
-            onBlur={commitCols}
+            value={cols}
+            onChange={(e) => {
+              const c = Math.min(8, Math.max(1, Number(e.target.value || 1)));
+              setCols(c);
+              setMatrix((prev) => resizePreserve(prev, rows, c));
+            }}
             className="w-20 p-2 border rounded-lg text-center"
             min={1}
             max={8}
           />
         </div>
 
-        {/* Input de la matriz */}
+        {/* Matrix */}
         <MatrixInput
           rows={rows}
           cols={cols}
