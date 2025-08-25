@@ -73,7 +73,7 @@ const EigenResult = ({ matrix, eigenvalues, eigenvectors, steps }: Props) => {
           </div>
         ) : (
           <p className="text-center text-gray-500">
-            (Not computed or non‑real)
+            (Non Existent)
           </p>
         )}
       </div>
@@ -101,7 +101,7 @@ const EigenResult = ({ matrix, eigenvalues, eigenvectors, steps }: Props) => {
           </div>
         ) : (
           <p className="text-center text-gray-500">
-            (Not computed or non‑real)
+            (Non Existent)
           </p>
         )}
       </div>
