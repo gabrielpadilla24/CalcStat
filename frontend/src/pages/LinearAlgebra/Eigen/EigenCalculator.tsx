@@ -4,6 +4,7 @@ import { useState } from "react";
 import NavBar from "@/components/NavBar";
 import BottomCTA from "@/components/BottomCTA";
 import EigenInput from "./components/EigenInput";
+import EigenResult from "./components/EigenResult";
 //INPUT AND RESULT
 
 type EigenResponse = {
@@ -29,7 +30,7 @@ const EigenCalculator = () => {
             <EigenInput onResult={setResult} />
           </div>
           <div className="flex-1 max-w-[600px]">
-            {/* <EigenResult result={result} /> */}
+            <EigenResult matrix={result?.matrix} />
           </div>
         </div>
       </div>

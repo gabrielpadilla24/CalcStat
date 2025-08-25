@@ -1402,3 +1402,22 @@ def receive_equations(data: EquationSystemData) -> Dict[str, Any]:
         "count": len(data.equations),
         **result,  # incluye: coeffmatrix, variables, status, solution, solution_latex, steps
     }
+
+
+#-----------------------------
+# Eigenvalues and Eigenvectors
+#-----------------------------
+
+@app.post("/eigen")
+def eigen(data: MatrixData):
+    mat = Matrix(data.matrix)
+
+    # Matriz original formateada (siempre se devuelve)
+    original_formatted = [
+        [format_number(mat[i, j]) for j in range(mat.cols)]
+        for i in range(mat.rows)
+    ]
+
+    return {
+        "matrix": original_formatted
+    }
