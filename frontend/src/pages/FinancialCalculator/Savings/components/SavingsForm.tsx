@@ -45,7 +45,7 @@ const SavingsForm: React.FC<SavingsFormProps> = ({ onResult }) => {
         setContribution(data.contribution);
         onResult(data);
       } else if ((data as { error?: string }).error) {
-        setError((data as { error: string }).error);
+        setError((data as { error?: string }).error ?? null);
       } else {
         setError("Invalid response from the server.");
       }
