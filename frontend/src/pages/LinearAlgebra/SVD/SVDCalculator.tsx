@@ -4,8 +4,7 @@ import { useState } from "react";
 import NavBar from "@/components/NavBar";
 import BottomCTA from "@/components/BottomCTA";
 import SVDInput, { type SVDResponse } from "./components/SVDInput";
-//import SVDResult from "./components/SVDResult"; // opcional si ya lo tienes
-// import SVDInfo from "./components/SVDInfo"; // si quieres la card educativa
+import SVDResult from "./components/SVDResult";
 
 const SVDCalculator = () => {
   const [result, setResult] = useState<SVDResponse | null>(null);
@@ -25,9 +24,9 @@ const SVDCalculator = () => {
             <SVDInput onResult={setResult} />
           </div>
 
-          {/* Result (+ opcionalmente info educativa) */}
+          {/* Result */}
           <div className="flex-1 max-w-[600px]">
-            {/* <SVDResult
+            <SVDResult
               matrix={result?.matrix}
               singularValues={result?.singularValues}
               U={result?.U}
@@ -36,8 +35,7 @@ const SVDCalculator = () => {
               steps={result?.steps}
               error={result?.error}
               explanation={result?.explanation}
-            /> */}
-            {/* <SVDInfo /> */}
+            />
           </div>
         </div>
       </div>

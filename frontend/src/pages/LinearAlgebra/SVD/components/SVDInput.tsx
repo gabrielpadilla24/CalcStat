@@ -1,21 +1,17 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useState } from "react";
 import MatrixInput from "@/components/MatrixInput";
 
 export type Step = { text: string; math?: string };
 
 export type SVDResponse = {
-  // Matriz original formateada desde el backend
   matrix: (string | number)[][];
-  // Resultados de la descomposición
-  singularValues?: number[]; // σ1 ≥ σ2 ≥ ...
-  U?: number[][]; // m × m
-  Sigma?: number[][]; // m × n (diagonal rectangular)
-  Vt?: number[][]; // n × n
-  // (Opcional) pasos educativos
+  singularValues?: number[];
+  U?: number[][];
+  Sigma?: number[][];
+  Vt?: number[][];
   steps?: Step[];
-  // (Opcional) error
   error?: string;
   explanation?: string;
 };
@@ -28,9 +24,8 @@ function resizePreserve(M: number[][], r: number, c: number): number[][] {
   const out = makeZeroMatrix(r, c);
   const rMin = Math.min(r, M.length);
   const cMin = Math.min(c, M[0]?.length ?? 0);
-  for (let i = 0; i < rMin; i++) {
+  for (let i = 0; i < rMin; i++)
     for (let j = 0; j < cMin; j++) out[i][j] = M[i][j];
-  }
   return out;
 }
 
@@ -42,7 +37,7 @@ const SVDInput = ({
 }: {
   onResult: (result: SVDResponse) => void;
 }) => {
-  // Dimensiones (permitir edición libre en el input con string)
+  // Dimensiones (permiten borrar sin forzar inmediatamente)
   const [rows, setRows] = useState<number>(3);
   const [cols, setCols] = useState<number>(3);
   const [rowsInput, setRowsInput] = useState<string>("3");
@@ -69,20 +64,25 @@ const SVDInput = ({
     setColsInput(String(c));
   };
 
-  const body = useMemo(() => JSON.stringify({ matrix }), [matrix]);
-
   const handleCalculate = async () => {
+    // 🔒 Garantiza que no se envíe matriz vacía: usa zeros del tamaño actual
+    const safeMatrix =
+      matrix && matrix.length > 0 && (matrix[0]?.length ?? 0) > 0
+        ? matrix
+        : makeZeroMatrix(rows, cols);
+
     try {
       const res = await fetch("http://localhost:8000/svd", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body,
+        body: JSON.stringify({ matrix: safeMatrix }),
+        // body, // <- opcional: si prefieres usar el memo, asegúrate que no esté vacío
       });
       if (!res.ok) throw new Error("Request failed");
       const data = (await res.json()) as SVDResponse;
 
       onResult({
-        matrix: data.matrix ?? matrix,
+        matrix: data.matrix ?? safeMatrix,
         singularValues: data.singularValues,
         U: data.U,
         Sigma: data.Sigma,
@@ -91,7 +91,7 @@ const SVDInput = ({
       });
     } catch {
       onResult({
-        matrix: matrix.map((row) => row.map((x) => String(x))),
+        matrix: safeMatrix.map((row) => row.map((x) => String(x))),
         error: "Failed to compute SVD.",
         explanation: "Please check your input and try again.",
       });
@@ -105,7 +105,7 @@ const SVDInput = ({
           Enter a matrix (m × n) to compute its SVD:
         </label>
 
-        {/* Dimensiones (permitir borrar sin que salte a 8) */}
+        {/* Dimensiones */}
         <div className="flex gap-4 justify-center mb-6">
           <input
             type="number"

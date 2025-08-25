@@ -1372,7 +1372,7 @@ def inverse(data: MatrixData):
 
 
 
-import re
+
 #----------------------------------------
 # LINEAR EQUATION SYSTEM
 #----------------------------------------
@@ -1477,4 +1477,15 @@ def eigen(data: MatrixData) -> Dict[str, Any]:
         "eigenvalues": eigenvalues_numeric,
         "eigenvectors": eigenvectors_numeric,
         "steps": steps,
+    }
+
+
+#------------------
+# SVD
+#------------------
+@app.post("/svd")
+def svd(data:MatrixData):
+    matrix = Matrix(data.matrix)
+    return{
+        'matrix': matrix
     }
