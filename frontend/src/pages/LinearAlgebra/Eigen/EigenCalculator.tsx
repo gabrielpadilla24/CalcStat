@@ -30,7 +30,7 @@ const EigenCalculator = () => {
             <EigenInput onResult={setResult} />
           </div>
           <div className="flex-1 max-w-[600px]">
-            <EigenResult matrix={result?.matrix} />
+            <EigenResult result={result} />
           </div>
         </div>
       </div>

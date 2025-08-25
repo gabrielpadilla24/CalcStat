@@ -1403,21 +1403,75 @@ def receive_equations(data: EquationSystemData) -> Dict[str, Any]:
         **result,  # incluye: coeffmatrix, variables, status, solution, solution_latex, steps
     }
 
-
-#-----------------------------
+# -----------------------------
 # Eigenvalues and Eigenvectors
-#-----------------------------
+# -----------------------------
+
+from sympy import Matrix, symbols, Eq, solve, latex as sympy_latex, N
 
 @app.post("/eigen")
-def eigen(data: MatrixData):
-    mat = Matrix(data.matrix)
+def eigen(data: MatrixData) -> Dict[str, Any]:
+    A = Matrix(data.matrix)
+    n = A.rows
+    steps: List[str] = []
 
-    # Matriz original formateada (siempre se devuelve)
+    # Matriz original (siempre)
     original_formatted = [
-        [format_number(mat[i, j]) for j in range(mat.cols)]
-        for i in range(mat.rows)
+        [format_number(A[i, j]) for j in range(A.cols)]
+        for i in range(A.rows)
     ]
 
+    # Verificar cuadrada
+    if A.rows != A.cols:
+        return {
+            "matrix": original_formatted,
+            "steps": ["Error: La matriz no es cuadrada."],
+        }
+
+    lam = symbols("λ")
+
+    # Paso 1: construir A - λI
+    A_lambda = A - lam * Matrix.eye(n)
+    steps.append(f"Paso 1: Construir A - λI = {sympy_latex(A_lambda)}")
+
+    # Paso 2: determinante
+    det_expr = A_lambda.det()
+    steps.append(f"Paso 2: Calcular determinante det(A - λI) = {sympy_latex(det_expr)}")
+
+    # Paso 3: polinomio característico
+    charpoly = A.charpoly(lam)
+    steps.append(
+        "Paso 3: Polinomio característico p(λ) = "
+        + sympy_latex(charpoly.as_expr())
+    )
+
+    # Paso 4: resolver p(λ) = 0
+    roots = solve(Eq(charpoly.as_expr(), 0), lam)
+    steps.append(
+        "Paso 4: Resolver p(λ) = 0 → autovalores λ: "
+        + ", ".join(sympy_latex(r) for r in roots)
+    )
+
+    # Autovectores (sin pasos detallados)
+    eigenvalues_numeric: List[float] = []
+    eigenvectors_numeric: List[List[float]] = []
+
+    for idx, val in enumerate(roots, start=1):
+        valN = N(val)
+        try:
+            # Resolver (A - λI)v = 0
+            eigvecs = (A - val * Matrix.eye(n)).nullspace()
+            if eigvecs:
+                v = eigvecs[0]
+                vN = [float(N(x)) for x in v]
+                eigenvalues_numeric.append(float(valN))
+                eigenvectors_numeric.append(vN)
+        except Exception:
+            pass
+
     return {
-        "matrix": original_formatted
+        "matrix": original_formatted,
+        "eigenvalues": eigenvalues_numeric,
+        "eigenvectors": eigenvectors_numeric,
+        "steps": steps,
     }

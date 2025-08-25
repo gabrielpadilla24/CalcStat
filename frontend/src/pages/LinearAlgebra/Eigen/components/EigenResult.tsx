@@ -1,10 +1,28 @@
 "use client";
 
-type EigenResultProps = {
-  matrix?: string[][] | number[][];
+type EigenResponse = {
+  matrix: (string | number)[][];
+  eigenvalues?: number[];
+  eigenvectors?: number[][];
+  steps?: string[];
 };
 
-const EigenResult = ({ matrix }: EigenResultProps) => {
+type Props = {
+  result: EigenResponse | null;
+};
+
+const fmt = (v: unknown) => {
+  if (typeof v === "number") {
+    const s = v.toFixed(6).replace(/\.?0+$/, "");
+    return s === "-0" ? "0" : s;
+  }
+  if (typeof v === "string") return v;
+  return String(v ?? "");
+};
+
+const EigenResult = ({ result }: Props) => {
+  const matrix = result?.matrix;
+
   if (!matrix || matrix.length === 0) {
     return (
       <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6 text-center">
@@ -16,34 +34,93 @@ const EigenResult = ({ matrix }: EigenResultProps) => {
   const rows = matrix.length;
   const cols = matrix[0]?.length ?? 0;
 
-  // Normaliza a string para render
-  const asStr = (v: string | number) => (typeof v === "number" ? String(v) : v);
-
   return (
-    <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6 text-center">
-      <h2 className="text-xl font-semibold mb-4">
-        Matrix Received ({rows} x {cols})
+    <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6">
+      {/* Encabezado */}
+      <h2 className="text-xl font-semibold mb-4 text-center">
+        Matrix Received ({rows} × {cols})
       </h2>
 
       {/* Matriz original */}
-      <div className="inline-block mb-2">
-        {matrix.map((row, i) => (
-          <div key={i} className="flex justify-center">
-            {row.map((val, j) => (
-              <div
-                key={j}
-                className="w-12 h-12 flex items-center justify-center border border-gray-300"
+      <div className="flex justify-center mb-8">
+        <div className="inline-block">
+          {matrix.map((row, i) => (
+            <div key={i} className="flex justify-center">
+              {row.map((val, j) => (
+                <div
+                  key={j}
+                  className="w-12 h-12 flex items-center justify-center border border-gray-300"
+                >
+                  {fmt(val)}
+                </div>
+              ))}
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Eigenvalues */}
+      <div className="mb-6">
+        <h3 className="text-lg font-semibold mb-2 text-center">Eigenvalues</h3>
+        {result?.eigenvalues && result.eigenvalues.length > 0 ? (
+          <div className="flex flex-wrap justify-center gap-2">
+            {result.eigenvalues.map((lam, i) => (
+              <span
+                key={i}
+                className="px-3 py-1 rounded-full border text-sm bg-gray-50"
               >
-                {asStr(val)}
+                λ{i + 1} = {fmt(lam)}
+              </span>
+            ))}
+          </div>
+        ) : (
+          <p className="text-center text-gray-500">
+            (No calculados o no reales)
+          </p>
+        )}
+      </div>
+
+      {/* Eigenvectors */}
+      <div className="mb-6">
+        <h3 className="text-lg font-semibold mb-3 text-center">Eigenvectors</h3>
+        {result?.eigenvectors && result.eigenvectors.length > 0 ? (
+          <div className="flex flex-wrap justify-center gap-6">
+            {result.eigenvectors.map((vec, idx) => (
+              <div key={idx} className="flex flex-col items-center">
+                <div className="text-sm font-medium mb-1">v{idx + 1}</div>
+                <div className="inline-block">
+                  {vec.map((val, r) => (
+                    <div
+                      key={r}
+                      className="w-16 h-10 flex items-center justify-center border border-gray-300"
+                    >
+                      {fmt(val)}
+                    </div>
+                  ))}
+                </div>
               </div>
             ))}
           </div>
-        ))}
+        ) : (
+          <p className="text-center text-gray-500">
+            (No calculados o no reales)
+          </p>
+        )}
       </div>
 
-      <p className="text-sm text-gray-500">
-        Tip: you can change the size on the left and recalculate.
-      </p>
+      {/* Steps (solo eigenvalues) */}
+      {result?.steps && result.steps.length > 0 && (
+        <div className="mt-8">
+          <h3 className="text-lg font-semibold mb-2 text-center">
+            Steps for Eigenvalues
+          </h3>
+          <ol className="list-decimal pl-6 space-y-1 text-gray-700 text-left">
+            {result.steps.map((s, i) => (
+              <li key={i}>{s}</li>
+            ))}
+          </ol>
+        </div>
+      )}
     </div>
   );
 };
