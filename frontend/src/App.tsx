@@ -22,6 +22,7 @@ import LinearAlgebraCalculator from "./pages/LinearAlgebra/LinearAlgebraCalculat
 import DeterminantCalculator from "./pages/LinearAlgebra/Determinant/DeterminantCalculator";
 import InverseCalculator from "./pages/LinearAlgebra/Inverse/InverseCalculator";
 import EqSystemCalculator from "./pages/LinearAlgebra/EqSystem/EqSystemCalculator";
+import EigenCalculator from "./pages/LinearAlgebra/Eigen/EigenCalculator";
 
 const App = () => {
   return (
@@ -116,6 +117,8 @@ const App = () => {
           path="/linearalgebra/eqsystem"
           element={<EqSystemCalculator />}
         />
+
+        <Route path="/linearalgebra/eigen" element={<EigenCalculator />} />
 
         {/* Other routes can be added here */}
         <Route path="/calculators" element={<Menu />} />
