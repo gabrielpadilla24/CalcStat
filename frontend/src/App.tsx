@@ -23,6 +23,7 @@ import DeterminantCalculator from "./pages/LinearAlgebra/Determinant/Determinant
 import InverseCalculator from "./pages/LinearAlgebra/Inverse/InverseCalculator";
 import EqSystemCalculator from "./pages/LinearAlgebra/EqSystem/EqSystemCalculator";
 import EigenCalculator from "./pages/LinearAlgebra/Eigen/EigenCalculator";
+import SVDCalculator from "./pages/LinearAlgebra/SVD/SVDCalculator";
 
 const App = () => {
   return (
@@ -119,6 +120,8 @@ const App = () => {
         />
 
         <Route path="/linearalgebra/eigen" element={<EigenCalculator />} />
+
+        <Route path="/linearalgebra/svd" element={<SVDCalculator />} />
 
         {/* Other routes can be added here */}
         <Route path="/calculators" element={<Menu />} />

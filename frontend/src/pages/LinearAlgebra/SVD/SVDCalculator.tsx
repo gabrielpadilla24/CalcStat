@@ -1,0 +1,50 @@
+"use client";
+
+import { useState } from "react";
+import NavBar from "@/components/NavBar";
+import BottomCTA from "@/components/BottomCTA";
+import SVDInput, { type SVDResponse } from "./components/SVDInput";
+//import SVDResult from "./components/SVDResult"; // opcional si ya lo tienes
+// import SVDInfo from "./components/SVDInfo"; // si quieres la card educativa
+
+const SVDCalculator = () => {
+  const [result, setResult] = useState<SVDResponse | null>(null);
+
+  return (
+    <>
+      <NavBar />
+
+      <div className="min-h-screen bg-gray-100 py-10">
+        <h1 className="text-4xl font-bold text-center mb-12">
+          Singular Value Decomposition (SVD) Calculator
+        </h1>
+
+        <div className="max-w-[1440px] mx-auto flex flex-col lg:flex-row gap-6 px-6 justify-center">
+          {/* Input */}
+          <div className="flex-1 max-w-[600px]">
+            <SVDInput onResult={setResult} />
+          </div>
+
+          {/* Result (+ opcionalmente info educativa) */}
+          <div className="flex-1 max-w-[600px]">
+            {/* <SVDResult
+              matrix={result?.matrix}
+              singularValues={result?.singularValues}
+              U={result?.U}
+              Sigma={result?.Sigma}
+              Vt={result?.Vt}
+              steps={result?.steps}
+              error={result?.error}
+              explanation={result?.explanation}
+            /> */}
+            {/* <SVDInfo /> */}
+          </div>
+        </div>
+      </div>
+
+      <BottomCTA buttonText="Back to Linear Algebra" href="/linearalgebra" />
+    </>
+  );
+};
+
+export default SVDCalculator;
