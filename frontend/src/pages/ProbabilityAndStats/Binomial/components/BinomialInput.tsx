@@ -26,7 +26,6 @@ type Props = {
 };
 
 export default function BinomialInput({ onResult }: Props) {
-  // ⚡ ahora inicializamos vacíos
   const [n, setN] = useState<string>("");
   const [p, setP] = useState<string>("");
   const [query, setQuery] = useState<ProbabilityQuery>({ kind: "equal", k: 0 });
@@ -37,7 +36,6 @@ export default function BinomialInput({ onResult }: Props) {
   };
 
   const handleSubmit = async () => {
-    // validación mínima: si están vacíos no se manda
     if (!n || !p) return;
 
     const params: BinomialParams = {
@@ -54,9 +52,7 @@ export default function BinomialInput({ onResult }: Props) {
         body: JSON.stringify(params),
       });
 
-      if (!res.ok) {
-        throw new Error("Backend error");
-      }
+      if (!res.ok) throw new Error("Backend error");
 
       const data: BinomialResponse = await res.json();
       onResult(data);
@@ -69,48 +65,50 @@ export default function BinomialInput({ onResult }: Props) {
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6 space-y-4">
-      <h2 className="text-xl font-bold">Binomial Distribution</h2>
+    <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6 space-y-6">
+      <h2 className="text-xl font-bold text-center">Binomial Distribution</h2>
 
       {/* n */}
-      <div className="flex items-center gap-2">
-        <label className="w-32">Number of trials (n):</label>
+      <div className="flex flex-col gap-1">
+        <label className="font-medium">Number of trials (n):</label>
         <input
           type="number"
-          className="border rounded px-2 py-1 w-32"
           value={n}
           placeholder="Enter n"
           min={1}
           onChange={(e) => setN(e.target.value)}
+          className="border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
         />
       </div>
 
       {/* p */}
-      <div className="flex items-center gap-2">
-        <label className="w-32">Success probability (p):</label>
+      <div className="flex flex-col gap-1">
+        <label className="font-medium">Success probability (p):</label>
         <input
           type="number"
           step="0.01"
           min={0}
           max={1}
-          className="border rounded px-2 py-1 w-32"
           value={p}
           placeholder="Enter p"
           onChange={(e) => setP(e.target.value)}
+          className="border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
         />
       </div>
 
       {/* Consulta de probabilidad */}
       <DistributionInput onChange={handleUpdate} />
 
-      {/* Submit button */}
-      <button
-        onClick={handleSubmit}
-        disabled={loading || !n || !p}
-        className="bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700 disabled:bg-gray-400"
-      >
-        {loading ? "Calculating..." : "Submit"}
-      </button>
+      {/* Botón centrado */}
+      <div className="flex justify-center">
+        <button
+          onClick={handleSubmit}
+          disabled={loading || !n || !p}
+          className="mt-6 bg-[#5FBA9B] text-white px-6 py-2 rounded-lg font-semibold hover:bg-[#4da88a] transition w-full"
+        >
+          {loading ? "Calculating..." : "Submit"}
+        </button>
+      </div>
     </div>
   );
 }
