@@ -24,6 +24,7 @@ import InverseCalculator from "./pages/LinearAlgebra/Inverse/InverseCalculator";
 import EqSystemCalculator from "./pages/LinearAlgebra/EqSystem/EqSystemCalculator";
 import EigenCalculator from "./pages/LinearAlgebra/Eigen/EigenCalculator";
 import SVDCalculator from "./pages/LinearAlgebra/SVD/SVDCalculator";
+import GramSchmidtCalculator from "./pages/LinearAlgebra/GramSchmidt/GramSchmidtCalculator";
 
 const App = () => {
   return (
@@ -122,6 +123,11 @@ const App = () => {
         <Route path="/linearalgebra/eigen" element={<EigenCalculator />} />
 
         <Route path="/linearalgebra/svd" element={<SVDCalculator />} />
+
+        <Route
+          path="/linearalgebra/gramschmidt"
+          element={<GramSchmidtCalculator />}
+        />
 
         {/* Other routes can be added here */}
         <Route path="/calculators" element={<Menu />} />
