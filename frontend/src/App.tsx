@@ -27,6 +27,7 @@ import SVDCalculator from "./pages/LinearAlgebra/SVD/SVDCalculator";
 import GramSchmidtCalculator from "./pages/LinearAlgebra/GramSchmidt/GramSchmidtCalculator";
 import ProbabilityAndStatsCalculator from "./pages/ProbabilityAndStats/ProbabilityandStatsCalculator";
 import BinomialCalculator from "./pages/ProbabilityAndStats/Binomial/BinomialCalculator";
+import PoissonCalculator from "./pages/ProbabilityAndStats/Poisson/PoissonCalculator";
 
 const App = () => {
   return (
@@ -141,6 +142,11 @@ const App = () => {
         <Route
           path="/probabilityandstats/binomialdistribution"
           element={<BinomialCalculator />}
+        />
+
+        <Route
+          path="/probabilityandstats/poissondistribution"
+          element={<PoissonCalculator />}
         />
 
         {/* Other routes can be added here */}

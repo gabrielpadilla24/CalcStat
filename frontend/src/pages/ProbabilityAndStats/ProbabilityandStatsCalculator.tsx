@@ -39,6 +39,24 @@ const ProbabilityAndStatsCalculator = () => {
             <SubmitButton text="Open Calculator" />
           </Link>
         </div>
+
+        {/* POISSON DISTRIBUTION */}
+        <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] flex flex-col justify-between text-left">
+          <img
+            src="/img/poisson.png"
+            alt="Poisson Distribution"
+            className="h-40 w-full object-cover mb-4 rounded"
+          />
+          <h2 className="text-xl font-bold text-gray-800 mb-2">
+            Poisson Distribution
+          </h2>
+          <p className="text-sm text-gray-600 mb-4">
+            Explore the Poisson distribution and its properties.
+          </p>
+          <Link to="/probabilityandstats/poissondistribution">
+            <SubmitButton text="Open Calculator" />
+          </Link>
+        </div>
       </div>
     </div>
   );
