@@ -8,9 +8,9 @@ import NormalResult from "./components/NormalResult";
 import NormalInfo from "./components/NormalInfo";
 
 type ContinuousQuery =
-  | { kind: "leq"; k: number }
-  | { kind: "geq"; k: number }
-  | { kind: "between"; a: number; b: number };
+  | { kind: "leq"; k?: number }
+  | { kind: "geq"; k?: number }
+  | { kind: "between"; a?: number; b?: number };
 
 type NormalResponse = {
   mu: number;
@@ -48,11 +48,14 @@ const NormalCalculator = () => {
             <NormalResult result={result} />
           </div>
         </div>
+
+        {/* Info Card */}
         <div className="max-w-[1220px] mx-auto px-6 mt-6">
           <NormalInfo />
         </div>
       </div>
 
+      {/* CTA */}
       <BottomCTA
         buttonText="Back to Probability & Statistics"
         href="/probabilityandstats"

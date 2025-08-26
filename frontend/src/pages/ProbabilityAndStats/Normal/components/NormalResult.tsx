@@ -5,9 +5,9 @@ import { BlockMath } from "react-katex";
 import NormalGraph from "./NormalGraph";
 
 type ContinuousQuery =
-  | { kind: "leq"; k: number }
-  | { kind: "geq"; k: number }
-  | { kind: "between"; a: number; b: number };
+  | { kind: "leq"; k?: number }
+  | { kind: "geq"; k?: number }
+  | { kind: "between"; a?: number; b?: number };
 
 type NormalResponse = {
   mu: number;
@@ -46,18 +46,18 @@ export default function NormalResult({ result }: Props) {
       </div>
 
       {/* Resultado */}
-      <div>
-        <p className="font-medium text-center">Result:</p>
+      <div className="text-center">
+        <p className="font-medium">Result:</p>
         <BlockMath math={result.prob_latex} />
       </div>
 
-      {/* Gráfico ocupa espacio extra */}
+      {/* Gráfico PDF + CDF */}
       <div className="flex-1">
         <NormalGraph
           support={result.support}
           pdf={result.pdf}
           cdf={result.cdf}
-          height={400}
+          height={353} // 👈 igual que en Exponential para que coincidan alturas
         />
       </div>
     </div>

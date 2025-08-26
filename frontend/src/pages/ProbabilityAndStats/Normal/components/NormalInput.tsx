@@ -31,7 +31,7 @@ export default function NormalInput({ onResult }: Props) {
   const [sigma, setStd] = useState<string>("");
   const [query, setQuery] = useState<ContinuousQuery>({
     kind: "leq",
-    k: undefined,
+    k: undefined, // 👈 ahora puede ser vacío
   });
   const [loading, setLoading] = useState(false);
 
