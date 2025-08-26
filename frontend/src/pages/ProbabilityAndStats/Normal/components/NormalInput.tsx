@@ -74,7 +74,7 @@ export default function NormalInput({ onResult }: Props) {
         Enter the parameters for the normal distribution.
       </p>
 
-      {/* Centramos el contenido */}
+      {/* Contenido centrado */}
       <div className="flex-1 flex flex-col justify-center space-y-6">
         {/* μ */}
         <div className="flex flex-col gap-1">
@@ -123,7 +123,7 @@ export default function NormalInput({ onResult }: Props) {
         </div>
       </div>
 
-      {/* Botón abajo */}
+      {/* Botón */}
       <div className="flex justify-center mt-6">
         <button
           onClick={handleSubmit}

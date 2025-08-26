@@ -5,6 +5,7 @@ import NavBar from "@/components/NavBar";
 import BottomCTA from "@/components/BottomCTA";
 import NormalInput from "./components/NormalInput";
 import NormalResult from "./components/NormalResult";
+import NormalInfo from "./components/NormalInfo";
 
 type ContinuousQuery =
   | { kind: "leq"; k: number }
@@ -38,14 +39,17 @@ const NormalCalculator = () => {
         {/* Input y Result */}
         <div className="max-w-[1440px] mx-auto flex flex-col lg:flex-row gap-6 px-6 justify-center items-stretch">
           {/* INPUT */}
-          <div className="flex-1 max-w-[500px] h-[747px]">
+          <div className="flex-1 max-w-[500px] min-h-[747px]">
             <NormalInput onResult={setResult} />
           </div>
 
           {/* RESULT */}
-          <div className="flex-1 max-w-[600px] ">
+          <div className="flex-1 max-w-[600px] min-h-[747px]">
             <NormalResult result={result} />
           </div>
+        </div>
+        <div className="max-w-[1220px] mx-auto px-6 mt-6">
+          <NormalInfo />
         </div>
       </div>
 
