@@ -16,8 +16,15 @@ const GramSchmidtInput = ({
   onResult: (result: GramSchmidtResponse) => void;
 }) => {
   const [numVectors, setNumVectors] = useState(2); // default: 2 vectores
+
+  // Estado numérico (para cálculos)
   const [vectors, setVectors] = useState<number[][]>(
-    Array.from({ length: 2 }, () => [0, 0, 0]) // inicializar en R^3
+    Array.from({ length: 2 }, () => [0, 0, 0])
+  );
+
+  // Estado string (para inputs visuales)
+  const [inputValues, setInputValues] = useState<string[][]>(
+    Array.from({ length: 2 }, () => ["", "", ""])
   );
 
   // 👉 sanitiza números
@@ -39,8 +46,12 @@ const GramSchmidtInput = ({
     const newVectors = Array.from({ length: value }, (_, i) =>
       vectors[i] ? vectors[i] : [0, 0, 0]
     );
+    const newInputs = Array.from({ length: value }, (_, i) =>
+      inputValues[i] ? inputValues[i] : ["", "", ""]
+    );
     setNumVectors(value);
     setVectors(newVectors);
+    setInputValues(newInputs);
   };
 
   // 🔁 actualizar valor en un componente específico
@@ -49,9 +60,19 @@ const GramSchmidtInput = ({
     compIdx: number,
     value: string
   ) => {
+    // Actualiza input string (lo que se ve en pantalla)
+    const newInputs = inputValues.map((vec, i) =>
+      i === vecIdx ? vec.map((c, j) => (j === compIdx ? value : c)) : vec
+    );
+    setInputValues(newInputs);
+
+    // Convierte a número (o 0 si vacío)
+    const parsed = value.trim() === "" ? 0 : Number(value);
     const newVectors = vectors.map((vec, i) =>
       i === vecIdx
-        ? vec.map((c, j) => (j === compIdx ? Number(value) || 0 : c))
+        ? vec.map((c, j) =>
+            j === compIdx ? (Number.isFinite(parsed) ? parsed : 0) : c
+          )
         : vec
     );
     setVectors(newVectors);
@@ -102,17 +123,17 @@ const GramSchmidtInput = ({
 
         {/* Inputs para cada vector (verticales en columna) */}
         <div className="flex flex-wrap gap-6 justify-center">
-          {vectors.map((vec, i) => (
+          {Array.from({ length: numVectors }).map((_, i) => (
             <div
               key={i}
               className="p-4 border rounded-lg bg-gray-50 flex flex-col gap-2"
             >
               <h3 className="font-semibold mb-2 text-center">v{i + 1}</h3>
-              {vec.map((val, j) => (
+              {Array.from({ length: 3 }).map((_, j) => (
                 <input
                   key={j}
                   type="number"
-                  value={val}
+                  value={inputValues[i]?.[j] ?? ""}
                   onChange={(e) => handleValueChange(i, j, e.target.value)}
                   className="w-20 p-2 border rounded-lg text-center"
                   placeholder={`x${j + 1}`}
