@@ -56,6 +56,11 @@ class ExponentialDistrData(BaseModel):
     lam: float   # tasa (>0)
     query: Union[QueryLeq, QueryGeq, QueryBetween]  # no usamos "equal"
 
+class UniformData(BaseModel):
+    a: float   # límite inferior
+    b: float   # límite superior
+    query: Union[QueryLeq, QueryGeq, QueryBetween]
+
 
 # --- Unified Handler class ---
 class ProbabilityDistribution:
@@ -201,4 +206,59 @@ class ProbabilityDistribution:
             "lam": lam, "query": q.dict(),
             "support": support, "pdf": pdf_values, "cdf": cdf_values,
             "prob_result": prob_result, "prob_latex": prob_latex,
+        }
+    
+
+    @staticmethod
+    def compute_uniform(data: UniformData):
+        a, b = data.a, data.b
+        q = data.query
+
+        if a >= b:
+            raise ValueError("El límite inferior 'a' debe ser menor que el límite superior 'b'.")
+
+        # --- PDF y CDF ---
+        def pdf(x):
+            if a <= x <= b:
+                return 1.0 / (b - a)
+            return 0.0
+
+        def cdf(x):
+            if x < a:
+                return 0.0
+            elif x > b:
+                return 1.0
+            else:
+                return (x - a) / (b - a)
+
+        # soporte: 200 puntos entre [a, b]
+        support = [round(x, 2) for x in np.linspace(a, b, 200)]
+        pdf_values = [pdf(x) for x in support]
+        cdf_values = [cdf(x) for x in support]
+
+        # --- Resultado de la consulta ---
+        prob_result = None
+        prob_latex = ""
+
+        if q.kind == "leq":
+            prob_result = cdf(q.k)
+            prob_latex = f"P(X \\leq {q.k}) = \\frac{{{q.k} - {a}}}{{{b} - {a}}} = {prob_result:.5f}"
+
+        elif q.kind == "geq":
+            prob_result = 1 - cdf(q.k)
+            prob_latex = f"P(X \\geq {q.k}) = 1 - F({q.k}) = {prob_result:.5f}"
+
+        elif q.kind == "between":
+            prob_result = cdf(q.b) - cdf(q.a)
+            prob_latex = f"P({q.a} \\leq X \\leq {q.b}) = F({q.b}) - F({q.a}) = {prob_result:.5f}"
+
+        return {
+            "a": a,
+            "b": b,
+            "query": q.dict(),
+            "support": support,   # valores de X
+            "pdf": pdf_values,    # densidad uniforme
+            "cdf": cdf_values,    # acumulada
+            "prob_result": prob_result,
+            "prob_latex": prob_latex,
         }
