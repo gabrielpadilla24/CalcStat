@@ -5,7 +5,7 @@ import NavBar from "@/components/NavBar";
 import BottomCTA from "@/components/BottomCTA";
 import GeometricInput from "./components/GeometricInput";
 import GeometricResult from "./components/GeometricResult";
-import GeometricGraph from "./components/GeometricGraph";
+//import GeometricInfo from "./components/GeometricInfo";
 
 type ProbabilityQuery =
   | { kind: "equal"; k: number }
@@ -35,26 +35,21 @@ const GeometricCalculator = () => {
           Geometric Distribution Calculator
         </h1>
 
-        <div className="max-w-[1440px] mx-auto flex flex-col lg:flex-row gap-6 px-6 justify-center">
+        <div className="max-w-[1440px] mx-auto flex flex-col lg:flex-row gap-6 px-6 justify-center items-stretch">
           {/* INPUT */}
-          <div className="flex-1 max-w-[500px] h-[747px]">
-            {/* 🔹 Aquí va el callback, igual que en Binomial y Poisson */}
+          <div className="flex-1 max-w-[500px]">
             <GeometricInput onResult={setResult} />
           </div>
 
-          {/* RESULT + GRAPH */}
+          {/* RESULT */}
           <div className="flex-1 max-w-[600px]">
             <GeometricResult result={result} />
-
-            {result && (
-              <GeometricGraph
-                support={result.support}
-                pmf={result.pmf}
-                cdf={result.cdf}
-                height={400}
-              />
-            )}
           </div>
+        </div>
+
+        {/* 🔹 Info Card abajo ocupando todo el ancho */}
+        <div className="max-w-[1220px] mx-auto px-6 mt-10">
+          {/* <GeometricInfo /> */}
         </div>
       </div>
 

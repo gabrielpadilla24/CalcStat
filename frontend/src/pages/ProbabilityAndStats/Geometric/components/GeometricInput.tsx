@@ -70,6 +70,9 @@ export default function GeometricInput({ onResult }: Props) {
       <h2 className="text-xl font-bold text-center mb-6">
         Geometric Distribution
       </h2>
+      <p className="text-center text-gray-600 mb-6">
+        Enter the parameters for the geometric distribution.
+      </p>
 
       {/* Centramos el contenido */}
       <div className="flex-1 flex flex-col justify-center space-y-6">

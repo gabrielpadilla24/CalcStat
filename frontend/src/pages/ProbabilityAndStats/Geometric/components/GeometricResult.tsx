@@ -2,6 +2,7 @@
 
 import "katex/dist/katex.min.css";
 import { BlockMath } from "react-katex";
+import GeometricGraph from "./GeometricGraph";
 
 type ProbabilityQuery =
   | { kind: "equal"; k: number }
@@ -34,18 +35,26 @@ export default function GeometricResult({ result }: Props) {
 
   return (
     <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6 space-y-6">
-      <h2 className="text-lg font-semibold">Geometric Result</h2>
+      <h2 className="text-xl font-bold text-center">Geometric Distribution</h2>
 
-      <div>
+      <div className="text-center">
         <p>
           <strong>p:</strong> {result.p}
         </p>
       </div>
 
       <div>
-        <p className="font-medium">Result:</p>
+        <p className="font-medium text-center">Result:</p>
         <BlockMath math={result.prob_latex} />
       </div>
+
+      {/* 🔹 Gráfico PMF + CDF */}
+      <GeometricGraph
+        support={result.support}
+        pmf={result.pmf}
+        cdf={result.cdf}
+        height={400}
+      />
     </div>
   );
 }
