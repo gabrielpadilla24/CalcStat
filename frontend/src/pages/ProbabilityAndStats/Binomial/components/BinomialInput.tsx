@@ -70,64 +70,73 @@ export default function BinomialInput({ onResult }: Props) {
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6 space-y-6">
-      <h2 className="text-xl font-bold text-center">Binomial Distribution</h2>
+    <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6 h-[747px] flex flex-col">
+      {/* 🔹 Título fijo arriba */}
+      <h2 className="text-2xl font-bold text-center mb-2">
+        Binomial Distribution
+      </h2>
+      <p className="text-center text-gray-600 mb-6">
+        Enter the values below to calculate the binomial probability
+        distribution.
+      </p>
 
-      {/* n */}
-      <div className="flex flex-col gap-1">
-        <label className="font-medium">Number of trials (n):</label>
-        <input
-          type="number"
-          value={n}
-          placeholder="Enter n"
-          min={1}
-          onChange={(e) => setN(e.target.value)}
-          className="border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-        />
-      </div>
+      {/* 🔹 Contenido centrado en el espacio disponible */}
+      <div className="flex-1 flex flex-col justify-center space-y-6">
+        {/* n */}
+        <div className="flex flex-col gap-1">
+          <label className="font-medium">Number of trials (n):</label>
+          <input
+            type="number"
+            value={n}
+            placeholder="Enter n"
+            min={1}
+            onChange={(e) => setN(e.target.value)}
+            className="border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+          />
+        </div>
 
-      {/* p */}
-      {/* p */}
-      <div className="flex flex-col gap-1">
-        <label className="font-medium">Success probability (p):</label>
-        <input
-          type="number"
-          step="0.01"
-          min={0}
-          max={1}
-          value={p}
-          placeholder="Enter p"
-          onChange={(e) => {
-            let val = parseFloat(e.target.value);
+        {/* p */}
+        <div className="flex flex-col gap-1">
+          <label className="font-medium">Success probability (p):</label>
+          <input
+            type="number"
+            step="0.01"
+            min={0}
+            max={1}
+            value={p}
+            placeholder="Enter p"
+            onChange={(e) => {
+              let val = parseFloat(e.target.value);
 
-            // prevenir NaN cuando está vacío
-            if (isNaN(val)) {
-              setP("");
-              return;
-            }
+              // prevenir NaN cuando está vacío
+              if (isNaN(val)) {
+                setP("");
+                return;
+              }
 
-            // limitar entre 0 y 1
-            if (val < 0) val = 0;
-            if (val > 1) val = 1;
+              // limitar entre 0 y 1
+              if (val < 0) val = 0;
+              if (val > 1) val = 1;
 
-            setP(val.toString());
-          }}
-          className="border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
-        />
-      </div>
+              setP(val.toString());
+            }}
+            className="border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+          />
+        </div>
 
-      {/* Consulta de probabilidad */}
-      <DistributionInput onChange={handleUpdate} />
+        {/* Consulta de probabilidad */}
+        <DistributionInput onChange={handleUpdate} />
 
-      {/* Botón centrado */}
-      <div className="flex justify-center">
-        <button
-          onClick={handleSubmit}
-          disabled={loading || !n || !p}
-          className="mt-6 bg-[#5FBA9B] text-white px-6 py-2 rounded-lg font-semibold hover:bg-[#4da88a] transition w-full"
-        >
-          {loading ? "Calculating..." : "Submit"}
-        </button>
+        {/* Botón centrado */}
+        <div className="flex justify-center">
+          <button
+            onClick={handleSubmit}
+            disabled={loading || !n || !p}
+            className="mt-6 bg-[#5FBA9B] text-white px-6 py-2 rounded-lg font-semibold hover:bg-[#4da88a] transition w-full"
+          >
+            {loading ? "Calculating..." : "Submit"}
+          </button>
+        </div>
       </div>
     </div>
   );
