@@ -1547,9 +1547,8 @@ def svd(data: MatrixData) -> Dict[str, Any]:
     "Vt": Vt_list,
    
 }
-
 #---------------------------------
-# ENDPOINT: Gram-Schmidt (con pasos en LaTeX)
+# ENDPOINT: Gram-Schmidt (con pasos detallados en LaTeX)
 #---------------------------------
 
 def _latex_vector(v: List[float]) -> str:
@@ -1570,17 +1569,21 @@ def gramschmidt(data: GramSchmidtData) -> Dict[str, Any]:
         orthonormal = []
 
         for i, v in enumerate(vectors):
-            steps.append(
-                rf"\text{{Start with }} v_{i+1} = {_latex_vector(v.tolist())}"
-            )
+            v_latex = _latex_vector(v.tolist())
+            steps.append(rf"v_{i+1} = {v_latex}")
+
             u = v.copy()
 
             # Proyecciones
             for j, q in enumerate(orthonormal):
-                proj = np.dot(v, q) * q
+                coef = np.dot(v, q)
+                proj = coef * q
                 u = u - proj
+                coef_str = str(round(coef, 4))
                 steps.append(
-                    rf"\text{{Subtract projection on }} q_{j+1}: \; u_{i+1} = {_latex_vector(u.tolist())}"
+                    rf"u_{i+1} = v_{i+1} - \langle v_{i+1}, q_{j+1} \rangle q_{j+1}"
+                    rf" = {v_latex} - ({coef_str}) \cdot {_latex_vector(q.tolist())}"
+                    rf" = {_latex_vector(u.tolist())}"
                 )
 
             # Normalización
@@ -1591,7 +1594,9 @@ def gramschmidt(data: GramSchmidtData) -> Dict[str, Any]:
             q_new = u / norm_u
             orthonormal.append(q_new)
             steps.append(
-                rf"\text{{Normalize: }} q_{i+1} = {_latex_vector(q_new.tolist())}"
+                rf"q_{i+1} = \frac{{u_{i+1}}}{{\|u_{i+1}\|}}"
+                rf" = \frac{{{_latex_vector(u.tolist())}}}{{{round(norm_u,4)}}}"
+                rf" = {_latex_vector(q_new.tolist())}"
             )
 
         # Construir salida en LaTeX
@@ -1605,7 +1610,7 @@ def gramschmidt(data: GramSchmidtData) -> Dict[str, Any]:
         return {
             "vectores": latex_original,
             "ortonormal": latex_ortonormal,
-            "pasos": steps,   # 👈 cada paso ya es LaTeX puro
+            "pasos": steps,   # 👈 cada paso es una fórmula LaTeX
             "status": "Success"
         }
 
