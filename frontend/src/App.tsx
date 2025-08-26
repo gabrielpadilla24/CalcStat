@@ -25,6 +25,7 @@ import EqSystemCalculator from "./pages/LinearAlgebra/EqSystem/EqSystemCalculato
 import EigenCalculator from "./pages/LinearAlgebra/Eigen/EigenCalculator";
 import SVDCalculator from "./pages/LinearAlgebra/SVD/SVDCalculator";
 import GramSchmidtCalculator from "./pages/LinearAlgebra/GramSchmidt/GramSchmidtCalculator";
+import ProbabilityAndStatsCalculator from "./pages/ProbabilityAndStats/ProbabilityandStatsCalculator";
 
 const App = () => {
   return (
@@ -127,6 +128,13 @@ const App = () => {
         <Route
           path="/linearalgebra/gramschmidt"
           element={<GramSchmidtCalculator />}
+        />
+
+        {/* Cards (all Probability and Stats calculators) */}
+
+        <Route
+          path="/probabilityandstats"
+          element={<ProbabilityAndStatsCalculator />}
         />
 
         {/* Other routes can be added here */}

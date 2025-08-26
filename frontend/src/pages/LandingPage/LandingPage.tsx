@@ -236,7 +236,9 @@ const LandingPage = () => {
               everything from descriptive stats to hypothesis testing.
             </p>
             <div className="w-fit pl-5">
-              <SubmitButton text="Go to Stats" />
+              <Link to="/probabilityandstats">
+                <SubmitButton text="Go to Probability & Stats" />
+              </Link>
             </div>
 
             {/* Overlapping image aligned to the right */}
