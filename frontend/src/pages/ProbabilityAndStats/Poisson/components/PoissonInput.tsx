@@ -10,7 +10,7 @@ type ProbabilityQuery =
   | { kind: "between"; a: number; b: number };
 
 type PoissonParams = {
-  lambda: number;
+  lam: number;
   query: ProbabilityQuery;
 };
 
@@ -29,7 +29,7 @@ type Props = {
 };
 
 export default function PoissonInput({ onResult }: Props) {
-  const [lambda, setLambda] = useState<string>("");
+  const [lam, setLambda] = useState<string>("");
   const [query, setQuery] = useState<ProbabilityQuery>({ kind: "equal", k: 0 });
   const [loading, setLoading] = useState(false);
 
@@ -38,10 +38,10 @@ export default function PoissonInput({ onResult }: Props) {
   };
 
   const handleSubmit = async () => {
-    if (!lambda) return;
+    if (!lam) return;
 
     const params: PoissonParams = {
-      lambda: Number(lambda),
+      lam: Number(lam),
       query,
     };
 
@@ -70,6 +70,10 @@ export default function PoissonInput({ onResult }: Props) {
       <h2 className="text-xl font-bold text-center mb-6">
         Poisson Distribution
       </h2>
+      <p className="text-center text-gray-600 mb-6">
+        Enter the values below to calculate the poisson probability
+        distribution.
+      </p>
 
       {/* Centramos el contenido */}
       <div className="flex-1 flex flex-col justify-center space-y-6">
@@ -85,7 +89,7 @@ export default function PoissonInput({ onResult }: Props) {
             type="number"
             step="0.1"
             min={0}
-            value={lambda}
+            value={lam}
             placeholder="Enter λ (e.g. 4.5)"
             onChange={(e) => setLambda(e.target.value)}
             className="border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none w-full"
@@ -106,7 +110,7 @@ export default function PoissonInput({ onResult }: Props) {
       <div className="flex justify-center mt-6">
         <button
           onClick={handleSubmit}
-          disabled={loading || !lambda}
+          disabled={loading || !lam}
           className="bg-[#5FBA9B] text-white px-6 py-2 rounded-lg font-semibold hover:bg-[#4da88a] transition w-full"
         >
           {loading ? "Calculating..." : "Submit"}
