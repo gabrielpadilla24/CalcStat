@@ -5,7 +5,7 @@ import NavBar from "@/components/NavBar";
 import BottomCTA from "@/components/BottomCTA";
 import UniformInput from "./components/UniformInput";
 import UniformResult from "./components/UniformResult";
-//import UniformInfo from "./components/UniformInfo";
+import UniformInfo from "./components/UniformInfo";
 
 type ContinuousQuery =
   | { kind: "leq"; k?: number }
@@ -36,22 +36,22 @@ const UniformCalculator = () => {
           Uniform Distribution Calculator
         </h1>
 
-        {/* Input + Result */}
+        {/* Input + Result con misma altura */}
         <div className="max-w-[1440px] mx-auto flex flex-col lg:flex-row gap-6 px-6 justify-center items-stretch">
           {/* INPUT */}
-          <div className="flex-1 max-w-[500px] h-full">
+          <div className="flex-1 max-w-[500px] h-full flex flex-col">
             <UniformInput onResult={setResult} />
           </div>
 
           {/* RESULT */}
-          <div className="flex-1 max-w-[600px] h-full">
+          <div className="flex-1 max-w-[600px] h-full flex flex-col">
             <UniformResult result={result} />
           </div>
         </div>
 
         {/* Info Card */}
         <div className="max-w-[1170px] mx-auto px-6 mt-6">
-          {/* <UniformInfo /> */}
+          <UniformInfo />
         </div>
       </div>
 

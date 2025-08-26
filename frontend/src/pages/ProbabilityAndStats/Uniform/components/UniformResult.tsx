@@ -56,7 +56,7 @@ export default function UniformResult({ result }: Props) {
         support={result.support}
         pdf={result.pdf}
         cdf={result.cdf}
-        height={353}
+        height={375}
       />
     </div>
   );
