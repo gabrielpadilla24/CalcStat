@@ -2,15 +2,18 @@
 
 type SVDResultProps = {
   matrix?: number[][];
-  singularValues?: number[];
+  singularValues?: number[]; // frontend-style
   U?: number[][];
-  Sigma?: number[][];
+  Sigma?: number[][];        // frontend-style
   Vt?: number[][];
-  /** Pasar si las calculas en backend, se muestran si están: */
+  // También podrían llegar con nombres del backend:
+  singular_values?: number[]; // backend-style
+  S?: number[][];             // backend-style
+
   rank?: number;
-  conditionNumber?: number;     // Infinity permitido
-  reconstructionError?: number; // ||A - UΣVᵀ||_F
-  relativeError?: number;       // 0..1
+  conditionNumber?: number;
+  reconstructionError?: number;
+  relativeError?: number;
   steps?: string[];
   error?: string;
   explanation?: string;
@@ -78,20 +81,35 @@ const Stat = ({
   </div>
 );
 
-const SVDResult = ({
-  matrix,
-  singularValues,
-  U,
-  Sigma,
-  Vt,
-  rank,
-  conditionNumber,
-  reconstructionError,
-  relativeError,
-  steps,
-  error,
-  explanation,
-}: SVDResultProps) => {
+// Construye Σ = diag(s) (k×k) desde s
+const diagFrom = (s?: number[]) => {
+  if (!s || s.length === 0) return undefined;
+  const k = s.length;
+  const S: number[][] = Array.from({ length: k }, (_, i) =>
+    Array.from({ length: k }, (_, j) => (i === j ? s[i] : 0))
+  );
+  return S;
+};
+
+const SVDResult = (props: SVDResultProps) => {
+  const {
+    matrix,
+    U,
+    Vt,
+    rank,
+    conditionNumber,
+    reconstructionError,
+    relativeError,
+    steps,
+    error,
+    explanation,
+  } = props;
+
+  // 🔁 Normalización de nombres (acepta frontend-style y backend-style)
+  const sVals = props.singularValues ?? props.singular_values;
+  const Sigma =
+    props.Sigma ?? props.S ?? diagFrom(sVals); // si no llega Σ, la creo con s
+
   // Sin datos aún
   if (!matrix || matrix.length === 0) {
     return (
@@ -163,9 +181,9 @@ const SVDResult = ({
       {/* Valores singulares */}
       <div>
         <h3 className="text-lg font-semibold mb-2">Singular Values (s)</h3>
-        {singularValues && singularValues.length > 0 ? (
+        {sVals && sVals.length > 0 ? (
           <div className="flex flex-wrap gap-2">
-            {singularValues.map((sv, i) => (
+            {sVals.map((sv, i) => (
               <Badge key={i}>{fmt(sv)}</Badge>
             ))}
           </div>

@@ -1552,20 +1552,17 @@ def svd(data: MatrixData) -> Dict[str, Any]:
     Vt_latex = _latex_matrix(Vt_list)
 
     return {
-        "matrix": A.tolist(),
-        "U": U_list,
-        "singular_values": s_list,
-        "S": S_list,
-        "Vt": Vt_list,
-        "rank": rank,
-        "condition_number": cond,
-        "reconstruction_error": recon_err,
-        "relative_error": rel_err,
-        "latex": {
-            "A": A_latex,
-            "U": U_latex,
-            "S": S_latex,
-            "Vt": Vt_latex,
-        },
-        "status": "Success"
-    }
+    "matrix": A.tolist(),
+    "U": U_list,
+    "singular_values": s_list,  # backend-style
+    "S": S_list,                # backend-style
+    # ✨ También frontend-style:
+    "singularValues": s_list,
+    "Sigma": S_list,
+    "Vt": Vt_list,
+    "rank": rank,
+    "conditionNumber": cond,
+    "reconstructionError": recon_err,
+    "relativeError": rel_err,
+    "status": "Success",
+}
