@@ -5,6 +5,7 @@ import NavBar from "@/components/NavBar";
 import BottomCTA from "@/components/BottomCTA";
 import PoissonInput from "./components/PoissonInput";
 import PoissonResult from "./components/PoissonResult";
+import PoissonInfo from "./components/PoissonInfo";
 
 type ProbabilityQuery =
   | { kind: "equal"; k: number }
@@ -44,6 +45,11 @@ const PoissonCalculator = () => {
           <div className="flex-1 max-w-[600px]">
             <PoissonResult result={result} />
           </div>
+        </div>
+
+        {/* 🔹 Info Card abajo ocupando todo el ancho */}
+        <div className="max-w-[1220px] mx-auto px-6 mt-10">
+          <PoissonInfo />
         </div>
       </div>
 
