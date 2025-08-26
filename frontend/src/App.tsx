@@ -29,6 +29,7 @@ import ProbabilityAndStatsCalculator from "./pages/ProbabilityAndStats/Probabili
 import BinomialCalculator from "./pages/ProbabilityAndStats/Binomial/BinomialCalculator";
 import PoissonCalculator from "./pages/ProbabilityAndStats/Poisson/PoissonCalculator";
 import GeometricCalculator from "./pages/ProbabilityAndStats/Geometric/GeometricCalculator";
+import NormalCalculator from "./pages/ProbabilityAndStats/Normal/NormalCalculator";
 
 const App = () => {
   return (
@@ -153,6 +154,11 @@ const App = () => {
         <Route
           path="/probabilityandstats/geometricdistribution"
           element={<GeometricCalculator />}
+        />
+
+        <Route
+          path="/probabilityandstats/normaldistribution"
+          element={<NormalCalculator />}
         />
 
         {/* Other routes can be added here */}

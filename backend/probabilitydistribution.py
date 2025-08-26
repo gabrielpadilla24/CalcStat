@@ -1,7 +1,7 @@
 from pydantic import BaseModel
 from typing import Union, Literal
 from scipy.stats import binom
-from scipy.stats import poisson, geom
+from scipy.stats import poisson, geom, norm
 
 
 # --- Query models ---
@@ -187,6 +187,57 @@ class ProbabilityDistribution:
             "support": support,
             "pmf": pmf_values,
             "cdf": cdf_values,
+            "prob_result": prob_result,
+            "prob_latex": prob_latex,
+        }
+
+
+
+# --- Normal request ---
+class NormalData(BaseModel):
+    mu: float   # media
+    sigma: float  # desviación estándar (>0)
+    query: Union[QueryLeq, QueryGeq, QueryBetween]  # no usamos "equal"
+
+
+class ProbabilityDistribution:
+    @staticmethod
+    def compute_normal(data: NormalData):
+        mu, sigma = data.mu, data.sigma
+        q = data.query
+
+        dist = norm(mu, sigma)  # distribución normal con media mu y sigma
+
+        # Valores de soporte (de μ - 4σ a μ + 4σ)
+        min_x = int(mu - 4 * sigma)
+        max_x = int(mu + 4 * sigma)
+        support = [x for x in range(min_x, max_x + 1)]
+        pdf_values = [dist.pdf(x) for x in support]
+        cdf_values = [dist.cdf(x) for x in support]
+
+        # Resultado de la consulta
+        prob_result = None
+        prob_latex = ""
+
+        if q.kind == "leq":
+            prob_result = dist.cdf(q.k)
+            prob_latex = f"P(X \\leq {q.k}) = {prob_result:.5f}"
+
+        elif q.kind == "geq":
+            prob_result = 1 - dist.cdf(q.k)
+            prob_latex = f"P(X \\geq {q.k}) = 1 - F({q.k}) = {prob_result:.5f}"
+
+        elif q.kind == "between":
+            prob_result = dist.cdf(q.b) - dist.cdf(q.a)
+            prob_latex = f"P({q.a} \\leq X \\leq {q.b}) = F({q.b}) - F({q.a}) = {prob_result:.5f}"
+
+        return {
+            "mu": mu,
+            "sigma": sigma,
+            "query": q.dict(),
+            "support": support,    # valores de X
+            "pdf": pdf_values,     # densidad f(x)
+            "cdf": cdf_values,     # acumulada F(x)
             "prob_result": prob_result,
             "prob_latex": prob_latex,
         }

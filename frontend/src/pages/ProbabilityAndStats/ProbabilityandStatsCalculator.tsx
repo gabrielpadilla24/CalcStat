@@ -75,6 +75,24 @@ const ProbabilityAndStatsCalculator = () => {
             <SubmitButton text="Open Calculator" />
           </Link>
         </div>
+
+        {/* Normal Distribution */}
+        <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] flex flex-col justify-between text-left">
+          <img
+            src="/img/normal.png"
+            alt="Normal Distribution"
+            className="h-40 w-full object-cover mb-4 rounded"
+          />
+          <h2 className="text-xl font-bold text-gray-800 mb-2">
+            Normal Distribution
+          </h2>
+          <p className="text-sm text-gray-600 mb-4">
+            Explore the normal distribution and its properties.
+          </p>
+          <Link to="/probabilityandstats/normaldistribution">
+            <SubmitButton text="Open Calculator" />
+          </Link>
+        </div>
       </div>
     </div>
   );
