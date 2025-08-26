@@ -5,7 +5,7 @@ import NavBar from "@/components/NavBar";
 import BottomCTA from "@/components/BottomCTA";
 import ExponentialDistrInput from "./components/ExponentialDistrInput";
 import ExponentialDistrResult from "./components/ExponentialDistrResult";
-//import ExponentialDistrInfo from "./components/ExponentialDistrInfo";
+import ExponentialDistrInfo from "./components/ExponentialDistrInfo";
 
 type ContinuousQuery =
   | { kind: "leq"; k?: number }
@@ -49,8 +49,8 @@ const ExponentialDistrCalculator = () => {
         </div>
 
         {/* Info Card */}
-        <div className="max-w-[1220px] mx-auto px-6 mt-10">
-          {/* <ExponentialDistrInfo /> */}
+        <div className="max-w-[1170px] mx-auto px-6 mt-6">
+          <ExponentialDistrInfo />
         </div>
       </div>
 
