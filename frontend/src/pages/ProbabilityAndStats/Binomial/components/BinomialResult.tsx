@@ -36,18 +36,17 @@ export default function BinomialResult({ result }: Props) {
   return (
     <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6">
       <h2 className="text-lg font-semibold mb-4">Binomial Result</h2>
+
       <p>
         <strong>n:</strong> {result.n}
       </p>
       <p>
         <strong>p:</strong> {result.p}
       </p>
+
       <div className="mt-4">
-        <p className="font-medium">Query:</p>
+        <p className="font-medium">Result:</p>
         <BlockMath math={result.prob_latex} />
-        <p className="mt-2">
-          <strong>Numerical Result:</strong> {result.prob_result.toFixed(5)}
-        </p>
       </div>
     </div>
   );
