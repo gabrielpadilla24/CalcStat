@@ -1481,19 +1481,91 @@ def eigen(data: MatrixData) -> Dict[str, Any]:
 
 
 
-
 #------------------
 # SVD
 #------------------
+
+def _num_to_str(x: float) -> str:
+    try:
+        xf = float(x)
+        if float(xf).is_integer():
+            return str(int(xf))
+        return f"{xf:.6f}".rstrip("0").rstrip(".")
+    except Exception:
+        return str(x)
+
+def _latex_matrix(M: List[List[float]]) -> str:
+    if not M:
+        return r"\begin{bmatrix}\end{bmatrix}"
+    rows = [" & ".join(_num_to_str(v) for v in row) for row in M]
+    return r"\begin{bmatrix}" + r" \\ ".join(rows) + r"\end{bmatrix}"
+
 @app.post("/svd")
-def svd(data: MatrixData):
-    # Si quieres usar Matrix para validar, ok, pero NO lo devuelvas:
-    mat = Matrix(data.matrix)
+def svd(data: MatrixData) -> Dict[str, Any]:
+    """
+    Calcula la descomposición SVD de A:
+        A = U * diag(s) * Vt   (full_matrices=False)
+    Devuelve U, s, S (matriz diagonal), Vt, y algunas métricas.
+    """
+    # Validación básica con SymPy (estructura y numérico)
+    try:
+        mat_sym = Matrix(data.matrix)
+    except Exception as e:
+        return {"error": f"Matriz inválida: {e}"}
 
-    # ✅ Serializa como lista de listas (números)
-    matrix_formatted = [
-        [float(mat[i, j]) for j in range(mat.cols)]
-        for i in range(mat.rows)
-    ]
+    if mat_sym.rows == 0 or mat_sym.cols == 0:
+        return {"error": "La matriz no puede ser vacía."}
 
-    return {"matrix": matrix_formatted}
+    # Asegurar float64 para la SVD numérica
+    try:
+        A = np.array(mat_sym.tolist(), dtype=np.float64)
+    except Exception as e:
+        return {"error": f"No se pudo convertir a float: {e}"}
+
+    try:
+        # SVD económica (recomendada para apps): shapes -> (m,k),(k,),(k,n) con k=min(m,n)
+        U, s, Vt = np.linalg.svd(A, full_matrices=False)
+    except np.linalg.LinAlgError as e:
+        return {"error": f"Falló la SVD: {e}"}
+
+    # Construir S (diagonal) para conveniencia
+    S = np.diag(s)
+
+    # Métricas útiles
+    froA = np.linalg.norm(A, ord="fro")
+    recon = U @ S @ Vt
+    recon_err = float(np.linalg.norm(A - recon, ord="fro"))
+    rel_err = float(recon_err / froA) if froA > 0 else 0.0
+    rank = int(np.sum(s > 1e-12))
+    cond = float(s[0] / s[-1]) if s[-1] > 0 else float("inf")
+
+    # Serializar a listas nativas
+    U_list  = U.tolist()
+    s_list  = s.tolist()
+    S_list  = S.tolist()
+    Vt_list = Vt.tolist()
+
+    # (Opcional) LaTeX para mostrar en frontend
+    A_latex  = _latex_matrix(A.tolist())
+    U_latex  = _latex_matrix(U_list)
+    S_latex  = _latex_matrix(S_list)
+    Vt_latex = _latex_matrix(Vt_list)
+
+    return {
+        "matrix": A.tolist(),
+        "U": U_list,
+        "singular_values": s_list,
+        "S": S_list,
+        "Vt": Vt_list,
+        "rank": rank,
+        "condition_number": cond,
+        "reconstruction_error": recon_err,
+        "relative_error": rel_err,
+        "latex": {
+            "A": A_latex,
+            "U": U_latex,
+            "S": S_latex,
+            "Vt": Vt_latex,
+        },
+        "status": "Success"
+    }
