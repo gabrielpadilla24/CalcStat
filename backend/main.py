@@ -1549,40 +1549,59 @@ def svd(data: MatrixData) -> Dict[str, Any]:
 }
 
 
-
 #---------------------------------
 # ENDPOINT: Gram-Schmidt
 #---------------------------------
 
-def _latex_vector(v: List[float]) -> str:
+def _latex_vector(v: list[float]) -> str:
     """Convierte un vector (lista) en LaTeX columna."""
     if not v:
         return r"\begin{bmatrix}\end{bmatrix}"
-    rows = " \\\\ ".join(str(x) for x in v)
+    rows = " \\\\ ".join(f"{x:.4f}".rstrip("0").rstrip(".") if isinstance(x, float) else str(x) for x in v)
     return r"\begin{bmatrix}" + rows + r"\end{bmatrix}"
 
 @app.post("/gramschmidt")
 def gramschmidt(data: GramSchmidtData) -> Dict[str, Any]:
-    """
-    Recibe un conjunto de vectores y devuelve su representación en LaTeX.
-    (Más adelante añadiremos el proceso de Gram–Schmidt y los vectores ortonormales).
-    """
     try:
-        vectors = data.vectors
-        if not vectors or not all(isinstance(v, list) for v in vectors):
-            return {"error": "Invalid input: expected a list of vectors."}
+        vectors = [np.array(v, dtype=float) for v in data.vectors]
+        if not vectors:
+            return {"error": "Input vectors are required."}
 
-        # Convertir cada vector a LaTeX columna
-        latex_vectors = [ _latex_vector(v) for v in vectors ]
+        steps = []
+        orthonormal_vectors = []
 
-        # Concatenar como lista en LaTeX
-        joined = ",\; ".join(latex_vectors)
-        latex_output = r"\{ " + joined + r" \}"
+        for i, v in enumerate(vectors):
+            u = v.copy()
+            steps.append(rf"Start with $v_{i+1} = {_latex_vector(v.tolist())}$")
+
+            # Restar proyecciones sobre vectores previos
+            for j, q in enumerate(orthonormal_vectors):
+                proj = np.dot(v, q) * q
+                u = u - proj
+                steps.append(
+                    rf"Subtract projection on $q_{j+1}$: $u_{i+1} = {_latex_vector(u.tolist())}$"
+                )
+
+            norm_u = np.linalg.norm(u)
+            if norm_u < 1e-10:
+                raise ValueError("The vectors are not linearly independent.")
+
+            q_new = u / norm_u
+            orthonormal_vectors.append(q_new)
+            steps.append(
+                rf"Normalize: $q_{i+1} = {_latex_vector(q_new.tolist())}$"
+            )
+
+        # Convertir listas a LaTeX
+        latex_original = r"\{ " + ",\; ".join(_latex_vector(v.tolist()) for v in vectors) + r" \}"
+        latex_ortonormal = r"\{ " + ",\; ".join(_latex_vector(q.tolist()) for q in orthonormal_vectors) + r" \}"
 
         return {
-            "vectores": latex_output,
+            "vectores": latex_original,
+            "ortonormal": latex_ortonormal,
+            "pasos": steps,
             "status": "Success"
         }
 
     except Exception as e:
-        return {"error": f"Failed to process vectors: {e}"}
+        return {"error": f"Failed Gram-Schmidt: {e}"}

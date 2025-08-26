@@ -1,58 +1,72 @@
 import numpy as np
 
-def calcular_eigen(matriz):
+def gram_schmidt(vectors):
     """
-    Calcula y muestra paso a paso los eigenvalores y eigenvectores de una matriz.
+    Aplica el proceso de ortonormalización de Gram-Schmidt a un conjunto de vectores.
 
-    Argumentos:
-    matriz (np.array): La matriz cuadrada de entrada.
+    Args:
+        vectors (list of np.array): Una lista de vectores linealmente independientes.
 
-    Retorna:
-    tuple: Una tupla que contiene los eigenvalores y los eigenvectores.
+    Returns:
+        list of np.array: Una lista de vectores ortonormales.
     """
-    # 1. Verificar si la matriz es cuadrada
-    print("Paso 1: Verificando si la matriz es cuadrada...")
-    if matriz.shape[0] != matriz.shape[1]:
-        print("Error: La matriz no es cuadrada. No se pueden calcular los eigenvalores y eigenvectores.")
-        return None, None
-    print("La matriz es cuadrada. Continuamos.")
-
-    # 2. Mostrar la matriz de entrada
-    print("\nPaso 2: La matriz de entrada es:")
-    print(matriz)
+    # Convierte la lista de vectores a un array de numpy para facilitar las operaciones.
+    vectors = [np.array(v, dtype=float) for v in vectors]
     
-    # 3. Calcular los eigenvalores y eigenvectores
-    print("\nPaso 3: Calculando eigenvalores y eigenvectores usando numpy.linalg.eig()...")
-    eigenvalores, eigenvectores = np.linalg.eig(matriz)
-
-    # 4. Mostrar los eigenvalores
-    print("\nPaso 4: Los eigenvalores son:")
-    for i, valor in enumerate(eigenvalores):
-        print(f"  λ{i+1} = {valor:.4f}")
-
-    # 5. Mostrar los eigenvectores
-    print("\nPaso 5: Los eigenvectores correspondientes son (cada columna es un eigenvector):")
-    print(eigenvectores)
+    # Crea una lista para almacenar los vectores ortonormales.
+    orthonormal_vectors = []
     
-    # 6. Verificación (opcional)
-    print("\nPaso 6: Verificación (A*v = λ*v)")
-    for i in range(len(eigenvalores)):
-        eigenvalor_i = eigenvalores[i]
-        eigenvector_i = eigenvectores[:, i]
+    # Itera sobre cada vector del conjunto original.
+    for v in vectors:
+        # Inicializa el nuevo vector ortogonal como el vector actual.
+        u = v.copy()
         
-        # A*v
-        Av = matriz @ eigenvector_i
-        # λ*v
-        lambdav = eigenvalor_i * eigenvector_i
+        # Proyecta el vector actual sobre cada uno de los vectores ya ortonormalizados.
+        for q in orthonormal_vectors:
+            # Producto punto entre el vector actual y el vector ortonormal.
+            proj_scalar = np.dot(v, q)
+            # Resta la proyección del vector actual.
+            u -= proj_scalar * q
         
-        print(f"\nVerificando para λ{i+1}:")
-        print(f"  A * v{i+1} = {Av}")
-        print(f"  λ{i+1} * v{i+1} = {lambdav}")
+        # Calcula la norma del nuevo vector ortogonal.
+        norm_u = np.linalg.norm(u)
+        
+        # Si la norma es casi cero, los vectores no son linealmente independientes.
+        if norm_u < 1e-10:
+            raise ValueError("El conjunto de vectores no es linealmente independiente.")
+        
+        # Normaliza el vector ortogonal.
+        q_new = u / norm_u
+        
+        # Añade el vector ortonormal a la lista.
+        orthonormal_vectors.append(q_new)
+        
+    return orthonormal_vectors
 
-    return eigenvalores, eigenvectores
-
-# Ejemplo de uso:
-matriz_ejemplo = np.array([[4, 1],
-                           [2, 3]])
-
-eigenvalores, eigenvectores = calcular_eigen(matriz_ejemplo)
+# --- Ejemplo de uso ---
+if __name__ == "__main__":
+    # Define un conjunto de vectores.
+    v1 = [1, 1, 0]
+    v2 = [1, 0, 1]
+    v3 = [0, 1, 1]
+    
+    # Aplica Gram-Schmidt.
+    try:
+        orthonormal_vectors = gram_schmidt([v1, v2, v3])
+        
+        # Imprime los vectores ortonormales resultantes.
+        print("Vectores originales:")
+        print(f"v1 = {v1}")
+        print(f"v2 = {v2}")
+        print(f"v3 = {v3}")
+        print("\nVectores ortonormales:")
+        for i, q in enumerate(orthonormal_vectors):
+            print(f"q{i+1} = {np.round(q, 4)}")
+            
+        # Opcional: Verifica la ortonormalidad (producto punto = 0, norma = 1)
+        print("\nVerificación:")
+        print(f"Producto punto q1 · q2: {np.round(np.dot(orthonormal_vectors[0], orthonormal_vectors[1]), 4)}")
+        print(f"Norma de q1: {np.round(np.linalg.norm(orthonormal_vectors[0]), 4)}")
+        
+    except ValueError as e:
+        print(e)
