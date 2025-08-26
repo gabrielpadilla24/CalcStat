@@ -34,7 +34,7 @@ const PoissonCalculator = () => {
           Poisson Distribution Calculator
         </h1>
 
-        <div className="max-w-[1440px] mx-auto flex flex-col lg:flex-row gap-6 px-6 justify-center">
+        <div className="max-w-[1440px] mx-auto flex flex-col lg:flex-row gap-6 px-6 justify-center items-stretch">
           {/* INPUT */}
           <div className="flex-1 max-w-[500px]">
             <PoissonInput onResult={setResult} />
