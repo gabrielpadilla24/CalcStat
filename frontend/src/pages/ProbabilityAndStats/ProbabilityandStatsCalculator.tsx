@@ -57,6 +57,24 @@ const ProbabilityAndStatsCalculator = () => {
             <SubmitButton text="Open Calculator" />
           </Link>
         </div>
+
+        {/* GEOMETRIC DISTRIBUTION */}
+        <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] flex flex-col justify-between text-left">
+          <img
+            src="/img/geometric.png"
+            alt="Geometric Distribution"
+            className="h-40 w-full object-cover mb-4 rounded"
+          />
+          <h2 className="text-xl font-bold text-gray-800 mb-2">
+            Geometric Distribution
+          </h2>
+          <p className="text-sm text-gray-600 mb-4">
+            Explore the geometric distribution and its properties.
+          </p>
+          <Link to="/probabilityandstats/geometricdistribution">
+            <SubmitButton text="Open Calculator" />
+          </Link>
+        </div>
       </div>
     </div>
   );
