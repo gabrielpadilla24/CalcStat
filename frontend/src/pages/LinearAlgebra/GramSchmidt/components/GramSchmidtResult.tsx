@@ -5,16 +5,16 @@ import { BlockMath } from "react-katex";
 
 type GramSchmidtResultProps = {
   vectores?: string; // LaTeX del conjunto de vectores ingresados
-  ortonormal?: string; // luego se usará para los ortonormales
-  pasos?: string[]; // luego se usará para los pasos intermedios
+  ortonormal?: string; // LaTeX del conjunto de vectores ortonormales
+  pasos?: string[]; // lista de pasos en LaTeX
   error?: string;
   explanation?: string;
 };
 
 const GramSchmidtResult = ({
   vectores,
-  //ortonormal,
-  //pasos,
+  ortonormal,
+  pasos,
   error,
   explanation,
 }: GramSchmidtResultProps) => {
@@ -38,13 +38,41 @@ const GramSchmidtResult = ({
     );
   }
 
-  // ✅ Mostrar solo los vectores ingresados
+  // ✅ Mostrar todo
   return (
-    <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6 text-center">
-      <h2 className="text-xl font-semibold mb-4">Input Vectors</h2>
-      <div className="flex justify-center">
+    <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6 space-y-8">
+      {/* Vectores originales */}
+      <div className="text-center">
+        <h2 className="text-xl font-semibold mb-4">Input Vectors</h2>
         <BlockMath math={vectores} />
       </div>
+
+      {/* Vectores ortonormales */}
+      {ortonormal && (
+        <div className="text-center">
+          <h2 className="text-xl font-semibold mb-4">Orthonormal Vectors</h2>
+          <BlockMath math={ortonormal} />
+        </div>
+      )}
+
+      {/* Pasos */}
+      {pasos && pasos.length > 0 && (
+        <div>
+          <h2 className="text-xl font-semibold mb-4 text-center">
+            Step-by-Step Process
+          </h2>
+          <div className="space-y-4">
+            {pasos.map((p, idx) => (
+              <div
+                key={idx}
+                className="bg-gray-50 border border-gray-200 rounded-lg p-3 text-center"
+              >
+                <BlockMath math={p} />
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
     </div>
   );
 };
