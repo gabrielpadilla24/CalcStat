@@ -2,6 +2,7 @@
 
 import "katex/dist/katex.min.css";
 import { BlockMath } from "react-katex";
+import BinomialGraph from "./BinomialGraph";
 
 type ProbabilityQuery =
   | { kind: "equal"; k: number }
@@ -34,20 +35,30 @@ export default function BinomialResult({ result }: Props) {
   }
 
   return (
-    <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6">
-      <h2 className="text-lg font-semibold mb-4">Binomial Result</h2>
+    <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6 space-y-6">
+      <h2 className="text-lg font-semibold">Binomial Result</h2>
 
-      <p>
-        <strong>n:</strong> {result.n}
-      </p>
-      <p>
-        <strong>p:</strong> {result.p}
-      </p>
+      <div>
+        <p>
+          <strong>n:</strong> {result.n}
+        </p>
+        <p>
+          <strong>p:</strong> {result.p}
+        </p>
+      </div>
 
-      <div className="mt-4">
+      <div>
         <p className="font-medium">Result:</p>
         <BlockMath math={result.prob_latex} />
       </div>
+
+      {/* 🔹 Nueva sección: gráfica */}
+      <BinomialGraph
+        n={result.n}
+        p={result.p}
+        query={result.query}
+        height={400}
+      />
     </div>
   );
 }

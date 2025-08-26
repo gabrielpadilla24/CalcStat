@@ -19,7 +19,7 @@ export default function BinomialGraph({ n, p, query, height = 500 }: Props) {
   const exprs: DesmosExpression[] = [
     {
       id: "binomial",
-      latex: `y=binomialdist(${n}, ${p})`,
+      latex: `binomialdist(${n}, ${p})`, // 👈 armado con espacio después de la coma
     },
   ];
 
@@ -28,22 +28,22 @@ export default function BinomialGraph({ n, p, query, height = 500 }: Props) {
     if (query.kind === "equal") {
       exprs.push({
         id: "highlight",
-        latex: `y=binomialdist(${n}, ${p}, ${query.k})`,
+        latex: `binomialdist(${n}, ${p}, ${query.k})`, // 👈 siempre ", " con espacio
       });
     } else if (query.kind === "leq") {
       exprs.push({
         id: "highlight",
-        latex: `y=binomialdist(${n}, ${p}, [0, ${query.k}])`,
+        latex: `binomialdist(${n}, ${p}, [0, ${query.k}])`,
       });
     } else if (query.kind === "geq") {
       exprs.push({
         id: "highlight",
-        latex: `y=binomialdist(${n}, ${p}, [${query.k}, ${n}])`,
+        latex: `binomialdist(${n}, ${p}, [${query.k}, ${n}])`,
       });
     } else if (query.kind === "between") {
       exprs.push({
         id: "highlight",
-        latex: `y=binomialdist(${n}, ${p}, [${query.a}, ${query.b}])`,
+        latex: `binomialdist(${n}, ${p}, [${query.a}, ${query.b}])`,
       });
     }
   }
