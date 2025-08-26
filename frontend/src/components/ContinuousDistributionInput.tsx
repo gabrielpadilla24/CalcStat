@@ -4,9 +4,9 @@ import { useState } from "react";
 
 // ⚡ Queries válidas en distribuciones continuas
 export type ContinuousQuery =
-  | { kind: "leq"; k: number }
-  | { kind: "geq"; k: number }
-  | { kind: "between"; a: number; b: number };
+  | { kind: "leq"; k?: number }
+  | { kind: "geq"; k?: number }
+  | { kind: "between"; a?: number; b?: number };
 
 type Props = {
   onChange: (query: ContinuousQuery) => void;
@@ -14,37 +14,49 @@ type Props = {
 
 export default function ContinuousDistributionInput({ onChange }: Props) {
   const [kind, setKind] = useState<ContinuousQuery["kind"]>("leq");
-  const [k, setK] = useState<number>(0);
-  const [a, setA] = useState<number>(0);
-  const [b, setB] = useState<number>(1);
+  const [k, setK] = useState<string>(""); // ← ahora empieza vacío
+  const [a, setA] = useState<string>(""); // también string
+  const [b, setB] = useState<string>("");
 
   const handleUpdate = (newKind: ContinuousQuery["kind"]) => {
     setKind(newKind);
     if (newKind === "leq" || newKind === "geq") {
-      onChange({ kind: newKind, k });
+      onChange({ kind: newKind, k: k === "" ? undefined : Number(k) });
     } else if (newKind === "between") {
-      onChange({ kind: "between", a, b });
+      onChange({
+        kind: "between",
+        a: a === "" ? undefined : Number(a),
+        b: b === "" ? undefined : Number(b),
+      });
     }
   };
 
-  const handleK = (val: number) => {
+  const handleK = (val: string) => {
     setK(val);
     if (kind === "leq" || kind === "geq") {
-      onChange({ kind, k: val });
+      onChange({ kind, k: val === "" ? undefined : Number(val) });
     }
   };
 
-  const handleA = (val: number) => {
+  const handleA = (val: string) => {
     setA(val);
     if (kind === "between") {
-      onChange({ kind: "between", a: val, b });
+      onChange({
+        kind: "between",
+        a: val === "" ? undefined : Number(val),
+        b: b === "" ? undefined : Number(b),
+      });
     }
   };
 
-  const handleB = (val: number) => {
+  const handleB = (val: string) => {
     setB(val);
     if (kind === "between") {
-      onChange({ kind: "between", a, b: val });
+      onChange({
+        kind: "between",
+        a: a === "" ? undefined : Number(a),
+        b: val === "" ? undefined : Number(val),
+      });
     }
   };
 
@@ -87,7 +99,7 @@ export default function ContinuousDistributionInput({ onChange }: Props) {
           <input
             type="number"
             value={k}
-            onChange={(e) => handleK(Number(e.target.value))}
+            onChange={(e) => handleK(e.target.value)}
             className="border rounded px-2 py-1 w-24"
           />
         </div>
@@ -100,7 +112,7 @@ export default function ContinuousDistributionInput({ onChange }: Props) {
             <input
               type="number"
               value={a}
-              onChange={(e) => handleA(Number(e.target.value))}
+              onChange={(e) => handleA(e.target.value)}
               className="border rounded px-2 py-1 w-20"
             />
           </div>
@@ -109,7 +121,7 @@ export default function ContinuousDistributionInput({ onChange }: Props) {
             <input
               type="number"
               value={b}
-              onChange={(e) => handleB(Number(e.target.value))}
+              onChange={(e) => handleB(e.target.value)}
               className="border rounded px-2 py-1 w-20"
             />
           </div>

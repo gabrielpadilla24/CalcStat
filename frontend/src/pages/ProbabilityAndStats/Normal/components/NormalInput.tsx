@@ -29,7 +29,10 @@ type Props = {
 export default function NormalInput({ onResult }: Props) {
   const [mu, setMean] = useState<string>("");
   const [sigma, setStd] = useState<string>("");
-  const [query, setQuery] = useState<ContinuousQuery>({ kind: "leq", k: 0 });
+  const [query, setQuery] = useState<ContinuousQuery>({
+    kind: "leq",
+    k: undefined,
+  });
   const [loading, setLoading] = useState(false);
 
   const handleUpdate = (newQuery: ContinuousQuery) => {
