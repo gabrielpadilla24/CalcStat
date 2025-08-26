@@ -26,6 +26,7 @@ import EigenCalculator from "./pages/LinearAlgebra/Eigen/EigenCalculator";
 import SVDCalculator from "./pages/LinearAlgebra/SVD/SVDCalculator";
 import GramSchmidtCalculator from "./pages/LinearAlgebra/GramSchmidt/GramSchmidtCalculator";
 import ProbabilityAndStatsCalculator from "./pages/ProbabilityAndStats/ProbabilityandStatsCalculator";
+import BinomialCalculator from "./pages/ProbabilityAndStats/Binomial/BinomialCalculator";
 
 const App = () => {
   return (
@@ -135,6 +136,11 @@ const App = () => {
         <Route
           path="/probabilityandstats"
           element={<ProbabilityAndStatsCalculator />}
+        />
+
+        <Route
+          path="/probabilityandstats/binomialdistribution"
+          element={<BinomialCalculator />}
         />
 
         {/* Other routes can be added here */}
