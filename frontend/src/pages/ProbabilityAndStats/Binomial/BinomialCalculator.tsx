@@ -5,6 +5,7 @@ import NavBar from "@/components/NavBar";
 import BottomCTA from "@/components/BottomCTA";
 import BinomialInput from "./components/BinomialInput";
 import BinomialResult from "./components/BinomialResult";
+import BinomialInfo from "./components/BinomialInfo"; // 👈 import
 
 type ProbabilityQuery =
   | { kind: "equal"; k: number }
@@ -35,6 +36,7 @@ const BinomialCalculator = () => {
           Binomial Distribution Calculator
         </h1>
 
+        {/* Input + Result cards */}
         <div className="max-w-[1440px] mx-auto flex flex-col lg:flex-row gap-6 px-6 justify-center">
           {/* INPUT */}
           <div className="flex-1 max-w-[500px]">
@@ -45,6 +47,12 @@ const BinomialCalculator = () => {
           <div className="flex-1 max-w-[600px]">
             <BinomialResult result={result} />
           </div>
+        </div>
+
+        {/* Info Card 👇 */}
+        {/* 🔹 Info Card abajo ocupando todo el ancho */}
+        <div className="max-w-[1220px] mx-auto px-6 mt-10">
+          <BinomialInfo />
         </div>
       </div>
 
