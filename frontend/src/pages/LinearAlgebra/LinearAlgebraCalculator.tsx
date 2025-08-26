@@ -109,6 +109,22 @@ const LinearAlgebraCalculator = () => {
             <SubmitButton text="Open Calculator" />
           </Link>
         </div>
+
+        {/* Gram-Schmidt */}
+        <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] flex flex-col justify-between text-left">
+          <img
+            src="/img/gramschmidt.png"
+            alt="Gram-Schmidt"
+            className="h-40 w-full object-cover mb-4 rounded"
+          />
+          <h2 className="text-xl font-bold text-gray-800 mb-2">Gram-Schmidt</h2>
+          <p className="text-sm text-gray-600 mb-4">
+            Apply the Gram-Schmidt process to a set of vectors.
+          </p>
+          <Link to="/linearalgebra/gramschmidt">
+            <SubmitButton text="Open Calculator" />
+          </Link>
+        </div>
       </div>
     </div>
   );
