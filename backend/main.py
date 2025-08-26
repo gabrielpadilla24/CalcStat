@@ -12,6 +12,8 @@ from sympy import latex as sympy_latex
 from sympy.parsing.latex import parse_latex
 import re
 from GaussianLinearSystem import GaussianLinearSystem
+from probabilitydistribution import BinomialData, ProbabilityDistribution
+
 
 
 
@@ -1616,3 +1618,18 @@ def gramschmidt(data: GramSchmidtData) -> Dict[str, Any]:
 
     except Exception as e:
         return {"error": f"Failed to compute Gram-Schmidt: {e}"}
+
+
+
+#-------------------------------
+# PROBABILITY AND STATS
+#-------------------------------
+
+
+
+#-------------------------------
+# BINOMIAL DISTRIBUTION
+#-------------------------------
+@app.post("/binomialdistribution")
+def compute_binomial(data: BinomialData):
+    return ProbabilityDistribution.compute_binomial(data)
