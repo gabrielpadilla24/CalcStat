@@ -26,15 +26,15 @@ type Props = {
 export default function ExponentialDistrResult({ result }: Props) {
   if (!result) {
     return (
-      <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6 text-center">
+      <div className="bg-white rounded-xl shadow-md border border-gray-200 p-4 text-center h-full">
         <p className="text-gray-500">No result yet. Submit parameters first.</p>
       </div>
     );
   }
 
   return (
-    <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6 space-y-6">
-      <h2 className="text-xl font-bold text-center">
+    <div className="bg-white rounded-xl shadow-md border border-gray-200 p-4 space-y-4 h-full">
+      <h2 className="text-lg font-bold text-center">
         Exponential Distribution
       </h2>
 
@@ -46,17 +46,17 @@ export default function ExponentialDistrResult({ result }: Props) {
       </div>
 
       {/* Resultado */}
-      <div>
-        <p className="font-medium text-center">Result:</p>
+      <div className="text-center">
+        <p className="font-medium">Result:</p>
         <BlockMath math={result.prob_latex} />
       </div>
 
-      {/* 🔹 Gráfico */}
+      {/* 🔹 Gráfico más pequeño */}
       <ExponentialDistrGraph
         support={result.support}
         pdf={result.pdf}
         cdf={result.cdf}
-        height={400}
+        height={353} // antes 400
       />
     </div>
   );

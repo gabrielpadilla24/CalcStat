@@ -38,12 +38,12 @@ const ExponentialDistrCalculator = () => {
         {/* Input + Result */}
         <div className="max-w-[1440px] mx-auto flex flex-col lg:flex-row gap-6 px-6 justify-center items-stretch">
           {/* INPUT */}
-          <div className="flex-1 max-w-[500px] h-[747px]">
+          <div className="flex-1 max-w-[500px] h-full">
             <ExponentialDistrInput onResult={setResult} />
           </div>
 
           {/* RESULT */}
-          <div className="flex-1 max-w-[600px]">
+          <div className="flex-1 max-w-[600px] h-full">
             <ExponentialDistrResult result={result} />
           </div>
         </div>
