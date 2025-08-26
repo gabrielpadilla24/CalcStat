@@ -14,24 +14,32 @@ type Props = {
 
 export default function DistributionInput({ onChange }: Props) {
   const [queryType, setQueryType] = useState<ProbabilityQuery["kind"]>("equal");
-  const [k, setK] = useState<number>(0);
-  const [a, setA] = useState<number>(0);
-  const [b, setB] = useState<number>(1);
 
-  const handleUpdate = (update: Partial<ProbabilityQuery>) => {
+  // inicializamos vacíos
+  const [kStr, setKStr] = useState<string>("");
+  const [aStr, setAStr] = useState<string>("");
+  const [bStr, setBStr] = useState<string>("");
+
+  // ⚡ ahora handleUpdate recibe los valores explícitos
+  const handleUpdate = (
+    kind: ProbabilityQuery["kind"],
+    k?: string,
+    a?: string,
+    b?: string
+  ) => {
     let q: ProbabilityQuery;
-    switch (queryType) {
+    switch (kind) {
       case "equal":
-        q = { kind: "equal", k };
+        q = { kind: "equal", k: Number(k) };
         break;
       case "leq":
-        q = { kind: "leq", k };
+        q = { kind: "leq", k: Number(k) };
         break;
       case "geq":
-        q = { kind: "geq", k };
+        q = { kind: "geq", k: Number(k) };
         break;
       case "between":
-        q = { kind: "between", a, b };
+        q = { kind: "between", a: Number(a), b: Number(b) };
         break;
     }
     onChange(q);
@@ -41,14 +49,17 @@ export default function DistributionInput({ onChange }: Props) {
     <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6 space-y-4">
       <h3 className="text-lg font-semibold">Probability Query</h3>
 
-      {/* Selección de tipo de consulta */}
+      {/* Selección de tipo */}
       <div className="flex flex-col gap-2">
         <label className="flex items-center gap-2">
           <input
             type="radio"
             value="equal"
             checked={queryType === "equal"}
-            onChange={() => setQueryType("equal")}
+            onChange={() => {
+              setQueryType("equal");
+              handleUpdate("equal", kStr);
+            }}
           />
           P(X = k)
         </label>
@@ -57,7 +68,10 @@ export default function DistributionInput({ onChange }: Props) {
             type="radio"
             value="leq"
             checked={queryType === "leq"}
-            onChange={() => setQueryType("leq")}
+            onChange={() => {
+              setQueryType("leq");
+              handleUpdate("leq", kStr);
+            }}
           />
           P(X ≤ k)
         </label>
@@ -66,7 +80,10 @@ export default function DistributionInput({ onChange }: Props) {
             type="radio"
             value="geq"
             checked={queryType === "geq"}
-            onChange={() => setQueryType("geq")}
+            onChange={() => {
+              setQueryType("geq");
+              handleUpdate("geq", kStr);
+            }}
           />
           P(X ≥ k)
         </label>
@@ -75,53 +92,28 @@ export default function DistributionInput({ onChange }: Props) {
             type="radio"
             value="between"
             checked={queryType === "between"}
-            onChange={() => setQueryType("between")}
+            onChange={() => {
+              setQueryType("between");
+              handleUpdate("between", undefined, aStr, bStr);
+            }}
           />
           P(a ≤ X ≤ b)
         </label>
       </div>
 
-      {/* Inputs dinámicos según el tipo */}
-      {queryType === "equal" && (
+      {/* Inputs dinámicos */}
+      {["equal", "leq", "geq"].includes(queryType) && (
         <div className="flex items-center gap-2">
           <label>k:</label>
           <input
             type="number"
             className="border rounded px-2 py-1 w-24"
-            value={k}
+            value={kStr}
+            placeholder="Enter k"
             onChange={(e) => {
-              setK(Number(e.target.value));
-              handleUpdate({ k: Number(e.target.value) });
-            }}
-          />
-        </div>
-      )}
-
-      {queryType === "leq" && (
-        <div className="flex items-center gap-2">
-          <label>k:</label>
-          <input
-            type="number"
-            className="border rounded px-2 py-1 w-24"
-            value={k}
-            onChange={(e) => {
-              setK(Number(e.target.value));
-              handleUpdate({ k: Number(e.target.value) });
-            }}
-          />
-        </div>
-      )}
-
-      {queryType === "geq" && (
-        <div className="flex items-center gap-2">
-          <label>k:</label>
-          <input
-            type="number"
-            className="border rounded px-2 py-1 w-24"
-            value={k}
-            onChange={(e) => {
-              setK(Number(e.target.value));
-              handleUpdate({ k: Number(e.target.value) });
+              const val = e.target.value.replace(/^0+(\d)/, "$1");
+              setKStr(val);
+              handleUpdate(queryType, val);
             }}
           />
         </div>
@@ -134,11 +126,12 @@ export default function DistributionInput({ onChange }: Props) {
             <input
               type="number"
               className="border rounded px-2 py-1 w-24"
-              value={a}
+              value={aStr}
+              placeholder="Enter a"
               onChange={(e) => {
-                const val = Number(e.target.value);
-                setA(val);
-                handleUpdate({ a: val, b });
+                const val = e.target.value.replace(/^0+(\d)/, "$1");
+                setAStr(val);
+                handleUpdate("between", undefined, val, bStr);
               }}
             />
           </div>
@@ -147,11 +140,12 @@ export default function DistributionInput({ onChange }: Props) {
             <input
               type="number"
               className="border rounded px-2 py-1 w-24"
-              value={b}
+              value={bStr}
+              placeholder="Enter b"
               onChange={(e) => {
-                const val = Number(e.target.value);
-                setB(val);
-                handleUpdate({ a, b: val });
+                const val = e.target.value.replace(/^0+(\d)/, "$1");
+                setBStr(val);
+                handleUpdate("between", undefined, aStr, val);
               }}
             />
           </div>

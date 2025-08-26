@@ -26,8 +26,9 @@ type Props = {
 };
 
 export default function BinomialInput({ onResult }: Props) {
-  const [n, setN] = useState<number>(10);
-  const [p, setP] = useState<number>(0.5);
+  // ⚡ ahora inicializamos vacíos
+  const [n, setN] = useState<string>("");
+  const [p, setP] = useState<string>("");
   const [query, setQuery] = useState<ProbabilityQuery>({ kind: "equal", k: 0 });
   const [loading, setLoading] = useState(false);
 
@@ -36,7 +37,15 @@ export default function BinomialInput({ onResult }: Props) {
   };
 
   const handleSubmit = async () => {
-    const params: BinomialParams = { n, p, query };
+    // validación mínima: si están vacíos no se manda
+    if (!n || !p) return;
+
+    const params: BinomialParams = {
+      n: Number(n),
+      p: Number(p),
+      query,
+    };
+
     try {
       setLoading(true);
       const res = await fetch("http://127.0.0.1:8000/binomialdistribution", {
@@ -70,8 +79,9 @@ export default function BinomialInput({ onResult }: Props) {
           type="number"
           className="border rounded px-2 py-1 w-32"
           value={n}
+          placeholder="Enter n"
           min={1}
-          onChange={(e) => setN(Number(e.target.value))}
+          onChange={(e) => setN(e.target.value)}
         />
       </div>
 
@@ -85,7 +95,8 @@ export default function BinomialInput({ onResult }: Props) {
           max={1}
           className="border rounded px-2 py-1 w-32"
           value={p}
-          onChange={(e) => setP(Number(e.target.value))}
+          placeholder="Enter p"
+          onChange={(e) => setP(e.target.value)}
         />
       </div>
 
@@ -95,7 +106,7 @@ export default function BinomialInput({ onResult }: Props) {
       {/* Submit button */}
       <button
         onClick={handleSubmit}
-        disabled={loading}
+        disabled={loading || !n || !p}
         className="bg-blue-600 text-white px-4 py-2 rounded-lg shadow hover:bg-blue-700 disabled:bg-gray-400"
       >
         {loading ? "Calculating..." : "Submit"}
