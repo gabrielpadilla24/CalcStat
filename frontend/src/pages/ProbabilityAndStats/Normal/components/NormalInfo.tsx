@@ -15,9 +15,9 @@ const NormalInfo = () => {
           The <strong>Normal Distribution</strong> (also called{" "}
           <em>Gaussian Distribution</em>) is the most important continuous
           probability distribution. It describes data that tends to cluster
-          around a central mean (<InlineMath math="\\mu" />
+          around a central mean (<InlineMath math="\mu" />
           ), with variability measured by the standard deviation (
-          <InlineMath math="\\sigma" />
+          <InlineMath math="\sigma" />
           ).
         </p>
 
@@ -43,9 +43,9 @@ const NormalInfo = () => {
           </li>
           <li>
             <strong>68-95-99.7 Rule:</strong> About 68% of data lies within{" "}
-            <InlineMath math="\\mu \\pm 1\\sigma" />, 95% within{" "}
-            <InlineMath math="\\mu \\pm 2\\sigma" />, and 99.7% within{" "}
-            <InlineMath math="\\mu \\pm 3\\sigma" />.
+            <InlineMath math="\mu \pm 1\sigma" />, 95% within{" "}
+            <InlineMath math="\mu \pm 2\sigma" />, and 99.7% within{" "}
+            <InlineMath math="\mu \pm 3\sigma" />.
           </li>
           <li>The distribution is symmetric around the mean.</li>
         </ul>
@@ -61,8 +61,8 @@ const NormalInfo = () => {
         <h3 className="text-xl font-semibold mb-2">🧠 Example</h3>
         <p className="mb-2">
           Suppose exam scores are Normally distributed with mean{" "}
-          <InlineMath math="\\mu = 70" /> and standard deviation{" "}
-          <InlineMath math="\\sigma = 10" />. The probability of a student
+          <InlineMath math="\mu = 70" /> and standard deviation{" "}
+          <InlineMath math="\sigma = 10" />. The probability of a student
           scoring less than 80 is:
         </p>
         <BlockMath math={"P(X \\leq 80) = F(80)"} />
