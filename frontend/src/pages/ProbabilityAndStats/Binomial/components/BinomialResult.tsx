@@ -1,5 +1,8 @@
 "use client";
 
+import "katex/dist/katex.min.css";
+import { BlockMath } from "react-katex";
+
 type ProbabilityQuery =
   | { kind: "equal"; k: number }
   | { kind: "leq"; k: number }
@@ -10,6 +13,11 @@ type BinomialResponse = {
   n: number;
   p: number;
   query: ProbabilityQuery;
+  support: number[];
+  pmf: number[];
+  cdf: number[];
+  prob_result: number;
+  prob_latex: string;
 };
 
 type Props = {
@@ -34,14 +42,13 @@ export default function BinomialResult({ result }: Props) {
       <p>
         <strong>p:</strong> {result.p}
       </p>
-      <p>
-        <strong>Query:</strong>{" "}
-        {result.query.kind === "equal" && `P(X = ${result.query.k})`}
-        {result.query.kind === "leq" && `P(X ≤ ${result.query.k})`}
-        {result.query.kind === "geq" && `P(X ≥ ${result.query.k})`}
-        {result.query.kind === "between" &&
-          `P(${result.query.a} ≤ X ≤ ${result.query.b})`}
-      </p>
+      <div className="mt-4">
+        <p className="font-medium">Query:</p>
+        <BlockMath math={result.prob_latex} />
+        <p className="mt-2">
+          <strong>Numerical Result:</strong> {result.prob_result.toFixed(5)}
+        </p>
+      </div>
     </div>
   );
 }

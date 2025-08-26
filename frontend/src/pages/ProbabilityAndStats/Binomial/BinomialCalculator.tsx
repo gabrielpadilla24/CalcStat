@@ -16,6 +16,11 @@ type BinomialResponse = {
   n: number;
   p: number;
   query: ProbabilityQuery;
+  support: number[];
+  pmf: number[];
+  cdf: number[];
+  prob_result: number;
+  prob_latex: string;
 };
 
 const BinomialCalculator = () => {

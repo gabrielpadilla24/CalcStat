@@ -19,6 +19,11 @@ type BinomialResponse = {
   n: number;
   p: number;
   query: ProbabilityQuery;
+  support: number[];
+  pmf: number[];
+  cdf: number[];
+  prob_result: number;
+  prob_latex: string;
 };
 
 type Props = {
@@ -82,6 +87,7 @@ export default function BinomialInput({ onResult }: Props) {
       </div>
 
       {/* p */}
+      {/* p */}
       <div className="flex flex-col gap-1">
         <label className="font-medium">Success probability (p):</label>
         <input
@@ -91,7 +97,21 @@ export default function BinomialInput({ onResult }: Props) {
           max={1}
           value={p}
           placeholder="Enter p"
-          onChange={(e) => setP(e.target.value)}
+          onChange={(e) => {
+            let val = parseFloat(e.target.value);
+
+            // prevenir NaN cuando está vacío
+            if (isNaN(val)) {
+              setP("");
+              return;
+            }
+
+            // limitar entre 0 y 1
+            if (val < 0) val = 0;
+            if (val > 1) val = 1;
+
+            setP(val.toString());
+          }}
           className="border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
         />
       </div>
