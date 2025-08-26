@@ -5,6 +5,7 @@ import NavBar from "@/components/NavBar";
 import BottomCTA from "@/components/BottomCTA";
 import SVDInput from "./components/SVDInput";
 import SVDResult from "./components/SVDResult";
+import SVDInfo from "./components/SVDInfo"; // 👈 agregado
 
 type SVDResponse = {
   matrix: number[][];
@@ -29,9 +30,12 @@ const SVDCalculator = () => {
         </h1>
 
         <div className="max-w-[1440px] mx-auto flex flex-col lg:flex-row gap-6 px-6 justify-center">
+          {/* Input */}
           <div className="flex-1 max-w-[600px]">
             <SVDInput onResult={setResult} />
           </div>
+
+          {/* Result + Education card */}
           <div className="flex-1 max-w-[600px]">
             <SVDResult
               matrix={result?.matrix}
@@ -43,9 +47,11 @@ const SVDCalculator = () => {
               error={result?.error}
               explanation={result?.explanation}
             />
+            <SVDInfo /> {/* 👈 Educational card debajo del resultado */}
           </div>
         </div>
       </div>
+
       <BottomCTA buttonText="Back to Linear Algebra" href="/linearalgebra" />
     </>
   );

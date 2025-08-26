@@ -4,11 +4,11 @@ type SVDResultProps = {
   matrix?: number[][];
   singularValues?: number[]; // frontend-style
   U?: number[][];
-  Sigma?: number[][];        // frontend-style
+  Sigma?: number[][]; // frontend-style
   Vt?: number[][];
   // También podrían llegar con nombres del backend:
   singular_values?: number[]; // backend-style
-  S?: number[][];             // backend-style
+  S?: number[][]; // backend-style
 
   rank?: number;
   conditionNumber?: number;
@@ -25,13 +25,7 @@ const fmt = (x: number) => {
   return s === "-0" ? "0" : s;
 };
 
-const MatrixGrid = ({
-  M,
-  caption,
-}: {
-  M?: number[][];
-  caption?: string;
-}) => {
+const MatrixGrid = ({ M, caption }: { M?: number[][]; caption?: string }) => {
   if (!M || M.length === 0) return null;
   return (
     <div className="space-y-2">
@@ -107,8 +101,7 @@ const SVDResult = (props: SVDResultProps) => {
 
   // 🔁 Normalización de nombres (acepta frontend-style y backend-style)
   const sVals = props.singularValues ?? props.singular_values;
-  const Sigma =
-    props.Sigma ?? props.S ?? diagFrom(sVals); // si no llega Σ, la creo con s
+  const Sigma = props.Sigma ?? props.S ?? diagFrom(sVals); // si no llega Σ, la creo con s
 
   // Sin datos aún
   if (!matrix || matrix.length === 0) {
@@ -136,10 +129,12 @@ const SVDResult = (props: SVDResultProps) => {
   const cols = matrix[0].length;
 
   return (
-    <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6 space-y-8">
-      <div>
-        <h2 className="text-2xl font-bold mb-1">Singular Value Decomposition</h2>
-        <p className="text-gray-500">
+    <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6 space-y-8 flex flex-col items-center">
+      <div className="w-full text-center">
+        <h2 className="text-2xl font-bold mb-1 text-center">
+          Singular Value Decomposition
+        </h2>
+        <p className="text-gray-500 text-center">
           Matrix A of shape ({rows} × {cols})
         </p>
       </div>
@@ -149,7 +144,7 @@ const SVDResult = (props: SVDResultProps) => {
         conditionNumber !== undefined ||
         reconstructionError !== undefined ||
         relativeError !== undefined) && (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 w-full justify-items-center">
           <Stat label="Rank" value={rank} />
           <Stat
             label="Condition Number"
@@ -179,22 +174,24 @@ const SVDResult = (props: SVDResultProps) => {
       )}
 
       {/* Valores singulares */}
-      <div>
-        <h3 className="text-lg font-semibold mb-2">Singular Values (s)</h3>
+      <div className="w-full text-center">
+        <h3 className="text-lg font-semibold mb-2 text-center">
+          Singular Values (s)
+        </h3>
         {sVals && sVals.length > 0 ? (
-          <div className="flex flex-wrap gap-2">
+          <div className="flex flex-wrap gap-2 justify-center">
             {sVals.map((sv, i) => (
               <Badge key={i}>{fmt(sv)}</Badge>
             ))}
           </div>
         ) : (
-          <p className="text-gray-500">—</p>
+          <p className="text-gray-500 text-center">—</p>
         )}
       </div>
 
       {/* Matrices */}
-      <div className="space-y-6">
-        <h3 className="text-lg font-semibold">Matrices</h3>
+      <div className="space-y-6 w-full text-center">
+        <h3 className="text-lg font-semibold text-center">Matrices</h3>
         <MatrixGrid M={matrix} caption="A" />
         <MatrixGrid M={U} caption="U" />
         <MatrixGrid M={Sigma} caption="Σ (diag(s))" />
@@ -203,11 +200,11 @@ const SVDResult = (props: SVDResultProps) => {
 
       {/* Steps / explicación (si llegan) */}
       {(steps && steps.length > 0) || explanation ? (
-        <div className="space-y-3">
+        <div className="space-y-3 w-full text-center">
           {steps && steps.length > 0 && (
             <>
-              <h3 className="text-lg font-semibold">Steps</h3>
-              <ol className="list-decimal list-inside space-y-1 text-sm text-gray-700">
+              <h3 className="text-lg font-semibold text-center">Steps</h3>
+              <ol className="list-decimal list-inside space-y-1 text-sm text-gray-700 text-left mx-auto max-w-xl">
                 {steps.map((st, idx) => (
                   <li key={idx}>{st}</li>
                 ))}
@@ -216,8 +213,8 @@ const SVDResult = (props: SVDResultProps) => {
           )}
           {explanation && (
             <>
-              <h3 className="text-lg font-semibold">Explanation</h3>
-              <p className="text-sm text-gray-700">{explanation}</p>
+              <h3 className="text-lg font-semibold text-center">Explanation</h3>
+              <p className="text-sm text-gray-700 text-center">{explanation}</p>
             </>
           )}
         </div>
@@ -225,5 +222,4 @@ const SVDResult = (props: SVDResultProps) => {
     </div>
   );
 };
-
 export default SVDResult;
