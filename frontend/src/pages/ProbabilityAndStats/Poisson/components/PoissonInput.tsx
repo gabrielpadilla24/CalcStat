@@ -10,16 +10,26 @@ type ProbabilityQuery =
   | { kind: "between"; a: number; b: number };
 
 type PoissonParams = {
-  lambda: number;
+  lam: number; // 👈 corregido: antes estaba "lambda"
   query: ProbabilityQuery;
 };
 
+type PoissonResponse = {
+  lam: number;
+  query: ProbabilityQuery;
+  support: number[];
+  pmf: number[];
+  cdf: number[];
+  prob_result: number;
+  prob_latex: string;
+};
+
 type Props = {
-  onResult: (result: any) => void;
+  onResult: (result: PoissonResponse | null) => void;
 };
 
 export default function PoissonInput({ onResult }: Props) {
-  const [lambda, setLambda] = useState<string>("");
+  const [lambda, setLambda] = useState<string>(""); // input del usuario
   const [query, setQuery] = useState<ProbabilityQuery>({ kind: "equal", k: 0 });
   const [loading, setLoading] = useState(false);
 
@@ -31,7 +41,7 @@ export default function PoissonInput({ onResult }: Props) {
     if (!lambda) return;
 
     const params: PoissonParams = {
-      lambda: Number(lambda),
+      lam: Number(lambda), // 👈 corregido: antes estaba "lambda"
       query,
     };
 
@@ -45,7 +55,7 @@ export default function PoissonInput({ onResult }: Props) {
 
       if (!res.ok) throw new Error("Backend error");
 
-      const data = await res.json();
+      const data: PoissonResponse = await res.json();
       onResult(data);
     } catch (err) {
       console.error("Error fetching poisson distribution:", err);

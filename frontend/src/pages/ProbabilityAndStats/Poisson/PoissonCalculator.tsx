@@ -4,9 +4,26 @@ import { useState } from "react";
 import NavBar from "@/components/NavBar";
 import BottomCTA from "@/components/BottomCTA";
 import PoissonInput from "./components/PoissonInput";
+import PoissonResult from "./components/PoissonResult";
+
+type ProbabilityQuery =
+  | { kind: "equal"; k: number }
+  | { kind: "leq"; k: number }
+  | { kind: "geq"; k: number }
+  | { kind: "between"; a: number; b: number };
+
+type PoissonResponse = {
+  lam: number;
+  query: ProbabilityQuery;
+  support: number[];
+  pmf: number[];
+  cdf: number[];
+  prob_result: number;
+  prob_latex: string;
+};
 
 const PoissonCalculator = () => {
-  const [result, setResult] = useState<any | null>(null);
+  const [result, setResult] = useState<PoissonResponse | null>(null);
 
   return (
     <>
@@ -23,11 +40,9 @@ const PoissonCalculator = () => {
             <PoissonInput onResult={setResult} />
           </div>
 
-          {/* RESULT (por ahora vacío, se añadirá luego) */}
+          {/* RESULT */}
           <div className="flex-1 max-w-[600px]">
-            <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6 text-center">
-              <p className="text-gray-500">Results will appear here.</p>
-            </div>
+            <PoissonResult result={result} />
           </div>
         </div>
       </div>

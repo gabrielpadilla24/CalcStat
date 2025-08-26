@@ -12,7 +12,7 @@ from sympy import latex as sympy_latex
 from sympy.parsing.latex import parse_latex
 import re
 from GaussianLinearSystem import GaussianLinearSystem
-from probabilitydistribution import BinomialData, ProbabilityDistribution
+from probabilitydistribution import BinomialData, ProbabilityDistribution, PoissonData
 
 
 
@@ -1633,3 +1633,11 @@ def gramschmidt(data: GramSchmidtData) -> Dict[str, Any]:
 @app.post("/binomialdistribution")
 def compute_binomial(data: BinomialData):
     return ProbabilityDistribution.compute_binomial(data)
+
+
+#-------------------------------
+# POISSON DISTRIBUTION
+#-------------------------------
+@app.post("/poissondistribution")
+def compute_poisson(data: PoissonData):
+    return ProbabilityDistribution.compute_poisson(data)
