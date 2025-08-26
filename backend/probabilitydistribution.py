@@ -1,7 +1,8 @@
 from pydantic import BaseModel
 from typing import Union, Literal
 from scipy.stats import binom
-from scipy.stats import poisson, geom, norm
+from scipy.stats import poisson, geom, norm, expon
+import numpy as np
 
 
 # --- Query models ---
@@ -241,3 +242,55 @@ class ProbabilityDistribution:
             "prob_result": prob_result,
             "prob_latex": prob_latex,
         }
+    
+
+
+
+# --- Exponential request ---
+class ExponentialDistrData(BaseModel):
+    lam: float   # tasa (>0)
+    query: Union[QueryLeq, QueryGeq, QueryBetween]  # no usamos "equal"
+
+
+class ProbabilityDistribution:
+    @staticmethod
+    def compute_exponential(data: ExponentialDistrData):
+        lam = data.lam
+        q = data.query
+
+        # distribución exponencial parametrizada con λ
+        dist = expon(scale=1/lam)
+
+        # soporte (ejemplo: de 0 hasta el percentil 99.9)
+        max_x = dist.ppf(0.999)
+        support = [round(x, 2) for x in list(np.linspace(0, max_x, 200))]
+        pdf_values = [dist.pdf(x) for x in support]
+        cdf_values = [dist.cdf(x) for x in support]
+
+        # Resultado de la consulta
+        prob_result = None
+        prob_latex = ""
+
+        if q.kind == "leq":
+            prob_result = dist.cdf(q.k)
+            prob_latex = f"P(X \\leq {q.k}) = {prob_result:.5f}"
+
+        elif q.kind == "geq":
+            prob_result = 1 - dist.cdf(q.k)
+            prob_latex = f"P(X \\geq {q.k}) = 1 - F({q.k}) = {prob_result:.5f}"
+
+        elif q.kind == "between":
+            prob_result = dist.cdf(q.b) - dist.cdf(q.a)
+            prob_latex = f"P({q.a} \\leq X \\leq {q.b}) = F({q.b}) - F({q.a}) = {prob_result:.5f}"
+
+        return {
+            "lam": lam,
+            "query": q.dict(),
+            "support": support,   # valores de X
+            "pdf": pdf_values,    # densidad f(x)
+            "cdf": cdf_values,    # acumulada F(x)
+            "prob_result": prob_result,
+            "prob_latex": prob_latex,
+        }
+
+

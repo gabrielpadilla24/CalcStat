@@ -12,7 +12,7 @@ from sympy import latex as sympy_latex
 from sympy.parsing.latex import parse_latex
 import re
 from GaussianLinearSystem import GaussianLinearSystem
-from probabilitydistribution import BinomialData, ProbabilityDistribution, PoissonData, GeometricData, NormalData
+from probabilitydistribution import BinomialData, ProbabilityDistribution, PoissonData, GeometricData, NormalData, ExponentialDistrData
 
 
 
@@ -1658,3 +1658,12 @@ def compute_geometric(data: GeometricData):
 @app.post("/normaldistribution")
 def compute_normal(data: NormalData):
     return ProbabilityDistribution.compute_normal(data)
+
+
+
+#-------------------------------
+# EXPONENTIAL DISTRIBUTION
+#-------------------------------
+@app.post("/exponentialdistribution")
+def compute_exponential(data: ExponentialDistrData):
+    return ProbabilityDistribution.compute_exponential(data)
