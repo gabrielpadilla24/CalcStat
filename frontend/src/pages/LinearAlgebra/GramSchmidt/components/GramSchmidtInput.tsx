@@ -1,7 +1,6 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import Vector from "@/components/Vector"; // 👈 nuestro input global de vectores
 
 type GramSchmidtResponse = {
   vectores: string;
@@ -16,9 +15,12 @@ const GramSchmidtInput = ({
 }: {
   onResult: (result: GramSchmidtResponse) => void;
 }) => {
-  const [vectors, setVectors] = useState<number[][]>([[0, 0]]);
+  const [numVectors, setNumVectors] = useState(2); // default: 2 vectores
+  const [vectors, setVectors] = useState<number[][]>(
+    Array.from({ length: 2 }, () => [0, 0, 0]) // inicializar en R^3
+  );
 
-  // 👉 Saneo: convierte strings a números, reemplaza NaN por 0
+  // 👉 sanitiza números
   const clean = (M: (number | string)[][]): number[][] =>
     M.map((row) =>
       row.map((v) => {
@@ -31,6 +33,29 @@ const GramSchmidtInput = ({
     () => JSON.stringify({ vectors: clean(vectors) }),
     [vectors]
   );
+
+  // 🔁 actualizar número de vectores
+  const handleNumVectorsChange = (value: number) => {
+    const newVectors = Array.from({ length: value }, (_, i) =>
+      vectors[i] ? vectors[i] : [0, 0, 0]
+    );
+    setNumVectors(value);
+    setVectors(newVectors);
+  };
+
+  // 🔁 actualizar valor en un componente específico
+  const handleValueChange = (
+    vecIdx: number,
+    compIdx: number,
+    value: string
+  ) => {
+    const newVectors = vectors.map((vec, i) =>
+      i === vecIdx
+        ? vec.map((c, j) => (j === compIdx ? Number(value) || 0 : c))
+        : vec
+    );
+    setVectors(newVectors);
+  };
 
   const handleCalculate = async () => {
     try {
@@ -56,12 +81,45 @@ const GramSchmidtInput = ({
     <div className="w-[600px] bg-white rounded-xl shadow-md border border-gray-200 p-8">
       <div className="flex flex-col items-center text-center">
         <label className="text-lg font-medium text-gray-700 mb-4">
-          Enter a set of vectors (1 to 4) for the Gram–Schmidt process:
+          Enter 1–4 vectors in <strong>ℝ³</strong> for Gram–Schmidt:
         </label>
 
-        {/* Input global de vectores */}
-        <div className="w-full mb-6">
-          <Vector onChange={setVectors} />
+        {/* Selector de cantidad de vectores */}
+        <div className="flex gap-4 justify-center mb-6">
+          <label className="font-medium text-gray-700">Vectors:</label>
+          <select
+            value={numVectors}
+            onChange={(e) => handleNumVectorsChange(Number(e.target.value))}
+            className="p-2 border rounded-lg"
+          >
+            {[1, 2, 3, 4].map((n) => (
+              <option key={n} value={n}>
+                {n}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        {/* Inputs para cada vector (verticales en columna) */}
+        <div className="flex flex-wrap gap-6 justify-center">
+          {vectors.map((vec, i) => (
+            <div
+              key={i}
+              className="p-4 border rounded-lg bg-gray-50 flex flex-col gap-2"
+            >
+              <h3 className="font-semibold mb-2 text-center">v{i + 1}</h3>
+              {vec.map((val, j) => (
+                <input
+                  key={j}
+                  type="number"
+                  value={val}
+                  onChange={(e) => handleValueChange(i, j, e.target.value)}
+                  className="w-20 p-2 border rounded-lg text-center"
+                  placeholder={`x${j + 1}`}
+                />
+              ))}
+            </div>
+          ))}
         </div>
 
         {/* Botón */}
