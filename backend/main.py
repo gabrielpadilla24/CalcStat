@@ -1502,12 +1502,7 @@ def _latex_matrix(M: List[List[float]]) -> str:
 
 @app.post("/svd")
 def svd(data: MatrixData) -> Dict[str, Any]:
-    """
-    Calcula la descomposición SVD de A:
-        A = U * diag(s) * Vt   (full_matrices=False)
-    Devuelve U, s, S (matriz diagonal), Vt, y algunas métricas.
-    """
-    # Validación básica con SymPy (estructura y numérico)
+
     try:
         mat_sym = Matrix(data.matrix)
     except Exception as e:
@@ -1516,28 +1511,19 @@ def svd(data: MatrixData) -> Dict[str, Any]:
     if mat_sym.rows == 0 or mat_sym.cols == 0:
         return {"error": "La matriz no puede ser vacía."}
 
-    # Asegurar float64 para la SVD numérica
     try:
         A = np.array(mat_sym.tolist(), dtype=np.float64)
     except Exception as e:
         return {"error": f"No se pudo convertir a float: {e}"}
 
     try:
-        # SVD económica (recomendada para apps): shapes -> (m,k),(k,),(k,n) con k=min(m,n)
         U, s, Vt = np.linalg.svd(A, full_matrices=False)
     except np.linalg.LinAlgError as e:
         return {"error": f"Falló la SVD: {e}"}
 
-    # Construir S (diagonal) para conveniencia
     S = np.diag(s)
 
-    # Métricas útiles
-    froA = np.linalg.norm(A, ord="fro")
-    recon = U @ S @ Vt
-    recon_err = float(np.linalg.norm(A - recon, ord="fro"))
-    rel_err = float(recon_err / froA) if froA > 0 else 0.0
-    rank = int(np.sum(s > 1e-12))
-    cond = float(s[0] / s[-1]) if s[-1] > 0 else float("inf")
+  
 
     # Serializar a listas nativas
     U_list  = U.tolist()
@@ -1545,24 +1531,15 @@ def svd(data: MatrixData) -> Dict[str, Any]:
     S_list  = S.tolist()
     Vt_list = Vt.tolist()
 
-    # (Opcional) LaTeX para mostrar en frontend
-    A_latex  = _latex_matrix(A.tolist())
-    U_latex  = _latex_matrix(U_list)
-    S_latex  = _latex_matrix(S_list)
-    Vt_latex = _latex_matrix(Vt_list)
+ 
 
     return {
-    "matrix": A.tolist(),
+
     "U": U_list,
-    "singular_values": s_list,  # backend-style
-    "S": S_list,                # backend-style
+
     # ✨ También frontend-style:
     "singularValues": s_list,
     "Sigma": S_list,
     "Vt": Vt_list,
-    "rank": rank,
-    "conditionNumber": cond,
-    "reconstructionError": recon_err,
-    "relativeError": rel_err,
-    "status": "Success",
+   
 }
