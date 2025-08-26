@@ -5,7 +5,7 @@ import NavBar from "@/components/NavBar";
 import BottomCTA from "@/components/BottomCTA";
 import GeometricInput from "./components/GeometricInput";
 import GeometricResult from "./components/GeometricResult";
-//import GeometricInfo from "./components/GeometricInfo";
+import GeometricInfo from "./components/GeometricInfo";
 
 type ProbabilityQuery =
   | { kind: "equal"; k: number }
@@ -48,8 +48,8 @@ const GeometricCalculator = () => {
         </div>
 
         {/* 🔹 Info Card abajo ocupando todo el ancho */}
-        <div className="max-w-[1220px] mx-auto px-6 mt-10">
-          {/* <GeometricInfo /> */}
+        <div className="max-w-[1220px] mx-auto px-6 mt-6">
+          <GeometricInfo />
         </div>
       </div>
 
