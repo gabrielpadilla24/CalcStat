@@ -4,7 +4,7 @@ import { useState } from "react";
 import NavBar from "@/components/NavBar";
 import BottomCTA from "@/components/BottomCTA";
 import GramSchmidtInput from "./components/GramSchmidtInput";
-// import GramSchmidtResult from "./components/GramSchmidtResult"; // 👈 lo activas cuando tengas el result listo
+import GramSchmidtResult from "./components/GramSchmidtResult"; // 👈 activado
 
 type GramSchmidtResponse = {
   vectores: string;
@@ -33,14 +33,13 @@ const GramSchmidtCalculator = () => {
 
           {/* Result */}
           <div className="flex-1 max-w-[600px]">
-            {/* Cuando hagamos el Result lo activamos */}
-            {/* <GramSchmidtResult
+            <GramSchmidtResult
               vectores={result?.vectores}
               ortonormal={result?.ortonormal}
               pasos={result?.pasos}
               error={result?.error}
               explanation={result?.explanation}
-            /> */}
+            />
           </div>
         </div>
       </div>

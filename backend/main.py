@@ -14,6 +14,7 @@ import re
 from GaussianLinearSystem import GaussianLinearSystem
 
 
+
 app = FastAPI()
 
 # -----------------------------
@@ -136,6 +137,9 @@ class EquationItem(BaseModel):
 
 class EquationSystemData(BaseModel):
     equations: List[EquationItem]
+
+class GramSchmidtData(BaseModel):
+    vectors: List[List[float]]
 
 
 
@@ -1543,3 +1547,42 @@ def svd(data: MatrixData) -> Dict[str, Any]:
     "Vt": Vt_list,
    
 }
+
+
+
+#---------------------------------
+# ENDPOINT: Gram-Schmidt
+#---------------------------------
+
+def _latex_vector(v: List[float]) -> str:
+    """Convierte un vector (lista) en LaTeX columna."""
+    if not v:
+        return r"\begin{bmatrix}\end{bmatrix}"
+    rows = " \\\\ ".join(str(x) for x in v)
+    return r"\begin{bmatrix}" + rows + r"\end{bmatrix}"
+
+@app.post("/gramschmidt")
+def gramschmidt(data: GramSchmidtData) -> Dict[str, Any]:
+    """
+    Recibe un conjunto de vectores y devuelve su representación en LaTeX.
+    (Más adelante añadiremos el proceso de Gram–Schmidt y los vectores ortonormales).
+    """
+    try:
+        vectors = data.vectors
+        if not vectors or not all(isinstance(v, list) for v in vectors):
+            return {"error": "Invalid input: expected a list of vectors."}
+
+        # Convertir cada vector a LaTeX columna
+        latex_vectors = [ _latex_vector(v) for v in vectors ]
+
+        # Concatenar como lista en LaTeX
+        joined = ",\; ".join(latex_vectors)
+        latex_output = r"\{ " + joined + r" \}"
+
+        return {
+            "vectores": latex_output,
+            "status": "Success"
+        }
+
+    except Exception as e:
+        return {"error": f"Failed to process vectors: {e}"}
