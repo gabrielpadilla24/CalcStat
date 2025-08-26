@@ -1,67 +1,70 @@
 "use client";
 
-import DesmosGraph, { DesmosExpression } from "@/components/DesmosGraph";
-
-type ProbabilityQuery =
-  | { kind: "equal"; k: number }
-  | { kind: "leq"; k: number }
-  | { kind: "geq"; k: number }
-  | { kind: "between"; a: number; b: number };
+import {
+  ResponsiveContainer,
+  ComposedChart,
+  Bar,
+  Line,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend,
+} from "recharts";
 
 type Props = {
-  n: number;
-  p: number;
-  query?: ProbabilityQuery;
+  support: number[]; // valores de X
+  pmf: number[]; // P(X=k)
+  cdf: number[]; // P(X<=k)
   height?: number;
 };
 
-export default function BinomialGraph({ n, p, query, height = 500 }: Props) {
-  const exprs: DesmosExpression[] = [
-    {
-      id: "binomial",
-      latex: `binomialdist(${n}, ${p})`, // 👈 armado con espacio después de la coma
-    },
-  ];
-
-  // 🔹 Resaltar consulta según el tipo
-  if (query) {
-    if (query.kind === "equal") {
-      exprs.push({
-        id: "highlight",
-        latex: `binomialdist(${n}, ${p}, ${query.k})`, // 👈 siempre ", " con espacio
-      });
-    } else if (query.kind === "leq") {
-      exprs.push({
-        id: "highlight",
-        latex: `binomialdist(${n}, ${p}, [0, ${query.k}])`,
-      });
-    } else if (query.kind === "geq") {
-      exprs.push({
-        id: "highlight",
-        latex: `binomialdist(${n}, ${p}, [${query.k}, ${n}])`,
-      });
-    } else if (query.kind === "between") {
-      exprs.push({
-        id: "highlight",
-        latex: `binomialdist(${n}, ${p}, [${query.a}, ${query.b}])`,
-      });
-    }
-  }
+export default function BinomialGraph({
+  support,
+  pmf,
+  cdf,
+  height = 400,
+}: Props) {
+  // 🔹 Rejuntar datos en un array [{x, pmf, cdf}]
+  const data = support.map((k, i) => ({
+    x: k,
+    pmf: pmf[i],
+    cdf: cdf[i],
+  }));
 
   return (
-    <DesmosGraph
-      title="📊 Binomial Distribution"
-      height={height}
-      expressions={exprs}
-      ui={{
-        expressions: true,
-        expressionsCollapsed: true,
-        keypad: false,
-        settingsMenu: false,
-        zoomButtons: true,
-        expressionsTopbar: false,
-        border: false,
-      }}
-    />
+    <div className="w-full bg-white border border-gray-300 p-4 rounded-xl mt-6 shadow-md overflow-hidden">
+      <h2 className="text-2xl font-semibold mb-4 text-center">
+        📊 Binomial Distribution
+      </h2>
+
+      <ResponsiveContainer width="100%" height={height}>
+        <ComposedChart data={data}>
+          <CartesianGrid strokeDasharray="3 3" />
+          <XAxis
+            dataKey="x"
+            label={{ value: "k", position: "insideBottom", dy: 10 }}
+          />
+          <YAxis />
+          <Tooltip
+            formatter={(value: number) => value.toFixed(4)}
+            labelFormatter={(label) => `X = ${label}`}
+          />
+          <Legend />
+
+          {/* 🔹 Barras para PMF */}
+          <Bar dataKey="pmf" name="PMF P(X=k)" fill="#5FBA9B" />
+
+          {/* 🔹 Línea para CDF */}
+          <Line
+            type="monotone"
+            dataKey="cdf"
+            name="CDF P(X≤k)"
+            stroke="#1E3A8A"
+            dot={false}
+          />
+        </ComposedChart>
+      </ResponsiveContainer>
+    </div>
   );
 }

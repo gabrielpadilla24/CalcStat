@@ -48,15 +48,15 @@ export default function BinomialResult({ result }: Props) {
       </div>
 
       <div>
-        <p className="font-medium">Result:</p>
+        <p className="text-lg font-semibold">Result:</p>
         <BlockMath math={result.prob_latex} />
       </div>
 
       {/* 🔹 Nueva sección: gráfica */}
       <BinomialGraph
-        n={result.n}
-        p={result.p}
-        query={result.query}
+        support={result.support}
+        pmf={result.pmf}
+        cdf={result.cdf}
         height={400}
       />
     </div>
