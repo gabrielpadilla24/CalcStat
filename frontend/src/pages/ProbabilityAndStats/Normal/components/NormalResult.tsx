@@ -57,7 +57,7 @@ export default function NormalResult({ result }: Props) {
           support={result.support}
           pdf={result.pdf}
           cdf={result.cdf}
-          height={353} // 👈 igual que en Exponential para que coincidan alturas
+          height={353}
         />
       </div>
     </div>
