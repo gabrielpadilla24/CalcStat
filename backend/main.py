@@ -12,7 +12,7 @@ from sympy import latex as sympy_latex
 from sympy.parsing.latex import parse_latex
 import re
 from GaussianLinearSystem import GaussianLinearSystem
-from probabilitydistribution import BinomialData, ProbabilityDistribution, PoissonData, GeometricData, NormalData, ExponentialDistrData, UniformData
+from probabilitydistribution import BinomialData, ProbabilityDistribution, PoissonData, GeometricData, NormalData, ExponentialDistrData, UniformData, BayesData
 
 
 
@@ -1675,3 +1675,15 @@ def compute_exponential(data: ExponentialDistrData):
 @app.post("/uniformdistribution")
 def compute_uniform(data: UniformData):
     return ProbabilityDistribution.compute_uniform(data)
+
+
+#---------------------------------
+# BAYES
+#---------------------------------
+@app.post("/bayes")
+def bayes_endpoint(data: BayesData):
+    try:
+        return ProbabilityDistribution.compute_bayes(data)
+    except Exception as e:
+        return {"error": str(e)}
+

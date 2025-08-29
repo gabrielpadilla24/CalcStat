@@ -32,6 +32,7 @@ import GeometricCalculator from "./pages/ProbabilityAndStats/Geometric/Geometric
 import NormalCalculator from "./pages/ProbabilityAndStats/Normal/NormalCalculator";
 import ExponentialDistrCalculator from "./pages/ProbabilityAndStats/ExponentialDistr/ExponentialDistrCalculator";
 import UniformCalculator from "./pages/ProbabilityAndStats/Uniform/UniformCalculator";
+import BayesCalculator from "./pages/ProbabilityAndStats/Bayes/BayesCalculator";
 
 const App = () => {
   return (
@@ -171,6 +172,11 @@ const App = () => {
         <Route
           path="/probabilityandstats/uniformdistribution"
           element={<UniformCalculator />}
+        />
+
+        <Route
+          path="/probabilityandstats/bayes"
+          element={<BayesCalculator />}
         />
 
         {/* Other routes can be added here */}

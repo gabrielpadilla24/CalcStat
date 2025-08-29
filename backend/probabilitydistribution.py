@@ -61,6 +61,13 @@ class UniformData(BaseModel):
     b: float   # límite superior
     query: Union[QueryLeq, QueryGeq, QueryBetween]
 
+class BayesData(BaseModel):
+    p_a: float                 # P(A)
+    p_b: float | None = None   # P(B), opcional si se conoce
+    p_b_given_a: float         # P(B|A)
+    p_b_given_not_a: float | None = None  # P(B|¬A), opcional
+
+
 
 # --- Unified Handler class ---
 class ProbabilityDistribution:
@@ -262,3 +269,43 @@ class ProbabilityDistribution:
             "prob_result": prob_result,
             "prob_latex": prob_latex,
         }
+    
+    @staticmethod
+    def compute_bayes(data: BayesData):
+        p_a = data.p_a
+        p_b = data.p_b
+        p_b_given_a = data.p_b_given_a
+        p_b_given_not_a = data.p_b_given_not_a
+
+        # Si no tenemos P(B), usamos la Ley de la prob. total
+        if p_b is None:
+            if p_b_given_not_a is None:
+                raise ValueError("Si no se proporciona P(B), se necesita P(B|¬A).")
+            p_b = p_b_given_a * p_a + p_b_given_not_a * (1 - p_a)
+
+        # Teorema de Bayes
+        posterior = (p_b_given_a * p_a) / p_b
+
+        # Construcción de la fórmula LaTeX
+        if p_b_given_not_a is not None and data.p_b is None:
+            latex = (
+                f"P(A|B) = \\frac{{P(B|A)P(A)}}{{P(B|A)P(A) + P(B|¬A)(1-P(A))}}"
+                f" = \\frac{{{p_b_given_a} \\cdot {p_a}}}{{{p_b_given_a} \\cdot {p_a} + {p_b_given_not_a} \\cdot (1-{p_a})}}"
+                f" = {posterior:.5f}"
+            )
+        else:
+            latex = (
+                f"P(A|B) = \\frac{{P(B|A)P(A)}}{{P(B)}}"
+                f" = \\frac{{{p_b_given_a} \\cdot {p_a}}}{{{p_b}}}"
+                f" = {posterior:.5f}"
+            )
+
+        return {
+            "p_a": p_a,
+            "p_b": p_b,
+            "p_b_given_a": p_b_given_a,
+            "p_b_given_not_a": p_b_given_not_a,
+            "posterior": posterior,
+            "latex": latex,
+        }
+
