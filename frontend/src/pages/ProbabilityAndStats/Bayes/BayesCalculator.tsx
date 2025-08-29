@@ -5,6 +5,7 @@ import NavBar from "@/components/NavBar";
 import BottomCTA from "@/components/BottomCTA";
 import BayesInput from "./components/BayesInput";
 import BayesResult from "./components/BayesResult";
+import BayesInfo from "./components/BayesInfo";
 
 type BayesResponse = {
   p_a: number;
@@ -30,22 +31,18 @@ const BayesCalculator = () => {
         </h1>
 
         {/* Input + Result */}
-        <div className="max-w-[1440px] mx-auto flex flex-col lg:flex-row gap-6 px-6 justify-center items-stretch">
+        <div className="max-w-[1440px] mx-auto flex flex-col lg:flex-row gap-6 px-6 justify-center">
           {/* INPUT */}
-          <div className="flex-1 max-w-[500px] min-h-[650px]">
+          <div className="flex-1 max-w-[500px]">
             <BayesInput onResult={setResult} />
           </div>
 
-          {/* RESULT */}
-          <div className="flex-1 max-w-[600px] min-h-[650px]">
+          {/* RESULT con Info debajo */}
+          <div className="flex-1 max-w-[600px] flex flex-col gap-6">
             <BayesResult result={result} />
+            <BayesInfo />
           </div>
         </div>
-
-        {/* (Opcional: Info card con explicación) */}
-        {/* <div className="max-w-[1170px] mx-auto px-6 mt-6">
-          <BayesInfo />
-        </div> */}
       </div>
 
       {/* CTA abajo */}

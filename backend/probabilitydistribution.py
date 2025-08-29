@@ -222,7 +222,7 @@ class ProbabilityDistribution:
         q = data.query
 
         if a >= b:
-            raise ValueError("El límite inferior 'a' debe ser menor que el límite superior 'b'.")
+            raise ValueError("The lower limit 'a' must be less than the upper limit 'b'.")
 
         # --- PDF y CDF ---
         def pdf(x):
@@ -280,7 +280,7 @@ class ProbabilityDistribution:
         # Si no tenemos P(B), usamos la Ley de la prob. total
         if p_b is None:
             if p_b_given_not_a is None:
-                raise ValueError("Si no se proporciona P(B), se necesita P(B|¬A).")
+                raise ValueError("If P(B) is not provided, P(B|¬A) is required.")
             p_b = p_b_given_a * p_a + p_b_given_not_a * (1 - p_a)
 
         # Teorema de Bayes
