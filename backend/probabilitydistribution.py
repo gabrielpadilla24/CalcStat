@@ -1,7 +1,8 @@
 from pydantic import BaseModel
-from typing import Union, Literal
+from typing import Union, Literal, List, Optional
 from scipy.stats import binom, poisson, geom, norm, expon
 import numpy as np
+import sympy as sp
 
 
 # --- Query models ---
@@ -66,6 +67,15 @@ class BayesData(BaseModel):
     p_b: float | None = None   # P(B), opcional si se conoce
     p_b_given_a: float         # P(B|A)
     p_b_given_not_a: float | None = None  # P(B|¬A), opcional
+
+x = sp.symbols("x")
+
+class EVMData(BaseModel):
+    variableType: Literal["discrete", "continuous"]
+    equation: str              # pmf o pdf en LaTeX
+    support: Optional[List[float]] = None  # solo discreta
+    interval: Optional[List[float]] = None # solo continua [a, b]
+    momentOrders: Optional[List[int]] = [1, 2, 3]  # por defecto 1,2,3
 
 
 
@@ -308,4 +318,54 @@ class ProbabilityDistribution:
             "posterior": posterior,
             "latex": latex,
         }
+    
+    @staticmethod
+    def compute_evm(data: EVMData):
+        try:
+            f_x = sp.parse_latex(data.equation)  # convierte de LaTeX a sympy
+            results = {}
+
+            if data.variableType == "discrete":
+                if not data.support:
+                    raise ValueError("Support must be provided for discrete variables")
+
+                # Normalización
+                Z = sum([f_x.subs(x, val) for val in data.support])
+                probs = [f_x.subs(x, val)/Z for val in data.support]
+
+                # Esperanza
+                E = sum([val * p for val, p in zip(data.support, probs)])
+                Var = sum([(val - E)**2 * p for val, p in zip(data.support, probs)])
+
+                results["expectedValue"] = float(E.evalf())
+                results["variance"] = float(Var.evalf())
+                results["moments"] = [
+                    {"order": k, "value": float(sum([val**k * p for val, p in zip(data.support, probs)]).evalf())}
+                    for k in data.momentOrders
+                ]
+
+            elif data.variableType == "continuous":
+                if not data.interval:
+                    raise ValueError("Interval must be provided for continuous variables")
+
+                a, b = data.interval
+                # Normalización
+                Z = sp.integrate(f_x, (x, a, b))
+                f_norm = f_x / Z
+
+                # Esperanza
+                E = sp.integrate(x * f_norm, (x, a, b))
+                Var = sp.integrate((x - E)**2 * f_norm, (x, a, b))
+
+                results["expectedValue"] = float(E.evalf())
+                results["variance"] = float(Var.evalf())
+                results["moments"] = [
+                    {"order": k, "value": float(sp.integrate((x**k) * f_norm, (x, a, b)).evalf())}
+                    for k in data.momentOrders
+                ]
+
+            return results
+
+        except Exception as e:
+            return {"error": str(e)}
 
