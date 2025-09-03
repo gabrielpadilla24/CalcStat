@@ -78,7 +78,7 @@ export default function CLTInput({ onResult }: Props) {
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6 w-full">
+    <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6 w-full h-[495px]">
       <h2 className="text-xl font-bold text-center mb-6">
         Central Limit Theorem Simulator
       </h2>
