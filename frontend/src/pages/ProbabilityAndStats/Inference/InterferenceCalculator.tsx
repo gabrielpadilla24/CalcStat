@@ -53,7 +53,7 @@ export default function InferenceCalculator() {
 
       <BottomCTA
         buttonText="Back to Probability & Statistics"
-        href="/probability-statistics"
+        href="/probabilityandstats"
       />
     </>
   );
