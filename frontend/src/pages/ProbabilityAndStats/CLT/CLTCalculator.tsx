@@ -6,6 +6,7 @@ import BottomCTA from "@/components/BottomCTA";
 import CLTInput from "./components/CLTInput";
 import CLTResult from "./components/CLTResult";
 import CLTGraph from "./components/CLTGraph";
+import CLTInfo from "./components/CLTInfo";
 
 type CLTResponse = {
   simulatedMeans?: number[];
@@ -53,6 +54,8 @@ const CLTCalculator = () => {
             <CLTGraph graphData={result.graphData} />
           </div>
         )}
+
+        <CLTInfo />
       </div>
 
       <BottomCTA
