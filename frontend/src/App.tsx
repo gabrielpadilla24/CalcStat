@@ -34,6 +34,7 @@ import ExponentialDistrCalculator from "./pages/ProbabilityAndStats/ExponentialD
 import UniformCalculator from "./pages/ProbabilityAndStats/Uniform/UniformCalculator";
 import BayesCalculator from "./pages/ProbabilityAndStats/Bayes/BayesCalculator";
 import EVMCalculator from "./pages/ProbabilityAndStats/EVM/EVMCalculator";
+import CLTCalculator from "./pages/ProbabilityAndStats/CLT/CLTCalculator";
 
 const App = () => {
   return (
@@ -184,6 +185,8 @@ const App = () => {
           path="/probabilityandstats/expectedvalueandmoments"
           element={<EVMCalculator />}
         />
+
+        <Route path="/probabilityandstats/clt" element={<CLTCalculator />} />
 
         {/* Other routes can be added here */}
         <Route path="/calculators" element={<Menu />} />
