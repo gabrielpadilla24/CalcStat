@@ -5,6 +5,7 @@ import NavBar from "@/components/NavBar";
 import BottomCTA from "@/components/BottomCTA";
 import CLTInput from "./components/CLTInput";
 import CLTResult from "./components/CLTResult";
+import CLTGraph from "./components/CLTGraph";
 
 type CLTResponse = {
   simulatedMeans?: number[];
@@ -18,6 +19,8 @@ type CLTResponse = {
   n_sim?: number;
   distribution?: string;
   params?: Record<string, number>;
+  graphData?: { x: number; freq: number; normal: number }[];
+
   error?: string;
 };
 
@@ -44,6 +47,12 @@ const CLTCalculator = () => {
             {result && <CLTResult {...result} />}
           </div>
         </div>
+
+        {result?.graphData && (
+          <div className="max-w-[900px] mx-auto mt-10 px-6">
+            <CLTGraph graphData={result.graphData} />
+          </div>
+        )}
       </div>
 
       <BottomCTA

@@ -372,7 +372,7 @@ class ProbabilityDistribution:
         n = data.n
         n_sim = data.n_sim
 
-        # --- Seleccionar distribución ---
+        # --- Selección de distribución ---
         if dist_name == "bernoulli":
             p = params.get("p", 0.5)
             dist = bernoulli(p)
@@ -387,7 +387,7 @@ class ProbabilityDistribution:
             dist = uniform(a, b - a)
         elif dist_name == "exponential":
             lam = params.get("lam", 1)
-            dist = expon(scale=1/lam)
+            dist = expon(scale=1 / lam)
         elif dist_name == "normal":
             mu, sigma = params.get("mu", 0), params.get("sigma", 1)
             dist = norm(mu, sigma)
@@ -398,14 +398,28 @@ class ProbabilityDistribution:
         samples = dist.rvs(size=(n_sim, n))
         sample_means = samples.mean(axis=1)
 
-        # --- Valores teóricos ---
+        # --- Teoría ---
         mu = dist.mean()
         sigma2 = dist.var()
         theo_mean = mu
         theo_var = sigma2 / n
 
+        # --- Histograma (backend) ---
+        bins = 30
+        min_val, max_val = sample_means.min(), sample_means.max()
+        counts, bin_edges = np.histogram(sample_means, bins=bins, density=True)
+        mids = (bin_edges[:-1] + bin_edges[1:]) / 2
+
+        # --- Curva normal teórica ---
+        pdf_vals = norm.pdf(mids, loc=theo_mean, scale=np.sqrt(theo_var))
+
+        # --- Datos listos para gráfico ---
+        graph_data = [
+            {"x": float(mids[i]), "freq": float(counts[i]), "normal": float(pdf_vals[i])}
+            for i in range(len(mids))
+        ]
+
         return {
-            "simulatedMeans": sample_means.tolist(),
             "simMean": float(np.mean(sample_means)),
             "simVar": float(np.var(sample_means)),
             "theoMean": float(theo_mean),
@@ -416,4 +430,5 @@ class ProbabilityDistribution:
             "n_sim": n_sim,
             "distribution": dist_name,
             "params": params,
+            "graphData": graph_data,  # 🔥 listo para frontend
         }
