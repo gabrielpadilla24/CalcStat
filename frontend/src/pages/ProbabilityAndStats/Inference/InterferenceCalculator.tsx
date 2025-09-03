@@ -5,20 +5,23 @@ import NavBar from "@/components/NavBar";
 import BottomCTA from "@/components/BottomCTA";
 import InferenceInput from "./components/InferenceInput";
 import InferenceResult from "./components/InferenceResult";
+//import InferenceInfo from "./components/InferenceInfo";
 
 type InferenceResponse = {
   test: string;
   statistic: number;
   p_value: number;
   alpha: number;
-  alternative: string;
-  ci: number[];
-  latex_ci: string;
+  alternative?: string;
+  ci?: number[];
+  latex_ci?: string;
   decision: string;
+  df_between?: number;
+  df_within?: number;
   error?: string;
 };
 
-const InferenceCalculator = () => {
+export default function InferenceCalculator() {
   const [result, setResult] = useState<InferenceResponse | null>(null);
 
   return (
@@ -32,8 +35,8 @@ const InferenceCalculator = () => {
 
         <div className="max-w-[1440px] mx-auto flex flex-col lg:flex-row gap-6 px-6 justify-center">
           {/* Input */}
-          <div className="flex-1 max-w-[600px]">
-            <InferenceInput onResult={(res) => setResult(res)} />
+          <div className="flex-1 max-w-[500px]">
+            <InferenceInput onResult={setResult} />
           </div>
 
           {/* Result */}
@@ -41,14 +44,17 @@ const InferenceCalculator = () => {
             {result && <InferenceResult {...result} />}
           </div>
         </div>
+
+        {/* Info card debajo */}
+        <div className="max-w-[1000px] mx-auto mt-10 px-6">
+          {/* <InferenceInfo /> */}
+        </div>
       </div>
 
       <BottomCTA
         buttonText="Back to Probability & Statistics"
-        href="/probabilityandstats"
+        href="/probability-statistics"
       />
     </>
   );
-};
-
-export default InferenceCalculator;
+}

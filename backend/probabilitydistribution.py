@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 from typing import Union, Literal, List, Optional
-from scipy.stats import binom, poisson, geom, norm, expon, uniform, bernoulli, t
+from scipy.stats import binom, poisson, geom, norm, expon, uniform, bernoulli, t, chi2, f
 import numpy as np
 import sympy as sp
 import math
@@ -85,14 +85,14 @@ class CLTData(BaseModel):
     n_sim: int   
 
 class InferenceData(BaseModel):
-    test: Literal["z", "t"]             # tipo de prueba
-    xbar: float                         # media muestral
-    mu0: float                          # valor hipotético de la media bajo H0
-    s: float                            # desviación estándar (σ conocida o s muestral)
-    n: int                              # tamaño de muestra
-    alpha: float = 0.05                 # nivel de significancia (default 5%)
-    alternative: Literal["!=", ">", "<"] = "!="  # tipo de hipótesis alternativa
-
+    test: Literal["z", "t", "chi2", "anova"]
+    xbar: float | None = None      # media muestral
+    mu0: float | None = None       # media hipotética o varianza hipotética (para chi2)
+    s: float | None = None         # desviación estándar (σ o s) o varianza muestral
+    n: int | None = None           # tamaño de muestra
+    alpha: float = 0.05            # nivel de significancia
+    alternative: Literal["!=", ">", "<"] = "!="
+    groups: list[list[float]] | None = None   # para ANOVA
 
 # --- Unified Handler class ---
 class ProbabilityDistribution:
@@ -445,56 +445,125 @@ class ProbabilityDistribution:
     
     @staticmethod
     def compute_inference(data: InferenceData):
-        xbar, mu0, s, n, alpha, test, alt = (
-            data.xbar, data.mu0, data.s, data.n, data.alpha, data.test, data.alternative
-        )
+        test = data.test.lower()
 
-        se = s / math.sqrt(n)  # error estándar
-
-        # --- Test estadístico ---
-        if test == "z":
-            stat = (xbar - mu0) / se
-            dist = norm(0, 1)
-            crit = dist.ppf(1 - alpha/2) if alt == "!=" else dist.ppf(1 - alpha)
-        elif test == "t":
-            stat = (xbar - mu0) / se
-            dist = t(df=n-1)
-            crit = dist.ppf(1 - alpha/2) if alt == "!=" else dist.ppf(1 - alpha)
-        else:
-            raise ValueError("Unsupported test type")
-
-        # --- p-valor según hipótesis ---
-        if alt == "!=":
-            p_value = 2 * (1 - dist.cdf(abs(stat)))
-        elif alt == ">":
-            p_value = 1 - dist.cdf(stat)
-        else:  # alt == "<"
-            p_value = dist.cdf(stat)
-
-        # --- Intervalo de confianza ---
-        if test == "z":
-            z_val = norm.ppf(1 - alpha/2)
-            ci = [xbar - z_val * se, xbar + z_val * se]
-            latex_ci = (
-                r"CI = \bar{x} \pm z_{\alpha/2}\cdot \frac{\sigma}{\sqrt{n}}"
+        # =============================
+        # Z-test y T-test (medias)
+        # =============================
+        if test in ["z", "t"]:
+            xbar, mu0, s, n, alpha, alt = (
+                data.xbar, data.mu0, data.s, data.n, data.alpha, data.alternative
             )
-        else:  # t-test
-            t_val = t.ppf(1 - alpha/2, df=n-1)
-            ci = [xbar - t_val * se, xbar + t_val * se]
-            latex_ci = (
-                r"CI = \bar{x} \pm t_{\alpha/2,n-1}\cdot \frac{s}{\sqrt{n}}"
-            )
+            se = s / math.sqrt(n)
 
-        decision = "Reject H0" if p_value < alpha else "Fail to reject H0"
+            if test == "z":
+                stat = (xbar - mu0) / se
+                dist = norm(0, 1)
+                z_val = norm.ppf(1 - alpha/2)
+                ci = [xbar - z_val * se, xbar + z_val * se]
+                latex_ci = r"CI = \bar{x} \pm z_{\alpha/2}\cdot \frac{\sigma}{\sqrt{n}}"
+            else:  # T-test
+                stat = (xbar - mu0) / se
+                dist = t(df=n-1)
+                t_val = t.ppf(1 - alpha/2, df=n-1)
+                ci = [xbar - t_val * se, xbar + t_val * se]
+                latex_ci = r"CI = \bar{x} \pm t_{\alpha/2,n-1}\cdot \frac{s}{\sqrt{n}}"
 
-        return {
-            "test": test,
-            "statistic": stat,
-            "p_value": p_value,
-            "alpha": alpha,
-            "alternative": alt,
-            "ci": ci,
-            "latex_ci": latex_ci,
-            "decision": decision,
-            "inputs": data.dict()
-        }
+            # --- p-valor según hipótesis ---
+            if alt == "!=":
+                p_value = 2 * (1 - dist.cdf(abs(stat)))
+            elif alt == ">":
+                p_value = 1 - dist.cdf(stat)
+            else:  # alt == "<"
+                p_value = dist.cdf(stat)
+
+            decision = "Reject H0" if p_value < alpha else "Fail to reject H0"
+
+            return {
+                "test": test,
+                "statistic": stat,
+                "p_value": p_value,
+                "alpha": alpha,
+                "alternative": alt,
+                "ci": ci,
+                "latex_ci": latex_ci,
+                "decision": decision,
+                "inputs": data.dict()
+            }
+
+        # =============================
+        # χ² Test (varianza)
+        # =============================
+        if test == "chi2":
+            s2, n, sigma0, alpha, alt = data.s, data.n, data.mu0, data.alpha, data.alternative
+            df = n - 1
+            stat = (df * s2) / sigma0
+
+            # Intervalo de confianza para la varianza
+            lower = (df * s2) / chi2.ppf(1 - alpha/2, df)
+            upper = (df * s2) / chi2.ppf(alpha/2, df)
+            ci = [lower, upper]
+
+            # Valor-p según hipótesis
+            if alt == "!=":
+                p_value = 2 * min(chi2.cdf(stat, df), 1 - chi2.cdf(stat, df))
+            elif alt == ">":
+                p_value = 1 - chi2.cdf(stat, df)
+            else:
+                p_value = chi2.cdf(stat, df)
+
+            decision = "Reject H0" if p_value < alpha else "Fail to reject H0"
+
+            return {
+                "test": "chi2",
+                "statistic": stat,
+                "p_value": p_value,
+                "ci": ci,
+                "latex_ci": r"CI = \left[\frac{(n-1)s^2}{\chi^2_{1-\alpha/2,n-1}}, \frac{(n-1)s^2}{\chi^2_{\alpha/2,n-1}}\right]",
+                "decision": decision,
+                "inputs": data.dict()
+            }
+
+        # =============================
+        # ANOVA (One-Way)
+        # =============================
+        if test == "anova":
+            groups = data.groups
+            alpha = data.alpha
+
+            k = len(groups)  # número de grupos
+            N = sum(len(g) for g in groups)  # total observaciones
+            grand_mean = sum(sum(g) for g in groups) / N
+
+            # Suma de cuadrados entre grupos
+            SSB = sum(len(g) * (sum(g)/len(g) - grand_mean)**2 for g in groups)
+            df_between = k - 1
+
+            # Suma de cuadrados dentro de grupos
+            SSW = sum(sum((x - (sum(g)/len(g)))**2 for x in g) for g in groups)
+            df_within = N - k
+
+            MSB = SSB / df_between
+            MSW = SSW / df_within
+            F_stat = MSB / MSW
+
+            # Valor-p
+            p_value = 1 - f.cdf(F_stat, df_between, df_within)
+
+            decision = "Reject H0" if p_value < alpha else "Fail to reject H0"
+
+            return {
+                "test": "anova",
+                "statistic": F_stat,
+                "p_value": p_value,
+                "decision": decision,
+                "df_between": df_between,
+                "df_within": df_within,
+                "inputs": data.dict(),
+                "explanation": "ANOVA tests whether at least one group mean differs."
+            }
+
+        # =============================
+        # Si el test no es soportado
+        # =============================
+        raise ValueError("Unsupported test type")

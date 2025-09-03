@@ -12,6 +12,8 @@ type Props = {
   ci?: number[];
   latex_ci?: string;
   decision?: string;
+  df_between?: number; // ANOVA
+  df_within?: number; // ANOVA
   error?: string;
 };
 
@@ -24,6 +26,8 @@ export default function InferenceResult({
   ci,
   latex_ci,
   decision,
+  df_between,
+  df_within,
   error,
 }: Props) {
   if (error) {
@@ -35,7 +39,7 @@ export default function InferenceResult({
     );
   }
 
-  if (!statistic || !ci) {
+  if (!statistic) {
     return (
       <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6 text-center">
         <p className="text-gray-500">
@@ -45,43 +49,62 @@ export default function InferenceResult({
     );
   }
 
-  const ciText = `[${ci[0].toFixed(4)}, ${ci[1].toFixed(4)}]`;
+  const ciText =
+    ci && ci.length === 2
+      ? `[${ci[0].toFixed(4)}, ${ci[1].toFixed(4)}]`
+      : undefined;
 
   return (
     <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6">
       <h2 className="text-xl font-bold mb-6 text-center">
-        Inference Results ({test?.toUpperCase()}-test)
+        Inference Results ({test?.toUpperCase()})
       </h2>
 
-      {/* Intervalo de confianza */}
-      <div className="mb-6">
-        <h3 className="font-semibold mb-2">Confidence Interval</h3>
-        {latex_ci && <BlockMath math={latex_ci} />}
-        <p className="text-gray-800">
-          <strong>CI:</strong> {ciText}
-        </p>
-      </div>
+      {/* IC solo para Z, T, χ² */}
+      {ci && (test === "z" || test === "t" || test === "chi2") && (
+        <div className="mb-6">
+          <h3 className="font-semibold mb-2">Confidence Interval</h3>
+          {latex_ci && <BlockMath math={latex_ci} />}
+          <p className="text-gray-800">
+            <strong>CI:</strong> {ciText}
+          </p>
+        </div>
+      )}
 
-      {/* Estadístico y valor p */}
+      {/* Estadístico + valor-p */}
       <div className="mb-6 space-y-2">
         <h3 className="font-semibold">Hypothesis Test</h3>
         <p>
           <strong>Statistic:</strong> {statistic.toFixed(4)}
         </p>
         <p>
-          <strong>p-value:</strong> {p_value?.toFixed(6)}
+          <strong>p-value:</strong>{" "}
+          {p_value !== undefined ? p_value.toExponential(4) : "—"}
         </p>
-        <p>
-          <strong>Significance level (α):</strong> {alpha}
-        </p>
-        <p>
-          <strong>Alternative hypothesis:</strong>{" "}
-          {alternative === "!=" && (
-            <InlineMath math={"H_1: \\mu \\neq \\mu_0"} />
-          )}
-          {alternative === ">" && <InlineMath math={"H_1: \\mu > \\mu_0"} />}
-          {alternative === "<" && <InlineMath math={"H_1: \\mu < \\mu_0"} />}
-        </p>
+        {alpha !== undefined && (
+          <p>
+            <strong>Significance level (α):</strong> {alpha}
+          </p>
+        )}
+
+        {/* Hipótesis alternativa (solo Z, T, χ²) */}
+        {(test === "z" || test === "t" || test === "chi2") && (
+          <p>
+            <strong>Alternative hypothesis:</strong>{" "}
+            {alternative === "!=" && (
+              <InlineMath math={"H_1: \\mu \\neq \\mu_0"} />
+            )}
+            {alternative === ">" && <InlineMath math={"H_1: \\mu > \\mu_0"} />}
+            {alternative === "<" && <InlineMath math={"H_1: \\mu < \\mu_0"} />}
+          </p>
+        )}
+
+        {/* ANOVA extra info */}
+        {test === "anova" && (
+          <p>
+            <strong>Degrees of freedom:</strong> ({df_between}, {df_within})
+          </p>
+        )}
       </div>
 
       {/* Decisión */}

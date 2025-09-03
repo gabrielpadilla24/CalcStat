@@ -35,7 +35,7 @@ import UniformCalculator from "./pages/ProbabilityAndStats/Uniform/UniformCalcul
 import BayesCalculator from "./pages/ProbabilityAndStats/Bayes/BayesCalculator";
 import EVMCalculator from "./pages/ProbabilityAndStats/EVM/EVMCalculator";
 import CLTCalculator from "./pages/ProbabilityAndStats/CLT/CLTCalculator";
-import InferenceCalculator from "./pages/ProbabilityAndStats/Inference/InferenceCalculator";
+import InferenceCalculator from "./pages/ProbabilityAndStats/Inference/InterferenceCalculator";
 
 const App = () => {
   return (
