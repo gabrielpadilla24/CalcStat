@@ -1,5 +1,8 @@
 "use client";
 
+import "katex/dist/katex.min.css";
+import { InlineMath } from "react-katex";
+
 type Props = {
   simMean?: number;
   simVar?: number;
@@ -12,6 +15,22 @@ type Props = {
   distribution?: string;
   params?: Record<string, number>;
   error?: string;
+};
+
+// 🔹 Helper para formatear distribución en LaTeX
+const formatParamsLatex = (
+  distribution?: string,
+  params?: Record<string, number>
+) => {
+  if (!distribution || !params) return "";
+
+  const upper = distribution.charAt(0).toUpperCase() + distribution.slice(1);
+
+  const paramStr = Object.entries(params)
+    .map(([k, v]) => `${k}=${v}`)
+    .join(", ");
+
+  return `\\text{${upper}}(${paramStr})`;
 };
 
 export default function CLTResult({
@@ -53,8 +72,8 @@ export default function CLTResult({
       {/* General info */}
       <div className="space-y-2 text-gray-800 mb-6">
         <p>
-          <strong>Distribution:</strong> {distribution?.toUpperCase()}{" "}
-          {params && JSON.stringify(params)}
+          <strong>Distribution:</strong>{" "}
+          <InlineMath math={formatParamsLatex(distribution, params)} />
         </p>
         <p>
           <strong>Sample size (n):</strong> {n}
@@ -88,8 +107,8 @@ export default function CLTResult({
         <p>
           According to the <strong>Central Limit Theorem</strong>, the sampling
           distribution of the mean approaches a Normal distribution with
-          parameters <code>N(μ, σ² / n)</code> as <em>n</em> grows, regardless
-          of the original distribution.
+          parameters <InlineMath math={"N(\\mu, \\sigma^2 / n)"} /> as{" "}
+          <em>n</em> grows, regardless of the original distribution.
         </p>
       </div>
     </div>
