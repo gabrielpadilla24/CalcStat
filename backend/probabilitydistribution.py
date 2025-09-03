@@ -1,8 +1,9 @@
 from pydantic import BaseModel
 from typing import Union, Literal, List, Optional
-from scipy.stats import binom, poisson, geom, norm, expon, uniform, bernoulli
+from scipy.stats import binom, poisson, geom, norm, expon, uniform, bernoulli, t
 import numpy as np
 import sympy as sp
+import math
 
 
 # --- Query models ---
@@ -82,6 +83,15 @@ class CLTData(BaseModel):
     params: dict                     # parámetros de la distribución
     n: int                           # tamaño de muestra
     n_sim: int   
+
+class InferenceData(BaseModel):
+    test: Literal["z", "t"]             # tipo de prueba
+    xbar: float                         # media muestral
+    mu0: float                          # valor hipotético de la media bajo H0
+    s: float                            # desviación estándar (σ conocida o s muestral)
+    n: int                              # tamaño de muestra
+    alpha: float = 0.05                 # nivel de significancia (default 5%)
+    alternative: Literal["!=", ">", "<"] = "!="  # tipo de hipótesis alternativa
 
 
 # --- Unified Handler class ---
@@ -431,4 +441,60 @@ class ProbabilityDistribution:
             "distribution": dist_name,
             "params": params,
             "graphData": graph_data,  # 🔥 listo para frontend
+        }
+    
+    @staticmethod
+    def compute_inference(data: InferenceData):
+        xbar, mu0, s, n, alpha, test, alt = (
+            data.xbar, data.mu0, data.s, data.n, data.alpha, data.test, data.alternative
+        )
+
+        se = s / math.sqrt(n)  # error estándar
+
+        # --- Test estadístico ---
+        if test == "z":
+            stat = (xbar - mu0) / se
+            dist = norm(0, 1)
+            crit = dist.ppf(1 - alpha/2) if alt == "!=" else dist.ppf(1 - alpha)
+        elif test == "t":
+            stat = (xbar - mu0) / se
+            dist = t(df=n-1)
+            crit = dist.ppf(1 - alpha/2) if alt == "!=" else dist.ppf(1 - alpha)
+        else:
+            raise ValueError("Unsupported test type")
+
+        # --- p-valor según hipótesis ---
+        if alt == "!=":
+            p_value = 2 * (1 - dist.cdf(abs(stat)))
+        elif alt == ">":
+            p_value = 1 - dist.cdf(stat)
+        else:  # alt == "<"
+            p_value = dist.cdf(stat)
+
+        # --- Intervalo de confianza ---
+        if test == "z":
+            z_val = norm.ppf(1 - alpha/2)
+            ci = [xbar - z_val * se, xbar + z_val * se]
+            latex_ci = (
+                r"CI = \bar{x} \pm z_{\alpha/2}\cdot \frac{\sigma}{\sqrt{n}}"
+            )
+        else:  # t-test
+            t_val = t.ppf(1 - alpha/2, df=n-1)
+            ci = [xbar - t_val * se, xbar + t_val * se]
+            latex_ci = (
+                r"CI = \bar{x} \pm t_{\alpha/2,n-1}\cdot \frac{s}{\sqrt{n}}"
+            )
+
+        decision = "Reject H0" if p_value < alpha else "Fail to reject H0"
+
+        return {
+            "test": test,
+            "statistic": stat,
+            "p_value": p_value,
+            "alpha": alpha,
+            "alternative": alt,
+            "ci": ci,
+            "latex_ci": latex_ci,
+            "decision": decision,
+            "inputs": data.dict()
         }

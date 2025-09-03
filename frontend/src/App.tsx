@@ -35,6 +35,7 @@ import UniformCalculator from "./pages/ProbabilityAndStats/Uniform/UniformCalcul
 import BayesCalculator from "./pages/ProbabilityAndStats/Bayes/BayesCalculator";
 import EVMCalculator from "./pages/ProbabilityAndStats/EVM/EVMCalculator";
 import CLTCalculator from "./pages/ProbabilityAndStats/CLT/CLTCalculator";
+import InferenceCalculator from "./pages/ProbabilityAndStats/Inference/InferenceCalculator";
 
 const App = () => {
   return (
@@ -184,6 +185,11 @@ const App = () => {
         <Route
           path="/probabilityandstats/expectedvalueandmoments"
           element={<EVMCalculator />}
+        />
+
+        <Route
+          path="/probabilityandstats/inference"
+          element={<InferenceCalculator />}
         />
 
         <Route path="/probabilityandstats/clt" element={<CLTCalculator />} />

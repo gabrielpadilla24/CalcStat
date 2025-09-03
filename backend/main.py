@@ -12,7 +12,7 @@ from sympy import latex as sympy_latex
 from sympy.parsing.latex import parse_latex
 import re
 from GaussianLinearSystem import GaussianLinearSystem
-from probabilitydistribution import BinomialData, ProbabilityDistribution, PoissonData, GeometricData, NormalData, ExponentialDistrData, UniformData, BayesData, EVMData, CLTData
+from probabilitydistribution import BinomialData, ProbabilityDistribution, PoissonData, GeometricData, NormalData, ExponentialDistrData, UniformData, BayesData, EVMData, CLTData, InferenceData
 
 
 
@@ -1706,5 +1706,16 @@ def expected_value_and_moments(data: EVMData):
 def clt_endpoint(data: CLTData):
     try:
         return ProbabilityDistribution.compute_clt(data)
+    except Exception as e:
+        return {"error": str(e)}
+    
+
+#---------------------------------
+# INFERENCE (Z & T tests)
+#---------------------------------
+@app.post("/inference")
+def inference_endpoint(data: InferenceData):
+    try:
+        return ProbabilityDistribution.compute_inference(data)
     except Exception as e:
         return {"error": str(e)}
