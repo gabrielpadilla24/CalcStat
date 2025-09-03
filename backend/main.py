@@ -12,7 +12,7 @@ from sympy import latex as sympy_latex
 from sympy.parsing.latex import parse_latex
 import re
 from GaussianLinearSystem import GaussianLinearSystem
-from probabilitydistribution import BinomialData, ProbabilityDistribution, PoissonData, GeometricData, NormalData, ExponentialDistrData, UniformData, BayesData, EVMData, CLTData, InferenceData, RegressionData
+from probabilitydistribution import BinomialData, ProbabilityDistribution, PoissonData, GeometricData, NormalData, ExponentialDistrData, UniformData, BayesData, EVMData, CLTData, InferenceData
 
 
 
@@ -1720,13 +1720,3 @@ def inference_endpoint(data: InferenceData):
     except Exception as e:
         return {"error": str(e)}
 
-
-#---------------------------------
-# REGRESSION (Simple & Multiple)
-#---------------------------------
-@app.post("/regression")
-def regression_endpoint(data: RegressionData):
-    try:
-        return ProbabilityDistribution.compute_regression(data)
-    except Exception as e:
-        return {"error": str(e)}
