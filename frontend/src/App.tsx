@@ -36,6 +36,7 @@ import BayesCalculator from "./pages/ProbabilityAndStats/Bayes/BayesCalculator";
 import EVMCalculator from "./pages/ProbabilityAndStats/EVM/EVMCalculator";
 import CLTCalculator from "./pages/ProbabilityAndStats/CLT/CLTCalculator";
 import InferenceCalculator from "./pages/ProbabilityAndStats/Inference/InterferenceCalculator";
+import RegressionCalculator from "./pages/ProbabilityAndStats/Regression/RegressionCalculator";
 
 const App = () => {
   return (
@@ -190,6 +191,11 @@ const App = () => {
         <Route
           path="/probabilityandstats/inference"
           element={<InferenceCalculator />}
+        />
+
+        <Route
+          path="/probabilityandstats/regression"
+          element={<RegressionCalculator />}
         />
 
         <Route path="/probabilityandstats/clt" element={<CLTCalculator />} />

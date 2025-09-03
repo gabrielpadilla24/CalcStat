@@ -4,6 +4,8 @@ from scipy.stats import binom, poisson, geom, norm, expon, uniform, bernoulli, t
 import numpy as np
 import sympy as sp
 import math
+import statsmodels.api as sm
+
 
 
 # --- Query models ---
@@ -93,6 +95,12 @@ class InferenceData(BaseModel):
     alpha: float = 0.05            # nivel de significancia
     alternative: Literal["!=", ">", "<"] = "!="
     groups: list[list[float]] | None = None   # para ANOVA
+
+
+class RegressionData(BaseModel):
+    X: List[List[float]]   # Matriz de predictores (puede ser 1 o varias columnas)
+    Y: List[float]         # Variable dependiente
+
 
 # --- Unified Handler class ---
 class ProbabilityDistribution:
@@ -567,3 +575,60 @@ class ProbabilityDistribution:
         # Si el test no es soportado
         # =============================
         raise ValueError("Unsupported test type")
+    
+    @staticmethod
+    def compute_regression(data: RegressionData):
+        try:
+            X = np.array(data.X, dtype=float)
+            Y = np.array(data.Y, dtype=float)
+
+            if X.ndim == 1:  # caso simple: lista plana
+                X = X.reshape(-1, 1)
+
+            # Intercepto
+            if data.include_intercept:
+                X = sm.add_constant(X)
+
+            model = sm.OLS(Y, X).fit()
+
+            # Nombres de coeficientes
+            coef_names = (
+                ["β0"] + [f"β{i+1}" for i in range(X.shape[1] - 1)]
+                if data.include_intercept
+                else [f"β{i+1}" for i in range(X.shape[1])]
+            )
+
+            # Coeficientes y estadísticos
+            coefs = dict(zip(coef_names, model.params.round(5).tolist()))
+            stderr = dict(zip(coef_names, model.bse.round(5).tolist()))
+            tvalues = dict(zip(coef_names, model.tvalues.round(5).tolist()))
+            pvalues = dict(zip(coef_names, model.pvalues.round(5).tolist()))
+
+            # Métricas globales
+            r2 = float(round(model.rsquared, 5))
+            r2_adj = float(round(model.rsquared_adj, 5))
+            fstat = float(round(model.fvalue, 5)) if model.fvalue is not None else None
+            f_pvalue = float(round(model.f_pvalue, 5)) if model.f_pvalue is not None else None
+
+            # Ecuación en LaTeX
+            terms = []
+            for i, name in enumerate(coef_names):
+                if name == "β0":
+                    terms.append(f"{coefs[name]}")
+                else:
+                    terms.append(f"{coefs[name]} X_{i}")
+            latex_eq = "y = " + " + ".join(terms)
+
+            return {
+                "coefficients": coefs,
+                "stderr": stderr,
+                "tvalues": tvalues,
+                "pvalues": pvalues,
+                "r2": r2,
+                "r2_adj": r2_adj,
+                "fstat": fstat,
+                "f_pvalue": f_pvalue,
+                "equation_latex": latex_eq,
+            }
+        except Exception as e:
+            return {"error": str(e)}
