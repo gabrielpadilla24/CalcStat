@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 from typing import Union, Literal, List, Optional
-from scipy.stats import binom, poisson, geom, norm, expon
+from scipy.stats import binom, poisson, geom, norm, expon, uniform, bernoulli
 import numpy as np
 import sympy as sp
 
@@ -75,6 +75,13 @@ class EVMData(BaseModel):
     equation: Optional[str] = None
     interval: Optional[List[float]] = None
     momentOrders: Optional[List[int]] = [1, 2, 3]
+
+
+class CLTData(BaseModel):
+    distribution: str                # "bernoulli", "binomial", "poisson", "uniform", "exponential", "normal"
+    params: dict                     # parámetros de la distribución
+    n: int                           # tamaño de muestra
+    n_sim: int   
 
 
 # --- Unified Handler class ---
@@ -356,3 +363,57 @@ class ProbabilityDistribution:
 
         except Exception as e:
             return {"error": str(e)}
+        
+
+    @staticmethod
+    def compute_clt(data: CLTData):
+        dist_name = data.distribution.lower()
+        params = data.params
+        n = data.n
+        n_sim = data.n_sim
+
+        # --- Seleccionar distribución ---
+        if dist_name == "bernoulli":
+            p = params.get("p", 0.5)
+            dist = bernoulli(p)
+        elif dist_name == "binomial":
+            n0, p = params.get("n", 10), params.get("p", 0.5)
+            dist = binom(n0, p)
+        elif dist_name == "poisson":
+            lam = params.get("lam", 1)
+            dist = poisson(lam)
+        elif dist_name == "uniform":
+            a, b = params.get("a", 0), params.get("b", 1)
+            dist = uniform(a, b - a)
+        elif dist_name == "exponential":
+            lam = params.get("lam", 1)
+            dist = expon(scale=1/lam)
+        elif dist_name == "normal":
+            mu, sigma = params.get("mu", 0), params.get("sigma", 1)
+            dist = norm(mu, sigma)
+        else:
+            raise ValueError(f"Unknown distribution: {dist_name}")
+
+        # --- Simulación de medias ---
+        samples = dist.rvs(size=(n_sim, n))
+        sample_means = samples.mean(axis=1)
+
+        # --- Valores teóricos ---
+        mu = dist.mean()
+        sigma2 = dist.var()
+        theo_mean = mu
+        theo_var = sigma2 / n
+
+        return {
+            "simulatedMeans": sample_means.tolist(),
+            "simMean": float(np.mean(sample_means)),
+            "simVar": float(np.var(sample_means)),
+            "theoMean": float(theo_mean),
+            "theoVar": float(theo_var),
+            "mu": float(mu),
+            "sigma2": float(sigma2),
+            "n": n,
+            "n_sim": n_sim,
+            "distribution": dist_name,
+            "params": params,
+        }

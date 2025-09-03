@@ -12,7 +12,7 @@ from sympy import latex as sympy_latex
 from sympy.parsing.latex import parse_latex
 import re
 from GaussianLinearSystem import GaussianLinearSystem
-from probabilitydistribution import BinomialData, ProbabilityDistribution, PoissonData, GeometricData, NormalData, ExponentialDistrData, UniformData, BayesData, EVMData
+from probabilitydistribution import BinomialData, ProbabilityDistribution, PoissonData, GeometricData, NormalData, ExponentialDistrData, UniformData, BayesData, EVMData, CLTData
 
 
 
@@ -1695,5 +1695,16 @@ def bayes_endpoint(data: BayesData):
 def expected_value_and_moments(data: EVMData):
     try:
         return ProbabilityDistribution.compute_evm(data)
+    except Exception as e:
+        return {"error": str(e)}
+
+
+#---------------------------------
+# CENTRAL LIMIT THEOREM SIMULATOR
+#---------------------------------
+@app.post("/clt")
+def clt_endpoint(data: CLTData):
+    try:
+        return ProbabilityDistribution.compute_clt(data)
     except Exception as e:
         return {"error": str(e)}
