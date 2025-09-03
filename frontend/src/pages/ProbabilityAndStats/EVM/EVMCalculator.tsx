@@ -5,6 +5,7 @@ import NavBar from "@/components/NavBar";
 import BottomCTA from "@/components/BottomCTA";
 import EVMInput from "./components/EVMInput";
 import EVMResult from "./components/EVMResult";
+import EVMInfo from "./components/EVMInfo";
 
 type EVMResponse = {
   expectedValue?: number;
@@ -36,6 +37,7 @@ const EVMCalculator = () => {
             {result && <EVMResult {...result} />}
           </div>
         </div>
+        <EVMInfo />
       </div>
 
       <BottomCTA
