@@ -33,6 +33,7 @@ import NormalCalculator from "./pages/ProbabilityAndStats/Normal/NormalCalculato
 import ExponentialDistrCalculator from "./pages/ProbabilityAndStats/ExponentialDistr/ExponentialDistrCalculator";
 import UniformCalculator from "./pages/ProbabilityAndStats/Uniform/UniformCalculator";
 import BayesCalculator from "./pages/ProbabilityAndStats/Bayes/BayesCalculator";
+import EVMCalculator from "./pages/ProbabilityAndStats/EVM/EVMCalculator";
 
 const App = () => {
   return (
@@ -177,6 +178,11 @@ const App = () => {
         <Route
           path="/probabilityandstats/bayes"
           element={<BayesCalculator />}
+        />
+
+        <Route
+          path="/probabilityandstats/expectedvalueandmoments"
+          element={<EVMCalculator />}
         />
 
         {/* Other routes can be added here */}

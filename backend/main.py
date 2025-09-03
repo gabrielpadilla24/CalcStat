@@ -12,7 +12,7 @@ from sympy import latex as sympy_latex
 from sympy.parsing.latex import parse_latex
 import re
 from GaussianLinearSystem import GaussianLinearSystem
-from probabilitydistribution import BinomialData, ProbabilityDistribution, PoissonData, GeometricData, NormalData, ExponentialDistrData, UniformData, BayesData
+from probabilitydistribution import BinomialData, ProbabilityDistribution, PoissonData, GeometricData, NormalData, ExponentialDistrData, UniformData, BayesData, EVMData
 
 
 
@@ -1687,3 +1687,13 @@ def bayes_endpoint(data: BayesData):
     except Exception as e:
         return {"error": str(e)}
 
+
+#---------------------------------
+# EXPECTED VALUE, VARIANCE & MOMENTS
+#---------------------------------
+@app.post("/expectedvalueandmoments")
+def expected_value_and_moments(data: EVMData):
+    try:
+        return ProbabilityDistribution.compute_evm(data)
+    except Exception as e:
+        return {"error": str(e)}

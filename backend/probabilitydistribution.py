@@ -68,15 +68,13 @@ class BayesData(BaseModel):
     p_b_given_a: float         # P(B|A)
     p_b_given_not_a: float | None = None  # P(B|¬A), opcional
 
-x = sp.symbols("x")
-
 class EVMData(BaseModel):
     variableType: Literal["discrete", "continuous"]
-    equation: str              # pmf o pdf en LaTeX
-    support: Optional[List[float]] = None  # solo discreta
-    interval: Optional[List[float]] = None # solo continua [a, b]
-    momentOrders: Optional[List[int]] = [1, 2, 3]  # por defecto 1,2,3
-
+    support: Optional[List[float]] = None
+    probs: Optional[List[float]] = None
+    equation: Optional[str] = None
+    interval: Optional[List[float]] = None
+    momentOrders: Optional[List[int]] = [1, 2, 3]
 
 
 # --- Unified Handler class ---
@@ -322,50 +320,39 @@ class ProbabilityDistribution:
     @staticmethod
     def compute_evm(data: EVMData):
         try:
-            f_x = sp.parse_latex(data.equation)  # convierte de LaTeX a sympy
-            results = {}
-
             if data.variableType == "discrete":
-                if not data.support:
-                    raise ValueError("Support must be provided for discrete variables")
+                if not data.support or not data.probs:
+                    raise ValueError("Support and probabilities are required for discrete variables.")
 
-                # Normalización
-                Z = sum([f_x.subs(x, val) for val in data.support])
-                probs = [f_x.subs(x, val)/Z for val in data.support]
+                if len(data.support) != len(data.probs):
+                    raise ValueError("Support and probability arrays must have the same length.")
 
-                # Esperanza
-                E = sum([val * p for val, p in zip(data.support, probs)])
-                Var = sum([(val - E)**2 * p for val, p in zip(data.support, probs)])
-
-                results["expectedValue"] = float(E.evalf())
-                results["variance"] = float(Var.evalf())
-                results["moments"] = [
-                    {"order": k, "value": float(sum([val**k * p for val, p in zip(data.support, probs)]).evalf())}
-                    for k in data.momentOrders
-                ]
-
-            elif data.variableType == "continuous":
-                if not data.interval:
-                    raise ValueError("Interval must be provided for continuous variables")
-
-                a, b = data.interval
-                # Normalización
-                Z = sp.integrate(f_x, (x, a, b))
-                f_norm = f_x / Z
+                total_prob = sum(data.probs)
+                if abs(total_prob - 1) > 1e-6:
+                    raise ValueError("Probabilities must sum to 1.")
 
                 # Esperanza
-                E = sp.integrate(x * f_norm, (x, a, b))
-                Var = sp.integrate((x - E)**2 * f_norm, (x, a, b))
+                E = round(sum(x * p for x, p in zip(data.support, data.probs)), 3)
 
-                results["expectedValue"] = float(E.evalf())
-                results["variance"] = float(Var.evalf())
-                results["moments"] = [
-                    {"order": k, "value": float(sp.integrate((x**k) * f_norm, (x, a, b)).evalf())}
-                    for k in data.momentOrders
-                ]
+                # Varianza
+                Var = round(sum(((x - E) ** 2) * p for x, p in zip(data.support, data.probs)), 3)
 
-            return results
+                # Momentos
+                moments = []
+                for k in data.momentOrders or [1, 2, 3]:
+                    mk = round(sum((x ** k) * p for x, p in zip(data.support, data.probs)), 3)
+                    moments.append({"order": k, "value": mk})
+
+                return {
+                    "expectedValue": E,
+                    "variance": Var,
+                    "moments": moments,
+                    "variableType": "discrete",
+                }
+
+            # (más adelante: continuous con integrales)
+            else:
+                raise NotImplementedError("Continuous variables not yet supported.")
 
         except Exception as e:
             return {"error": str(e)}
-
