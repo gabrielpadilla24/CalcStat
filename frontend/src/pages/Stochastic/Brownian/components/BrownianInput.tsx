@@ -125,7 +125,7 @@ export default function BrownianInput({
       <button
         type="submit"
         disabled={loading}
-        className="mt-4 w-full bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 disabled:opacity-50"
+        className="mt-4 w-full bg-[#5FBA9B] text-white py-2 px-4 rounded-lg hover:bg-[#4FAE8D] disabled:opacity-50"
       >
         {loading ? "Simulating..." : "Simulate"}
       </button>
