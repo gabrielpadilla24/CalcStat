@@ -123,7 +123,9 @@ const LandingPage = () => {
               Stochastic Calculator brings advanced math to life.
             </p>
             <div className="w-fit pr-5 ml-20">
-              <SubmitButton text="Go to Stochastic" />
+              <Link to="/stochastic">
+                <SubmitButton text="Go to Stochastic" />
+              </Link>
             </div>
           </div>
         </div>

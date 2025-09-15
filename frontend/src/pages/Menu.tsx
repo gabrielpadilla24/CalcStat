@@ -53,16 +53,13 @@ const Menu = () => {
             From risk models to optimization tools, explore financial logic with
             precision.
           </p>
-          <button
-            disabled
-            className="bg-gray-300 text-white px-6 py-2 rounded-md"
-          >
-            Coming Soon
-          </button>
+          <Link to="/stochastic">
+            <SubmitButton text="Go to Stochastic" />
+          </Link>
         </div>
 
         {/* Stochastic */}
-        <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] text-left opacity-50 cursor-not-allowed">
+        <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] text-left ">
           <img
             src="/img/stochasticimg.png"
             alt="Stochastic Calculator"
@@ -74,12 +71,9 @@ const Menu = () => {
           <p className="text-sm text-gray-600 mb-4">
             Model uncertainty and randomness in complex systems.
           </p>
-          <button
-            disabled
-            className="bg-gray-300 text-white px-6 py-2 rounded-md"
-          >
-            Coming Soon
-          </button>
+          <Link to="/stochastic">
+            <SubmitButton text="Go to Stochastic" />
+          </Link>
         </div>
 
         {/* Calculus */}
