@@ -1,9 +1,26 @@
 "use client";
 
+import { useState } from "react";
 import NavBar from "@/components/NavBar";
 import BottomCTA from "@/components/BottomCTA";
+import BrownianInput from "./components/BrownianInput";
+import BrownianResult from "./components/BrownianResult";
+
+type BrownianResponse = {
+  params: {
+    x0: number;
+    mu: number;
+    sigma: number;
+    T: number;
+    N: number;
+    M: number;
+  };
+  chartData: { [key: string]: number | string }[];
+};
 
 const BrownianCalculator = () => {
+  const [result, setResult] = useState<BrownianResponse | undefined>(undefined);
+
   return (
     <>
       <NavBar />
@@ -12,10 +29,16 @@ const BrownianCalculator = () => {
           Brownian Motion Simulator
         </h1>
 
-        {/* Aquí luego irán el input y el resultado */}
         <div className="max-w-[1440px] mx-auto flex flex-col lg:flex-row gap-6 px-6 justify-center">
-          <div className="flex-1 max-w-[600px]">{/* INPUT */}</div>
-          <div className="flex-1 max-w-[600px]">{/* RESULT */}</div>
+          {/* Input form */}
+          <div className="flex-1 max-w-[600px]">
+            <BrownianInput onResult={setResult} />
+          </div>
+
+          {/* Simulation result */}
+          <div className="flex-1 max-w-[600px]">
+            <BrownianResult result={result} />
+          </div>
         </div>
       </div>
       <BottomCTA

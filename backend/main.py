@@ -13,7 +13,7 @@ from sympy.parsing.latex import parse_latex
 import re
 from GaussianLinearSystem import GaussianLinearSystem
 from probabilitydistribution import BinomialData, ProbabilityDistribution, PoissonData, GeometricData, NormalData, ExponentialDistrData, UniformData, BayesData, EVMData, CLTData, InferenceData
-
+from stochastic import BrownianData, StochasticSimulator
 
 
 
@@ -1720,3 +1720,14 @@ def inference_endpoint(data: InferenceData):
     except Exception as e:
         return {"error": str(e)}
 
+
+
+#---------------------------------
+# BROWNIAN MOTION SIMULATOR
+#---------------------------------
+@app.post("/brownian")
+def brownian_endpoint(data: BrownianData):
+    try:
+        return StochasticSimulator.simulate_brownian(data)
+    except Exception as e:
+        return {"error": str(e)}
