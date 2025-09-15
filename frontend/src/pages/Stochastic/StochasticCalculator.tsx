@@ -22,20 +22,20 @@ const StochasticCalculator = () => {
 
       {/* Cards (Stochastic) */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto px-4 pb-20">
-        {/*BINOMIAL DISTRIBUTION */}
+        {/*Brownian Motion Simulator */}
         <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] flex flex-col justify-between text-left">
           <img
-            src="/img/binomial.png"
-            alt="Binomial Distribution"
+            src="/img/brownian.png"
+            alt="Brownian Motion Simulator"
             className="h-40 w-full object-cover mb-4 rounded"
           />
           <h2 className="text-xl font-bold text-gray-800 mb-2">
-            Binomial Distribution
+            Brownian Motion Simulator
           </h2>
           <p className="text-sm text-gray-600 mb-4">
-            Explore the binomial distribution and its properties.
+            Explore the Brownian motion and its properties.
           </p>
-          <Link to="/probabilityandstats/binomialdistribution">
+          <Link to="/stochastic/brownian">
             <SubmitButton text="Open Calculator" />
           </Link>
         </div>

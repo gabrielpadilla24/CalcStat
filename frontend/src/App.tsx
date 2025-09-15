@@ -37,6 +37,7 @@ import EVMCalculator from "./pages/ProbabilityAndStats/EVM/EVMCalculator";
 import CLTCalculator from "./pages/ProbabilityAndStats/CLT/CLTCalculator";
 import InferenceCalculator from "./pages/ProbabilityAndStats/Inference/InterferenceCalculator";
 import StochasticCalculator from "./pages/Stochastic/StochasticCalculator";
+import BrownianCalculator from "./pages/Stochastic/Brownian/BrownianCalculator";
 
 const App = () => {
   return (
@@ -196,6 +197,8 @@ const App = () => {
         <Route path="/probabilityandstats/clt" element={<CLTCalculator />} />
 
         <Route path="/stochastic" element={<StochasticCalculator />} />
+
+        <Route path="/stochastic/brownian" element={<BrownianCalculator />} />
 
         {/* Other routes can be added here */}
         <Route path="/calculators" element={<Menu />} />
