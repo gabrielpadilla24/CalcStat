@@ -30,7 +30,7 @@ export default function BrownianResult({
 }) {
   if (!result || !result.chartData || result.chartData.length === 0) {
     return (
-      <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6 text-center">
+      <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6 text-center h-full">
         <p className="text-gray-500">
           No simulation yet. Submit parameters to see results.
         </p>
@@ -49,34 +49,37 @@ export default function BrownianResult({
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6">
+    <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6 h-full flex flex-col">
       <h2 className="text-xl font-semibold mb-4 text-center">
         Simulated Trajectories
       </h2>
 
-      <ResponsiveContainer width="100%" height={400}>
-        <LineChart data={chartData}>
-          <CartesianGrid strokeDasharray="3 3" />
-          <XAxis
-            dataKey="step"
-            label={{ value: "Step", position: "insideBottom", offset: -5 }}
-          />
-          <YAxis />
-          <Tooltip />
-          <Legend />
-
-          {Array.from({ length: M }, (_, idx) => (
-            <Line
-              key={idx}
-              type="monotone"
-              dataKey={`traj${idx}`}
-              stroke={`hsl(${(idx * 360) / M}, 70%, 50%)`}
-              dot={false}
-              strokeWidth={2}
+      {/* 🔹 Usamos flex-grow para que el gráfico llene el espacio */}
+      <div className="flex-1">
+        <ResponsiveContainer width="100%" height="100%">
+          <LineChart data={chartData}>
+            <CartesianGrid strokeDasharray="3 3" />
+            <XAxis
+              dataKey="step"
+              label={{ value: "Step", position: "insideBottom", offset: -5 }}
             />
-          ))}
-        </LineChart>
-      </ResponsiveContainer>
+            <YAxis />
+            <Tooltip />
+            <Legend />
+
+            {Array.from({ length: M }, (_, idx) => (
+              <Line
+                key={idx}
+                type="monotone"
+                dataKey={`traj${idx}`}
+                stroke={`hsl(${(idx * 360) / M}, 70%, 50%)`}
+                dot={false}
+                strokeWidth={2}
+              />
+            ))}
+          </LineChart>
+        </ResponsiveContainer>
+      </div>
 
       {/* 🔽 Scroll button */}
       <div
