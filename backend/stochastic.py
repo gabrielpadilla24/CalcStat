@@ -448,7 +448,7 @@ class StochasticSimulator:
                 ]
 
             elif data.process == "Geometric Brownian motion":
-                qv_formula = r"[X]_t = \int_0^t \sigma^2 e^{2(\mu-\tfrac{1}{2}\sigma^2)s + 2\sigma W_s} ds"
+                qv_formula = r"[X]_t = \int_0^t (\sigma X_s)^2 ds"
                 qv_value = "Integral form only"
                 steps = [
                     r"dX_t = \mu X_t dt + \sigma X_t dW_t",
@@ -485,7 +485,7 @@ class StochasticSimulator:
             if data.N > 5000 or data.M > 200:
                 return {
                     "error": "Too many steps/trajectories. "
-                             "Please try with N ≤ 5000 and M ≤ 200."
+                            "Please try with N ≤ 5000 and M ≤ 200."
                 }
 
             dt = data.T / data.N
@@ -503,6 +503,11 @@ class StochasticSimulator:
                 X_paths = data.a * W_paths
             elif data.process == "Shifted Brownian motion":
                 X_paths = data.a * W_paths + data.b
+            elif data.process == "Geometric Brownian motion":
+                mu = data.mu or 0.05
+                sigma = data.sigma or 0.2
+                time_grid = np.linspace(0, data.T, data.N + 1)
+                X_paths = np.exp((mu - 0.5 * sigma**2) * time_grid + sigma * W_paths)
             else:
                 return {"error": f"Monte Carlo not implemented for {data.process}"}
 
@@ -533,4 +538,3 @@ class StochasticSimulator:
 
         else:
             return {"error": f"Unknown mode: {data.mode}"}
-
