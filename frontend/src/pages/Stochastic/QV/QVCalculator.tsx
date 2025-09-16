@@ -5,6 +5,7 @@ import NavBar from "@/components/NavBar";
 import BottomCTA from "@/components/BottomCTA";
 import QVInput from "./components/QVInput";
 import QVResult from "./components/QVResult";
+import QVInfo from "./components/QVInfo";
 
 type QVData = {
   process: string;
@@ -54,6 +55,11 @@ const QVCalculator = () => {
           <div className="flex-1 max-w-3xl">
             <QVResult result={result} />
           </div>
+        </div>
+
+        {/* Info Card */}
+        <div className="max-w-[1230px] mx-auto px-6 mt-6">
+          <QVInfo />
         </div>
       </div>
 
