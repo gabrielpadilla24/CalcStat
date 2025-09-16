@@ -23,6 +23,14 @@ class ItoLemmaData(BaseModel):
     mu: str       # drift μ(t,x)
     sigma: str    # volatility σ(t,x) 
 
+class SDEData(BaseModel):
+    x0: float
+    mu: str
+    sigma: str
+    T: float
+    N: int
+    M: int
+
 def normalize_latex(expr: str) -> str:
     expr = expr.replace(r"\cdot", "*")
     expr = expr.replace("^", "**")
@@ -138,3 +146,47 @@ class StochasticSimulator:
             "final": steps[-1],
             "steps": steps
         }
+    
+    @staticmethod
+    def solve_sde(data: SDEData):
+        # Variables simbólicas
+        t, x = sp.symbols("t x")
+
+        # Normalizar y parsear drift y sigma
+        def normalize(expr: str) -> str:
+            expr = expr.replace(r"\cdot", "*").replace("^", "**")
+            return expr.strip()
+
+        mu_expr = sp.sympify(normalize(data.mu), locals={"t": t, "x": x})
+        sigma_expr = sp.sympify(normalize(data.sigma), locals={"t": t, "x": x})
+
+        mu_func = sp.lambdify((t, x), mu_expr, "numpy")
+        sigma_func = sp.lambdify((t, x), sigma_expr, "numpy")
+
+        # Parámetros
+        dt = data.T / data.N
+        sqrt_dt = np.sqrt(dt)
+
+        # Simulación de trayectorias
+        paths = np.zeros((data.M, data.N + 1))
+        paths[:, 0] = data.x0
+
+        for i in range(data.N):
+            t_i = i * dt
+            dW = np.random.normal(0, sqrt_dt, size=data.M)
+            X_i = paths[:, i]
+            paths[:, i+1] = X_i + mu_func(t_i, X_i) * dt + sigma_func(t_i, X_i) * dW
+
+        # 🔹 Formato Recharts
+        chart_data = []
+        for step in range(data.N + 1):
+            row = {"step": step}
+            for m in range(data.M):
+                row[f"traj{m}"] = float(paths[m, step])
+            chart_data.append(row)
+
+        return {
+            "params": data.dict(),
+            "chartData": chart_data
+        }
+
