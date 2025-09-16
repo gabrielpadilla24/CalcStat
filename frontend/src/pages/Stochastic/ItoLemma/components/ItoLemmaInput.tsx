@@ -1,6 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import { addStyles, EditableMathField } from "react-mathquill";
+
+addStyles();
 
 type ItoLemmaData = {
   f: string;
@@ -22,7 +25,7 @@ export default function ItoLemmaInput({
 }: {
   onResult: (result: ItoLemmaResponse) => void;
 }) {
-  const [f, setF] = useState("t*x**2");
+  const [f, setF] = useState("t*x^2");
   const [mu, setMu] = useState("0.05*x");
   const [sigma, setSigma] = useState("0.2*x");
 
@@ -38,12 +41,8 @@ export default function ItoLemmaInput({
         body: JSON.stringify(payload),
       });
 
-      const data = await res.json();
-      if (data.error) {
-        alert("Error: " + data.error);
-      } else {
-        onResult(data);
-      }
+      const data = (await res.json()) as ItoLemmaResponse;
+      onResult(data);
     } catch {
       alert("❌ Failed to connect to backend.");
     }
@@ -52,7 +51,7 @@ export default function ItoLemmaInput({
   return (
     <form
       onSubmit={handleSubmit}
-      className="bg-white rounded-xl shadow-md border border-gray-200 p-6 space-y-4"
+      className="bg-white rounded-xl shadow-md border border-gray-200 p-6 space-y-6"
     >
       <h2 className="text-xl font-semibold text-center mb-2">
         Enter Function and Process
@@ -60,50 +59,41 @@ export default function ItoLemmaInput({
 
       {/* Function f(t,x) */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
+        <label className="block text-sm font-medium text-gray-700 mb-2">
           Function f(t, x)
         </label>
-        <input
-          type="text"
-          value={f}
-          onChange={(e) => setF(e.target.value)}
-          className="w-full border rounded-md p-2"
-          placeholder='e.g. "t*x**2", "exp(x)", "log(x)"'
-          required
+        <EditableMathField
+          latex={f}
+          onChange={(mf) => setF(mf.latex())}
+          className="text-xl w-full border border-gray-300 px-4 py-2 rounded-lg bg-white focus:outline-none"
         />
       </div>
 
       {/* Drift μ(t,x) */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
+        <label className="block text-sm font-medium text-gray-700 mb-2">
           Drift μ(t, x)
         </label>
-        <input
-          type="text"
-          value={mu}
-          onChange={(e) => setMu(e.target.value)}
-          className="w-full border rounded-md p-2"
-          placeholder='e.g. "0.05*x", "t", "1"'
-          required
+        <EditableMathField
+          latex={mu}
+          onChange={(mf) => setMu(mf.latex())}
+          className="text-xl w-full border border-gray-300 px-4 py-2 rounded-lg bg-white focus:outline-none"
         />
       </div>
 
       {/* Volatility σ(t,x) */}
       <div>
-        <label className="block text-sm font-medium text-gray-700 mb-1">
+        <label className="block text-sm font-medium text-gray-700 mb-2">
           Volatility σ(t, x)
         </label>
-        <input
-          type="text"
-          value={sigma}
-          onChange={(e) => setSigma(e.target.value)}
-          className="w-full border rounded-md p-2"
-          placeholder='e.g. "0.2*x", "1", "sqrt(t)"'
-          required
+        <EditableMathField
+          latex={sigma}
+          onChange={(mf) => setSigma(mf.latex())}
+          className="text-xl w-full border border-gray-300 px-4 py-2 rounded-lg bg-white focus:outline-none"
         />
       </div>
 
-      {/* Submit */}
+      {/* Submit button */}
       <button
         type="submit"
         className="w-full bg-[#5FBA9B] hover:bg-[#4FAE8D] text-white font-semibold py-2 px-4 rounded-md transition-colors"

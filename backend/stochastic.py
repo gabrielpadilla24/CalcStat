@@ -23,6 +23,11 @@ class ItoLemmaData(BaseModel):
     mu: str       # drift μ(t,x)
     sigma: str    # volatility σ(t,x) 
 
+def normalize_latex(expr: str) -> str:
+    expr = expr.replace(r"\cdot", "*")
+    expr = expr.replace("^", "**")
+    return expr.strip()
+
 class StochasticSimulator:
 
     @staticmethod
@@ -88,16 +93,21 @@ class StochasticSimulator:
             "params": data.dict(),
             "chartData": chart_data
         }
-    
+
+
     @staticmethod
     def apply_ito_lemma(data: ItoLemmaData):
-        # Definir variables simbólicas
         t, x = sp.symbols("t x")
 
-        # Parsear funciones de entrada
-        f_expr = sp.sympify(data.f, locals={"t": t, "x": x})
-        mu_expr = sp.sympify(data.mu, locals={"t": t, "x": x})
-        sigma_expr = sp.sympify(data.sigma, locals={"t": t, "x": x})
+        # 🔹 Normalizar inputs
+        f_in = normalize_latex(data.f)
+        mu_in = normalize_latex(data.mu)
+        sigma_in = normalize_latex(data.sigma)
+
+        # Parsear funciones
+        f_expr = sp.sympify(f_in, locals={"t": t, "x": x})
+        mu_expr = sp.sympify(mu_in, locals={"t": t, "x": x})
+        sigma_expr = sp.sympify(sigma_in, locals={"t": t, "x": x})
 
         # Derivadas parciales
         f_t = sp.diff(f_expr, t)
@@ -108,7 +118,6 @@ class StochasticSimulator:
         drift = f_t + mu_expr * f_x + sp.Rational(1, 2) * (sigma_expr**2) * f_xx
         diffusion = sigma_expr * f_x
 
-        # Respuesta paso a paso
         steps = [
             rf"\frac{{\partial f}}{{\partial t}} = {sp.latex(f_t)}",
             rf"\frac{{\partial f}}{{\partial x}} = {sp.latex(f_x)}",
