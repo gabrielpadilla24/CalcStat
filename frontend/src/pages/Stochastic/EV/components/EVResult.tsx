@@ -13,6 +13,7 @@ type EVResponse = {
   expectation: string;
   variance: string;
   steps: string[];
+  formula?: string;
 };
 
 export default function EVResult({ result }: { result?: EVResponse }) {
@@ -26,7 +27,7 @@ export default function EVResult({ result }: { result?: EVResponse }) {
     );
   }
 
-  const { params, expectation, variance, steps } = result;
+  const { expectation, variance, steps, formula } = result;
 
   return (
     <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6 space-y-6">
@@ -36,11 +37,9 @@ export default function EVResult({ result }: { result?: EVResponse }) {
 
       <div className="space-y-4">
         <p className="text-gray-700 font-medium">Selected process:</p>
-        <BlockMath math={`X_t = ${params.process}`} />
-
+        <BlockMath math={`X_t = ${formula}`} />{" "}
         <p className="text-gray-700 font-medium">Expectation:</p>
         <BlockMath math={`E[X_t] = ${expectation}`} />
-
         <p className="text-gray-700 font-medium">Variance:</p>
         <BlockMath math={`Var(X_t) = ${variance}`} />
       </div>

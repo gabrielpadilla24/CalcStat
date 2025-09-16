@@ -19,7 +19,8 @@ export default function EVInput({
 }: {
   onResult: (result: EVResponse) => void;
 }) {
-  const [process, setProcess] = useState("W_t");
+  // 🔹 Valor inicial "Brownian motion" (coincide con backend)
+  const [process, setProcess] = useState("Brownian motion");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -27,6 +28,7 @@ export default function EVInput({
     const payload: EVData = { process };
 
     try {
+      // 🔹 endpoint correcto
       const res = await fetch("http://localhost:8000/ev", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -49,7 +51,7 @@ export default function EVInput({
         Select a Process
       </h2>
 
-      {/* Dropdown con fórmulas */}
+      {/* Dropdown con procesos reconocidos por backend */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">
           Process
@@ -59,12 +61,16 @@ export default function EVInput({
           onChange={(e) => setProcess(e.target.value)}
           className="w-full border rounded-md p-2"
         >
-          <option value="W_t">Brownian Motion: Xₜ = Wₜ</option>
-          <option value="mu*t + sigma*W_t">
-            Linear Drift-Diffusion: Xₜ = μt + σWₜ
-          </option>
-          <option value="exp(sigma*W_t - 0.5*sigma^2*t)">
+          <option value="Brownian motion">Brownian Motion: Xₜ = Wₜ</option>
+          <option value="Deterministic time">Deterministic Time: Xₜ = t</option>
+          <option value="Exponential martingale">
             Exponential Martingale: Xₜ = e^(σWₜ - ½σ²t)
+          </option>
+          <option value="Shifted Brownian motion">
+            Shifted Brownian Motion: Xₜ = aWₜ + b
+          </option>
+          <option value="Quadratic martingale">
+            Quadratic Martingale: Xₜ = Wₜ² - t
           </option>
         </select>
       </div>

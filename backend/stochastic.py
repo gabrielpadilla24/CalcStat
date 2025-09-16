@@ -350,16 +350,21 @@ class StochasticSimulator:
             return {"error": "Process is required."}
 
         steps = []
+        formula = ""
+
         if data.process == "Brownian motion":
             EX, VarX = 0, t
+            formula = r"W_t"
             steps = [r"E[W_t] = 0", r"\mathrm{Var}(W_t) = t"]
 
         elif data.process == "Deterministic time":
             EX, VarX = t, 0
+            formula = r"t"
             steps = [r"E[t] = t", r"\mathrm{Var}(t) = 0"]
 
         elif data.process == "Exponential martingale":
             EX, VarX = 1, sp.exp(σ**2*t) - 1
+            formula = r"e^{\sigma W_t - \tfrac{1}{2}\sigma^2 t}"
             steps = [
                 r"E\!\left[e^{\sigma W_t - \tfrac{1}{2}\sigma^2 t}\right] = 1",
                 r"\mathrm{Var} = e^{\sigma^2 t} - 1"
@@ -367,6 +372,7 @@ class StochasticSimulator:
 
         elif data.process == "Shifted Brownian motion":
             EX, VarX = b, a**2 * t
+            formula = r"a W_t + b"
             steps = [
                 r"E[a W_t + b] = b",
                 r"\mathrm{Var}(a W_t + b) = a^2 t"
@@ -374,6 +380,7 @@ class StochasticSimulator:
 
         elif data.process == "Quadratic martingale":
             EX, VarX = 0, 2*t**2
+            formula = r"W_t^2 - t"
             steps = [
                 r"E[W_t^2 - t] = 0",
                 r"\mathrm{Var}(W_t^2 - t) = 2t^2"
@@ -385,6 +392,7 @@ class StochasticSimulator:
                 "params": data.dict(),
                 "expectation": "Not available analytically",
                 "variance": "Not available analytically",
+                "formula": "N/A",
                 "steps": []
             }
 
@@ -393,5 +401,6 @@ class StochasticSimulator:
             "params": data.dict(),
             "expectation": sp.latex(EX),
             "variance": sp.latex(VarX),
+            "formula": formula,   # 🔥 Fórmula añadida
             "steps": steps
         }
