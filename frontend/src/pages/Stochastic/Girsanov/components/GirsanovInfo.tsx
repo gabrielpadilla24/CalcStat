@@ -102,9 +102,9 @@ const GirsanovInfo = () => {
 
         <h3 className="text-xl font-semibold mb-2">🧠 Example</h3>
         <p className="mb-2">
-          Let <InlineMath math="\\mu = 0.1" />,{" "}
-          <InlineMath math="\\tilde{\\mu} = 0.05" />, and{" "}
-          <InlineMath math="\\sigma = 0.2" />.
+          Let <InlineMath math="\mu = 0.1" />,{" "}
+          <InlineMath math="\tilde{\mu} = 0.05" />, and{" "}
+          <InlineMath math="\sigma = 0.2" />.
         </p>
         <p className="mb-2">
           Then the change in drift is:

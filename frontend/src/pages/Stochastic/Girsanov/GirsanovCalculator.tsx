@@ -54,7 +54,7 @@ const GirsanovCalculator = () => {
           </div>
         </div>
         {/* Info Card */}
-        <div className="max-w-[1230px] mx-auto px-6 mt-6">
+        <div className="max-w-[1270px] mx-auto px-6 mt-6">
           <GirsanovInfo />
         </div>
       </div>
