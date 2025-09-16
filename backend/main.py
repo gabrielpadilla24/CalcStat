@@ -13,7 +13,7 @@ from sympy.parsing.latex import parse_latex
 import re
 from GaussianLinearSystem import GaussianLinearSystem
 from probabilitydistribution import BinomialData, ProbabilityDistribution, PoissonData, GeometricData, NormalData, ExponentialDistrData, UniformData, BayesData, EVMData, CLTData, InferenceData
-from stochastic import BrownianData, StochasticSimulator
+from stochastic import BrownianData, StochasticSimulator, ItoData
 
 
 
@@ -1729,5 +1729,16 @@ def inference_endpoint(data: InferenceData):
 def brownian_endpoint(data: BrownianData):
     try:
         return StochasticSimulator.simulate_brownian(data)
+    except Exception as e:
+        return {"error": str(e)}
+    
+
+#---------------------------------
+# ITÔ INTEGRAL SIMULATOR
+#---------------------------------
+@app.post("/ito")
+def ito_endpoint(data: ItoData):
+    try:
+        return StochasticSimulator.simulate_ito(data)
     except Exception as e:
         return {"error": str(e)}
