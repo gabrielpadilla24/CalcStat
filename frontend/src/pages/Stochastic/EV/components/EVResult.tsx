@@ -1,0 +1,62 @@
+"use client";
+
+import "katex/dist/katex.min.css";
+import { BlockMath } from "react-katex";
+
+type EVData = {
+  process: string;
+};
+
+type EVResponse = {
+  mode: string;
+  params: EVData;
+  expectation: string;
+  variance: string;
+  steps: string[];
+};
+
+export default function EVResult({ result }: { result?: EVResponse }) {
+  if (!result) {
+    return (
+      <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6 text-center">
+        <p className="text-gray-500">
+          No computation yet. Select a process and compute E[Xₜ], Var(Xₜ).
+        </p>
+      </div>
+    );
+  }
+
+  const { params, expectation, variance, steps } = result;
+
+  return (
+    <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6 space-y-6">
+      <h2 className="text-xl font-semibold text-center mb-4">
+        Expectation & Variance
+      </h2>
+
+      <div className="space-y-4">
+        <p className="text-gray-700 font-medium">Selected process:</p>
+        <BlockMath math={`X_t = ${params.process}`} />
+
+        <p className="text-gray-700 font-medium">Expectation:</p>
+        <BlockMath math={`E[X_t] = ${expectation}`} />
+
+        <p className="text-gray-700 font-medium">Variance:</p>
+        <BlockMath math={`Var(X_t) = ${variance}`} />
+      </div>
+
+      {steps && steps.length > 0 && (
+        <div>
+          <h3 className="text-lg font-semibold mt-6 mb-3">
+            Step-by-step derivation
+          </h3>
+          <div className="space-y-3">
+            {steps.map((s, idx) => (
+              <BlockMath key={idx} math={s} />
+            ))}
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}

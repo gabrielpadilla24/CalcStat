@@ -40,6 +40,9 @@ class MartingaleData(BaseModel):
     M: int = 0            # trayectorias
     w0: float = 0.0       # valor inicial de W0
 
+class EVData(BaseModel):
+    process: str 
+
 
 def normalize_latex(expr: str) -> str:
     expr = expr.replace(r"\cdot", "*")
@@ -338,3 +341,57 @@ class StochasticSimulator:
 
         else:
             return {"error": f"Unknown mode: {data.mode}"}
+        
+    @staticmethod
+    def compute_expectation_variance(data: EVData):
+        t, W, σ, a, b = sp.symbols("t W σ a b")
+
+        if not data.process:
+            return {"error": "Process is required."}
+
+        steps = []
+        if data.process == "Brownian motion":
+            EX, VarX = 0, t
+            steps = [r"E[W_t] = 0", r"\mathrm{Var}(W_t) = t"]
+
+        elif data.process == "Deterministic time":
+            EX, VarX = t, 0
+            steps = [r"E[t] = t", r"\mathrm{Var}(t) = 0"]
+
+        elif data.process == "Exponential martingale":
+            EX, VarX = 1, sp.exp(σ**2*t) - 1
+            steps = [
+                r"E\!\left[e^{\sigma W_t - \tfrac{1}{2}\sigma^2 t}\right] = 1",
+                r"\mathrm{Var} = e^{\sigma^2 t} - 1"
+            ]
+
+        elif data.process == "Shifted Brownian motion":
+            EX, VarX = b, a**2 * t
+            steps = [
+                r"E[a W_t + b] = b",
+                r"\mathrm{Var}(a W_t + b) = a^2 t"
+            ]
+
+        elif data.process == "Quadratic martingale":
+            EX, VarX = 0, 2*t**2
+            steps = [
+                r"E[W_t^2 - t] = 0",
+                r"\mathrm{Var}(W_t^2 - t) = 2t^2"
+            ]
+
+        else:
+            return {
+                "mode": "analytical",
+                "params": data.dict(),
+                "expectation": "Not available analytically",
+                "variance": "Not available analytically",
+                "steps": []
+            }
+
+        return {
+            "mode": "analytical",
+            "params": data.dict(),
+            "expectation": sp.latex(EX),
+            "variance": sp.latex(VarX),
+            "steps": steps
+        }
