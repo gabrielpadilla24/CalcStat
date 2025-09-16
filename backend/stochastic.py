@@ -54,6 +54,15 @@ class QVData(BaseModel):
     mu: float = 0
     sigma: float = 0
 
+class GirsanovData(BaseModel):
+    mu: float      # drift original bajo P
+    sigma: float   # volatilidad > 0
+    mu_tilde: float  # nuevo drift bajo Q
+    T: float = 1.0   # horizonte temporal (opcional)
+    N: int = 100     # pasos discretización (para Monte Carlo)
+    M: int = 20      # número de trayectorias (para Monte Carlo)
+    mode: str = "analytical"   # "analytical" o "montecarlo"
+
 
 def normalize_latex(expr: str) -> str:
     expr = expr.replace(r"\cdot", "*")
@@ -548,3 +557,55 @@ class StochasticSimulator:
 
         else:
             return {"error": f"Unknown mode: {data.mode}"}
+
+
+    @staticmethod
+    def compute_girsanov(data: GirsanovData):
+        t, W, mu, sigma, mu_tilde = sp.symbols("t W mu sigma mu_tilde")
+
+        # Validaciones básicas
+        if data.sigma <= 0:
+            return {"error": "σ must be positive."}
+
+        if not data.mode:
+            return {"error": "Mode must be provided."}
+
+        # -----------------------
+        # MODO ANALÍTICO
+        # -----------------------
+        if data.mode == "analytical":
+            # θ = (μ - μ̃)/σ
+            theta_val = (data.mu - data.mu_tilde) / data.sigma
+            theta_expr = (mu - mu_tilde) / sigma
+
+            # Radon–Nikodym derivative
+            Z_t = sp.exp(-theta_expr * W - sp.Rational(1, 2) * theta_expr**2 * t)
+
+            steps = [
+                rf"dX_t = {data.mu} \, dt + {data.sigma} \, dW_t",
+                rf"\theta = \frac{{\mu - \tilde{{\mu}}}}{{\sigma}} = \frac{{{data.mu} - {data.mu_tilde}}}{{{data.sigma}}} = {theta_val:.4f}",
+                rf"W_t^Q = W_t + \theta t",
+                rf"dX_t = {data.mu_tilde} \, dt + {data.sigma} \, dW_t^Q",
+                rf"Z_t = \exp\Big(-\theta W_t - \tfrac{{1}}{{2}}\theta^2 t \Big)"
+            ]
+
+            return {
+                "mode": "analytical",
+                "params": data.dict(),
+                "theta": theta_val,
+                "process_P": rf"dX_t = {data.mu} \, dt + {data.sigma} \, dW_t",
+                "process_Q": rf"dX_t = {data.mu_tilde} \, dt + {data.sigma} \, dW_t^Q",
+                "radon_nikodym": sp.latex(Z_t),
+                "steps": steps
+            }
+
+        # -----------------------
+        # MODO MONTE CARLO (opcional más adelante)
+        # -----------------------
+        elif data.mode == "montecarlo":
+            return {"error": "Monte Carlo not implemented yet for Girsanov."}
+
+        else:
+            return {"error": f"Unknown mode: {data.mode}"}
+
+    

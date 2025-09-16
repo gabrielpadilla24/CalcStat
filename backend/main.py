@@ -13,7 +13,7 @@ from sympy.parsing.latex import parse_latex
 import re
 from GaussianLinearSystem import GaussianLinearSystem
 from probabilitydistribution import BinomialData, ProbabilityDistribution, PoissonData, GeometricData, NormalData, ExponentialDistrData, UniformData, BayesData, EVMData, CLTData, InferenceData
-from stochastic import BrownianData, StochasticSimulator, ItoData, ItoLemmaData, SDEData, MartingaleData, EVData, QVData
+from stochastic import BrownianData, StochasticSimulator, ItoData, ItoLemmaData, SDEData, MartingaleData, EVData, QVData, GirsanovData
 
 
 
@@ -1794,5 +1794,16 @@ def ev_endpoint(data: EVData):
 def quadratic_variation_endpoint(data: QVData):
     try:
         return StochasticSimulator.compute_qv(data)
+    except Exception as e:
+        return {"error": str(e)}
+
+
+#---------------------------------
+# Girsanov Theorem Simulator
+#---------------------------------
+@app.post("/girsanov")
+def girsanov_endpoint(data: GirsanovData):
+    try:
+        return StochasticSimulator.compute_girsanov(data)
     except Exception as e:
         return {"error": str(e)}

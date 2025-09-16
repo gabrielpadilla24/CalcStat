@@ -44,6 +44,7 @@ import SDECalculator from "./pages/Stochastic/SDE/SDECalculator";
 import MartingaleCalculator from "./pages/Stochastic/Martingale/MartingaleCalculator";
 import EVCalculator from "./pages/Stochastic/EV/EVCalculator";
 import QVCalculator from "./pages/Stochastic/QV/QVCalculator";
+import GirsanovCalculator from "./pages/Stochastic/Girsanov/GirsanovCalculator";
 
 const App = () => {
   return (
@@ -223,6 +224,8 @@ const App = () => {
         <Route path="/stochastic/ev" element={<EVCalculator />} />
 
         <Route path="/stochastic/qv" element={<QVCalculator />} />
+
+        <Route path="/stochastic/girsanov" element={<GirsanovCalculator />} />
 
         {/* Other routes can be added here */}
         <Route path="/calculators" element={<Menu />} />
