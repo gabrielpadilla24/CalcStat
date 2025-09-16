@@ -436,27 +436,30 @@ class StochasticSimulator:
 
             elif data.process == "Scaled Brownian motion":
                 qv_formula = r"[a W]_t = a^2 t"
-                qv_value = sp.latex((data.a**2) * t)   # 🔥 ahora sí usa el valor numérico de a
+                qv_value = sp.latex((data.a ** 2) * t)
                 steps = [
                     rf"[aW]_t = a^2 [W]_t = {data.a**2} \cdot t",
                     r"[W]_t = t"
                 ]
 
-
             elif data.process == "Shifted Brownian motion":
                 qv_formula = r"[a W + b]_t = a^2 t"
-                qv_value = sp.latex(a**2 * t)
+                qv_value = sp.latex((data.a ** 2) * t)
                 steps = [
-                    r"[a W_t + b]_t = a^2 [W]_t + [b]_t",
+                    rf"[a W_t + b]_t = a^2 [W]_t + [b]_t = {data.a**2} \cdot t + 0",
                     r"[W]_t = t, \quad [b]_t = 0"
                 ]
 
             elif data.process == "Geometric Brownian motion":
                 qv_formula = r"[X]_t = \int_0^t (\sigma X_s)^2 ds"
-                qv_value = "Integral form only"
+                qv_value = (
+                    r"\int_0^t \big("
+                    + f"{data.sigma}^2 X_s^2"
+                    + r"\big) ds"
+                )
                 steps = [
                     r"dX_t = \mu X_t dt + \sigma X_t dW_t",
-                    r"\Rightarrow [X]_t = \int_0^t (\sigma X_s)^2 ds"
+                    rf"\Rightarrow [X]_t = \int_0^t (\sigma X_s)^2 ds = \int_0^t ({data.sigma}^2 X_s^2) ds"
                 ]
 
             else:
