@@ -38,6 +38,7 @@ import CLTCalculator from "./pages/ProbabilityAndStats/CLT/CLTCalculator";
 import InferenceCalculator from "./pages/ProbabilityAndStats/Inference/InterferenceCalculator";
 import StochasticCalculator from "./pages/Stochastic/StochasticCalculator";
 import BrownianCalculator from "./pages/Stochastic/Brownian/BrownianCalculator";
+import ItoIntegralCalculator from "./pages/Stochastic/ItoIntegral/ItoIntegralCalculator";
 
 const App = () => {
   return (
@@ -199,6 +200,11 @@ const App = () => {
         <Route path="/stochastic" element={<StochasticCalculator />} />
 
         <Route path="/stochastic/brownian" element={<BrownianCalculator />} />
+
+        <Route
+          path="/stochastic/itointegral"
+          element={<ItoIntegralCalculator />}
+        />
 
         {/* Other routes can be added here */}
         <Route path="/calculators" element={<Menu />} />

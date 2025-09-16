@@ -50,10 +50,7 @@ const BrownianCalculator = () => {
         </div>
       </div>
 
-      <BottomCTA
-        buttonText="Back to Stochastic Calculus"
-        href="/stochastic-calculus"
-      />
+      <BottomCTA buttonText="Back to Stochastic Calculus" href="/stochastic" />
     </>
   );
 };

@@ -39,6 +39,24 @@ const StochasticCalculator = () => {
             <SubmitButton text="Open Calculator" />
           </Link>
         </div>
+
+        {/* Ito Integral Calculator */}
+        <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] flex flex-col justify-between text-left">
+          <img
+            src="/img/ito_integral.png"
+            alt="Itô Integral Calculator"
+            className="h-40 w-full object-cover mb-4 rounded"
+          />
+          <h2 className="text-xl font-bold text-gray-800 mb-2">
+            Itô Integral Calculator
+          </h2>
+          <p className="text-sm text-gray-600 mb-4">
+            Calculate Itô integrals for various stochastic processes.
+          </p>
+          <Link to="/stochastic/itointegral">
+            <SubmitButton text="Open Calculator" />
+          </Link>
+        </div>
       </div>
     </div>
   );
