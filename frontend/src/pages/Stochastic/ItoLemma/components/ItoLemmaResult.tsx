@@ -25,7 +25,7 @@ export default function ItoLemmaResult({
 }) {
   if (!result) {
     return (
-      <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6 text-center">
+      <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6 space-y-6 max-w-2xl mx-auto">
         <p className="text-gray-500">
           No computation yet. Submit inputs to see Itô’s Lemma in action.
         </p>

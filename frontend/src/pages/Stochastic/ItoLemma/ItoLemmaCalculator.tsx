@@ -38,18 +38,18 @@ const ItoLemmaCalculator = () => {
         {/* Inputs + Result */}
         <div className="max-w-[1440px] mx-auto flex flex-col lg:flex-row gap-6 px-6 justify-center">
           {/* Input form */}
-          <div className="w-full lg:w-1/3 max-w-sm">
+          <div className="w-full lg:w-1/3 max-w-md">
             <ItoLemmaInput onResult={setResult} />
           </div>
 
           {/* Result */}
-          <div className="flex-1 max-w-3xl">
+          <div className="flex-1 max-w-xl">
             <ItoLemmaResult result={result} />
           </div>
         </div>
 
         {/* Info Card */}
-        <div className="max-w-[1170px] mx-auto px-6 mt-6">
+        <div className="max-w-[1100px] mx-auto px-6 mt-6">
           <ItoLemmaInfo />
         </div>
       </div>
