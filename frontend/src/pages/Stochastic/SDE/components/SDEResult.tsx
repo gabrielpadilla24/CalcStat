@@ -23,6 +23,7 @@ type SDEData = {
 type SDEResponse = {
   params: SDEData;
   chartData: { [key: string]: number | string }[];
+  stats?: { mean: number; variance: number; min: number; max: number };
 };
 
 export default function SDEResult({ result }: { result?: SDEResponse }) {
@@ -36,7 +37,7 @@ export default function SDEResult({ result }: { result?: SDEResponse }) {
     );
   }
 
-  const { chartData, params } = result;
+  const { chartData, params, stats } = result;
   const { M } = params;
 
   const handleScroll = () => {
@@ -78,6 +79,19 @@ export default function SDEResult({ result }: { result?: SDEResponse }) {
           </LineChart>
         </ResponsiveContainer>
       </div>
+
+      {/* 🔹 Stats section */}
+      {stats && (
+        <div className="mt-6 text-center">
+          <h3 className="text-md font-semibold mb-2">
+            📊 Statistics of Xₜ at T
+          </h3>
+          <p className="text-gray-700">Mean: {stats.mean.toFixed(4)}</p>
+          <p className="text-gray-700">Variance: {stats.variance.toFixed(4)}</p>
+          <p className="text-gray-700">Min: {stats.min.toFixed(4)}</p>
+          <p className="text-gray-700">Max: {stats.max.toFixed(4)}</p>
+        </div>
+      )}
 
       {/* 🔽 Scroll button */}
       <div

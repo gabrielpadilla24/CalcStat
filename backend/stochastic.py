@@ -177,6 +177,15 @@ class StochasticSimulator:
             X_i = paths[:, i]
             paths[:, i+1] = X_i + mu_func(t_i, X_i) * dt + sigma_func(t_i, X_i) * dW
 
+        # 🔹 Estadísticas finales en T
+        final_values = paths[:, -1]
+        stats = {
+            "mean": float(np.mean(final_values)),
+            "variance": float(np.var(final_values)),
+            "min": float(np.min(final_values)),
+            "max": float(np.max(final_values)),
+        }
+
         # 🔹 Formato Recharts
         chart_data = []
         for step in range(data.N + 1):
@@ -187,6 +196,6 @@ class StochasticSimulator:
 
         return {
             "params": data.dict(),
-            "chartData": chart_data
+            "chartData": chart_data,
+            "stats": stats
         }
-
