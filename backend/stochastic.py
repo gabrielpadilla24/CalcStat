@@ -244,10 +244,8 @@ class StochasticSimulator:
 
             drift = f_t + sp.Rational(1, 2) * f_WW  # mu=0, sigma=1
             diffusion = f_W
-
             drift_simplified = sp.simplify(drift)
 
-            # Verificación con tolerancia
             is_martingale = False
             if drift_simplified == 0 or drift_simplified.equals(0):
                 is_martingale = True
@@ -292,11 +290,13 @@ class StochasticSimulator:
 
             f_func = sp.lambdify((t, W), expr, "numpy")
 
+            # Simulación de Browniano
             dW = np.random.normal(0, sqrt_dt, size=(data.M, data.N))
             W_paths = np.zeros((data.M, data.N + 1))
             W_paths[:, 0] = data.w0
             W_paths[:, 1:] = data.w0 + np.cumsum(dW, axis=1)
 
+            # Simulación del proceso
             process_paths = np.zeros((data.M, data.N + 1))
             for i in range(data.N + 1):
                 t_i = i * dt
@@ -305,7 +305,7 @@ class StochasticSimulator:
             means = process_paths.mean(axis=0)
             vars_ = process_paths.var(axis=0)
 
-            # 🔹 limitar a 50 trayectorias en salida
+            # 🔹 limitar trayectorias a mostrar
             max_traj = min(data.M, 50)
 
             chart_data = []
@@ -319,16 +319,19 @@ class StochasticSimulator:
                     row[f"traj{m}"] = float(process_paths[m, step])
                 chart_data.append(row)
 
-            tol = 1e-2
-            is_martingale = np.allclose(means, means[0], atol=tol)
+            # ✅ Nuevo criterio: media final ≈ media inicial
+            tol_rel = 0.05  # 5% tolerancia relativa
+            mean0, meanT = means[0], means[-1]
+            is_martingale = abs(meanT - mean0) <= tol_rel * abs(mean0)
 
             return {
                 "mode": "montecarlo",
                 "params": data.dict(),
                 "chartData": chart_data,
                 "isMartingale": bool(is_martingale),
-                "reason": "Empirical mean constant across time"
-                if is_martingale else "Empirical mean varied",
+                "reason": "Empirical mean stayed close to initial value"
+                if is_martingale
+                else f"Empirical mean drifted (from {mean0:.3f} to {meanT:.3f})",
                 "trajectoriesShown": max_traj,
                 "trajectoriesTotal": data.M
             }
