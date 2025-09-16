@@ -1,6 +1,9 @@
 "use client";
 
 import { useState } from "react";
+import { addStyles, EditableMathField } from "react-mathquill";
+
+addStyles();
 
 type SDEData = {
   x0: number;
@@ -21,17 +24,24 @@ export default function SDEInput({
 }: {
   onResult: (result: SDEResponse) => void;
 }) {
-  const [x0, setX0] = useState(1);
-  const [mu, setMu] = useState("0.05*x");
-  const [sigma, setSigma] = useState("0.2*x");
-  const [T, setT] = useState(1);
-  const [N, setN] = useState(100);
-  const [M, setM] = useState(5);
+  const [x0, setX0] = useState<number>(1);
+  const [muLatex, setMuLatex] = useState("");
+  const [sigmaLatex, setSigmaLatex] = useState("");
+  const [T, setT] = useState<number>(1);
+  const [N, setN] = useState<number>(100);
+  const [M, setM] = useState<number>(5);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const payload: SDEData = { x0, mu, sigma, T, N, M };
+    const payload: SDEData = {
+      x0,
+      mu: muLatex,
+      sigma: sigmaLatex,
+      T,
+      N,
+      M,
+    };
 
     try {
       const res = await fetch("http://localhost:8000/sde", {
@@ -41,11 +51,7 @@ export default function SDEInput({
       });
 
       const data = await res.json();
-      if (data.error) {
-        alert("❌ Error: " + data.error);
-      } else {
-        onResult(data);
-      }
+      onResult(data);
     } catch {
       alert("❌ Failed to connect to backend.");
     }
@@ -54,13 +60,13 @@ export default function SDEInput({
   return (
     <form
       onSubmit={handleSubmit}
-      className="bg-white rounded-xl shadow-md border border-gray-200 p-6 space-y-4"
+      className="bg-white rounded-xl shadow-md border border-gray-200 p-6 space-y-5"
     >
       <h2 className="text-xl font-semibold text-center mb-2">
         Enter SDE Parameters
       </h2>
 
-      {/* Initial value x0 */}
+      {/* Initial value X₀ */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">
           Initial Value (X₀)
@@ -71,7 +77,7 @@ export default function SDEInput({
           value={x0}
           onChange={(e) => setX0(parseFloat(e.target.value))}
           className="w-full border rounded-md p-2"
-          required
+          placeholder="1.0"
         />
       </div>
 
@@ -80,14 +86,12 @@ export default function SDEInput({
         <label className="block text-sm font-medium text-gray-700 mb-1">
           Drift μ(t, x)
         </label>
-        <input
-          type="text"
-          value={mu}
-          onChange={(e) => setMu(e.target.value)}
-          className="w-full border rounded-md p-2"
-          placeholder='e.g. "0.05*x"'
-          required
+        <EditableMathField
+          latex={muLatex}
+          onChange={(mf) => setMuLatex(mf.latex())}
+          className="text-xl w-full border border-gray-300 px-4 py-2 rounded-lg bg-white"
         />
+        <p className="text-sm text-gray-500 mt-1">e.g. 0.05 · x</p>
       </div>
 
       {/* Volatility σ(t,x) */}
@@ -95,14 +99,12 @@ export default function SDEInput({
         <label className="block text-sm font-medium text-gray-700 mb-1">
           Volatility σ(t, x)
         </label>
-        <input
-          type="text"
-          value={sigma}
-          onChange={(e) => setSigma(e.target.value)}
-          className="w-full border rounded-md p-2"
-          placeholder='e.g. "0.2*x"'
-          required
+        <EditableMathField
+          latex={sigmaLatex}
+          onChange={(mf) => setSigmaLatex(mf.latex())}
+          className="text-xl w-full border border-gray-300 px-4 py-2 rounded-lg bg-white"
         />
+        <p className="text-sm text-gray-500 mt-1">e.g. 0.2 · x</p>
       </div>
 
       {/* Time horizon T */}
@@ -116,7 +118,7 @@ export default function SDEInput({
           value={T}
           onChange={(e) => setT(parseFloat(e.target.value))}
           className="w-full border rounded-md p-2"
-          required
+          placeholder="1.0"
         />
       </div>
 
@@ -130,7 +132,7 @@ export default function SDEInput({
           value={N}
           onChange={(e) => setN(parseInt(e.target.value))}
           className="w-full border rounded-md p-2"
-          required
+          placeholder="100"
         />
       </div>
 
@@ -144,7 +146,7 @@ export default function SDEInput({
           value={M}
           onChange={(e) => setM(parseInt(e.target.value))}
           className="w-full border rounded-md p-2"
-          required
+          placeholder="5"
         />
       </div>
 
