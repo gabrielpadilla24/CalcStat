@@ -13,7 +13,7 @@ from sympy.parsing.latex import parse_latex
 import re
 from GaussianLinearSystem import GaussianLinearSystem
 from probabilitydistribution import BinomialData, ProbabilityDistribution, PoissonData, GeometricData, NormalData, ExponentialDistrData, UniformData, BayesData, EVMData, CLTData, InferenceData
-from stochastic import BrownianData, StochasticSimulator, ItoData, ItoLemmaData, SDEData
+from stochastic import BrownianData, StochasticSimulator, ItoData, ItoLemmaData, SDEData, MartingaleData
 
 
 
@@ -1761,5 +1761,16 @@ def ito_lemma_endpoint(data: ItoLemmaData):
 def sde_endpoint(data: SDEData):
     try:
         return StochasticSimulator.solve_sde(data)
+    except Exception as e:
+        return {"error": str(e)}
+
+
+#---------------------------------
+# Martingales Simulator
+#---------------------------------
+@app.post("/martingale")
+def martingale_endpoint(data: MartingaleData):
+    try:
+        return StochasticSimulator.test_martingale(data)
     except Exception as e:
         return {"error": str(e)}

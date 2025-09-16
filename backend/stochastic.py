@@ -32,6 +32,15 @@ class SDEData(BaseModel):
     N: int
     M: int
 
+class MartingaleData(BaseModel):
+    process: str     # función f(t, W)
+    mode: str       # "montecarlo" o "analytical"
+    T: float = 0.0        # horizonte temporal
+    N: int = 0            # pasos
+    M: int = 0            # trayectorias
+    w0: float = 0.0       # valor inicial de W0
+
+
 def normalize_latex(expr: str) -> str:
     expr = expr.replace(r"\cdot", "*")
     expr = expr.replace("^", "**")
@@ -209,3 +218,102 @@ class StochasticSimulator:
             "chartData": chart_data,
             "stats": stats,
         }
+    
+    @staticmethod
+    def test_martingale(data: MartingaleData):
+        t, W = sp.symbols("t W")
+
+        # Normalizador: soporta "0.2W" o "tW"
+        def normalize(expr: str) -> str:
+            expr = expr.replace(r"\cdot", "*").replace("^", "**")
+            return str(sp.sympify(expr, locals={"t": t, "W": W}))
+
+        if not data.process or not data.mode:
+            return {"error": "Both 'process' and 'mode' are required."}
+
+        expr = sp.sympify(normalize(data.process), locals={"t": t, "W": W})
+
+        # -----------------------
+        # MODO ANALÍTICO (Itô)
+        # -----------------------
+        if data.mode == "analytical":
+            f_t = sp.diff(expr, t)
+            f_W = sp.diff(expr, W)
+            f_WW = sp.diff(expr, W, 2)
+
+            drift = f_t + sp.Rational(1, 2) * f_WW  # mu=0, sigma=1
+            diffusion = f_W
+
+            is_martingale = (drift.simplify() == 0)
+
+            steps = [
+                rf"\frac{{\partial f}}{{\partial t}} = {sp.latex(f_t)}",
+                rf"\frac{{\partial f}}{{\partial W}} = {sp.latex(f_W)}",
+                rf"\frac{{\partial^2 f}}{{\partial W^2}} = {sp.latex(f_WW)}",
+                r"\text{Substitute into Itô's Lemma:}",
+                rf"df(t,W_t) = \Big({sp.latex(drift)}\Big)\, dt + \Big({sp.latex(diffusion)}\Big)\, dW_t"
+            ]
+
+            return {
+                "mode": "analytical",
+                "params": data.dict(),
+                "partials": {
+                    "f_t": sp.latex(f_t),
+                    "f_W": sp.latex(f_W),
+                    "f_WW": sp.latex(f_WW),
+                },
+                "drift": sp.latex(drift),
+                "diffusion": sp.latex(diffusion),
+                "isMartingale": bool(is_martingale),
+                "reason": "Drift term vanished" if is_martingale else "Non-zero drift term",
+                "final": steps[-1],
+                "steps": steps
+            }
+
+        # -----------------------
+        # MODO MONTE CARLO
+        # -----------------------
+        elif data.mode == "montecarlo":
+            if data.N <= 0 or data.M <= 0 or data.T <= 0:
+                return {"error": "Monte Carlo mode requires positive T, N, and M."}
+
+            dt = data.T / data.N
+            sqrt_dt = np.sqrt(dt)
+
+            f_func = sp.lambdify((t, W), expr, "numpy")
+
+            dW = np.random.normal(0, sqrt_dt, size=(data.M, data.N))
+            W_paths = np.zeros((data.M, data.N + 1))
+            W_paths[:, 0] = data.w0
+            W_paths[:, 1:] = data.w0 + np.cumsum(dW, axis=1)
+
+            process_paths = np.zeros((data.M, data.N + 1))
+            for i in range(data.N + 1):
+                t_i = i * dt
+                process_paths[:, i] = f_func(t_i, W_paths[:, i])
+
+            means = process_paths.mean(axis=0)
+            vars_ = process_paths.var(axis=0)
+
+            chart_data = []
+            for step in range(data.N + 1):
+                row = {"step": step, "mean": float(means[step]), "var": float(vars_[step])}
+                for m in range(data.M):
+                    row[f"traj{m}"] = float(process_paths[m, step])
+                chart_data.append(row)
+
+            tol = 1e-2
+            is_martingale = np.allclose(means, means[0], atol=tol)
+
+            return {
+                "mode": "montecarlo",
+                "params": data.dict(),
+                "chartData": chart_data,
+                "isMartingale": bool(is_martingale),
+                "reason": "Empirical mean constant across time"
+                if is_martingale
+                else "Empirical mean varied"
+            }
+
+        else:
+            return {"error": f"Unknown mode: {data.mode}"}
