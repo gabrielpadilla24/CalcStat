@@ -43,6 +43,7 @@ import ItoLemmaCalculator from "./pages/Stochastic/ItoLemma/ItoLemmaCalculator";
 import SDECalculator from "./pages/Stochastic/SDE/SDECalculator";
 import MartingaleCalculator from "./pages/Stochastic/Martingale/MartingaleCalculator";
 import EVCalculator from "./pages/Stochastic/EV/EVCalculator";
+import QVCalculator from "./pages/Stochastic/QV/QVCalculator";
 
 const App = () => {
   return (
@@ -220,6 +221,8 @@ const App = () => {
         />
 
         <Route path="/stochastic/ev" element={<EVCalculator />} />
+
+        <Route path="/stochastic/qv" element={<QVCalculator />} />
 
         {/* Other routes can be added here */}
         <Route path="/calculators" element={<Menu />} />

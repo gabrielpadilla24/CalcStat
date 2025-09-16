@@ -43,6 +43,17 @@ class MartingaleData(BaseModel):
 class EVData(BaseModel):
     process: str 
 
+class QVData(BaseModel):
+    process: str
+    mode: str                # "analytical" o "montecarlo"
+    T: float
+    N: int
+    M: int
+    a: float
+    b: float
+    mu: float
+    sigma: float
+
 
 def normalize_latex(expr: str) -> str:
     expr = expr.replace(r"\cdot", "*")
@@ -404,3 +415,122 @@ class StochasticSimulator:
             "formula": formula,   # 🔥 Fórmula añadida
             "steps": steps
         }
+    
+    @staticmethod
+    def compute_qv(data: QVData):
+        t, W, a, b, mu, sigma = sp.symbols("t W a b mu sigma")
+
+        if not data.process or not data.mode:
+            return {"error": "Both 'process' and 'mode' are required."}
+
+        # -----------------------
+        # MODO ANALÍTICO
+        # -----------------------
+        if data.mode == "analytical":
+            steps, qv_formula, qv_value = [], None, None
+
+            if data.process == "Brownian motion":
+                qv_formula = r"[W]_t = t"
+                qv_value = sp.latex(t)
+                steps = [r"[W]_t = t"]
+
+            elif data.process == "Scaled Brownian motion":
+                qv_formula = r"[a W]_t = a^2 t"
+                qv_value = sp.latex(a**2 * t)
+                steps = [r"[aW]_t = a^2 [W]_t", r"[W]_t = t"]
+
+            elif data.process == "Shifted Brownian motion":
+                qv_formula = r"[a W + b]_t = a^2 t"
+                qv_value = sp.latex(a**2 * t)
+                steps = [
+                    r"[a W_t + b]_t = a^2 [W]_t + [b]_t",
+                    r"[W]_t = t, \quad [b]_t = 0"
+                ]
+
+            elif data.process == "Geometric Brownian motion":
+                qv_formula = r"[X]_t = \int_0^t \sigma^2 e^{2(\mu-\tfrac{1}{2}\sigma^2)s + 2\sigma W_s} ds"
+                qv_value = "Integral form only"
+                steps = [
+                    r"dX_t = \mu X_t dt + \sigma X_t dW_t",
+                    r"\Rightarrow [X]_t = \int_0^t (\sigma X_s)^2 ds"
+                ]
+
+            else:
+                return {
+                    "mode": "analytical",
+                    "params": data.dict(),
+                    "formula": data.process,
+                    "qv_formula": "Not available analytically",
+                    "qv_value": "N/A",
+                    "steps": []
+                }
+
+            return {
+                "mode": "analytical",
+                "params": data.dict(),
+                "formula": data.process,
+                "qv_formula": qv_formula,
+                "qv_value": qv_value,
+                "steps": steps
+            }
+
+        # -----------------------
+        # MODO MONTE CARLO
+        # -----------------------
+        elif data.mode == "montecarlo":
+            if data.N <= 0 or data.M <= 0 or data.T <= 0:
+                return {"error": "Monte Carlo mode requires positive T, N, and M."}
+
+            # 🚨 Input limits
+            if data.N > 5000 or data.M > 200:
+                return {
+                    "error": "Too many steps/trajectories. "
+                             "Please try with N ≤ 5000 and M ≤ 200."
+                }
+
+            dt = data.T / data.N
+            sqrt_dt = np.sqrt(dt)
+
+            # Simulate Brownian increments
+            dW = np.random.normal(0, sqrt_dt, size=(data.M, data.N))
+            W_paths = np.cumsum(dW, axis=1)
+            W_paths = np.hstack([np.zeros((data.M, 1)), W_paths])  # include W0 = 0
+
+            # Select process
+            if data.process == "Brownian motion":
+                X_paths = W_paths
+            elif data.process == "Scaled Brownian motion":
+                X_paths = data.a * W_paths
+            elif data.process == "Shifted Brownian motion":
+                X_paths = data.a * W_paths + data.b
+            else:
+                return {"error": f"Monte Carlo not implemented for {data.process}"}
+
+            # Quadratic variation ≈ sum of squared increments
+            qv_paths = np.cumsum(np.diff(X_paths, axis=1) ** 2, axis=1)
+            qv_paths = np.hstack([np.zeros((data.M, 1)), qv_paths])
+
+            mean_qv = qv_paths.mean(axis=0)
+
+            # limit trajectories for frontend
+            max_traj = min(data.M, 50)
+
+            chart_data = []
+            for step in range(data.N + 1):
+                row = {"step": step, "mean_qv": float(mean_qv[step])}
+                for m in range(max_traj):
+                    row[f"traj{m}"] = float(qv_paths[m, step])
+                chart_data.append(row)
+
+            return {
+                "mode": "montecarlo",
+                "params": data.dict(),
+                "formula": data.process,
+                "chartData": chart_data,
+                "trajectoriesShown": max_traj,
+                "trajectoriesTotal": data.M
+            }
+
+        else:
+            return {"error": f"Unknown mode: {data.mode}"}
+
