@@ -2,13 +2,16 @@
 
 export default function BrownianInfo() {
   return (
-    <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6 mt-6">
+    <div
+      id="brownian-info"
+      className="bg-white rounded-xl shadow-md border border-gray-200 p-6 mt-6"
+    >
       <h2 className="text-2xl font-semibold mb-4">ℹ️ About Brownian Motion</h2>
 
       <p className="mb-4 text-gray-700">
         The <strong>Brownian Motion Simulator</strong> generates trajectories of
-        a<em> Wiener process </em> (standard Brownian motion) and its
-        generalized form with drift and volatility.
+        a <em>Wiener process</em> (standard Brownian motion) and its generalized
+        form with drift and volatility.
       </p>
 
       <h3 className="text-xl font-semibold mt-4 mb-2">📌 Definition</h3>
@@ -43,8 +46,7 @@ export default function BrownianInfo() {
       <h3 className="text-xl font-semibold mt-4 mb-2">🔢 Simulation</h3>
       <p className="mb-3 text-gray-700">
         The process is simulated by discretizing time into <code>N</code> steps
-        of size
-        <code> Δt = T / N</code>, and using:
+        of size <code>Δt = T / N</code>, and using:
       </p>
       <p className="bg-gray-50 border rounded p-2 text-center font-mono">
         Xₜ₊Δₜ = Xₜ + μΔt + σ√Δt · Z, &nbsp; Z ~ N(0,1)

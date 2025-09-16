@@ -41,11 +41,19 @@ export default function BrownianResult({
   const { chartData, params } = result;
   const { M } = params;
 
+  const handleScroll = () => {
+    const infoSection = document.getElementById("brownian-info");
+    if (infoSection) {
+      infoSection.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
   return (
-    <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6 ">
+    <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6">
       <h2 className="text-xl font-semibold mb-4 text-center">
         Simulated Trajectories
       </h2>
+
       <ResponsiveContainer width="100%" height={400}>
         <LineChart data={chartData}>
           <CartesianGrid strokeDasharray="3 3" />
@@ -69,6 +77,15 @@ export default function BrownianResult({
           ))}
         </LineChart>
       </ResponsiveContainer>
+
+      {/* 🔽 Scroll button */}
+      <div
+        onClick={handleScroll}
+        className="flex items-center justify-center gap-2 mt-6 cursor-pointer text-[#5FBA9B] hover:text-[#4FAE8D] font-medium transition-colors"
+      >
+        <span className="text-lg">↓</span>
+        <span>See how it was calculated</span>
+      </div>
     </div>
   );
 }
