@@ -39,6 +39,7 @@ import InferenceCalculator from "./pages/ProbabilityAndStats/Inference/Interfere
 import StochasticCalculator from "./pages/Stochastic/StochasticCalculator";
 import BrownianCalculator from "./pages/Stochastic/Brownian/BrownianCalculator";
 import ItoIntegralCalculator from "./pages/Stochastic/ItoIntegral/ItoIntegralCalculator";
+import ItoLemmaCalculator from "./pages/Stochastic/ItoLemma/ItoLemmaCalculator";
 
 const App = () => {
   return (
@@ -205,6 +206,8 @@ const App = () => {
           path="/stochastic/itointegral"
           element={<ItoIntegralCalculator />}
         />
+
+        <Route path="/stochastic/itolemma" element={<ItoLemmaCalculator />} />
 
         {/* Other routes can be added here */}
         <Route path="/calculators" element={<Menu />} />
