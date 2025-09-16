@@ -16,7 +16,12 @@ class ItoData(BaseModel):
     T: float = 1.0      
     N: int = 1000        
     M: int = 10          
-    w0: float = 0.0     
+    w0: float = 0.0    
+
+class ItoLemmaData(BaseModel):
+    f: str        # function f(t,x)
+    mu: str       # drift μ(t,x)
+    sigma: str    # volatility σ(t,x) 
 
 class StochasticSimulator:
 
@@ -82,4 +87,45 @@ class StochasticSimulator:
         return {
             "params": data.dict(),
             "chartData": chart_data
+        }
+    
+    @staticmethod
+    def apply_ito_lemma(data: ItoLemmaData):
+        # Definir variables simbólicas
+        t, x = sp.symbols("t x")
+
+        # Parsear funciones de entrada
+        f_expr = sp.sympify(data.f, locals={"t": t, "x": x})
+        mu_expr = sp.sympify(data.mu, locals={"t": t, "x": x})
+        sigma_expr = sp.sympify(data.sigma, locals={"t": t, "x": x})
+
+        # Derivadas parciales
+        f_t = sp.diff(f_expr, t)
+        f_x = sp.diff(f_expr, x)
+        f_xx = sp.diff(f_expr, x, 2)
+
+        # Términos de Itô
+        drift = f_t + mu_expr * f_x + sp.Rational(1, 2) * (sigma_expr**2) * f_xx
+        diffusion = sigma_expr * f_x
+
+        # Respuesta paso a paso
+        steps = [
+            rf"\frac{{\partial f}}{{\partial t}} = {sp.latex(f_t)}",
+            rf"\frac{{\partial f}}{{\partial x}} = {sp.latex(f_x)}",
+            rf"\frac{{\partial^2 f}}{{\partial x^2}} = {sp.latex(f_xx)}",
+            r"\text{Substitute into Itô's Lemma:}",
+            rf"df(t,X_t) = \Big({sp.latex(drift)}\Big)\, dt + \Big({sp.latex(diffusion)}\Big)\, dW_t"
+        ]
+
+        return {
+            "params": data.dict(),
+            "partials": {
+                "f_t": sp.latex(f_t),
+                "f_x": sp.latex(f_x),
+                "f_xx": sp.latex(f_xx),
+            },
+            "drift": sp.latex(drift),
+            "diffusion": sp.latex(diffusion),
+            "final": steps[-1],
+            "steps": steps
         }
