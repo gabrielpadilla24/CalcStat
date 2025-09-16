@@ -29,7 +29,7 @@ export default function MartingaleInput({
 }: {
   onResult: (result: MartingaleResponse) => void;
 }) {
-  const [mode, setMode] = useState<"montecarlo" | "analytical">("montecarlo");
+  const [mode, setMode] = useState<"montecarlo" | "analytical">("analytical");
   const [process, setProcess] = useState("exp(0.2*W - 0.5*0.2^2*t)");
   const [T, setT] = useState(1);
   const [N, setN] = useState(100);
