@@ -2,7 +2,7 @@ from pydantic import BaseModel
 import numpy as np
 import sympy as sp
 from sympy.parsing.sympy_parser import parse_expr, standard_transformations, implicit_multiplication_application
-
+import re
 
 class BrownianData(BaseModel):
     x0: float = 0.0
@@ -223,10 +223,11 @@ class StochasticSimulator:
     def test_martingale(data: MartingaleData):
         t, W = sp.symbols("t W")
 
-        # Normalizador: soporta "0.2W" o "tW"
+        # Normalizador: soporta "0.2W", "tW", "\cdot", "^"
         def normalize(expr: str) -> str:
             expr = expr.replace(r"\cdot", "*").replace("^", "**")
-            return str(sp.sympify(expr, locals={"t": t, "W": W}))
+            expr = re.sub(r"(\d)([a-zA-Z\(])", r"\1*\2", expr)  # 2x -> 2*x
+            return expr.strip()
 
         if not data.process or not data.mode:
             return {"error": "Both 'process' and 'mode' are required."}
@@ -244,14 +245,23 @@ class StochasticSimulator:
             drift = f_t + sp.Rational(1, 2) * f_WW  # mu=0, sigma=1
             diffusion = f_W
 
-            is_martingale = (drift.simplify() == 0)
+            drift_simplified = sp.simplify(drift)
+
+            # Verificación con tolerancia
+            is_martingale = False
+            if drift_simplified == 0 or drift_simplified.equals(0):
+                is_martingale = True
+            else:
+                drift_val = float(sp.N(drift_simplified.subs({t: 0, W: 0})))
+                if abs(drift_val) < 1e-10:
+                    is_martingale = True
 
             steps = [
                 rf"\frac{{\partial f}}{{\partial t}} = {sp.latex(f_t)}",
                 rf"\frac{{\partial f}}{{\partial W}} = {sp.latex(f_W)}",
                 rf"\frac{{\partial^2 f}}{{\partial W^2}} = {sp.latex(f_WW)}",
                 r"\text{Substitute into Itô's Lemma:}",
-                rf"df(t,W_t) = \Big({sp.latex(drift)}\Big)\, dt + \Big({sp.latex(diffusion)}\Big)\, dW_t"
+                rf"df(t,W_t) = \Big({sp.latex(drift_simplified)}\Big)\, dt + \Big({sp.latex(diffusion)}\Big)\, dW_t"
             ]
 
             return {
@@ -262,7 +272,7 @@ class StochasticSimulator:
                     "f_W": sp.latex(f_W),
                     "f_WW": sp.latex(f_WW),
                 },
-                "drift": sp.latex(drift),
+                "drift": sp.latex(drift_simplified),
                 "diffusion": sp.latex(diffusion),
                 "isMartingale": bool(is_martingale),
                 "reason": "Drift term vanished" if is_martingale else "Non-zero drift term",
@@ -295,10 +305,17 @@ class StochasticSimulator:
             means = process_paths.mean(axis=0)
             vars_ = process_paths.var(axis=0)
 
+            # 🔹 limitar a 50 trayectorias en salida
+            max_traj = min(data.M, 50)
+
             chart_data = []
             for step in range(data.N + 1):
-                row = {"step": step, "mean": float(means[step]), "var": float(vars_[step])}
-                for m in range(data.M):
+                row = {
+                    "step": step,
+                    "mean": float(means[step]),
+                    "var": float(vars_[step])
+                }
+                for m in range(max_traj):
                     row[f"traj{m}"] = float(process_paths[m, step])
                 chart_data.append(row)
 
@@ -311,8 +328,9 @@ class StochasticSimulator:
                 "chartData": chart_data,
                 "isMartingale": bool(is_martingale),
                 "reason": "Empirical mean constant across time"
-                if is_martingale
-                else "Empirical mean varied"
+                if is_martingale else "Empirical mean varied",
+                "trajectoriesShown": max_traj,
+                "trajectoriesTotal": data.M
             }
 
         else:

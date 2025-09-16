@@ -1,7 +1,6 @@
 "use client";
 
 import { useState } from "react";
-import MathFunctionInput from "@/components/MathFunctionInput";
 
 type MartingaleData = {
   process: string;
@@ -22,6 +21,7 @@ type MartingaleResponse = {
   drift?: string;
   diffusion?: string;
   final?: string;
+  partials?: { f_t: string; f_W: string; f_WW: string };
 };
 
 export default function MartingaleInput({
@@ -29,31 +29,26 @@ export default function MartingaleInput({
 }: {
   onResult: (result: MartingaleResponse) => void;
 }) {
-  const [processLatex, setProcessLatex] = useState(
-    "exp(sigma*W - 0.5*sigma^2*t)"
-  );
   const [mode, setMode] = useState<"montecarlo" | "analytical">("montecarlo");
-
-  // Params para Monte Carlo
+  const [process, setProcess] = useState("exp(0.2*W - 0.5*0.2^2*t)");
   const [T, setT] = useState(1);
   const [N, setN] = useState(100);
-  const [M, setM] = useState(10);
+  const [M, setM] = useState(5);
   const [w0, setW0] = useState(0);
 
-  const handleSubmit = async () => {
-    try {
-      const payload: MartingaleData =
-        mode === "montecarlo"
-          ? { process: processLatex, mode, T, N, M, w0 }
-          : { process: processLatex, mode };
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
 
+    const payload: MartingaleData = { process, mode, T, N, M, w0 };
+
+    try {
       const res = await fetch("http://localhost:8000/martingale", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify(payload),
       });
 
-      const data = (await res.json()) as MartingaleResponse;
+      const data = await res.json();
       onResult(data);
     } catch {
       alert("❌ Failed to connect to backend.");
@@ -61,38 +56,57 @@ export default function MartingaleInput({
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6 space-y-6">
-      <h2 className="text-xl font-semibold text-center mb-2">
-        Enter Process and Mode
-      </h2>
+    <form
+      onSubmit={handleSubmit}
+      className="bg-white rounded-xl shadow-md border border-gray-200 p-6 space-y-4"
+    >
+      <h2 className="text-xl font-semibold text-center mb-2">Enter Process</h2>
 
-      {/* Process Input */}
-      <MathFunctionInput
-        label="Process f(t, W)"
-        examples={["exp(sigma*W - 0.5*sigma^2*t)", "t*W", "W^2 - t"]}
-        endpoint="/noop" // no usamos el endpoint interno
-        payloadKey="process"
-        onSuccess={() => {}}
-        onLatexChange={setProcessLatex}
-        presetLatex="W^2 - t"
-      />
-
-      {/* Mode Switch */}
-      <div className="flex justify-center items-center gap-4">
-        <label className="font-medium">Mode:</label>
-        <select
-          value={mode}
-          onChange={(e) =>
-            setMode(e.target.value as "montecarlo" | "analytical")
-          }
-          className="border rounded-md p-2"
-        >
-          <option value="montecarlo">Monte Carlo Simulation</option>
-          <option value="analytical">Analytical (Itô’s Lemma)</option>
-        </select>
+      {/* Process f(t,W) */}
+      <div>
+        <label className="block text-sm font-medium text-gray-700 mb-1">
+          Process f(t, W)
+        </label>
+        <input
+          type="text"
+          value={process}
+          onChange={(e) => setProcess(e.target.value)}
+          className="w-full border rounded-md p-2"
+          placeholder='e.g. "exp(σ*W - 0.5*σ^2*t)"'
+          required
+        />
       </div>
 
-      {/* Extra params if Monte Carlo */}
+      {/* Toggle switch */}
+      <div className="flex items-center justify-between">
+        <span className="text-sm font-medium text-gray-700">Mode</span>
+        <div className="flex gap-2">
+          <button
+            type="button"
+            onClick={() => setMode("montecarlo")}
+            className={`px-3 py-1 rounded-md font-medium ${
+              mode === "montecarlo"
+                ? "bg-[#5FBA9B] text-white"
+                : "bg-gray-200 text-gray-700"
+            }`}
+          >
+            Monte Carlo
+          </button>
+          <button
+            type="button"
+            onClick={() => setMode("analytical")}
+            className={`px-3 py-1 rounded-md font-medium ${
+              mode === "analytical"
+                ? "bg-[#5FBA9B] text-white"
+                : "bg-gray-200 text-gray-700"
+            }`}
+          >
+            Analytical
+          </button>
+        </div>
+      </div>
+
+      {/* Extra params only for Monte Carlo */}
       {mode === "montecarlo" && (
         <div className="space-y-3">
           <div>
@@ -101,12 +115,14 @@ export default function MartingaleInput({
             </label>
             <input
               type="number"
-              value={T}
               step="0.1"
+              value={T}
               onChange={(e) => setT(parseFloat(e.target.value))}
               className="w-full border rounded-md p-2"
+              required
             />
           </div>
+
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Steps (N)
@@ -116,8 +132,10 @@ export default function MartingaleInput({
               value={N}
               onChange={(e) => setN(parseInt(e.target.value))}
               className="w-full border rounded-md p-2"
+              required
             />
           </div>
+
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Trajectories (M)
@@ -127,16 +145,18 @@ export default function MartingaleInput({
               value={M}
               onChange={(e) => setM(parseInt(e.target.value))}
               className="w-full border rounded-md p-2"
+              required
             />
           </div>
+
           <div>
             <label className="block text-sm font-medium text-gray-700 mb-1">
               Initial W₀
             </label>
             <input
               type="number"
-              value={w0}
               step="0.1"
+              value={w0}
               onChange={(e) => setW0(parseFloat(e.target.value))}
               className="w-full border rounded-md p-2"
             />
@@ -145,11 +165,11 @@ export default function MartingaleInput({
       )}
 
       <button
-        onClick={handleSubmit}
+        type="submit"
         className="w-full bg-[#5FBA9B] hover:bg-[#4FAE8D] text-white font-semibold py-2 px-4 rounded-md transition-colors"
       >
         Test Martingale
       </button>
-    </div>
+    </form>
   );
 }
