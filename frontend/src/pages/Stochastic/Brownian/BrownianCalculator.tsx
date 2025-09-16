@@ -45,7 +45,7 @@ const BrownianCalculator = () => {
         </div>
 
         {/* Info Card */}
-        <div className="max-w-[1200px] mx-auto px-6 mt-6">
+        <div className="max-w-[1220px] mx-auto px-6 mt-6">
           <BrownianInfo />
         </div>
       </div>
