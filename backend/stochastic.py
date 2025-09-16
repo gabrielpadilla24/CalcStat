@@ -1,6 +1,7 @@
 from pydantic import BaseModel
 import numpy as np
 import sympy as sp
+from sympy.parsing.sympy_parser import parse_expr, standard_transformations, implicit_multiplication_application
 
 
 class BrownianData(BaseModel):
@@ -152,13 +153,22 @@ class StochasticSimulator:
         # Variables simbólicas
         t, x = sp.symbols("t x")
 
-        # Normalizar y parsear drift y sigma
+        # Transformaciones para parsing
+        transformations = standard_transformations + (implicit_multiplication_application,)
+
         def normalize(expr: str) -> str:
-            expr = expr.replace(r"\cdot", "*").replace("^", "**")
+            if not expr:
+                return "0"
+            expr = (
+                expr.replace(r"\cdot", "*")  # 0.2 \cdot x -> 0.2*x
+                .replace("·", "*")           # símbolo punto medio -> *
+                .replace("^", "**")          # x^2 -> x**2
+            )
             return expr.strip()
 
-        mu_expr = sp.sympify(normalize(data.mu), locals={"t": t, "x": x})
-        sigma_expr = sp.sympify(normalize(data.sigma), locals={"t": t, "x": x})
+        # Parsear con multiplicación implícita habilitada
+        mu_expr = parse_expr(normalize(data.mu), local_dict={"t": t, "x": x}, transformations=transformations)
+        sigma_expr = parse_expr(normalize(data.sigma), local_dict={"t": t, "x": x}, transformations=transformations)
 
         mu_func = sp.lambdify((t, x), mu_expr, "numpy")
         sigma_func = sp.lambdify((t, x), sigma_expr, "numpy")
@@ -177,7 +187,7 @@ class StochasticSimulator:
             X_i = paths[:, i]
             paths[:, i+1] = X_i + mu_func(t_i, X_i) * dt + sigma_func(t_i, X_i) * dW
 
-        # 🔹 Estadísticas finales en T
+        # 🔹 Estadísticas finales
         final_values = paths[:, -1]
         stats = {
             "mean": float(np.mean(final_values)),
@@ -197,5 +207,5 @@ class StochasticSimulator:
         return {
             "params": data.dict(),
             "chartData": chart_data,
-            "stats": stats
+            "stats": stats,
         }

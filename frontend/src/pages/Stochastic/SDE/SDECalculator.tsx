@@ -48,7 +48,7 @@ const SDECalculator = () => {
         </div>
 
         {/* Info Card */}
-        <div className="max-w-[1170px] mx-auto px-6 mt-6">
+        <div className="max-w-[1230px] mx-auto px-6 mt-6">
           <SDEInfo />
         </div>
       </div>
