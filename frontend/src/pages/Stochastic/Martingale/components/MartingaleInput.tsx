@@ -39,6 +39,13 @@ export default function MartingaleInput({
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    if (N > 2000 || M > 2000) {
+      alert(
+        "⚠️ Please use N and M lower than 2000 to avoid performance issues."
+      );
+      return;
+    }
+
     const payload: MartingaleData = { process, mode, T, N, M, w0 };
 
     try {
@@ -134,6 +141,9 @@ export default function MartingaleInput({
               className="w-full border rounded-md p-2"
               required
             />
+            <p className="text-xs text-gray-500 mt-1">
+              ⚠️ Please keep N &lt; 2000 to avoid performance issues.
+            </p>
           </div>
 
           <div>
@@ -147,6 +157,9 @@ export default function MartingaleInput({
               className="w-full border rounded-md p-2"
               required
             />
+            <p className="text-xs text-gray-500 mt-1">
+              ⚠️ Please keep M &lt; 50 to avoid performance issues.
+            </p>
           </div>
 
           <div>
