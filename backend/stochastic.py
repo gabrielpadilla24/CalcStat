@@ -46,13 +46,13 @@ class EVData(BaseModel):
 class QVData(BaseModel):
     process: str
     mode: str                # "analytical" o "montecarlo"
-    T: float
-    N: int
-    M: int
-    a: float
-    b: float
-    mu: float
-    sigma: float
+    T: float = 0
+    N: int = 0
+    M: int = 0
+    a: float = 0
+    b: float = 0
+    mu: float = 0
+    sigma: float = 0
 
 
 def normalize_latex(expr: str) -> str:
@@ -436,8 +436,12 @@ class StochasticSimulator:
 
             elif data.process == "Scaled Brownian motion":
                 qv_formula = r"[a W]_t = a^2 t"
-                qv_value = sp.latex(a**2 * t)
-                steps = [r"[aW]_t = a^2 [W]_t", r"[W]_t = t"]
+                qv_value = sp.latex((data.a**2) * t)   # 🔥 ahora sí usa el valor numérico de a
+                steps = [
+                    rf"[aW]_t = a^2 [W]_t = {data.a**2} \cdot t",
+                    r"[W]_t = t"
+                ]
+
 
             elif data.process == "Shifted Brownian motion":
                 qv_formula = r"[a W + b]_t = a^2 t"
