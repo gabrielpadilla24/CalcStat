@@ -25,8 +25,10 @@ type GirsanovResponse = {
 
 export default function GirsanovInput({
   onResult,
+  infoRef,
 }: {
   onResult: (result: GirsanovResponse) => void;
+  infoRef: React.RefObject<HTMLDivElement>; // 👉 referencia al info
 }) {
   const [mu, setMu] = useState<number>(0.1);
   const [muTilde, setMuTilde] = useState<number>(0.05);
@@ -64,6 +66,12 @@ export default function GirsanovInput({
       }
     } catch {
       alert("❌ Failed to connect to backend.");
+    }
+  };
+
+  const handleScroll = () => {
+    if (infoRef?.current) {
+      infoRef.current.scrollIntoView({ behavior: "smooth", block: "start" });
     }
   };
 
@@ -201,6 +209,15 @@ export default function GirsanovInput({
         className="w-full bg-[#5FBA9B] hover:bg-[#4FAE8D] text-white font-semibold py-2 px-4 rounded-md transition-colors"
       >
         Apply Girsanov’s Theorem
+      </button>
+
+      {/* Learn How it Works */}
+      <button
+        type="button"
+        onClick={handleScroll}
+        className="w-full bg-blue-100 hover:bg-blue-200 text-blue-700 font-medium py-2 px-4 rounded-md transition-colors"
+      >
+        ↓ Learn How it Works!
       </button>
     </form>
   );
