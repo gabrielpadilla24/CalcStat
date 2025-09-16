@@ -33,20 +33,20 @@ const ItoIntegralCalculator = () => {
         </h1>
 
         {/* Inputs + Result */}
-        <div className="max-w-[1440px] mx-auto flex flex-col lg:flex-row gap-6 px-6 justify-center">
+        <div className="max-w-[1440px] mx-auto flex flex-col lg:flex-row gap-6 px-6 justify-center mb-6">
           {/* Input form */}
           <div className="w-full lg:w-1/3 max-w-sm">
             <ItoIntegralInput onResult={setResult} />
           </div>
 
           {/* Simulation result */}
-          <div className="flex-1 max-w-3xl min-h-[600px]">
+          <div className="flex-1 max-w-3xl">
             <ItoIntegralResult result={result} />
           </div>
         </div>
 
         {/* Info Card */}
-        <div className="max-w-[1170px] mx-auto px-6 mt-6">
+        <div className="max-w-[1220px] mx-auto px-6">
           <ItoIntegralInfo />
         </div>
       </div>

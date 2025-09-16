@@ -50,13 +50,13 @@ export default function ItoIntegralResult({
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6 h-full flex flex-col">
-      <h2 className="text-xl font-semibold mb-4 text-center">
+    <div className="bg-white rounded-xl shadow-md border border-gray-200 p-4 flex flex-col">
+      <h2 className="text-lg font-semibold mb-3 text-center">
         Simulated Itô Integral Trajectories
       </h2>
 
-      {/* Chart fills available height */}
-      <div className="flex-1">
+      {/* 🔹 Fixed chart height instead of flex-grow */}
+      <div className="w-full h-[430px]">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={chartData}>
             <CartesianGrid strokeDasharray="3 3" />
@@ -67,7 +67,6 @@ export default function ItoIntegralResult({
             <YAxis />
             <Tooltip />
             <Legend />
-
             {Array.from({ length: M }, (_, idx) => (
               <Line
                 key={idx}
@@ -85,9 +84,9 @@ export default function ItoIntegralResult({
       {/* 🔽 Scroll button */}
       <div
         onClick={handleScroll}
-        className="flex items-center justify-center gap-2 mt-6 cursor-pointer text-[#5FBA9B] hover:text-[#4FAE8D] font-medium transition-colors"
+        className="flex items-center justify-center gap-2 mt-4 cursor-pointer text-[#5FBA9B] hover:text-[#4FAE8D] font-medium transition-colors"
       >
-        <span className="text-lg">↓</span>
+        <span className="text-base">↓</span>
         <span>See how it was calculated</span>
       </div>
     </div>

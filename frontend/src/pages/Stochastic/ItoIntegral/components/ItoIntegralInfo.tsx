@@ -4,7 +4,7 @@ export default function ItoIntegralInfo() {
   return (
     <div
       id="ito-info"
-      className="bg-white rounded-xl shadow-md border border-gray-200 p-6 mt-6"
+      className="bg-white rounded-xl shadow-md border border-gray-200 p-6"
     >
       <h2 className="text-2xl font-semibold mb-4">ℹ️ About Itô Integral</h2>
 
