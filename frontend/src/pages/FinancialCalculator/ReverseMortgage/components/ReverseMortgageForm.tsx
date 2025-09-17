@@ -17,7 +17,7 @@ type ReverseMortgageResult = {
   type: "Lump Sum" | "Monthly Advance";
   years: number;
   interestRate: number;
-  yearlyDebt: number[]; // <-- nuevo campo para graficar
+  yearlyDebt: number[];
 };
 
 const ReverseMortgageForm = () => {
@@ -75,7 +75,7 @@ const ReverseMortgageForm = () => {
       } else {
         setResult(data);
 
-        // 👉 Scroll suave hacia el resultado
+        // Scroll to results
         setTimeout(() => {
           resultsRef.current?.scrollIntoView({ behavior: "smooth" });
         }, 100);
@@ -87,7 +87,7 @@ const ReverseMortgageForm = () => {
   };
 
   return (
-    <>
+    <div className="bg-white p-4 sm:p-6 rounded-2xl shadow-lg w-full max-w-4xl mx-auto mt-8">
       <form
         onSubmit={handleSubmit}
         className="grid grid-cols-1 md:grid-cols-2 gap-6"
@@ -186,7 +186,7 @@ const ReverseMortgageForm = () => {
       </form>
 
       {result && (
-        <div ref={resultsRef}>
+        <div ref={resultsRef} className="mt-8 space-y-8">
           <ReverseMortgageResults {...result} />
           <ReverseMortgageChart yearlyDebt={result.yearlyDebt} />
           <ReverseMortgageInfo />
@@ -213,7 +213,7 @@ const ReverseMortgageForm = () => {
           )}
         </div>
       )}
-    </>
+    </div>
   );
 };
 

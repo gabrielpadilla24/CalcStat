@@ -19,12 +19,14 @@ const ReverseMortgageChart: React.FC<ReverseMortgageChartProps> = ({
 
   const options: ApexCharts.ApexOptions = {
     chart: {
-      height: 350,
       type: "bar",
+      toolbar: { show: false },
+      animations: { enabled: true },
     },
     plotOptions: {
       bar: {
         borderRadius: 6,
+        columnWidth: "65%",
         dataLabels: {
           position: "top",
         },
@@ -35,45 +37,61 @@ const ReverseMortgageChart: React.FC<ReverseMortgageChartProps> = ({
       formatter: (val) => `$${val.toLocaleString()}`,
       offsetY: -20,
       style: {
-        fontSize: "12px",
+        fontSize: "11px",
         colors: ["#304758"],
       },
     },
     xaxis: {
       categories,
-      position: "bottom",
-      axisBorder: {
-        show: true,
+      labels: {
+        style: { fontSize: "12px" },
       },
-      axisTicks: {
-        show: true,
-      },
-      tooltip: {
-        enabled: true,
-      },
+      tooltip: { enabled: true },
     },
     yaxis: {
       labels: {
         formatter: (val) => `$${val.toLocaleString()}`,
+        style: { fontSize: "12px" },
       },
     },
     title: {
       text: "Projected Debt Over Time",
       align: "center",
       style: {
-        fontSize: "16px",
+        fontSize: "18px",
+        fontWeight: "bold",
         color: "#333",
       },
     },
+    responsive: [
+      {
+        breakpoint: 1024,
+        options: {
+          plotOptions: { bar: { columnWidth: "70%" } },
+          dataLabels: { style: { fontSize: "10px" } },
+        },
+      },
+      {
+        breakpoint: 640,
+        options: {
+          plotOptions: { bar: { columnWidth: "80%" } },
+          dataLabels: { enabled: false }, // hide on small screens for clarity
+          xaxis: { labels: { style: { fontSize: "10px" } } },
+          yaxis: { labels: { style: { fontSize: "10px" } } },
+          title: { style: { fontSize: "14px" } },
+        },
+      },
+    ],
   };
 
   return (
-    <div className="mt-10">
+    <div className="mt-10 bg-white rounded-xl shadow p-4 sm:p-6">
       <ReactApexChart
         options={options}
         series={series}
         type="bar"
         height={350}
+        width="100%" // ✅ stretches to parent width
       />
     </div>
   );

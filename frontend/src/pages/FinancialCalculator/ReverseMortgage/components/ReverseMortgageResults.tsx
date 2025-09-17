@@ -14,23 +14,26 @@ const ReverseMortgageResults: React.FC<ReverseMortgageResultProps> = ({
   amountOwedAtEnd,
 }) => {
   return (
-    <div className="flex justify-center mt-10">
-      <div className="bg-green-50 border border-green-300 p-6 rounded-2xl shadow w-full max-w-2xl text-center">
-        <h2 className="text-2xl font-bold text-green-800 mb-4">
+    <div className="flex justify-center mt-10 px-4">
+      <div className="bg-green-50 border border-green-300 p-4 sm:p-6 md:p-8 rounded-2xl shadow w-full max-w-3xl">
+        <h2 className="text-xl sm:text-2xl md:text-3xl font-bold text-green-800 mb-6 text-center">
           Reverse Mortgage Summary
         </h2>
-        <p className="text-gray-700 mb-1">
-          <strong>Payout Type:</strong> {type}
-        </p>
-        <p className="text-gray-700 mb-1">
-          <strong>Years:</strong> {years}
-        </p>
-        <p className="text-gray-700 mb-4">
-          <strong>Annual Interest Rate:</strong> {interestRate}%
-        </p>
-        <p className="text-xl font-bold text-gray-900">
-          Amount Owed at End: ${amountOwedAtEnd.toLocaleString()}
-        </p>
+
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-center text-gray-700">
+          <p>
+            <strong>Payout Type:</strong> {type}
+          </p>
+          <p>
+            <strong>Years:</strong> {years}
+          </p>
+          <p>
+            <strong>Annual Interest Rate:</strong> {interestRate}%
+          </p>
+          <p className="sm:col-span-2 text-lg sm:text-xl font-bold text-gray-900 mt-4">
+            Amount Owed at End: ${amountOwedAtEnd.toLocaleString()}
+          </p>
+        </div>
       </div>
     </div>
   );
