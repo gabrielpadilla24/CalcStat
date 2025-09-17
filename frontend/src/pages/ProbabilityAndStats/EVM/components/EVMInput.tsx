@@ -22,7 +22,7 @@ export default function EVMInput({
   const [rows, setRows] = useState<Row[]>([{ x: "", p: "" }]);
   const [loading, setLoading] = useState(false);
 
-  // Calcular suma de probabilidades
+  // ✅ Probability sum
   const probSum = useMemo(() => {
     return rows.reduce((sum, r) => {
       const val = parseFloat(r.p);
@@ -30,13 +30,11 @@ export default function EVMInput({
     }, 0);
   }, [rows]);
 
-  // Validación: cada prob ≤ 1 y suma total = 1
+  // ✅ Validation
   const isValid = useMemo(() => {
     const probs = rows.map((r) => parseFloat(r.p)).filter((v) => !isNaN(v));
-
     if (probs.some((p) => p < 0 || p > 1)) return false;
-
-    return Math.abs(probSum - 1) < 1e-6; // tolerancia flotante
+    return Math.abs(probSum - 1) < 1e-6;
   }, [rows, probSum]);
 
   const handleRowChange = (index: number, field: keyof Row, value: string) => {
@@ -99,22 +97,26 @@ export default function EVMInput({
 
   return (
     <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6 w-full">
-      <h2 className="text-xl font-bold text-center mb-4">
+      <h2 className="text-lg sm:text-xl font-bold text-center mb-4">
         Discrete Random Variable Input
       </h2>
       <p className="text-sm text-gray-600 mb-4 text-center">
         Enter up to 20 values. Probabilities must sum to 1.
       </p>
 
-      <div className="space-y-2">
+      {/* Inputs */}
+      <div className="space-y-3">
         {rows.map((row, index) => (
-          <div key={index} className="flex gap-4">
+          <div
+            key={index}
+            className="flex flex-col sm:flex-row gap-3 sm:gap-4 w-full"
+          >
             <input
               type="number"
               placeholder={`x${index + 1}`}
               value={row.x}
               onChange={(e) => handleRowChange(index, "x", e.target.value)}
-              className="flex-1 border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              className="flex-1 border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none w-full"
             />
             <input
               type="number"
@@ -124,14 +126,14 @@ export default function EVMInput({
               placeholder={`P(x${index + 1})`}
               value={row.p}
               onChange={(e) => handleRowChange(index, "p", e.target.value)}
-              className="flex-1 border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              className="flex-1 border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none w-full"
             />
           </div>
         ))}
       </div>
 
-      {/* Mostrar suma de probabilidades */}
-      <p className="text-sm text-gray-700 mt-3">
+      {/* Probability sum */}
+      <p className="text-sm text-gray-700 mt-3 text-center sm:text-left">
         Sum of probabilities:{" "}
         <span
           className={`font-semibold ${
@@ -142,6 +144,7 @@ export default function EVMInput({
         </span>
       </p>
 
+      {/* Button */}
       <button
         onClick={handleSubmit}
         disabled={loading || !isValid}
