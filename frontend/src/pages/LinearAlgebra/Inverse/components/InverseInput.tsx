@@ -45,45 +45,47 @@ const InverseInput = ({
   };
 
   return (
-    <div className="w-[600px] bg-white rounded-xl shadow-md border border-gray-200 p-8">
+    <div className="w-full max-w-[600px] bg-white rounded-xl shadow-md border border-gray-200 p-4 sm:p-6 md:p-8 mx-auto">
       <div className="flex flex-col items-center text-center">
-        <label className="text-lg font-medium text-gray-700 mb-4">
+        <label className="text-base sm:text-lg font-medium text-gray-700 mb-4">
           Enter a square matrix to calculate its inverse:
         </label>
 
-        {/* Dimensiones */}
-        <div className="flex gap-4 justify-center mb-6">
+        {/* Dimensions */}
+        <div className="flex flex-wrap gap-4 justify-center items-center mb-6">
           <input
             type="number"
             value={rows}
             onChange={(e) => setRows(Number(e.target.value))}
-            className="w-20 p-2 border rounded-lg text-center"
+            className="w-16 sm:w-20 p-2 border rounded-lg text-center"
             min={1}
             max={8}
           />
-          <span className="text-lg">x</span>
+          <span className="text-base sm:text-lg">x</span>
           <input
             type="number"
             value={cols}
             onChange={(e) => setCols(Number(e.target.value))}
-            className="w-20 p-2 border rounded-lg text-center"
+            className="w-16 sm:w-20 p-2 border rounded-lg text-center"
             min={1}
             max={8}
           />
         </div>
 
-        {/* Input de la matriz */}
-        <MatrixInput
-          rows={rows}
-          cols={cols}
-          onChange={setMatrix}
-          title="Matrix A"
-        />
+        {/* Matrix input */}
+        <div className="w-full overflow-x-auto">
+          <MatrixInput
+            rows={rows}
+            cols={cols}
+            onChange={setMatrix}
+            title="Matrix A"
+          />
+        </div>
 
-        {/* Botón */}
+        {/* Button */}
         <button
           onClick={handleCalculate}
-          className="mt-6 bg-[#5FBA9B] text-white px-6 py-2 rounded-lg font-semibold hover:bg-[#4da88a] transition w-full"
+          className="mt-6 bg-[#5FBA9B] text-white px-4 sm:px-6 py-2 rounded-lg font-semibold hover:bg-[#4da88a] transition w-full"
         >
           Calculate Inverse
         </button>
