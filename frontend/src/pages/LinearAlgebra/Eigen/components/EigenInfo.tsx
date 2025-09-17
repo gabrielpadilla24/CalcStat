@@ -5,12 +5,12 @@ import { BlockMath, InlineMath } from "react-katex";
 
 const EigenInfo = () => {
   return (
-    <div className="bg-blue-50 border border-blue-200 rounded-xl p-6 mt-10 text-gray-800">
-      <h2 className="text-2xl font-bold mb-4">
+    <div className="bg-blue-50 border border-blue-200 rounded-xl p-4 sm:p-6 lg:p-8 mt-6 sm:mt-10 text-gray-800 max-w-4xl mx-auto">
+      <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold mb-4 text-center">
         📚 Understanding Eigenvalues & Eigenvectors
       </h2>
 
-      <p className="mb-4">
+      <p className="mb-4 text-sm sm:text-base leading-relaxed">
         Given a square matrix{" "}
         <InlineMath math="A \in \mathbb{R}^{n \times n}" />, a{" "}
         <strong>eigenvector</strong> <InlineMath math="v \neq 0" /> and its{" "}
@@ -20,21 +20,25 @@ const EigenInfo = () => {
         <InlineMath math="v" /> without changing its direction.
       </p>
 
-      <h3 className="text-xl font-semibold mb-2">
+      <h3 className="text-lg sm:text-xl font-semibold mb-2">
         📝 How are eigenvalues found?
       </h3>
-      <p className="mb-2">
+      <p className="mb-2 text-sm sm:text-base">
         They are roots of the <em>characteristic equation</em>:
       </p>
-      <BlockMath math="\det(A - \lambda I) = 0" />
-      <p className="mb-4">
+      <div className="overflow-x-auto">
+        <BlockMath math="\det(A - \lambda I) = 0" />
+      </div>
+      <p className="mb-4 text-sm sm:text-base">
         For each eigenvalue <InlineMath math="\lambda" />, an eigenvector is any
-        non‑zero solution of <InlineMath math="(A - \lambda I)\,v = 0" /> (i.e.,
+        non-zero solution of <InlineMath math="(A - \lambda I)\,v = 0" /> (i.e.,
         the nullspace).
       </p>
 
-      <h3 className="text-xl font-semibold mb-2">🔧 Practical workflow</h3>
-      <ol className="list-decimal list-inside space-y-2 mb-4">
+      <h3 className="text-lg sm:text-xl font-semibold mb-2">
+        🔧 Practical workflow
+      </h3>
+      <ol className="list-decimal list-inside space-y-2 mb-4 text-sm sm:text-base">
         <li>
           Build <InlineMath math="A - \lambda I" /> and compute{" "}
           <InlineMath math="\det(A - \lambda I)" />.
@@ -53,8 +57,8 @@ const EigenInfo = () => {
         </li>
       </ol>
 
-      <h3 className="text-xl font-semibold mb-2">💡 Key concepts</h3>
-      <ul className="list-disc list-inside space-y-2 mb-4">
+      <h3 className="text-lg sm:text-xl font-semibold mb-2">💡 Key concepts</h3>
+      <ul className="list-disc list-inside space-y-2 mb-4 text-sm sm:text-base">
         <li>
           <strong>Algebraic vs. geometric multiplicity:</strong>{" "}
           <InlineMath math="\text{alg mult}(\lambda)" /> is its root
@@ -75,7 +79,7 @@ const EigenInfo = () => {
           <InlineMath math="A = Q \Lambda Q^{\mathsf T}" /> (Spectral Theorem).
         </li>
         <li>
-          <strong>Scaling/normalization:</strong> any non‑zero multiple of an
+          <strong>Scaling/normalization:</strong> any non-zero multiple of an
           eigenvector is also an eigenvector; it’s common to normalize{" "}
           <InlineMath math="\|v\|=1" />.
         </li>
@@ -85,11 +89,9 @@ const EigenInfo = () => {
         </li>
       </ul>
 
-      <h3 className="text-xl font-semibold mb-2">🚀 Applications</h3>
-      <ul className="list-disc list-inside space-y-1 mb-4">
-        <li>
-          Principal Component Analysis (PCA) and dimensionality reduction.
-        </li>
+      <h3 className="text-lg sm:text-xl font-semibold mb-2">🚀 Applications</h3>
+      <ul className="list-disc list-inside space-y-1 mb-4 text-sm sm:text-base">
+        <li>PCA and dimensionality reduction.</li>
         <li>Stability analysis of dynamical systems.</li>
         <li>Vibration modes in mechanical/structural systems.</li>
         <li>
@@ -99,8 +101,8 @@ const EigenInfo = () => {
         </li>
       </ul>
 
-      <h3 className="text-xl font-semibold mb-2">🧠 Tips</h3>
-      <ul className="list-disc list-inside space-y-1">
+      <h3 className="text-lg sm:text-xl font-semibold mb-2">🧠 Tips</h3>
+      <ul className="list-disc list-inside space-y-1 text-sm sm:text-base">
         <li>
           Numerical routines (e.g., QR algorithm, power iteration) are preferred
           for large matrices.
