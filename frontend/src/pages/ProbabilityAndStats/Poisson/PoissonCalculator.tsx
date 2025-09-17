@@ -30,25 +30,38 @@ const PoissonCalculator = () => {
     <>
       <NavBar />
 
-      <div className="min-h-screen bg-gray-100 py-10 px-6">
-        <h1 className="text-4xl font-bold text-center mb-12">
+      <div className="min-h-screen bg-gray-100 py-10 px-4 sm:px-6">
+        {/* Header */}
+        <h1 className="text-3xl sm:text-4xl font-bold text-center mb-12">
           Poisson Distribution Calculator
         </h1>
 
-        <div className="max-w-[1440px] mx-auto flex flex-col lg:flex-row gap-6 px-6 justify-center items-stretch">
+        {/* Input + Result */}
+        <div
+          className="
+            max-w-[1440px] 
+            mx-auto 
+            flex 
+            flex-col lg:flex-row 
+            gap-6 
+            justify-center 
+            items-center lg:items-stretch
+            px-0 sm:px-6
+          "
+        >
           {/* INPUT */}
-          <div className="flex-1 max-w-[500px]">
+          <div className="w-full max-w-[500px]">
             <PoissonInput onResult={setResult} />
           </div>
 
           {/* RESULT */}
-          <div className="flex-1 max-w-[600px]">
+          <div className="w-full max-w-[600px]">
             <PoissonResult result={result} />
           </div>
         </div>
 
-        {/* 🔹 Info Card abajo ocupando todo el ancho */}
-        <div className="max-w-[1220px] mx-auto px-6 mt-10">
+        {/* Info Card */}
+        <div className="max-w-[1220px] mx-auto px-2 sm:px-6 mt-10">
           <PoissonInfo />
         </div>
       </div>
