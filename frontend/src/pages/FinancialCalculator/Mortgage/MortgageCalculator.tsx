@@ -35,7 +35,6 @@ const MortgageCalculator: React.FC<MortgageCalculatorProps> = ({
   const [insurance, setInsurance] = useState<string>("");
 
   const [loanTypeState, setLoanTypeState] = useState<string>(loanType || "");
-
   const location = useLocation();
   const isGeneralRoute = location.pathname === "/mortgage";
 
@@ -67,30 +66,23 @@ const MortgageCalculator: React.FC<MortgageCalculatorProps> = ({
   const amortizationRef = useRef<HTMLDivElement | null>(null);
 
   const scrollToGraph = () => {
-    if (amortizationRef.current) {
-      amortizationRef.current.scrollIntoView({ behavior: "smooth" });
-    }
+    amortizationRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   const scrollToARM = () => {
-    const armSection = document.querySelector(".mt-12");
-    if (armSection) {
-      armSection.scrollIntoView({ behavior: "smooth" });
-    }
+    document.querySelector(".mt-12")?.scrollIntoView({ behavior: "smooth" });
   };
 
   const scrollToInterestOnly = () => {
-    const interestOnlySection = document.querySelector(".mt-8");
-    if (interestOnlySection) {
-      interestOnlySection.scrollIntoView({ behavior: "smooth" });
-    }
+    document.querySelector("#interest-only-explanation")?.scrollIntoView({
+      behavior: "smooth",
+    });
   };
 
   const scrollToBalloon = () => {
-    const balloonSection = document.querySelector("#balloon-explanation");
-    if (balloonSection) {
-      balloonSection.scrollIntoView({ behavior: "smooth" });
-    }
+    document.querySelector("#balloon-explanation")?.scrollIntoView({
+      behavior: "smooth",
+    });
   };
 
   const monthlyPropertyTax = propertyTaxes ? Number(propertyTaxes) / 12 : 0;
@@ -101,10 +93,29 @@ const MortgageCalculator: React.FC<MortgageCalculatorProps> = ({
     <>
       <NavBar />
       <div className="min-h-screen bg-gray-100 py-10 px-4">
-        <h1 className="text-4xl font-bold text-center mb-12">{getTitle()}</h1>
+        <h1 className="text-3xl sm:text-4xl font-bold text-center mb-12">
+          {getTitle()}
+        </h1>
 
-        <div className="flex justify-center items-start gap-12 flex-wrap mb-16">
-          <div>
+        {/* Responsive form + chart layout */}
+        <div
+          className="
+            max-w-[1440px] 
+            mx-auto 
+            flex 
+            flex-col 
+            md:flex-col 
+            lg:flex-row 
+            items-center 
+            lg:items-start 
+            justify-center 
+            gap-8 
+            lg:gap-12 
+            mb-16
+          "
+        >
+          {/* FORM */}
+          <div className="w-full max-w-[500px] flex-1">
             <MortgageForm
               setResultado={setResultado}
               setTotalPayment={setTotalPayment}
@@ -120,7 +131,8 @@ const MortgageCalculator: React.FC<MortgageCalculatorProps> = ({
             />
           </div>
 
-          <div className="w-full md:w-auto">
+          {/* CHART */}
+          <div className="w-full max-w-[650px] flex-1 flex justify-center">
             <MonthlyBreakdownChart
               resultado={resultado}
               monthlyPropertyTax={monthlyPropertyTax}
@@ -135,6 +147,7 @@ const MortgageCalculator: React.FC<MortgageCalculatorProps> = ({
           </div>
         </div>
 
+        {/* Amortization graph */}
         <div ref={amortizationRef} className="flex justify-center">
           <AmortizationGraph
             principalPaid={principalPaid}
@@ -143,6 +156,7 @@ const MortgageCalculator: React.FC<MortgageCalculatorProps> = ({
           />
         </div>
 
+        {/* Conditional explanations */}
         {loanTypeState === "ARM" && (
           <div className="mt-12">
             <ARMExplanation fixedYearsMessage={resultado?.fixedYearsMessage} />
@@ -166,4 +180,5 @@ const MortgageCalculator: React.FC<MortgageCalculatorProps> = ({
     </>
   );
 };
+
 export default MortgageCalculator;

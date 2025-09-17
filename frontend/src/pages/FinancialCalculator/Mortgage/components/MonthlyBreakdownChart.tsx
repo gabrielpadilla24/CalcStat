@@ -95,9 +95,9 @@ const MonthlyBreakdownChart: React.FC<Props> = ({
     },
     responsive: [
       {
-        breakpoint: 480,
+        breakpoint: 768,
         options: {
-          chart: { width: 250 },
+          chart: { width: "100%" },
         },
       },
     ],
@@ -106,28 +106,18 @@ const MonthlyBreakdownChart: React.FC<Props> = ({
   return (
     <div
       className={`
-    bg-white 
-    rounded-lg 
-    shadow-md 
-    p-6 
-    w-[600px] 
-    flex 
-    flex-col 
-    justify-between 
-    transition-all 
-    duration-300
-    ${
-      loanType === "Interest Only"
-        ? "h-[576px]"
-        : loanType === "Balloon Payments"
-        ? "h-[576px]"
-        : loanType === "Fixed Rate"
-        ? "h-[516px]"
-        : loanType === "ARM"
-        ? "h-[576px]"
-        : "h-[460px]" // Default para Fixed Rate, ARM, etc.
-    }
-  `}
+        bg-white 
+        rounded-lg 
+        shadow-md 
+        p-6 
+        w-full
+        max-w-[600px]
+        flex 
+        flex-col 
+        justify-between 
+        transition-all 
+        duration-300
+      `}
     >
       <h2 className="text-xl font-semibold text-center mb-4">
         Monthly Payment Chart
@@ -135,7 +125,7 @@ const MonthlyBreakdownChart: React.FC<Props> = ({
 
       {/* Tabs para Interest Only o Balloon Payments */}
       {isTwoPaymentLoan && (
-        <div className="flex justify-center mb-4">
+        <div className="flex justify-center mb-4 flex-wrap gap-2">
           <button
             className={`px-4 py-2 rounded-l-lg border ${
               selectedTab === "initial"
@@ -170,17 +160,18 @@ const MonthlyBreakdownChart: React.FC<Props> = ({
           hasResult ? "opacity-100" : "opacity-0"
         }`}
       >
-        <div className="flex flex-col md:flex-row gap-6 justify-between items-start">
-          <div className="flex-1 flex justify-center">
+        <div className="flex flex-col md:flex-row gap-6 justify-between items-center md:items-start">
+          <div className="flex-1 flex justify-center w-full">
             <ReactApexChart
               options={options}
               series={series}
               type="donut"
-              height={300}
+              height={280}
+              width="100%"
             />
           </div>
 
-          <div className="flex-1 text-sm text-gray-700 space-y-1">
+          <div className="flex-1 text-sm text-gray-700 space-y-1 w-full">
             <div className="bg-green-100 border border-green-300 text-green-700 px-4 py-4 rounded-lg text-center shadow-sm mb-4">
               <div className="text-lg font-semibold leading-tight">
                 {loanType === "Balloon Payments" && selectedTab === "after"

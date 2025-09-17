@@ -12,20 +12,20 @@ const AmortizationGraph: React.FC<AmortizationGraphProps> = ({
   interestPaid,
   loanBalance,
 }) => {
-  const years = principalPaid.map((_, i) => `Year ${i}`);
+  const years = principalPaid.map((_, i) => `Year ${i + 1}`);
 
   const formatCurrency = (val: number): string =>
     val.toLocaleString("en-US", {
       style: "currency",
       currency: "USD",
-      minimumFractionDigits: 2,
+      minimumFractionDigits: 0,
     });
 
   const options = {
     chart: {
       type: "line" as const,
-      height: 350,
       zoom: { enabled: false },
+      toolbar: { show: false },
     },
     dataLabels: { enabled: false },
     stroke: {
@@ -43,6 +43,7 @@ const AmortizationGraph: React.FC<AmortizationGraphProps> = ({
     xaxis: {
       categories: years,
       title: { text: "Year" },
+      labels: { rotate: -45 },
     },
     yaxis: {
       title: { text: "Amount (USD)" },
@@ -59,7 +60,22 @@ const AmortizationGraph: React.FC<AmortizationGraphProps> = ({
       position: "top" as const,
       horizontalAlign: "center" as const,
     },
-    colors: ["#3b82f6", "#10b981", "#f59e0b"], // opcional: azul, verde, naranja
+    colors: ["#3b82f6", "#10b981", "#f59e0b"], // azul, verde, naranja
+    responsive: [
+      {
+        breakpoint: 1024,
+        options: {
+          chart: { height: 400 },
+        },
+      },
+      {
+        breakpoint: 640,
+        options: {
+          chart: { height: 300 },
+          xaxis: { labels: { show: false } },
+        },
+      },
+    ],
   };
 
   const series = [
@@ -69,7 +85,7 @@ const AmortizationGraph: React.FC<AmortizationGraphProps> = ({
   ];
 
   return (
-    <div className="bg-white rounded-lg shadow-md p-6 w-[1200px]">
+    <div className="bg-white rounded-lg shadow-md p-6 w-full max-w-[1200px] mx-auto">
       <ReactApexChart
         options={options}
         series={series}

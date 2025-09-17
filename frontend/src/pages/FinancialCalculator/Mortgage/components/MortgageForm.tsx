@@ -39,7 +39,7 @@ const MortgageForm: React.FC<Props> = ({
   setInsurance,
   setLoanType,
   showLoanTypeSelector = true,
-  loanType,
+  //loanType,
 }) => {
   const detectLoanTypeFromURL = (): string => {
     const path = window.location.pathname.toLowerCase();
@@ -409,38 +409,28 @@ const MortgageForm: React.FC<Props> = ({
     <form
       onSubmit={handleSubmit}
       className={`
-        bg-white 
-        rounded-lg 
-        shadow-md 
-        p-6 
-        w-[550px] 
-        flex 
-        flex-col 
-        justify-between 
-        transition-all 
-        duration-300
-        ${
-          loanType === "Interest Only"
-            ? "h-[576px]"
-            : loanType === "Balloon Payments"
-            ? "h-[576px]"
-            : loanType === "Fixed Rate"
-            ? "h-[516px]"
-            : loanType === "ARM"
-            ? "h-[576px]"
-            : "h-[460px]" // Default para Fixed Rate, ARM, etc.
-        }
-      `}
+      bg-white 
+      rounded-lg 
+      shadow-md 
+      p-6 
+      w-full
+      max-w-[550px]
+      flex 
+      flex-col 
+      justify-between 
+      transition-all 
+      duration-300
+    `}
     >
-      <table className="w-full space-y-4">
-        <tbody>
+      <table className="w-full">
+        <tbody className="space-y-4">
           {/* Tipo de Hipoteca (solo si se permite seleccionar) */}
           {showLoanTypeSelector && (
-            <tr>
-              <td>
+            <tr className="flex flex-col sm:table-row">
+              <td className="pb-2 sm:pb-0 sm:pr-4">
                 <label htmlFor="loanType">Mortgage Type:</label>
               </td>
-              <td>
+              <td className="w-full">
                 <select
                   id="loanType"
                   name="loanType"
@@ -461,8 +451,8 @@ const MortgageForm: React.FC<Props> = ({
           {/* Campos dinámicos por tipo */}
           {formData.loanType === "Fixed Rate" && (
             <>
-              <tr>
-                <td>
+              <tr className="flex flex-col sm:table-row">
+                <td className="pb-2 sm:pb-0 sm:pr-4">
                   <label htmlFor="duration">Mortgage Duration:</label>
                 </td>
                 <td>
@@ -492,8 +482,8 @@ const MortgageForm: React.FC<Props> = ({
 
           {formData.loanType === "ARM" && (
             <>
-              <tr>
-                <td>
+              <tr className="flex flex-col sm:table-row">
+                <td className="pb-2 sm:pb-0 sm:pr-4">
                   <label htmlFor="loanTerm">Loan Term (Years):</label>
                 </td>
                 <td>
@@ -524,8 +514,8 @@ const MortgageForm: React.FC<Props> = ({
 
           {formData.loanType === "Interest Only" && (
             <>
-              <tr>
-                <td>
+              <tr className="flex flex-col sm:table-row">
+                <td className="pb-2 sm:pb-0 sm:pr-4">
                   <label htmlFor="loanTerm">Loan Term (Years):</label>
                 </td>
                 <td>
@@ -556,8 +546,8 @@ const MortgageForm: React.FC<Props> = ({
 
           {formData.loanType === "Balloon Payments" && (
             <>
-              <tr>
-                <td>
+              <tr className="flex flex-col sm:table-row">
+                <td className="pb-2 sm:pb-0 sm:pr-4">
                   <label htmlFor="loanTerm">Loan Term (Years):</label>
                 </td>
                 <td>
@@ -587,8 +577,8 @@ const MortgageForm: React.FC<Props> = ({
           )}
 
           {/* Campos opcionales */}
-          <tr>
-            <td>
+          <tr className="flex flex-col sm:table-row">
+            <td className="pb-2 sm:pb-0 sm:pr-4">
               <label htmlFor="propertyTaxes">Property Taxes (Annual):</label>
             </td>
             <td>
@@ -602,8 +592,9 @@ const MortgageForm: React.FC<Props> = ({
               />
             </td>
           </tr>
-          <tr>
-            <td>
+
+          <tr className="flex flex-col sm:table-row">
+            <td className="pb-2 sm:pb-0 sm:pr-4">
               <label htmlFor="hoaFees">HOA Fees (Monthly):</label>
             </td>
             <td>
@@ -617,8 +608,9 @@ const MortgageForm: React.FC<Props> = ({
               />
             </td>
           </tr>
-          <tr>
-            <td>
+
+          <tr className="flex flex-col sm:table-row">
+            <td className="pb-2 sm:pb-0 sm:pr-4">
               <label htmlFor="insurance">Insurance (Annual):</label>
             </td>
             <td>
