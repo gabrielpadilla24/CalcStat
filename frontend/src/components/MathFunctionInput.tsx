@@ -8,7 +8,6 @@ addStyles();
 // JSON-safe type
 type Json = string | number | boolean | null | Json[] | { [k: string]: Json };
 
-// ✅ interfaz mínima del MathField que necesitamos (sin `any`)
 interface MathField {
   latex: (l?: string) => string;
   focus: () => void;
@@ -31,14 +30,8 @@ interface MathFunctionInputProps<
   className?: string;
   inputLeft?: ReactNode;
   extraContent?: ReactNode;
-
-  /** (opcional) preset inicial si quieres controlar el valor */
   presetLatex?: string;
-
-  /** (opcional) escucha cambios en LaTeX */
   onLatexChange?: (latex: string) => void;
-
-  /** 🔥 NUEVO: te paso el MathField al montar para controlar el cursor/plantillas */
   onMathField?: (mf: MathField | null) => void;
 }
 
@@ -106,15 +99,15 @@ const MathFunctionInput = <
 
   return (
     <div
-      className={`max-w-[1440px] mx-auto flex flex-col items-center justify-center px-6 ${className}`}
+      className={`max-w-[1440px] mx-auto flex flex-col items-center justify-center px-4 sm:px-6 ${className}`}
     >
-      <div className="w-[600px] bg-white rounded-xl shadow-md border border-gray-200 p-8">
+      <div className="w-full max-w-[600px] bg-white rounded-xl shadow-md border border-gray-200 p-4 sm:p-6 lg:p-8">
         <div className="flex flex-col items-center text-center">
           <label className="text-lg font-medium text-gray-700 mb-4">
             {label}
           </label>
 
-          <div className="w-full flex items-center gap-3 mb-6">
+          <div className="w-full flex flex-wrap items-center gap-3 mb-6">
             {inputLeft && (
               <div className="shrink-0 flex items-center justify-center">
                 {inputLeft}
@@ -125,7 +118,6 @@ const MathFunctionInput = <
               latex={latex}
               onChange={(mf) => setLatex(mf.latex())}
               mathquillDidMount={(mf) => {
-                // expón el MathField arriba (sin perder compatibilidad)
                 onMathField?.(mf as unknown as MathField);
               }}
               className="text-xl w-full border border-gray-300 px-4 py-2 rounded-lg bg-white focus:outline-none"
@@ -134,10 +126,10 @@ const MathFunctionInput = <
 
           {extraContent}
 
-          <p className="text-sm text-gray-500 mb-4">
+          <p className="text-sm text-gray-500 mb-4 break-words">
             Examples:&nbsp;
             {examples.map((ex, i) => (
-              <code key={i} className="mr-2">
+              <code key={i} className="mr-2 whitespace-nowrap">
                 {ex}
               </code>
             ))}
@@ -146,7 +138,7 @@ const MathFunctionInput = <
           <button
             onClick={handleCalculate}
             disabled={loading || !latex.trim()}
-            className="bg-[#5FBA9B] disabled:opacity-60 disabled:cursor-not-allowed text-white px-6 py-2 rounded-lg font-semibold hover:bg-[#4da88a] transition"
+            className="w-full sm:w-auto bg-[#5FBA9B] disabled:opacity-60 disabled:cursor-not-allowed text-white px-6 py-2 rounded-lg font-semibold hover:bg-[#4da88a] transition"
           >
             {loading ? "Calculating..." : buttonText}
           </button>
