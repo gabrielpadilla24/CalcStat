@@ -211,14 +211,14 @@ export default function GirsanovInput({
         Apply Girsanov’s Theorem
       </button>
 
-      {/* Learn How it Works */}
-      <button
-        type="button"
+      {/* 🔽 Learn How it Works (scroll trigger) */}
+      <div
         onClick={handleScroll}
-        className="w-full bg-blue-100 hover:bg-blue-200 text-blue-700 font-medium py-2 px-4 rounded-md transition-colors"
+        className="flex items-center justify-center gap-2 mt-4 cursor-pointer text-[#5FBA9B] hover:text-[#4FAE8D] font-medium transition-colors"
       >
-        ↓ Learn How it Works!
-      </button>
+        <span className="text-base">↓</span>
+        <span>Learn How it Works!</span>
+      </div>
     </form>
   );
 }
