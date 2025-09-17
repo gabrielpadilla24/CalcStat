@@ -56,10 +56,10 @@ const SavingsForm: React.FC<SavingsFormProps> = ({ onResult }) => {
   };
 
   return (
-    <div className="bg-white p-6 rounded-2xl shadow-lg w-full">
+    <div className="bg-white p-6 rounded-2xl shadow-lg w-full h-full flex flex-col justify-between">
       <form
         onSubmit={handleSubmit}
-        className="flex flex-col items-center w-full"
+        className="flex flex-col items-center w-full flex-grow"
       >
         <div className="mb-6 text-center w-full">
           <h2 className="text-2xl font-semibold mb-3">
@@ -67,7 +67,7 @@ const SavingsForm: React.FC<SavingsFormProps> = ({ onResult }) => {
           </h2>
         </div>
 
-        <div className="w-full space-y-4">
+        <div className="w-full space-y-4 flex-grow">
           <div>
             <label className="block font-medium mb-1">Target Amount:</label>
             <input
@@ -75,7 +75,7 @@ const SavingsForm: React.FC<SavingsFormProps> = ({ onResult }) => {
               step="0.01"
               value={goalAmount}
               onChange={(e) => setGoalAmount(e.target.value)}
-              placeholder="Ej: 10000"
+              placeholder="Eg: 10000"
               className="border border-gray-300 rounded-lg p-2 w-full"
               required
             />
@@ -88,7 +88,7 @@ const SavingsForm: React.FC<SavingsFormProps> = ({ onResult }) => {
               step="0.01"
               value={interestRate}
               onChange={(e) => setInterestRate(e.target.value)}
-              placeholder="Ej: 5"
+              placeholder="Eg: 5"
               className="border border-gray-300 rounded-lg p-2 w-full"
               required
             />
@@ -102,7 +102,7 @@ const SavingsForm: React.FC<SavingsFormProps> = ({ onResult }) => {
               type="number"
               value={years}
               onChange={(e) => setYears(e.target.value)}
-              placeholder="Ej: 10"
+              placeholder="Eg: 10"
               className="border border-gray-300 rounded-lg p-2 w-full"
               required
             />

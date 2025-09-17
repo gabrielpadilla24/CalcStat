@@ -20,17 +20,17 @@ const SavingsChart: React.FC<SavingsChartProps> = ({
       maximumFractionDigits: 2,
     });
 
-  const options = {
+  const options: ApexCharts.ApexOptions = {
     chart: {
-      type: "line" as const,
+      type: "line",
       zoom: { enabled: false },
       toolbar: { show: true },
     },
     dataLabels: { enabled: false },
-    stroke: { curve: "straight" as const, width: 3 },
+    stroke: { curve: "straight", width: 3 },
     title: {
       text: "Accumulated Savings vs. Goal",
-      align: "center" as const,
+      align: "center",
       style: { fontWeight: "bold", fontSize: "20px" },
     },
     xaxis: {
@@ -39,6 +39,7 @@ const SavingsChart: React.FC<SavingsChartProps> = ({
         text: "Year",
         style: { fontWeight: 600 },
       },
+      labels: { rotate: -45 },
     },
     yaxis: {
       title: {
@@ -60,40 +61,38 @@ const SavingsChart: React.FC<SavingsChartProps> = ({
         opacity: 0.5,
       },
     },
+    responsive: [
+      {
+        breakpoint: 1024, // tablets
+        options: {
+          chart: { height: 400 },
+          title: { style: { fontSize: "18px" } },
+        },
+      },
+      {
+        breakpoint: 640, // mobiles
+        options: {
+          chart: { height: 300 },
+          xaxis: { labels: { rotate: -30 } },
+          title: { style: { fontSize: "16px" } },
+        },
+      },
+    ],
   };
 
   const series = [
-    {
-      name: "Accumulated Value",
-      data: valores,
-    },
-    {
-      name: "Total Contributions",
-      data: aportes,
-    },
-    {
-      name: "Savings Goal",
-      data: Array(valores.length).fill(goal),
-    },
+    { name: "Accumulated Value", data: valores },
+    { name: "Total Contributions", data: aportes },
+    { name: "Savings Goal", data: Array(valores.length).fill(goal) },
   ];
 
   return (
-    <div
-      style={{
-        backgroundColor: "#fff",
-        padding: "24px",
-        borderRadius: "8px",
-        boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
-        width: "750px",
-        height: "608px",
-        margin: "0 auto",
-      }}
-    >
+    <div className="bg-white p-6 rounded-xl shadow-md w-full max-w-5xl mx-auto mt-8">
       <ReactApexChart
         options={options}
         series={series}
         type="line"
-        height={550}
+        height={500}
       />
     </div>
   );
