@@ -5,23 +5,23 @@ import { BlockMath, InlineMath } from "react-katex";
 
 const SVDInfo = () => {
   return (
-    <div className="bg-blue-50 border border-blue-200 rounded-xl p-6 mt-10 text-gray-800">
-      <h2 className="text-2xl font-bold mb-4">
+    <div className="bg-blue-50 border border-blue-200 rounded-xl shadow-md p-4 sm:p-6 md:p-8 mt-6 sm:mt-10 text-gray-800 max-w-[1200px] mx-auto">
+      <h2 className="text-xl sm:text-2xl font-bold mb-4 text-center sm:text-left">
         📚 Understanding Singular Value Decomposition (SVD)
       </h2>
 
-      <p className="mb-4">
+      <p className="mb-4 text-sm sm:text-base">
         The <strong>Singular Value Decomposition (SVD)</strong> is a powerful
         factorization that expresses any matrix{" "}
         <InlineMath math="A \in \mathbb{R}^{m \times n}" /> as:
       </p>
 
-      <div className="flex justify-center mb-4">
+      <div className="flex justify-center mb-4 overflow-x-auto">
         <BlockMath math="\mathbf{A} = \mathbf{U}\,\boldsymbol{\Sigma}\,\mathbf{V}^{\top}" />
       </div>
 
-      <h3 className="text-xl font-semibold mb-2">🔎 Components</h3>
-      <ul className="list-disc list-inside space-y-2 mb-4">
+      <h3 className="text-lg sm:text-xl font-semibold mb-2">🔎 Components</h3>
+      <ul className="list-disc list-inside space-y-2 mb-4 text-sm sm:text-base">
         <li>
           <InlineMath math="\mathbf{U}" />: <InlineMath math="m \times m" />{" "}
           orthogonal matrix (left singular vectors).
@@ -38,8 +38,10 @@ const SVDInfo = () => {
         </li>
       </ul>
 
-      <h3 className="text-xl font-semibold mb-2">📝 Key Properties</h3>
-      <ul className="list-disc list-inside space-y-2 mb-4">
+      <h3 className="text-lg sm:text-xl font-semibold mb-2">
+        📝 Key Properties
+      </h3>
+      <ul className="list-disc list-inside space-y-2 mb-4 text-sm sm:text-base">
         <li>
           <strong>Rank</strong>: equals the number of non-zero singular values.
         </li>
@@ -53,8 +55,8 @@ const SVDInfo = () => {
         </li>
       </ul>
 
-      <h3 className="text-xl font-semibold mb-2">🚀 Applications</h3>
-      <ul className="list-disc list-inside space-y-2 mb-4">
+      <h3 className="text-lg sm:text-xl font-semibold mb-2">🚀 Applications</h3>
+      <ul className="list-disc list-inside space-y-2 mb-4 text-sm sm:text-base">
         <li>
           Principal Component Analysis (PCA) and dimensionality reduction.
         </li>
@@ -63,15 +65,18 @@ const SVDInfo = () => {
         <li>Latent Semantic Analysis (LSA) in NLP.</li>
       </ul>
 
-      <h3 className="text-xl font-semibold mb-2">🧮 Example</h3>
-      <p className="mb-2">
+      <h3 className="text-lg sm:text-xl font-semibold mb-2">🧮 Example</h3>
+      <p className="mb-2 text-sm sm:text-base">
         For <InlineMath math="A = \begin{bmatrix}2 & 4 \\ 1 & 2\end{bmatrix}" />
         :
       </p>
-      <BlockMath math="\mathbf{A} = \mathbf{U}\,\boldsymbol{\Sigma}\,\mathbf{V}^{\top}" />
-      <BlockMath math="\mathbf{U} \approx \begin{bmatrix}-0.894 & -0.447 \\ -0.447 & 0.894\end{bmatrix}" />
-      <BlockMath math="\boldsymbol{\Sigma} = \begin{bmatrix}5 & 0 \\ 0 & 0\end{bmatrix}" />
-      <BlockMath math="\mathbf{V}^{\top} \approx \begin{bmatrix}-0.447 & -0.894 \\ -0.894 & 0.447\end{bmatrix}" />
+
+      <div className="overflow-x-auto space-y-2">
+        <BlockMath math="\mathbf{A} = \mathbf{U}\,\boldsymbol{\Sigma}\,\mathbf{V}^{\top}" />
+        <BlockMath math="\mathbf{U} \approx \begin{bmatrix}-0.894 & -0.447 \\ -0.447 & 0.894\end{bmatrix}" />
+        <BlockMath math="\boldsymbol{\Sigma} = \begin{bmatrix}5 & 0 \\ 0 & 0\end{bmatrix}" />
+        <BlockMath math="\mathbf{V}^{\top} \approx \begin{bmatrix}-0.447 & -0.894 \\ -0.894 & 0.447\end{bmatrix}" />
+      </div>
     </div>
   );
 };
