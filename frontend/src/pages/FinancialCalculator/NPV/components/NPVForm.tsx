@@ -69,7 +69,8 @@ const NPVForm = () => {
       const payload = {
         futureValue: parseFloat(futureValue),
         years: parseInt(years),
-        interestRate: parseFloat(interestRate) / 100,
+        // ✅ Enviamos porcentaje tal cual (ej. 8), backend hace /100
+        interestRate: parseFloat(interestRate),
       };
 
       try {
@@ -108,7 +109,8 @@ const NPVForm = () => {
 
       const payload = {
         cashFlows: cashFlows.map((cf) => parseFloat(cf.amount)),
-        interestRate: parseFloat(interestRate) / 100,
+        // ✅ Enviamos porcentaje tal cual (ej. 8), backend hace /100
+        interestRate: parseFloat(interestRate),
       };
 
       try {
@@ -146,17 +148,19 @@ const NPVForm = () => {
   };
 
   return (
-    <div className="bg-white p-6 rounded-2xl shadow-lg w-full max-w-3xl mx-auto mt-8">
+    <div className="bg-white p-4 sm:p-6 rounded-2xl shadow-lg w-full max-w-3xl mx-auto mt-8">
       <form
         onSubmit={handleSubmit}
         className="flex flex-col items-center w-full"
       >
         <div className="mb-6 text-center w-full">
-          <h2 className="text-2xl font-semibold mb-3">Calculation Mode</h2>
-          <div className="flex justify-center gap-4">
+          <h2 className="text-xl sm:text-2xl font-semibold mb-3">
+            Calculation Mode
+          </h2>
+          <div className="flex justify-center gap-3 sm:gap-4 flex-wrap">
             <button
               type="button"
-              className={`px-4 py-2 rounded-lg font-medium w-[130px] ${
+              className={`px-3 py-2 sm:px-4 sm:py-2 rounded-lg font-medium w-[120px] sm:w-[130px] ${
                 mode === "single" ? "bg-[#0BB489] text-white" : "bg-gray-200"
               }`}
               onClick={() => setMode("single")}
@@ -165,7 +169,7 @@ const NPVForm = () => {
             </button>
             <button
               type="button"
-              className={`px-4 py-2 rounded-lg font-medium w-[130px] ${
+              className={`px-3 py-2 sm:px-4 sm:py-2 rounded-lg font-medium w-[120px] sm:w-[130px] ${
                 mode === "sequence" ? "bg-[#0BB489] text-white" : "bg-gray-200"
               }`}
               onClick={() => setMode("sequence")}
@@ -220,9 +224,9 @@ const NPVForm = () => {
               {cashFlows.map((cf, index) => (
                 <div
                   key={cf.year}
-                  className="grid grid-cols-[80px_200px_60px] gap-2  max-w-md mx-auto items-center"
+                  className="grid grid-cols-1 sm:grid-cols-[80px_1fr_60px] gap-2 max-w-md w-full items-center"
                 >
-                  <label className="text-right font-medium">
+                  <label className="sm:text-right font-medium">
                     {`Year ${cf.year}`}
                   </label>
 
@@ -231,7 +235,7 @@ const NPVForm = () => {
                     step="0.01"
                     value={cf.amount}
                     onChange={(e) => handleChangeAmount(index, e.target.value)}
-                    className="border border-gray-300 rounded-lg p-2 w-[200px] mx-auto"
+                    className="border border-gray-300 rounded-lg p-2 w-full max-w-xs sm:max-w-none"
                     required
                   />
 
@@ -244,7 +248,7 @@ const NPVForm = () => {
                       Remove
                     </button>
                   ) : (
-                    <div className="w-[51px]" />
+                    <div className="h-5" />
                   )}
                 </div>
               ))}
@@ -258,8 +262,8 @@ const NPVForm = () => {
               + Add Year
             </button>
 
-            <div className="grid grid-cols-[80px_200px_60px] gap-2 mb-6 max-w-md mx-auto items-center">
-              <label className="text-right font-medium">
+            <div className="grid grid-cols-1 sm:grid-cols-[80px_1fr_60px] gap-2 mb-6 max-w-md w-full items-center">
+              <label className="sm:text-right font-medium">
                 Discount Rate (%)
               </label>
               <input
@@ -267,10 +271,10 @@ const NPVForm = () => {
                 step="0.01"
                 value={interestRate}
                 onChange={(e) => setInterestRate(e.target.value)}
-                className="border border-gray-300 rounded-lg p-2 w-[200px] mx-auto"
+                className="border border-gray-300 rounded-lg p-2 w-full max-w-xs sm:max-w-none"
                 required
               />
-              <div className="w-[51px]" />
+              <div className="h-5" />
             </div>
           </>
         )}

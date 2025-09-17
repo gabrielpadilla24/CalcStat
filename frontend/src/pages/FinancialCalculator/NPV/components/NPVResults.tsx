@@ -24,22 +24,26 @@ const NPVResults = ({
   }
 
   return (
-    <div className="mt-10 bg-green-50 border border-green-200 p-6 rounded-xl shadow-inner text-center">
-      <h2 className="text-2xl font-bold text-green-800 mb-4">
+    <div className="mt-8 sm:mt-10 bg-green-50 border border-green-200 p-4 sm:p-6 rounded-xl shadow-inner text-center w-full max-w-xl mx-auto">
+      <h2 className="text-xl sm:text-2xl font-bold text-green-800 mb-4">
         Net Present Value Summary
       </h2>
+
       {futureValue !== undefined && (
-        <p className="text-gray-700 mb-1">
+        <p className="text-gray-700 mb-1 text-sm sm:text-base">
           <strong>Future Value:</strong> ${futureValue.toLocaleString()}
         </p>
       )}
-      <p className="text-gray-700 mb-1">
+
+      <p className="text-gray-700 mb-1 text-sm sm:text-base">
         <strong>Years:</strong> {years}
       </p>
-      <p className="text-gray-700 mb-4">
+
+      <p className="text-gray-700 mb-4 text-sm sm:text-base">
         <strong>Discount Rate:</strong> {interestRate}%
       </p>
-      <p className="text-xl font-bold text-gray-900">
+
+      <p className="text-lg sm:text-xl font-bold text-gray-900">
         Net Present Value: ${npv.toLocaleString()}
       </p>
     </div>
