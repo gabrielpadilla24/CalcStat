@@ -27,37 +27,43 @@ type Props = {
 export default function NormalResult({ result }: Props) {
   if (!result) {
     return (
-      <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6 text-center h-full flex items-center justify-center">
-        <p className="text-gray-500">No result yet. Submit parameters first.</p>
+      <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6 text-center w-full min-h-[200px] flex items-center justify-center">
+        <p className="text-gray-500 text-sm sm:text-base">
+          No result yet. Submit parameters first.
+        </p>
       </div>
     );
   }
 
   return (
-    <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6 w-full h-full flex flex-col space-y-6">
-      <h2 className="text-xl font-bold text-center">Normal Distribution</h2>
+    <div className="bg-white rounded-xl shadow-md border border-gray-200 p-4 sm:p-6 w-full flex flex-col space-y-6">
+      <h2 className="text-lg sm:text-xl font-bold text-center">
+        Normal Distribution
+      </h2>
 
-      {/* Parámetros */}
-      <div className="text-center">
+      {/* Parameters */}
+      <div className="text-center text-sm sm:text-base">
         <p>
           <strong>μ:</strong> {result.mu} &nbsp;&nbsp;
           <strong>σ:</strong> {result.sigma}
         </p>
       </div>
 
-      {/* Resultado */}
+      {/* Result */}
       <div className="text-center">
-        <p className="font-medium">Result:</p>
-        <BlockMath math={result.prob_latex} />
+        <p className="font-medium text-sm sm:text-base">Result:</p>
+        <div className="overflow-x-auto">
+          <BlockMath math={result.prob_latex} />
+        </div>
       </div>
 
-      {/* Gráfico PDF + CDF */}
-      <div className="flex-1">
+      {/* Chart */}
+      <div className="flex-1 w-full">
         <NormalGraph
           support={result.support}
           pdf={result.pdf}
           cdf={result.cdf}
-          height={353}
+          height={250} // smaller default
         />
       </div>
     </div>
