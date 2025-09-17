@@ -24,20 +24,20 @@ const IRRCalculator = () => {
     <>
       <NavBar />
 
-      <div className="min-h-screen bg-gray-100 py-10 px-6">
-        <h1 className="text-4xl font-bold text-center mb-12">
+      <div className="min-h-screen bg-gray-100 py-10 px-4 sm:px-6">
+        <h1 className="text-3xl sm:text-4xl font-bold text-center mb-12">
           Internal Rate of Return Calculator
         </h1>
 
-        {/* FLEX CONTAINER */}
-        <div className="max-w-[1440px] mx-auto flex flex-col lg:flex-row items-start justify-center gap-4 px-6">
-          {/* FORM */}
-          <div className="flex-1 max-w-[500px]">
+        {/* Layout principal */}
+        <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-start justify-center gap-8">
+          {/* FORM (más angosto) */}
+          <div className="w-full lg:w-1/3">
             <IRRForm onResult={setResult} onLearnMore={handleScrollToInfo} />
           </div>
 
-          {/* CHART */}
-          <div className="flex-1 max-w-[750px]">
+          {/* CHART (más ancho) */}
+          <div className="w-full lg:w-2/3">
             <IRRChart
               irr={result?.irr ?? 0}
               discountRates={result?.discountRates ?? []}
@@ -46,8 +46,8 @@ const IRRCalculator = () => {
           </div>
         </div>
 
-        {/* INFO */}
-        <div ref={infoRef} className="mt-8">
+        {/* INFO SECTION */}
+        <div ref={infoRef} className="mt-12">
           <IRRInfo />
         </div>
       </div>

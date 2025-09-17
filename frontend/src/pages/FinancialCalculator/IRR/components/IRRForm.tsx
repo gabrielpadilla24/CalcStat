@@ -48,7 +48,6 @@ const IRRForm: React.FC<IRRFormProps> = ({ onResult, onLearnMore }) => {
     setResult(null);
 
     const amountsAreValid = cashFlows.every((cf) => cf.amount.trim() !== "");
-
     if (!amountsAreValid) {
       setError("Please fill in all cash flow values before submitting.");
       return;
@@ -87,32 +86,29 @@ const IRRForm: React.FC<IRRFormProps> = ({ onResult, onLearnMore }) => {
   };
 
   return (
-    <div className="bg-white p-6 rounded-2xl shadow-lg w-[500px] h-[600px] mx-auto flex flex-col">
+    <div className="bg-white p-6 sm:p-8 rounded-2xl shadow-lg w-full max-w-lg mx-auto flex flex-col">
       <form
         onSubmit={handleSubmit}
         className="flex flex-col items-center w-full flex-grow"
       >
-        <h2 className="text-2xl font-semibold mb-10 text-center w-full">
+        <h2 className="text-xl sm:text-2xl font-semibold mb-8 text-center w-full">
           Cashflow of the Project
         </h2>
 
         {/* ✅ Scrollable input box section */}
-        <div
-          className="overflow-y-scroll scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent space-y-4 mb-6 w-full flex flex-col items-center px-2"
-          style={{ maxHeight: "160px" }}
-        >
+        <div className="overflow-y-auto scrollbar-thin scrollbar-thumb-gray-300 scrollbar-track-transparent space-y-4 mb-6 w-full px-2 max-h-40 sm:max-h-48">
           {cashFlows.map((cf, index) => (
             <div
               key={cf.year}
-              className="grid grid-cols-[80px_200px_60px] gap-2 max-w-md mx-auto items-center"
+              className="grid grid-cols-1 sm:grid-cols-[80px_1fr_60px] gap-2 items-center w-full"
             >
-              <label className="text-right font-medium">{`Year ${cf.year}`}</label>
+              <label className="sm:text-right font-medium">{`Year ${cf.year}`}</label>
               <input
                 type="number"
                 step="0.01"
                 value={cf.amount}
                 onChange={(e) => handleChangeAmount(index, e.target.value)}
-                className="border border-gray-300 rounded-lg p-2 w-[200px] mx-auto"
+                className="border border-gray-300 rounded-lg p-2 w-full"
                 required
               />
               {cf.year !== 0 ? (
@@ -124,7 +120,7 @@ const IRRForm: React.FC<IRRFormProps> = ({ onResult, onLearnMore }) => {
                   Remove
                 </button>
               ) : (
-                <div className="w-[51px]" />
+                <div className="hidden sm:block w-[51px]" />
               )}
             </div>
           ))}
@@ -159,7 +155,7 @@ const IRRForm: React.FC<IRRFormProps> = ({ onResult, onLearnMore }) => {
       {result && <IRRResults irr={result.irr} cashFlows={result.cashFlows} />}
 
       {error && (
-        <div className="mt-4 bg-red-50 border border-red-300 p-4 rounded-xl text-red-700 text-center">
+        <div className="mt-4 bg-red-50 border border-red-300 p-4 rounded-xl text-red-700 text-center text-sm sm:text-base">
           <p>{error}</p>
         </div>
       )}

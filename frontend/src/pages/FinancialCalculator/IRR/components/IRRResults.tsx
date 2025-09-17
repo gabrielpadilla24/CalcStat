@@ -23,15 +23,15 @@ const IRRResults = ({ irr, cashFlows }: IRRResultProps) => {
 
   return (
     <div
-      className={`mt-8 mb-5 bg-green-50 border border-green-200 p-6 rounded-xl shadow-inner text-center transform transition-all duration-700 ease-out ${
+      className={`mt-8 mb-5 bg-green-50 border border-green-200 p-4 sm:p-6 rounded-xl shadow-inner text-center max-w-xl mx-auto transform transition-all duration-700 ease-out ${
         visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-4"
       }`}
     >
-      <h2 className="text-2xl font-bold text-green-800 mb-4">
+      <h2 className="text-lg sm:text-xl md:text-2xl font-bold text-green-800 mb-4">
         Internal Rate of Return (IRR)
       </h2>
 
-      <p className="text-xl font-bold text-gray-900 mt-4">
+      <p className="text-base sm:text-lg md:text-xl font-bold text-gray-900 mt-4">
         IRR: {irr.toFixed(2)}%
       </p>
     </div>

@@ -84,6 +84,22 @@ const IRRChart: React.FC<IRRChartProps> = ({ irr, discountRates, npvs }) => {
         opacity: 0.5,
       },
     },
+    responsive: [
+      {
+        breakpoint: 1024, // tablet
+        options: {
+          chart: { height: 400 },
+          title: { style: { fontSize: "16px" } },
+        },
+      },
+      {
+        breakpoint: 640, // móvil
+        options: {
+          chart: { height: 300 },
+          xaxis: { labels: { style: { fontSize: "10px" } } },
+        },
+      },
+    ],
   };
 
   const series = [
@@ -94,22 +110,12 @@ const IRRChart: React.FC<IRRChartProps> = ({ irr, discountRates, npvs }) => {
   ];
 
   return (
-    <div
-      style={{
-        backgroundColor: "#fff",
-        padding: "24px",
-        borderRadius: "8px",
-        boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
-        width: "750px",
-        height: "600px",
-        margin: "0 auto",
-      }}
-    >
+    <div className="w-full max-w-4xl bg-white p-4 sm:p-6 rounded-xl shadow-md mx-auto">
       <ReactApexChart
         options={options}
         series={series}
         type="line"
-        height={550}
+        height={500}
       />
     </div>
   );
