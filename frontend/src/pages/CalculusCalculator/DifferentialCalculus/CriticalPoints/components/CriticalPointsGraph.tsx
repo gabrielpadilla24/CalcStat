@@ -68,19 +68,23 @@ export default function CriticalPointsGraph({
   if (minPoint) exprs.push({ id: "absmin", latex: minPoint });
 
   return (
-    <DesmosGraph
-      title="📎 Critical Points Graph"
-      height={height}
-      expressions={exprs}
-      ui={{
-        expressions: true,
-        expressionsCollapsed: true,
-        keypad: false,
-        settingsMenu: false,
-        zoomButtons: true,
-        expressionsTopbar: true,
-        border: false,
-      }}
-    />
+    <div className="w-full">
+      <div className="w-full max-w-full rounded-lg overflow-hidden shadow-md border border-gray-200">
+        <DesmosGraph
+          title="📎 Critical Points Graph"
+          height={height}
+          expressions={exprs}
+          ui={{
+            expressions: true,
+            expressionsCollapsed: true,
+            keypad: false,
+            settingsMenu: false,
+            zoomButtons: true,
+            expressionsTopbar: true,
+            border: false,
+          }}
+        />
+      </div>
+    </div>
   );
 }

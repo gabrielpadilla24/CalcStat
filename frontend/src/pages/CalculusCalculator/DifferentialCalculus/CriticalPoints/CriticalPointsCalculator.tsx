@@ -25,15 +25,15 @@ const CriticalPointsCalculator = () => {
     <>
       <NavBar />
 
-      <div className="min-h-screen bg-gray-100 py-10">
-        <h1 className="text-4xl font-bold text-center mb-12">
+      <div className="min-h-screen bg-gray-100 py-10 px-4 sm:px-6">
+        <h1 className="text-3xl sm:text-4xl font-bold text-center mb-12">
           Critical Points / Extrema
         </h1>
 
         {/* Contenedor principal */}
-        <div className="max-w-[1440px] mx-auto flex flex-col lg:flex-row justify-center items-start gap-6 px-6">
+        <div className="max-w-[1440px] mx-auto flex flex-col lg:flex-row justify-center items-start gap-6">
           {/* Columna izquierda: Input + Graph */}
-          <div className="flex-1 max-w-[600px] w-full flex flex-col items-center">
+          <div className="flex-1 w-full max-w-[600px] mx-auto lg:mx-0 flex flex-col items-center gap-6">
             <div className="w-full">
               <CriticalPointsInput
                 onResult={(
@@ -57,17 +57,17 @@ const CriticalPointsCalculator = () => {
             {/* Gráfico */}
             <div className="w-full">
               <CriticalPointsGraph
-                latex={original} // ← viene en LaTeX desde el backend
+                latex={original}
                 firstDerivativeLatex={firstDerivative}
                 secondDerivativeLatex={secondDerivative}
                 absoluteExtrema={absoluteExtrema}
-                height={500}
+                height={400} // responsive baseline
               />
             </div>
           </div>
 
           {/* Columna derecha: Result */}
-          <div className="flex-1 w-full max-w-[600px]">
+          <div className="flex-1 w-full max-w-[600px] mx-auto lg:mx-0">
             <CriticalPointsResult
               original={original}
               firstDerivative={firstDerivative}

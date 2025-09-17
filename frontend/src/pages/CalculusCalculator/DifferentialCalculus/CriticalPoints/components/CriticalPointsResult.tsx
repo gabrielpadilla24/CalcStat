@@ -17,7 +17,11 @@ type CriticalPointsResultProps = {
 
 const SectionTitle: React.FC<{ children: React.ReactNode }> = ({
   children,
-}) => <h3 className="font-semibold mb-1">{children}</h3>;
+}) => (
+  <h3 className="font-semibold mb-2 text-base sm:text-lg text-gray-800">
+    {children}
+  </h3>
+);
 
 const CriticalPointsResult: React.FC<CriticalPointsResultProps> = ({
   original,
@@ -34,31 +38,33 @@ const CriticalPointsResult: React.FC<CriticalPointsResultProps> = ({
     criticalPoints.length > 0;
 
   return (
-    <div className="bg-white shadow-md rounded-xl p-6 w-full text-gray-800">
-      <h2 className="text-2xl font-bold mb-6">Results</h2>
+    <div className="bg-white shadow-md rounded-xl p-4 sm:p-6 w-full text-gray-800">
+      <h2 className="text-xl sm:text-2xl font-bold mb-6 text-center sm:text-left">
+        Results
+      </h2>
 
       {!hasResult && (
-        <p className="text-gray-500 italic">
+        <p className="text-gray-500 italic text-center sm:text-left">
           Enter a function above to compute its critical points.
         </p>
       )}
 
       {hasResult && (
-        <>
+        <div className="space-y-6">
           {/* Function & Derivatives */}
-          <div className="mb-6">
+          <div>
             <SectionTitle>Function & Derivatives</SectionTitle>
-            <div className="flex flex-col gap-1">
-              <div className="flex items-center gap-2">
-                <span>f(x):</span>
+            <div className="flex flex-col gap-2">
+              <div className="flex items-center gap-2 overflow-x-auto">
+                <span className="shrink-0">f(x):</span>
                 <StaticMathField>{original}</StaticMathField>
               </div>
-              <div className="flex items-center gap-2">
-                <span>f'(x):</span>
+              <div className="flex items-center gap-2 overflow-x-auto">
+                <span className="shrink-0">f'(x):</span>
                 <StaticMathField>{firstDerivative}</StaticMathField>
               </div>
-              <div className="flex items-center gap-2">
-                <span>f''(x):</span>
+              <div className="flex items-center gap-2 overflow-x-auto">
+                <span className="shrink-0">f''(x):</span>
                 <StaticMathField>{secondDerivative}</StaticMathField>
               </div>
             </div>
@@ -66,11 +72,11 @@ const CriticalPointsResult: React.FC<CriticalPointsResultProps> = ({
 
           {/* Critical Points */}
           {criticalPoints.length > 0 && (
-            <div className="mb-6">
+            <div>
               <SectionTitle>Critical Points</SectionTitle>
               <ul className="list-disc list-inside space-y-1">
                 {criticalPoints.map((point, idx) => (
-                  <li key={idx}>
+                  <li key={idx} className="overflow-x-auto">
                     <StaticMathField>{point}</StaticMathField>
                   </li>
                 ))}
@@ -79,7 +85,7 @@ const CriticalPointsResult: React.FC<CriticalPointsResultProps> = ({
           )}
 
           {/* Second Derivative Test */}
-          <div className="mb-6">
+          <div>
             <SectionTitle>Second Derivative Test</SectionTitle>
             <p className="text-gray-700 whitespace-pre-line">
               {classification || "—"}
@@ -88,16 +94,20 @@ const CriticalPointsResult: React.FC<CriticalPointsResultProps> = ({
 
           {/* Absolute Extrema */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <div className="bg-gray-50 border border-gray-200 rounded-lg p-3">
+            <div className="bg-gray-50 border border-gray-200 rounded-lg p-3 text-center sm:text-left">
               <SectionTitle>Absolute Max</SectionTitle>
-              <p className="text-gray-700">{absoluteExtrema?.max ?? "—"}</p>
+              <p className="text-gray-700 break-words">
+                {absoluteExtrema?.max ?? "—"}
+              </p>
             </div>
-            <div className="bg-gray-50 border border-gray-200 rounded-lg p-3">
+            <div className="bg-gray-50 border border-gray-200 rounded-lg p-3 text-center sm:text-left">
               <SectionTitle>Absolute Min</SectionTitle>
-              <p className="text-gray-700">{absoluteExtrema?.min ?? "—"}</p>
+              <p className="text-gray-700 break-words">
+                {absoluteExtrema?.min ?? "—"}
+              </p>
             </div>
           </div>
-        </>
+        </div>
       )}
     </div>
   );
