@@ -30,32 +30,32 @@ const UniformCalculator = () => {
     <>
       <NavBar />
 
-      <div className="min-h-screen bg-gray-100 py-10 px-6">
-        {/* Título */}
-        <h1 className="text-4xl font-bold text-center mb-12">
+      <div className="min-h-screen bg-gray-100 py-8 sm:py-10 px-4 sm:px-6">
+        {/* Title */}
+        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-8 sm:mb-12">
           Uniform Distribution Calculator
         </h1>
 
-        {/* Input + Result con misma altura */}
-        <div className="max-w-[1440px] mx-auto flex flex-col lg:flex-row gap-6 px-6 justify-center items-stretch">
+        {/* Input + Result */}
+        <div className="max-w-[1440px] mx-auto flex flex-col lg:flex-row gap-6 sm:gap-8 justify-center items-center lg:items-start px-2 sm:px-6">
           {/* INPUT */}
-          <div className="flex-1 max-w-[500px] h-full flex flex-col">
+          <div className="flex-1 w-full max-w-full sm:max-w-[500px]">
             <UniformInput onResult={setResult} />
           </div>
 
           {/* RESULT */}
-          <div className="flex-1 max-w-[600px] h-full flex flex-col">
+          <div className="flex-1 w-full max-w-full sm:max-w-[600px] mt-6 lg:mt-0">
             <UniformResult result={result} />
           </div>
         </div>
 
         {/* Info Card */}
-        <div className="max-w-[1170px] mx-auto px-6 mt-6">
+        <div className="max-w-[1170px] mx-auto px-2 sm:px-6 mt-8 sm:mt-10">
           <UniformInfo />
         </div>
       </div>
 
-      {/* CTA abajo */}
+      {/* CTA */}
       <BottomCTA
         buttonText="Back to Probability & Statistics"
         href="/probabilityandstats"
