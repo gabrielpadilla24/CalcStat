@@ -600,12 +600,66 @@ class StochasticSimulator:
             }
 
         # -----------------------
-        # MODO MONTE CARLO (opcional más adelante)
+        # MODO MONTE CARLO
         # -----------------------
         elif data.mode == "montecarlo":
-            return {"error": "Monte Carlo not implemented yet for Girsanov."}
+            if not data.T or not data.N or not data.M:
+                return {"error": "Monte Carlo requires T, N, and M."}
+
+            # Input limits
+            if data.N > 5000 or data.M > 200:
+                return {
+                    "error": "Too many steps/trajectories. "
+                            "Please try with N ≤ 5000 and M ≤ 200."
+                }
+
+            dt = data.T / data.N
+            sqrt_dt = np.sqrt(dt)
+
+            # Simulación de Brownian increments
+            dW = np.random.normal(0, sqrt_dt, size=(data.M, data.N))
+            W_paths = np.cumsum(dW, axis=1)
+            W_paths = np.hstack([np.zeros((data.M, 1)), W_paths])  # incluir W0 = 0
+            time_grid = np.linspace(0, data.T, data.N + 1)
+
+            # θ
+            theta_val = (data.mu - data.mu_tilde) / data.sigma
+
+            # Trayectorias bajo P
+            X_P = data.mu * time_grid + data.sigma * W_paths
+
+            # Trayectorias bajo Q (ajustamos drift con Girsanov)
+            W_Q = W_paths + theta_val * time_grid
+            X_Q = data.mu_tilde * time_grid + data.sigma * W_Q
+
+            # Datos para graficar (limitamos a 50 trayectorias)
+            max_traj = min(data.M, 50)
+            chart_data = []
+            for step in range(data.N + 1):
+                row = {"step": int(step), "time": float(time_grid[step])}
+                for m in range(max_traj):
+                    row[f"trajP_{m}"] = float(X_P[m, step])
+                    row[f"trajQ_{m}"] = float(X_Q[m, step])
+                chart_data.append(row)
+
+            # Estadísticas al final (en T) para Q
+            X_T = X_Q[:, -1]
+            stats = {
+                "mean": float(np.mean(X_T)),
+                "variance": float(np.var(X_T)),
+                "min": float(np.min(X_T)),
+                "max": float(np.max(X_T)),
+            }
+
+            return {
+                "mode": "montecarlo",
+                "params": data.dict(),
+                "theta": theta_val,
+                "chartData": chart_data,
+                "stats": stats,
+                "trajectoriesShown": max_traj,
+                "trajectoriesTotal": data.M,
+            }
 
         else:
             return {"error": f"Unknown mode: {data.mode}"}
-
-    
