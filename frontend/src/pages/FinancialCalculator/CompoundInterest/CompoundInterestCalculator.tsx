@@ -31,29 +31,32 @@ const ExponentialCalculator = () => {
     <>
       <NavBar />
       {/* 🔽 Contenedor principal */}
-
-      <div className="min-h-screen bg-gray-100 py-10">
-        <h1 className="text-4xl font-bold text-center mb-12">
+      <div className="min-h-screen bg-gray-100 py-10 px-4">
+        <h1 className="text-3xl md:text-4xl font-bold text-center mb-12">
           Compound Interest Calculator
         </h1>
 
-        <div className="flex justify-center items-start gap-10">
-          <div>
+        {/* Layout principal */}
+        <div className="flex flex-col lg:flex-row justify-center items-stretch gap-8 max-w-7xl mx-auto">
+          {/* Formulario (más angosto) */}
+          <div className="w-full lg:w-1/3">
             <ExponentialForm
               setValoresPorAño={setValoresPorAño}
               setAportesPorAño={setAportesPorAño}
               setFormulaData={setFormulaData}
               setMostrarFormulaConValores={setMostrarFormulaConValores}
-              scrollToFormula={scrollToFormula} // ✅ PASAMOS scrollToFormula
+              scrollToFormula={scrollToFormula}
             />
           </div>
-          <div>
+
+          {/* Gráfico (más ancho) */}
+          <div className="w-full lg:w-2/3">
             <ExponentialGraph valores={valoresPorAño} aportes={aportesPorAño} />
           </div>
         </div>
 
-        {/* 🔽 Fórmula con scroll-to-ref */}
-        <div ref={formulaRef}>
+        {/* Fórmula con scroll-to-ref */}
+        <div ref={formulaRef} className="mt-12">
           <ExponentialFormula
             P={formulaData.P}
             r={formulaData.r}
@@ -64,6 +67,7 @@ const ExponentialCalculator = () => {
           />
         </div>
       </div>
+
       <BottomCTA buttonText="Browse Financial" href="/financial" />
     </>
   );

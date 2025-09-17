@@ -21,10 +21,12 @@ const ExponentialGraph: React.FC<ExponentialGraphProps> = ({
 
   const options = {
     chart: {
-      height: 350,
       type: "line" as const,
       zoom: {
         enabled: false,
+      },
+      toolbar: {
+        show: false,
       },
     },
     dataLabels: {
@@ -37,7 +39,7 @@ const ExponentialGraph: React.FC<ExponentialGraphProps> = ({
       text: "Exponential Growth per Year",
       style: {
         fontWeight: "bold",
-        fontSize: "20px",
+        fontSize: "18px",
       },
       align: "center" as const,
     },
@@ -49,12 +51,45 @@ const ExponentialGraph: React.FC<ExponentialGraphProps> = ({
     },
     xaxis: {
       categories,
+      labels: {
+        style: {
+          fontSize: "12px",
+        },
+      },
     },
     tooltip: {
       y: {
         formatter: (val: number) => formatearNumero(val),
       },
     },
+    responsive: [
+      {
+        breakpoint: 1024, // tablets
+        options: {
+          chart: {
+            height: 400,
+          },
+          title: {
+            style: {
+              fontSize: "16px",
+            },
+          },
+        },
+      },
+      {
+        breakpoint: 640, // móviles
+        options: {
+          chart: {
+            height: 300,
+          },
+          xaxis: {
+            labels: {
+              show: false,
+            },
+          },
+        },
+      },
+    ],
   };
 
   const series = [
@@ -69,21 +104,12 @@ const ExponentialGraph: React.FC<ExponentialGraphProps> = ({
   ];
 
   return (
-    <div
-      style={{
-        backgroundColor: "#fff",
-        padding: "24px",
-        borderRadius: "8px",
-        boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
-        width: "750px",
-        height: "600px",
-      }}
-    >
+    <div className="w-full max-w-4xl bg-white p-4 sm:p-6 rounded-xl shadow-md mx-auto">
       <ReactApexChart
         options={options}
         series={series}
         type="line"
-        height={550}
+        height={450}
       />
     </div>
   );

@@ -92,9 +92,7 @@ const ExponentialForm: React.FC<Props> = ({
       body: JSON.stringify(payload),
     })
       .then((res) => {
-        if (!res.ok) {
-          throw new Error("Server response error");
-        }
+        if (!res.ok) throw new Error("Server response error");
         return res.json();
       })
       .then(
@@ -127,134 +125,107 @@ const ExponentialForm: React.FC<Props> = ({
   return (
     <form
       onSubmit={handleSubmit}
-      style={{
-        backgroundColor: "white",
-        padding: "24px",
-        borderRadius: "8px",
-        boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
-        width: "550px",
-        height: formData.addConstant ? "600px" : "auto", // Cambia la altura dinámicamente
-        transition: "height 0.3s ease", // Transición suave al cambiar la altura
-      }}
+      className="w-full max-w-md md:max-w-lg bg-white p-6 md:p-8 rounded-xl shadow-md mx-auto transition-all"
     >
-      <table style={{ width: "100%", borderSpacing: "12px" }}>
-        <tbody>
-          <InputField
-            label="Initial Amount"
-            name="initialValue"
-            value={formData.initialValue}
-            onChange={handleChange}
-            placeholder="Ej: 1000"
-          />
-          <InputField
-            label="Interest Rate (%)"
-            name="growthRate"
-            value={formData.growthRate}
-            onChange={handleChange}
-            placeholder="Ej: 5"
-          />
-          <InputField
-            label="Time Period (Years)"
-            name="time"
-            value={formData.time}
-            onChange={handleChange}
-            placeholder="Ej: 12"
-          />
-          <CheckBox
-            label={
-              <>
-                Add Constant Contribution{" "}
-                <Tooltip message="Add recurring contributions" width="110px" />
-              </>
-            }
-            name="addConstant"
-            checked={formData.addConstant}
-            onChange={handleChange}
-          />
-          {formData.addConstant && (
-            <>
-              <tr style={{ height: "60px" }}>
-                <td align="left" style={{ width: "50%" }}>
-                  <label htmlFor="constantValue">
-                    Contribution Amount:{" "}
-                    <Tooltip
-                      message="Monthly addition to the principal (use negative for withdrawals)"
-                      width="190px"
-                    />
-                  </label>
-                </td>
-                <td>
-                  <input
-                    type="number"
-                    id="constantValue"
-                    name="constantValue"
-                    value={formData.constantValue}
-                    onChange={handleChange}
-                    placeholder="Ej: 100"
-                    style={{
-                      width: "100%",
-                      padding: "8px",
-                      borderRadius: "6px",
-                      border: "1px solid #ccc",
-                    }}
-                    required
-                  />
-                </td>
-              </tr>
+      {/* Campos */}
+      <div className="space-y-6">
+        <InputField
+          label="Initial Amount"
+          name="initialValue"
+          value={formData.initialValue}
+          onChange={handleChange}
+          placeholder="Ej: 1000"
+        />
+        <InputField
+          label="Interest Rate (%)"
+          name="growthRate"
+          value={formData.growthRate}
+          onChange={handleChange}
+          placeholder="Ej: 5"
+        />
+        <InputField
+          label="Time Period (Years)"
+          name="time"
+          value={formData.time}
+          onChange={handleChange}
+          placeholder="Ej: 12"
+        />
 
-              <tr style={{ height: "60px" }}>
-                <td align="left" style={{ width: "50%" }}>
-                  <label htmlFor="frequency">Contribution Frequency:</label>
-                </td>
-                <td>
-                  <select
-                    id="frequency"
-                    name="frequency"
-                    value={formData.frequency}
-                    onChange={handleChange}
-                    style={{
-                      width: "100%",
-                      padding: "8px",
-                      borderRadius: "6px",
-                      border: "1px solid #ccc",
-                    }}
-                  >
-                    <option value="Yearly">Yearly</option>
-                    <option value="Monthly">Monthly</option>
-                  </select>
-                </td>
-              </tr>
+        <CheckBox
+          label={
+            <>
+              Add Constant Contribution{" "}
+              <Tooltip message="Add recurring contributions" width="110px" />
             </>
-          )}
-        </tbody>
-      </table>
-      <div style={{ marginTop: "25px", textAlign: "center" }}>
+          }
+          name="addConstant"
+          checked={formData.addConstant}
+          onChange={handleChange}
+        />
+
+        {formData.addConstant && (
+          <div className="space-y-6">
+            <div>
+              <label
+                htmlFor="constantValue"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Contribution Amount:{" "}
+                <Tooltip
+                  message="Monthly addition to the principal (use negative for withdrawals)"
+                  width="190px"
+                />
+              </label>
+              <input
+                type="number"
+                id="constantValue"
+                name="constantValue"
+                value={formData.constantValue}
+                onChange={handleChange}
+                placeholder="Ej: 100"
+                className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 focus:ring-[#5FBA9B] focus:border-[#5FBA9B] sm:text-sm"
+                required
+              />
+            </div>
+
+            <div>
+              <label
+                htmlFor="frequency"
+                className="block text-sm font-medium text-gray-700"
+              >
+                Contribution Frequency:
+              </label>
+              <select
+                id="frequency"
+                name="frequency"
+                value={formData.frequency}
+                onChange={handleChange}
+                className="mt-1 block w-full rounded-md border border-gray-300 px-3 py-2 focus:ring-[#5FBA9B] focus:border-[#5FBA9B] sm:text-sm"
+              >
+                <option value="Yearly">Yearly</option>
+                <option value="Monthly">Monthly</option>
+              </select>
+            </div>
+          </div>
+        )}
+      </div>
+
+      {/* Botón */}
+      <div className="mt-6 text-center">
         <SubmitButton text="Calculate" />
       </div>
 
+      {/* Resultado */}
       {resultado !== null && (
-        <div
-          style={{
-            marginTop: "25px",
-            padding: "16px",
-            borderRadius: "8px",
-            backgroundColor: "#f0fdf4",
-            border: "1px solid #10b981",
-            color: "#065f46",
-            fontWeight: "bold",
-            fontSize: "18px",
-            textAlign: "center",
-          }}
-        >
+        <div className="mt-6 p-4 rounded-lg bg-green-50 border border-green-400 text-green-800 font-bold text-lg text-center">
           Final Amount: {formatearNumero(resultado)}
         </div>
       )}
 
-      {/* Nuevo contenido agregado aquí */}
+      {/* Scroll a fórmula */}
       <div
         onClick={scrollToFormula}
         className="mt-4 text-center text-sm text-gray-500 flex justify-center items-center gap-1 cursor-pointer hover:text-gray-700 transition-colors"
-        style={{ marginTop: "15px" }}
       >
         <span className="text-lg">↓</span>
         <span>See how it was calculated</span>
