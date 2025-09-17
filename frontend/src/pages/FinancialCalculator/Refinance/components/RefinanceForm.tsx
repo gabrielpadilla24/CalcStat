@@ -25,9 +25,7 @@ const RefinanceForm = () => {
   const [closingCosts, setClosingCosts] = useState("");
 
   const [result, setResult] = useState<RefinanceResult | null>(null);
-
   const resultRef = useRef<HTMLDivElement | null>(null);
-
   const [score, setScore] = useState<number | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -54,7 +52,6 @@ const RefinanceForm = () => {
       setResult(data);
       setScore(data.refinanceScore);
 
-      // Scroll hacia los resultados
       setTimeout(() => {
         resultRef.current?.scrollIntoView({ behavior: "smooth" });
       }, 100);
@@ -67,10 +64,11 @@ const RefinanceForm = () => {
     result?.monthlySavings !== undefined && result.monthlySavings < 0;
 
   return (
-    <div className="max-w-4xl mx-auto p-6 bg-white shadow-md rounded-2xl">
+    <div className="max-w-4xl mx-auto p-4 sm:p-6 bg-white shadow-md rounded-2xl">
+      {/* FORM */}
       <form
         onSubmit={handleSubmit}
-        className="grid grid-cols-1 md:grid-cols-2 gap-6"
+        className="grid grid-cols-1 sm:grid-cols-2 gap-6"
       >
         <div>
           <label className="block font-medium mb-1">
@@ -156,7 +154,7 @@ const RefinanceForm = () => {
           />
         </div>
 
-        <div className="md:col-span-2">
+        <div className="sm:col-span-2">
           <label className="block font-medium mb-1">Closing Costs ($)</label>
           <input
             type="number"
@@ -168,7 +166,7 @@ const RefinanceForm = () => {
           />
         </div>
 
-        <div className="md:col-span-2">
+        <div className="sm:col-span-2">
           <button
             type="submit"
             className="w-full bg-[#0BB489] hover:bg-[#0AA47A] text-white font-semibold py-3 rounded-lg transition duration-200"
@@ -178,14 +176,18 @@ const RefinanceForm = () => {
         </div>
       </form>
 
+      {/* RESULTS */}
       {result && (
         <>
-          <div ref={resultRef} className="mt-10 bg-gray-100 p-6 rounded-lg">
-            <h3 className="text-2xl font-bold text-center mb-6">
+          <div
+            ref={resultRef}
+            className="mt-10 bg-gray-100 p-4 sm:p-6 rounded-lg"
+          >
+            <h3 className="text-xl sm:text-2xl font-bold text-center mb-6">
               New Monthly Payment
             </h3>
             <p
-              className={`text-4xl font-bold text-center mb-2 ${
+              className={`text-2xl sm:text-4xl font-bold text-center mb-2 ${
                 isWorseDeal ? "text-red-600" : "text-green-600"
               }`}
             >
@@ -193,7 +195,7 @@ const RefinanceForm = () => {
             </p>
 
             {isWorseDeal && (
-              <p className="text-center text-red-600 font-medium mb-4">
+              <p className="text-center text-red-600 font-medium mb-4 text-sm sm:text-base">
                 ⚠️ Refinancing increases your monthly payment. Consider keeping
                 your current loan.
               </p>
@@ -201,27 +203,39 @@ const RefinanceForm = () => {
 
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-center text-gray-800">
               <div className="border-t pt-4">
-                <p className="font-semibold text-sm">Monthly Savings</p>
-                <p className={`text-lg ${isWorseDeal ? "text-red-600" : ""}`}>
+                <p className="font-semibold text-xs sm:text-sm">
+                  Monthly Savings
+                </p>
+                <p
+                  className={`text-base sm:text-lg ${
+                    isWorseDeal ? "text-red-600" : ""
+                  }`}
+                >
                   ${result.monthlySavings.toFixed(2)}
                 </p>
               </div>
 
               <div className="border-t pt-4">
-                <p className="font-semibold text-sm">Difference in Interest</p>
-                <p className="text-lg">
+                <p className="font-semibold text-xs sm:text-sm">
+                  Difference in Interest
+                </p>
+                <p className="text-base sm:text-lg">
                   ${result.differenceInInterest.toFixed(2)}
                 </p>
               </div>
 
               <div className="border-t pt-4">
-                <p className="font-semibold text-sm">Total Cost</p>
-                <p className="text-lg">${result.totalCost.toFixed(2)}</p>
+                <p className="font-semibold text-xs sm:text-sm">Total Cost</p>
+                <p className="text-base sm:text-lg">
+                  ${result.totalCost.toFixed(2)}
+                </p>
               </div>
 
               <div className="border-t pt-4">
-                <p className="font-semibold text-sm">Months to Recoup Costs</p>
-                <p className="text-lg">
+                <p className="font-semibold text-xs sm:text-sm">
+                  Months to Recoup Costs
+                </p>
+                <p className="text-base sm:text-lg">
                   {result.monthsToRecoupCosts !== null
                     ? result.monthsToRecoupCosts.toFixed(2)
                     : "N/A"}
@@ -230,14 +244,22 @@ const RefinanceForm = () => {
             </div>
           </div>
 
-          {score !== null && <ScoreMeter value={score} />}
+          {score !== null && (
+            <div className="mt-8">
+              <ScoreMeter value={score} />
+            </div>
+          )}
 
-          <RefinanceBreakEvenChart
-            groupedOriginal={result.groupedOriginal}
-            groupedRefinanced={result.groupedRefinanced}
-          />
+          <div className="mt-8">
+            <RefinanceBreakEvenChart
+              groupedOriginal={result.groupedOriginal}
+              groupedRefinanced={result.groupedRefinanced}
+            />
+          </div>
 
-          <RefinanceEducation />
+          <div className="mt-8">
+            <RefinanceEducation />
+          </div>
         </>
       )}
     </div>
