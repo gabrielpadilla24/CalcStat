@@ -28,17 +28,22 @@ type Props = {
 export default function BinomialResult({ result }: Props) {
   if (!result) {
     return (
-      <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6 text-center">
-        <p className="text-gray-500">No result yet. Submit parameters first.</p>
+      <div className="bg-white rounded-xl shadow-md border border-gray-200 p-4 sm:p-6 text-center">
+        <p className="text-gray-500 text-sm sm:text-base">
+          No result yet. Submit parameters first.
+        </p>
       </div>
     );
   }
 
   return (
-    <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6 space-y-6">
-      <h2 className="text-lg font-semibold">Binomial Result</h2>
+    <div className="bg-white rounded-xl shadow-md border border-gray-200 p-4 sm:p-6 space-y-4 sm:space-y-6 w-full">
+      <h2 className="text-lg sm:text-xl font-semibold text-center sm:text-left">
+        Binomial Result
+      </h2>
 
-      <div>
+      {/* Parameters */}
+      <div className="flex flex-col sm:flex-row sm:gap-8 text-sm sm:text-base text-gray-700">
         <p>
           <strong>n:</strong> {result.n}
         </p>
@@ -47,18 +52,21 @@ export default function BinomialResult({ result }: Props) {
         </p>
       </div>
 
-      <div>
-        <p className="text-lg font-semibold">Result:</p>
+      {/* Formula */}
+      <div className="overflow-x-auto">
+        <p className="text-base sm:text-lg font-semibold mb-2">Result:</p>
         <BlockMath math={result.prob_latex} />
       </div>
 
-      {/* 🔹 Nueva sección: gráfica */}
-      <BinomialGraph
-        support={result.support}
-        pmf={result.pmf}
-        cdf={result.cdf}
-        height={400}
-      />
+      {/* Graph */}
+      <div className="w-full">
+        <BinomialGraph
+          support={result.support}
+          pmf={result.pmf}
+          cdf={result.cdf}
+          height={300} // 🔹 smaller on mobile
+        />
+      </div>
     </div>
   );
 }

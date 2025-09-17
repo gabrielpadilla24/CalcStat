@@ -70,18 +70,18 @@ export default function BinomialInput({ onResult }: Props) {
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6 h-[747px] flex flex-col">
-      {/* 🔹 Título fijo arriba */}
+    <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6 sm:p-8 flex flex-col w-full">
+      {/* 🔹 Title */}
       <h2 className="text-2xl font-bold text-center mb-2">
         Binomial Distribution
       </h2>
-      <p className="text-center text-gray-600 mb-6">
+      <p className="text-center text-gray-600 mb-6 text-sm sm:text-base">
         Enter the values below to calculate the binomial probability
         distribution.
       </p>
 
-      {/* 🔹 Contenido centrado en el espacio disponible */}
-      <div className="flex-1 flex flex-col justify-center space-y-6">
+      {/* 🔹 Inputs & Content */}
+      <div className="flex-1 flex flex-col justify-center space-y-4 sm:space-y-6">
         {/* n */}
         <div className="flex flex-col gap-1">
           <label className="font-medium">Number of trials (n):</label>
@@ -91,7 +91,7 @@ export default function BinomialInput({ onResult }: Props) {
             placeholder="Enter n"
             min={1}
             onChange={(e) => setN(e.target.value)}
-            className="border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            className="border rounded px-3 py-2 w-full focus:ring-2 focus:ring-blue-500 focus:outline-none"
           />
         </div>
 
@@ -108,31 +108,28 @@ export default function BinomialInput({ onResult }: Props) {
             onChange={(e) => {
               let val = parseFloat(e.target.value);
 
-              // prevenir NaN cuando está vacío
               if (isNaN(val)) {
                 setP("");
                 return;
               }
-
-              // limitar entre 0 y 1
               if (val < 0) val = 0;
               if (val > 1) val = 1;
 
               setP(val.toString());
             }}
-            className="border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            className="border rounded px-3 py-2 w-full focus:ring-2 focus:ring-blue-500 focus:outline-none"
           />
         </div>
 
-        {/* Consulta de probabilidad */}
+        {/* Probability Query Selector */}
         <DistributionInput onChange={handleUpdate} />
 
-        {/* Botón centrado */}
+        {/* Submit Button */}
         <div className="flex justify-center">
           <button
             onClick={handleSubmit}
             disabled={loading || !n || !p}
-            className="mt-6 bg-[#5FBA9B] text-white px-6 py-2 rounded-lg font-semibold hover:bg-[#4da88a] transition w-full"
+            className="mt-4 sm:mt-6 bg-[#5FBA9B] text-white px-6 py-2 rounded-lg font-semibold hover:bg-[#4da88a] transition w-full"
           >
             {loading ? "Calculating..." : "Submit"}
           </button>
