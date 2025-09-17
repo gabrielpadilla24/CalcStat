@@ -45,6 +45,7 @@ import MartingaleCalculator from "./pages/Stochastic/Martingale/MartingaleCalcul
 import EVCalculator from "./pages/Stochastic/EV/EVCalculator";
 import QVCalculator from "./pages/Stochastic/QV/QVCalculator";
 import GirsanovCalculator from "./pages/Stochastic/Girsanov/GirsanovCalculator";
+import BlackScholesCalculator from "./pages/Stochastic/BlackScholes/BlackScholesCalculator";
 
 const App = () => {
   return (
@@ -226,6 +227,11 @@ const App = () => {
         <Route path="/stochastic/qv" element={<QVCalculator />} />
 
         <Route path="/stochastic/girsanov" element={<GirsanovCalculator />} />
+
+        <Route
+          path="/stochastic/blackscholes"
+          element={<BlackScholesCalculator />}
+        />
 
         {/* Other routes can be added here */}
         <Route path="/calculators" element={<Menu />} />

@@ -3,6 +3,9 @@ import numpy as np
 import sympy as sp
 from sympy.parsing.sympy_parser import parse_expr, standard_transformations, implicit_multiplication_application
 import re
+from typing import Literal, Optional, List, Dict, Any
+from scipy.stats import norm
+
 
 class BrownianData(BaseModel):
     x0: float = 0.0
@@ -62,6 +65,17 @@ class GirsanovData(BaseModel):
     N: int = 100     # pasos discretización (para Monte Carlo)
     M: int = 20      # número de trayectorias (para Monte Carlo)
     mode: str = "analytical"   # "analytical" o "montecarlo"
+
+class BlackScholesData(BaseModel):
+    S0: float   # Initial stock price
+    K: float    # Strike
+    r: float    # Risk-free rate
+    sigma: float  # Volatility
+    T: float    # Time to maturity
+    option_type: Literal["call", "put"]
+    mode: Literal["derivation", "analytical", "montecarlo"]
+    N: Optional[int] = 100  # Steps for Monte Carlo
+    M: Optional[int] = 1000  # Trajectories for Monte Carlo
 
 
 def normalize_latex(expr: str) -> str:
@@ -659,6 +673,125 @@ class StochasticSimulator:
                 "stats": stats,
                 "trajectoriesShown": max_traj,
                 "trajectoriesTotal": data.M,
+            }
+
+        else:
+            return {"error": f"Unknown mode: {data.mode}"}
+
+    @staticmethod
+    def compute_black_scholes(data: BlackScholesData) -> Dict[str, Any]:
+        S0, K, r, sigma, T = data.S0, data.K, data.r, data.sigma, data.T
+
+        if data.sigma <= 0:
+            return {"error": "Volatility σ must be positive."}
+        if data.T <= 0:
+            return {"error": "Time to maturity T must be positive."}
+        if data.K <= 0 or data.S0 <= 0:
+            return {"error": "S0 and K must be positive."}
+
+        # -----------------------
+        # MODE: DERIVATION
+        # -----------------------
+        if data.mode == "derivation":
+            t, S, V, r_, sigma_ = sp.symbols("t S V r sigma")
+
+            PDE = sp.Eq(
+                sp.Derivative(V, t)
+                + (1 / 2) * sigma_**2 * S**2 * sp.Derivative(V, (S, 2))
+                + r_ * S * sp.Derivative(V, S)
+                - r_ * V,
+                0,
+            )
+
+            steps = [
+                r"\text{Start with GBM: } dS_t = \mu S_t \, dt + \sigma S_t \, dW_t",
+                r"\text{Construct portfolio: } \Pi = V - \Delta S",
+                r"\text{Eliminate randomness (choose } \Delta \text{)}",
+                r"\text{Obtain risk-neutral PDE:}",
+                sp.latex(PDE),
+                r"\text{Boundary condition (Call): } V(T, S) = \max(S - K, 0)",
+                r"\text{Boundary condition (Put): } V(T, S) = \max(K - S, 0)",
+            ]
+
+            # PDE with user parameters
+            PDE_user = sp.Eq(
+                sp.Derivative(V, t)
+                + (1 / 2) * sigma**2 * S**2 * sp.Derivative(V, (S, 2))
+                + r * S * sp.Derivative(V, S)
+                - r * V,
+                0,
+            )
+
+            return {
+                "mode": "derivation",
+                "params": data.dict(),
+                "pde_general": sp.latex(PDE),
+                "pde_user": sp.latex(PDE_user),
+                "steps": steps,
+            }
+
+
+        # -----------------------
+        # MODE: ANALYTICAL
+        # -----------------------
+        elif data.mode == "analytical":
+            d1 = (np.log(S0 / K) + (r + 0.5 * sigma**2) * T) / (sigma * np.sqrt(T))
+            d2 = d1 - sigma * np.sqrt(T)
+
+            if data.option_type == "call":
+                price = S0 * norm.cdf(d1) - K * np.exp(-r * T) * norm.cdf(d2)
+            else:  # put
+                price = K * np.exp(-r * T) * norm.cdf(-d2) - S0 * norm.cdf(-d1)
+
+            return {
+                "mode": "analytical",
+                "params": data.dict(),
+                "d1": d1,
+                "d2": d2,
+                "price": price,
+                "formula": r"\text{Black–Scholes formula applied with inputs.}"
+            }
+
+        # -----------------------
+        # MODE: MONTE CARLO
+        # -----------------------
+        elif data.mode == "montecarlo":
+            N, M = data.N or 100, data.M or 1000
+            dt = T / N
+
+            # Simulate paths
+            prices = np.zeros((M, N+1))
+            prices[:, 0] = S0
+
+            for i in range(1, N+1):
+                Z = np.random.normal(0, 1, M)
+                prices[:, i] = prices[:, i-1] * np.exp(
+                    (r - 0.5 * sigma**2) * dt + sigma * np.sqrt(dt) * Z
+                )
+
+            # Payoff at maturity
+            if data.option_type == "call":
+                payoffs = np.maximum(prices[:, -1] - K, 0)
+            else:
+                payoffs = np.maximum(K - prices[:, -1], 0)
+
+            mc_price = np.exp(-r * T) * np.mean(payoffs)
+            mc_std = np.std(payoffs) / np.sqrt(M)
+
+            # Build chart data for front
+            chartData = []
+            for m in range(min(M, 20)):  # show up to 20 trajectories
+                for i in range(N+1):
+                    if len(chartData) <= i:
+                        chartData.append({"step": i})
+                    chartData[i][f"path{m}"] = prices[m, i]
+
+            return {
+                "mode": "montecarlo",
+                "params": data.dict(),
+                "price": mc_price,
+                "std_error": mc_std,
+                "chartData": chartData
             }
 
         else:

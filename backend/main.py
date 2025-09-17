@@ -13,7 +13,7 @@ from sympy.parsing.latex import parse_latex
 import re
 from GaussianLinearSystem import GaussianLinearSystem
 from probabilitydistribution import BinomialData, ProbabilityDistribution, PoissonData, GeometricData, NormalData, ExponentialDistrData, UniformData, BayesData, EVMData, CLTData, InferenceData
-from stochastic import BrownianData, StochasticSimulator, ItoData, ItoLemmaData, SDEData, MartingaleData, EVData, QVData, GirsanovData
+from stochastic import BrownianData, StochasticSimulator, ItoData, ItoLemmaData, SDEData, MartingaleData, EVData, QVData, GirsanovData, BlackScholesData
 
 
 
@@ -1805,5 +1805,15 @@ def quadratic_variation_endpoint(data: QVData):
 def girsanov_endpoint(data: GirsanovData):
     try:
         return StochasticSimulator.compute_girsanov(data)
+    except Exception as e:
+        return {"error": str(e)}
+    
+#---------------------------------
+# Black-Scholes Model Simulator
+#---------------------------------
+@app.post("/blackscholes")
+def black_scholes_endpoint(data: BlackScholesData):
+    try:
+        return StochasticSimulator.compute_black_scholes(data)
     except Exception as e:
         return {"error": str(e)}
