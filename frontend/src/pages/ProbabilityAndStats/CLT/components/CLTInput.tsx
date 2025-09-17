@@ -28,7 +28,7 @@ export default function CLTInput({ onResult }: Props) {
   const [nSim, setNSim] = useState("1000");
   const [loading, setLoading] = useState(false);
 
-  // campos dinámicos según distribución
+  // Campos dinámicos según distribución
   const distParams: Record<string, string[]> = {
     bernoulli: ["p"],
     binomial: ["n", "p"],
@@ -78,8 +78,8 @@ export default function CLTInput({ onResult }: Props) {
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6 w-full h-[495px]">
-      <h2 className="text-xl font-bold text-center mb-6">
+    <div className="bg-white rounded-xl shadow-md border border-gray-200 p-4 sm:p-6 w-full flex flex-col">
+      <h2 className="text-lg sm:text-xl font-bold text-center mb-4 sm:mb-6">
         Central Limit Theorem Simulator
       </h2>
 
@@ -105,7 +105,7 @@ export default function CLTInput({ onResult }: Props) {
       </div>
 
       {/* Dynamic parameters */}
-      <div className="grid grid-cols-2 gap-4 mb-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-4">
         {distParams[distribution].map((param) => (
           <div key={param} className="flex flex-col gap-1">
             <label className="font-medium">{param}</label>
@@ -114,7 +114,7 @@ export default function CLTInput({ onResult }: Props) {
               value={params[param] ?? ""}
               onChange={(e) => handleParamChange(param, e.target.value)}
               placeholder={`Enter ${param}`}
-              className="border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+              className="border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none w-full"
             />
           </div>
         ))}
@@ -128,7 +128,7 @@ export default function CLTInput({ onResult }: Props) {
           value={n}
           onChange={(e) => setN(e.target.value)}
           placeholder="Enter n"
-          className="border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+          className="border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none w-full"
         />
       </div>
 
@@ -140,7 +140,7 @@ export default function CLTInput({ onResult }: Props) {
           value={nSim}
           onChange={(e) => setNSim(e.target.value)}
           placeholder="Enter Nsim"
-          className="border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none"
+          className="border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none w-full"
         />
       </div>
 
@@ -148,7 +148,7 @@ export default function CLTInput({ onResult }: Props) {
       <button
         onClick={handleSubmit}
         disabled={loading}
-        className="bg-[#5FBA9B] text-white px-6 py-2 rounded-lg font-semibold hover:bg-[#4da88a] transition w-full"
+        className="bg-[#5FBA9B] text-white px-6 py-2 rounded-lg font-semibold hover:bg-[#4da88a] transition w-full mt-2 sm:mt-4 disabled:opacity-60"
       >
         {loading ? "Simulating..." : "Run Simulation"}
       </button>

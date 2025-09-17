@@ -21,7 +21,6 @@ type CLTResponse = {
   distribution?: string;
   params?: Record<string, number>;
   graphData?: { x: number; freq: number; normal: number }[];
-
   error?: string;
 };
 
@@ -32,32 +31,39 @@ const CLTCalculator = () => {
     <>
       <NavBar />
 
-      <div className="min-h-screen bg-gray-100 py-10">
-        <h1 className="text-4xl font-bold text-center mb-12">
+      <div className="min-h-screen bg-gray-100 py-8 sm:py-10 px-4 sm:px-6">
+        {/* Title */}
+        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-8 sm:mb-12">
           Central Limit Theorem Simulator
         </h1>
 
-        <div className="max-w-[1440px] mx-auto flex flex-col lg:flex-row gap-6 px-6 justify-center">
+        {/* Input + Result */}
+        <div className="max-w-[1440px] mx-auto flex flex-col lg:flex-row gap-6 sm:gap-8 px-0 sm:px-6 justify-center items-center lg:items-stretch">
           {/* Input */}
-          <div className="flex-1 max-w-[600px]">
+          <div className="flex-1 w-full max-w-full sm:max-w-[600px]">
             <CLTInput onResult={(res) => setResult(res)} />
           </div>
 
           {/* Result */}
-          <div className="flex-1 max-w-[600px]">
+          <div className="flex-1 w-full max-w-full sm:max-w-[600px]">
             {result && <CLTResult {...result} />}
           </div>
         </div>
 
+        {/* Graph */}
         {result?.graphData && (
-          <div className="max-w-[900px] mx-auto mt-10 px-6">
+          <div className="max-w-[900px] mx-auto mt-8 sm:mt-10 px-0 sm:px-6">
             <CLTGraph graphData={result.graphData} />
           </div>
         )}
 
-        <CLTInfo />
+        {/* Info Card */}
+        <div className="max-w-[1170px] mx-auto mt-8 sm:mt-10 px-0 sm:px-6">
+          <CLTInfo />
+        </div>
       </div>
 
+      {/* CTA */}
       <BottomCTA
         buttonText="Back to Probability & Statistics"
         href="/probabilityandstats"
