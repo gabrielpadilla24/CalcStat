@@ -8,45 +8,45 @@ const LandingPage = () => {
 
   const calculators = [
     {
-      title: "Quant Calculator",
-      desc: "From risk models to optimization tools, our Quant Calculator helps you explore financial logic with precision and speed.",
-      img: "/img/quantimg.png",
-      link: "/quant",
-      reverse: false,
-    },
-    {
       title: "Stochastic Calculator",
       desc: "Model uncertainty and randomness in complex systems — our Stochastic Calculator brings advanced math to life.",
       img: "/img/stochasticimg.png",
       link: "/stochastic",
-      reverse: true,
+      reverse: false,
     },
     {
       title: "Calculus Calculator",
       desc: "Tackle differential calculus with ease. Our Calculus Calculator is built for single-variable analysis.",
       img: "/img/calculusimg.png",
       link: "/calculus",
-      reverse: false,
+      reverse: true,
     },
     {
       title: "Linear Algebra Calculator",
       desc: "Work with matrices, vectors, transformations and systems of equations. Our Linear Algebra Calculator empowers your understanding of core linear structures.",
       img: "/img/linearimg.png",
       link: "/linearalgebra",
-      reverse: true,
+      reverse: false,
     },
     {
       title: "Probability & Statistics",
       desc: "Calculate probabilities, visualize distributions, and analyze data with precision. Our Probability & Statistics Calculator supports everything from descriptive stats to hypothesis testing.",
       img: "/img/probstatsimg.png",
       link: "/probabilityandstats",
-      reverse: false,
+      reverse: true,
     },
     {
       title: "Financial Calculator",
       desc: "Handle compound interest, annuities, loan amortization, and investment growth effortlessly. Our Financial Calculator brings money math to life.",
       img: "/img/financialimg.png",
       link: "/financial",
+      reverse: false,
+    },
+    {
+      title: "Quant Calculator",
+      desc: "From risk models to optimization tools, our Quant Calculator helps you explore financial logic with precision and speed.",
+      img: "/img/quantimg.png",
+      link: "/quant",
       reverse: true,
     },
   ];
