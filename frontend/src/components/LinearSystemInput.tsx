@@ -14,9 +14,9 @@ export interface LinearSystemInputProps<
   label?: string;
   buttonText?: string;
   endpoint: string;
-  initialVars?: number; // por defecto 2
-  initialRows?: number; // por defecto 2
-  extraPayload?: TExtra; // payload extra opcional
+  initialVars?: number; // default 2
+  initialRows?: number; // default 2
+  extraPayload?: TExtra;
   className?: string;
   onSuccess: (data: TResponse) => void;
 }
@@ -75,7 +75,7 @@ export default function LinearSystemInput<
 
   const removeRow = (index: number) => {
     setEquations((prev) => {
-      if (prev.length <= numVars) return prev; // no dejar menos de numVars
+      if (prev.length <= numVars) return prev;
       return prev.filter((_, i) => i !== index);
     });
   };
@@ -129,49 +129,59 @@ export default function LinearSystemInput<
   return (
     <form
       onSubmit={handleSubmit}
-      className={`bg-white rounded-xl shadow-md border border-gray-200 p-6 ${className}`}
+      className={`bg-white rounded-xl shadow-md border border-gray-200 p-4 sm:p-6 ${className}`}
     >
       <h2 className="text-lg font-semibold mb-4 text-center">{label}</h2>
 
-      {/* Número de variables */}
-      <div className="flex items-center justify-center gap-3 mb-6">
+      {/* Number of variables */}
+      <div className="flex flex-wrap items-center justify-center gap-2 sm:gap-3 mb-6">
         <label className="text-sm text-gray-700">Variables (n):</label>
         <input
           type="number"
           min={2}
           value={numVars}
           onChange={handleNumVarsChange}
-          className="w-24 border rounded px-3 py-2 text-center"
+          className="w-20 sm:w-24 border rounded px-3 py-2 text-center"
         />
-        <span className="text-xs text-gray-500">
+        <span className="text-xs text-gray-500 w-full sm:w-auto text-center">
           * minimum {numVars} equations
         </span>
       </div>
 
-      {/* Filas de ecuaciones */}
+      {/* Equations */}
       <div className="space-y-4">
         {equations.map((eq, i) => (
-          <div key={i} className="flex items-center gap-2 justify-center">
+          <div
+            key={i}
+            className="flex flex-wrap sm:flex-nowrap items-center gap-2 justify-center"
+          >
+            {/* LHS */}
             <input
               type="text"
               value={eq.lhs}
               onChange={(e) => handleChange(i, "lhs", e.target.value)}
               placeholder="3x + 2y - z"
-              className="w-60 border rounded px-3 py-2 text-center"
+              className="flex-1 min-w-[140px] sm:w-60 border rounded px-3 py-2 text-center"
             />
-            <span>=</span>
+
+            {/* Equal sign */}
+            <span className="text-center w-full sm:w-auto">=</span>
+
+            {/* RHS */}
             <input
               type="text"
               value={eq.rhs}
               onChange={(e) => handleChange(i, "rhs", e.target.value)}
               placeholder="5"
-              className="w-24 border rounded px-3 py-2 text-center"
+              className="flex-1 min-w-[80px] sm:w-24 border rounded px-3 py-2 text-center"
             />
+
+            {/* Remove button */}
             <button
               type="button"
               onClick={() => removeRow(i)}
               disabled={!canRemove}
-              className={`font-bold ml-2 ${
+              className={`font-bold ml-0 sm:ml-2 ${
                 canRemove ? "text-red-500" : "text-gray-300 cursor-not-allowed"
               }`}
               title={
@@ -186,7 +196,7 @@ export default function LinearSystemInput<
         ))}
       </div>
 
-      {/* Botones */}
+      {/* Buttons */}
       <div className="flex flex-col sm:flex-row gap-3 justify-between mt-6">
         <button
           type="button"
