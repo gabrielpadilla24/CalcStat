@@ -27,34 +27,44 @@ type Props = {
 export default function GeometricResult({ result }: Props) {
   if (!result) {
     return (
-      <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6 text-center">
-        <p className="text-gray-500">No result yet. Submit parameters first.</p>
+      <div className="bg-white rounded-xl shadow-md border border-gray-200 p-4 sm:p-6 text-center">
+        <p className="text-gray-500 text-sm sm:text-base">
+          No result yet. Submit parameters first.
+        </p>
       </div>
     );
   }
 
   return (
-    <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6 space-y-6">
-      <h2 className="text-xl font-bold text-center">Geometric Distribution</h2>
+    <div className="bg-white rounded-xl shadow-md border border-gray-200 p-4 sm:p-6 space-y-4 sm:space-y-6">
+      <h2 className="text-lg sm:text-xl font-bold text-center">
+        Geometric Distribution
+      </h2>
 
+      {/* Probability p */}
       <div className="text-center">
-        <p>
+        <p className="text-sm sm:text-base">
           <strong>p:</strong> {result.p}
         </p>
       </div>
 
+      {/* Result formula */}
       <div>
-        <p className="font-medium text-center">Result:</p>
-        <BlockMath math={result.prob_latex} />
+        <p className="font-medium text-center text-sm sm:text-base">Result:</p>
+        <div className="overflow-x-auto">
+          <BlockMath math={result.prob_latex} />
+        </div>
       </div>
 
-      {/* 🔹 Gráfico PMF + CDF */}
-      <GeometricGraph
-        support={result.support}
-        pmf={result.pmf}
-        cdf={result.cdf}
-        height={400}
-      />
+      {/* Chart */}
+      <div className="w-full">
+        <GeometricGraph
+          support={result.support}
+          pmf={result.pmf}
+          cdf={result.cdf}
+          height={300} // 📱 smaller height for mobile
+        />
+      </div>
     </div>
   );
 }

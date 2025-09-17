@@ -30,25 +30,26 @@ const GeometricCalculator = () => {
     <>
       <NavBar />
 
-      <div className="min-h-screen bg-gray-100 py-10 px-6">
-        <h1 className="text-4xl font-bold text-center mb-12">
+      <div className="min-h-screen bg-gray-100 py-8 sm:py-10 px-4 sm:px-6">
+        <h1 className="text-2xl sm:text-3xl md:text-4xl font-bold text-center mb-8 sm:mb-12">
           Geometric Distribution Calculator
         </h1>
 
-        <div className="max-w-[1440px] mx-auto flex flex-col lg:flex-row gap-6 px-6 justify-center items-stretch">
+        {/* Input + Result */}
+        <div className="max-w-[1440px] mx-auto flex flex-col xl:flex-row gap-6 sm:gap-8 px-2 sm:px-6 justify-center items-center xl:items-stretch">
           {/* INPUT */}
-          <div className="flex-1 max-w-[500px]">
+          <div className="flex-1 w-full max-w-[500px]">
             <GeometricInput onResult={setResult} />
           </div>
 
           {/* RESULT */}
-          <div className="flex-1 max-w-[600px]">
+          <div className="flex-1 w-full max-w-[600px]">
             <GeometricResult result={result} />
           </div>
         </div>
 
-        {/* 🔹 Info Card abajo ocupando todo el ancho */}
-        <div className="max-w-[1220px] mx-auto px-6 mt-6">
+        {/* Info Card */}
+        <div className="max-w-[1220px] mx-auto px-2 sm:px-6 mt-8 sm:mt-10">
           <GeometricInfo />
         </div>
       </div>
