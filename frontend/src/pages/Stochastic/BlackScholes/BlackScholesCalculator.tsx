@@ -7,7 +7,7 @@ import BlackScholesInput from "./components/BlackScholesInput";
 import BlackScholesResult, {
   BlackScholesResponse,
 } from "./components/BlackScholesResult";
-// import BlackScholesInfo from "./components/BlackScholesInfo";
+import BlackScholesInfo from "./components/BlackScholesInfo";
 
 export default function BlackScholesCalculator() {
   const [result, setResult] = useState<BlackScholesResponse | null>(null);
@@ -26,7 +26,7 @@ export default function BlackScholesCalculator() {
         {/* Grid principal */}
         <div className="max-w-[1440px] mx-auto flex flex-col lg:flex-row gap-6 px-6 justify-center">
           {/* Input */}
-          <div className="flex-1 max-w-[600px]">
+          <div className="w-full lg:w-1/3 max-w-md">
             <BlackScholesInput onResult={setResult} infoRef={infoRef} />
           </div>
 
@@ -37,8 +37,12 @@ export default function BlackScholesCalculator() {
         </div>
 
         {/* Info Section */}
-        <div ref={infoRef} id="blackscholes-info">
-          {/* <BlackScholesInfo /> */}
+        <div
+          className="max-w-[1230px] mx-auto px-6 mt-4"
+          ref={infoRef}
+          id="blackscholes-info"
+        >
+          <BlackScholesInfo />
         </div>
       </div>
 
