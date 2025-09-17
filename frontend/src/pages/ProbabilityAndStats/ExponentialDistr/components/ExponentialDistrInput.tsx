@@ -65,22 +65,22 @@ export default function ExponentialDistrInput({ onResult }: Props) {
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6 w-full h-full flex flex-col">
-      <h2 className="text-xl font-bold text-center mb-6">
+    <div className="bg-white rounded-xl shadow-md border border-gray-200 p-4 sm:p-6 w-full h-full flex flex-col">
+      <h2 className="text-lg sm:text-xl font-bold text-center mb-4 sm:mb-6">
         Exponential Distribution
       </h2>
-      <p className="text-center text-gray-600 mb-6">
+      <p className="text-center text-gray-600 mb-4 sm:mb-6 text-sm sm:text-base">
         Enter the parameter λ (rate) for the exponential distribution.
       </p>
 
-      {/* Centramos el contenido */}
-      <div className="flex-1 flex flex-col justify-center space-y-6">
+      {/* Form content */}
+      <div className="flex-1 flex flex-col justify-center space-y-4 sm:space-y-6">
         {/* λ */}
         <div className="flex flex-col gap-1">
-          <label className="font-medium">
+          <label className="font-medium text-sm sm:text-base">
             Lambda (λ): Rate parameter (average number of events per unit time)
           </label>
-          <p className="text-sm text-gray-500 mb-1">
+          <p className="text-xs sm:text-sm text-gray-500 mb-1">
             👉 Example: If the average waiting time between arrivals is 10
             minutes, then λ = 0.1.
           </p>
@@ -91,26 +91,28 @@ export default function ExponentialDistrInput({ onResult }: Props) {
             value={lam}
             placeholder="Enter λ (e.g. 0.5)"
             onChange={(e) => setLam(e.target.value)}
-            className="border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none w-full"
+            className="border rounded px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none w-full text-sm sm:text-base"
           />
         </div>
 
-        {/* Consulta de probabilidad */}
+        {/* Probability query */}
         <div>
-          <label className="font-medium">Probability Query</label>
-          <p className="text-sm text-gray-500 mb-2">
+          <label className="font-medium text-sm sm:text-base">
+            Probability Query
+          </label>
+          <p className="text-xs sm:text-sm text-gray-500 mb-2">
             Choose the probability type (≤, ≥, or between values).
           </p>
           <ContinuousDistributionInput onChange={handleUpdate} />
         </div>
       </div>
 
-      {/* Botón abajo */}
-      <div className="flex justify-center mt-6">
+      {/* Submit button */}
+      <div className="flex justify-center mt-4 sm:mt-6">
         <button
           onClick={handleSubmit}
           disabled={loading || !lam}
-          className="bg-[#5FBA9B] text-white px-6 py-2 rounded-lg font-semibold hover:bg-[#4da88a] transition w-full"
+          className="bg-[#5FBA9B] text-white px-4 sm:px-6 py-2 rounded-lg font-semibold hover:bg-[#4da88a] transition w-full text-sm sm:text-base"
         >
           {loading ? "Calculating..." : "Submit"}
         </button>
