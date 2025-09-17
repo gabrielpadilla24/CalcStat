@@ -3,7 +3,7 @@ import NavBar from "@/components/NavBar";
 import BottomCTA from "@/components/BottomCTA";
 import GrowthComparisonForm from "./components/GrowthComparisonForm";
 import GrowthComparisonChart from "./components/GrowthComparisonChart";
-import GrowthComparisonInfo from "./components/GrowthComparisonInfo"; // Si aún no existe, puedes comentarlo o crearlo
+import GrowthComparisonInfo from "./components/GrowthComparisonInfo";
 
 type GrowthComparisonResponse = {
   finalValues: number[];
@@ -19,19 +19,21 @@ const GrowthComparisonCalculator = () => {
     <>
       <NavBar />
 
-      <div className="min-h-screen bg-gray-100 py-10 px-6">
-        <h1 className="text-4xl font-bold text-center mb-12">
+      <div className="min-h-screen bg-gray-100 py-10 px-4 sm:px-6">
+        {/* Title */}
+        <h1 className="text-3xl sm:text-4xl font-bold text-center mb-12">
           Growth Comparison Calculator
         </h1>
 
-        <div className="max-w-[1440px] mx-auto flex flex-col lg:flex-row items-start justify-center gap-4 px-6">
-          {/* FORM */}
-          <div className="flex-1 max-w-[500px]">
+        {/* Layout principal */}
+        <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-start justify-center gap-8">
+          {/* FORM (más angosto) */}
+          <div className="w-full lg:w-1/3">
             <GrowthComparisonForm onResult={setResult} />
           </div>
 
-          {/* CHART */}
-          <div className="flex-1 max-w-[750px]">
+          {/* CHART (más ancho) */}
+          <div className="w-full lg:w-2/3">
             <GrowthComparisonChart
               timeline={result?.timeline ?? []}
               valoresPorTasa={result?.valoresPorTasa ?? []}
@@ -40,8 +42,8 @@ const GrowthComparisonCalculator = () => {
           </div>
         </div>
 
-        {/* INFO SECTION (puede ser opcional o educativa como en Savings) */}
-        <div className="mt-10">
+        {/* INFO SECTION */}
+        <div className="mt-12">
           <GrowthComparisonInfo />
         </div>
       </div>

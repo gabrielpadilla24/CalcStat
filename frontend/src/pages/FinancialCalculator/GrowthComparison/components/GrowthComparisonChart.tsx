@@ -56,6 +56,23 @@ const GrowthComparisonChart: React.FC<GrowthComparisonChartProps> = ({
     grid: {
       row: { colors: ["#f3f3f3", "transparent"], opacity: 0.5 },
     },
+    responsive: [
+      {
+        breakpoint: 1024, // tablets
+        options: {
+          chart: { height: 400 },
+          title: { style: { fontSize: "16px" } },
+        },
+      },
+      {
+        breakpoint: 640, // móviles
+        options: {
+          chart: { height: 300 },
+          legend: { fontSize: "12px" },
+          xaxis: { labels: { show: false } },
+        },
+      },
+    ],
   };
 
   const series = interestRates.map((rate, i) => ({
@@ -64,25 +81,12 @@ const GrowthComparisonChart: React.FC<GrowthComparisonChartProps> = ({
   }));
 
   return (
-    <div
-      style={{
-        backgroundColor: "#fff",
-        padding: "24px",
-        borderRadius: "8px",
-        boxShadow: "0 4px 12px rgba(0,0,0,0.1)",
-        width: "750px",
-        height: "688px",
-        margin: "0 auto",
-        display: "flex",
-        flexDirection: "column",
-        justifyContent: "center", // ✅ Centrado vertical
-      }}
-    >
+    <div className="w-full max-w-4xl bg-white p-4 sm:p-6 rounded-xl shadow-md mx-auto">
       <ReactApexChart
         options={options}
         series={series}
         type="line"
-        height={550}
+        height={500}
       />
     </div>
   );

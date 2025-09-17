@@ -63,18 +63,21 @@ const GrowthComparisonForm: React.FC<GrowthComparisonFormProps> = ({
   };
 
   return (
-    <div className="bg-white p-6 rounded-2xl shadow-lg w-full">
+    <div className="bg-white p-6 sm:p-8 rounded-2xl shadow-lg w-full max-w-lg mx-auto">
       <form
         onSubmit={handleSubmit}
         className="flex flex-col items-center w-full"
       >
+        {/* Header */}
         <div className="mb-6 text-center w-full">
-          <h2 className="text-2xl font-semibold mb-3">
+          <h2 className="text-xl sm:text-2xl font-semibold mb-3">
             Compare Two Return Rates
           </h2>
         </div>
 
+        {/* Inputs */}
         <div className="w-full space-y-4">
+          {/* Initial amount */}
           <div>
             <label className="block font-medium mb-1">Initial Amount:</label>
             <input
@@ -88,7 +91,8 @@ const GrowthComparisonForm: React.FC<GrowthComparisonFormProps> = ({
             />
           </div>
 
-          <div className="flex gap-4">
+          {/* Two rates → stack on mobile, side-by-side on md+ */}
+          <div className="flex flex-col sm:flex-row gap-4">
             <div className="flex-1">
               <label className="block font-medium mb-1">
                 Return Rate 1 (%):
@@ -120,6 +124,7 @@ const GrowthComparisonForm: React.FC<GrowthComparisonFormProps> = ({
             </div>
           </div>
 
+          {/* Years */}
           <div>
             <label className="block font-medium mb-1">
               Time Period (Years):
@@ -135,6 +140,7 @@ const GrowthComparisonForm: React.FC<GrowthComparisonFormProps> = ({
           </div>
         </div>
 
+        {/* Submit button */}
         <button
           type="submit"
           className="w-full mt-6 bg-[#0BB489] hover:bg-[#0AA47A] text-white font-semibold py-3 rounded-lg transition duration-200"
@@ -151,9 +157,9 @@ const GrowthComparisonForm: React.FC<GrowthComparisonFormProps> = ({
         />
       </div>
 
-      {/* Error message */}
+      {/* Error */}
       {error && (
-        <div className="mt-6 bg-red-50 border border-red-300 p-4 rounded-xl text-red-700 text-center">
+        <div className="mt-6 bg-red-50 border border-red-300 p-4 rounded-xl text-red-700 text-center text-sm sm:text-base">
           <p>{error}</p>
         </div>
       )}
