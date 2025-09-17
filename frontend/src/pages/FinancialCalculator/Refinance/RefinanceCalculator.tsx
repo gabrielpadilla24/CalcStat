@@ -8,7 +8,7 @@ const RefinanceCalculator = () => {
       <NavBar />
 
       <main className="flex-grow w-full px-4 sm:px-6 lg:px-8 pt-8 sm:pt-12">
-        <div className="max-w-6xl mx-auto">
+        <div className="max-w-6xl mx-auto mb-12">
           <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold text-center mb-8 sm:mb-12">
             Refinance Mortgage Calculator
           </h1>

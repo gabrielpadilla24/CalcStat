@@ -14,14 +14,23 @@ type SavingsResult = {
 const SavingsCalculator = () => {
   const [result, setResult] = useState<SavingsResult | null>(null);
 
-  // 👉 Sync chart height with form
+  // 👉 Sync chart height with form only for desktops
   const formRef = useRef<HTMLDivElement>(null);
   const [formHeight, setFormHeight] = useState<number | null>(null);
 
   useEffect(() => {
-    if (formRef.current) {
-      setFormHeight(formRef.current.offsetHeight);
-    }
+    const updateHeight = () => {
+      if (formRef.current && window.innerWidth >= 1024) {
+        // only set equal height on lg screens
+        setFormHeight(formRef.current.offsetHeight);
+      } else {
+        setFormHeight(null); // let it auto-size on smaller devices
+      }
+    };
+
+    updateHeight();
+    window.addEventListener("resize", updateHeight);
+    return () => window.removeEventListener("resize", updateHeight);
   }, [result]);
 
   return (
@@ -58,7 +67,7 @@ const SavingsCalculator = () => {
         </div>
 
         {/* Info Section */}
-        <div className="mt-10">
+        <div className="mt-4">
           <SavingsInfo />
         </div>
       </div>
