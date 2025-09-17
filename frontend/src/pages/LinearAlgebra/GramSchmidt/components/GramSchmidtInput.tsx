@@ -60,7 +60,7 @@ const GramSchmidtInput = ({
     compIdx: number,
     value: string
   ) => {
-    // Actualiza input string (lo que se ve en pantalla)
+    // Actualiza input string
     const newInputs = inputValues.map((vec, i) =>
       i === vecIdx ? vec.map((c, j) => (j === compIdx ? value : c)) : vec
     );
@@ -99,14 +99,14 @@ const GramSchmidtInput = ({
   };
 
   return (
-    <div className="w-[600px] bg-white rounded-xl shadow-md border border-gray-200 p-8">
+    <div className="w-full max-w-full sm:max-w-[650px] bg-white rounded-xl shadow-md border border-gray-200 p-4 sm:p-6 md:p-8 mx-auto">
       <div className="flex flex-col items-center text-center">
-        <label className="text-lg font-medium text-gray-700 mb-4">
+        <label className="text-base sm:text-lg font-medium text-gray-700 mb-4">
           Enter 1–4 vectors in <strong>ℝ³</strong> for Gram–Schmidt:
         </label>
 
         {/* Selector de cantidad de vectores */}
-        <div className="flex gap-4 justify-center mb-6">
+        <div className="flex flex-wrap gap-3 sm:gap-4 justify-center mb-6">
           <label className="font-medium text-gray-700">Vectors:</label>
           <select
             value={numVectors}
@@ -121,21 +121,23 @@ const GramSchmidtInput = ({
           </select>
         </div>
 
-        {/* Inputs para cada vector (verticales en columna) */}
-        <div className="flex flex-wrap gap-6 justify-center">
+        {/* Inputs para cada vector */}
+        <div className="flex flex-wrap gap-4 sm:gap-6 justify-center w-full">
           {Array.from({ length: numVectors }).map((_, i) => (
             <div
               key={i}
-              className="p-4 border rounded-lg bg-gray-50 flex flex-col gap-2"
+              className="flex-1 min-w-[120px] max-w-[180px] p-3 sm:p-4 border rounded-lg bg-gray-50 flex flex-col gap-2"
             >
-              <h3 className="font-semibold mb-2 text-center">v{i + 1}</h3>
+              <h3 className="font-semibold mb-1 sm:mb-2 text-center">
+                v{i + 1}
+              </h3>
               {Array.from({ length: 3 }).map((_, j) => (
                 <input
                   key={j}
                   type="number"
                   value={inputValues[i]?.[j] ?? ""}
                   onChange={(e) => handleValueChange(i, j, e.target.value)}
-                  className="w-20 p-2 border rounded-lg text-center"
+                  className="w-full p-2 border rounded-lg text-center text-sm sm:text-base"
                   placeholder={`x${j + 1}`}
                 />
               ))}
@@ -146,7 +148,7 @@ const GramSchmidtInput = ({
         {/* Botón */}
         <button
           onClick={handleCalculate}
-          className="mt-6 bg-[#5FBA9B] text-white px-6 py-2 rounded-lg font-semibold hover:bg-[#4da88a] transition w-full"
+          className="mt-6 bg-[#5FBA9B] text-white px-4 sm:px-6 py-2 rounded-lg font-semibold hover:bg-[#4da88a] transition w-full"
         >
           Compute Gram–Schmidt
         </button>
