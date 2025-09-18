@@ -75,7 +75,7 @@ export default function BlackScholesResult({
   } = result;
 
   return (
-    <div className="bg-white rounded-xl border border-gray-200 shadow-md p-6 space-y-6">
+    <div className="bg-white rounded-xl border border-gray-200 shadow-md p-6 space-y-6 w-full">
       <h2 className="text-xl font-semibold text-center">
         Black–Scholes Result
       </h2>
@@ -84,14 +84,18 @@ export default function BlackScholesResult({
       {mode === "derivation" && (
         <>
           <p className="font-medium text-gray-700">Black–Scholes PDE:</p>
-          <BlockMath math={pde_general || ""} />
+          <div className="overflow-x-auto">
+            <BlockMath math={pde_general || ""} />
+          </div>
 
           {pde_user && (
             <>
               <p className="font-medium text-gray-700 mt-4">
                 PDE with your parameters:
               </p>
-              <BlockMath math={pde_user} />
+              <div className="overflow-x-auto">
+                <BlockMath math={pde_user} />
+              </div>
             </>
           )}
 
@@ -102,7 +106,9 @@ export default function BlackScholesResult({
               </h3>
               <div className="space-y-3">
                 {steps.map((s, idx) => (
-                  <BlockMath key={idx} math={s} />
+                  <div key={idx} className="overflow-x-auto">
+                    <BlockMath math={s} />
+                  </div>
                 ))}
               </div>
             </div>
@@ -126,12 +132,12 @@ export default function BlackScholesResult({
       {/* Monte Carlo */}
       {mode === "montecarlo" && chartData && (
         <div>
-          <p className="text-gray-700">
+          <p className="text-gray-700 text-center">
             <strong>Estimated Price:</strong> {price?.toFixed(4)} ±{" "}
             {std_error?.toFixed(4)}
           </p>
 
-          <div className="w-full h-[400px] mt-6">
+          <div className="w-full h-[300px] sm:h-[400px] mt-6">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={chartData}>
                 <CartesianGrid strokeDasharray="3 3" />

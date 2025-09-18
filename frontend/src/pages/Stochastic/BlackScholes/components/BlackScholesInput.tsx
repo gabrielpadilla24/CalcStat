@@ -6,14 +6,14 @@ type Mode = "derivation" | "analytical" | "montecarlo";
 type OptionType = "call" | "put";
 
 export type BlackScholesData = {
-  S0: number; // precio inicial
-  K: number; // strike
-  r: number; // tasa libre de riesgo
-  sigma: number; // volatilidad
-  T: number; // horizonte temporal
-  option_type: OptionType; // ✅ agregado
-  N?: number; // pasos (para MC)
-  M?: number; // trayectorias (para MC)
+  S0: number;
+  K: number;
+  r: number;
+  sigma: number;
+  T: number;
+  option_type: OptionType;
+  N?: number;
+  M?: number;
   mode: Mode;
 };
 
@@ -31,7 +31,7 @@ export default function BlackScholesInput({
   onResult,
   infoRef,
 }: {
-  onResult: (result: BlackScholesResponse | null) => void; // ✅ ahora acepta null
+  onResult: (result: BlackScholesResponse | null) => void;
   infoRef: React.RefObject<HTMLDivElement | null>;
 }) {
   const [S0, setS0] = useState<number>(100);
@@ -42,7 +42,7 @@ export default function BlackScholesInput({
   const [N, setN] = useState<number>(100);
   const [M, setM] = useState<number>(50);
   const [mode, setMode] = useState<Mode>("derivation");
-  const [optionType, setOptionType] = useState<OptionType>("call"); // ✅ toggle Call/Put
+  const [optionType, setOptionType] = useState<OptionType>("call");
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -53,7 +53,7 @@ export default function BlackScholesInput({
       r,
       sigma,
       T,
-      option_type: optionType, // ✅ siempre presente
+      option_type: optionType,
       N,
       M,
       mode,
@@ -73,7 +73,7 @@ export default function BlackScholesInput({
         onResult(data);
       }
     } catch {
-      onResult(null); // ✅ resetea si hay error de conexión
+      onResult(null);
       alert("❌ Failed to connect to backend.");
     }
   };
@@ -87,22 +87,22 @@ export default function BlackScholesInput({
   return (
     <form
       onSubmit={handleSubmit}
-      className="bg-white rounded-xl shadow-md border border-gray-200 p-6 space-y-4"
+      className="bg-white rounded-xl shadow-md border border-gray-200 p-6 space-y-4 w-full max-w-md mx-auto"
     >
       <h2 className="text-xl font-semibold text-center mb-2">
         Black–Scholes PDE Tool
       </h2>
 
       {/* Option type toggle */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
         <span className="text-sm font-medium text-gray-700">Option Type</span>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           {(["call", "put"] as OptionType[]).map((t) => (
             <button
               key={t}
               type="button"
               onClick={() => setOptionType(t)}
-              className={`px-3 py-1 rounded-md font-medium ${
+              className={`flex-1 sm:flex-none px-3 py-1 rounded-md font-medium ${
                 optionType === t
                   ? "bg-[#5FBA9B] text-white"
                   : "bg-gray-200 text-gray-700"
@@ -115,15 +115,15 @@ export default function BlackScholesInput({
       </div>
 
       {/* Mode toggle */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
         <span className="text-sm font-medium text-gray-700">Mode</span>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           {(["derivation", "analytical", "montecarlo"] as Mode[]).map((m) => (
             <button
               key={m}
               type="button"
               onClick={() => setMode(m)}
-              className={`px-3 py-1 rounded-md font-medium ${
+              className={`flex-1 sm:flex-none px-3 py-1 rounded-md font-medium ${
                 mode === m
                   ? "bg-[#5FBA9B] text-white"
                   : "bg-gray-200 text-gray-700"
@@ -137,73 +137,41 @@ export default function BlackScholesInput({
 
       {/* Parameters */}
       <div className="space-y-3">
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Initial Price S₀
-          </label>
-          <input
-            type="number"
-            value={S0}
-            onChange={(e) => setS0(parseFloat(e.target.value))}
-            className="w-full border rounded-md p-2"
-            placeholder="e.g. 100"
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Strike K
-          </label>
-          <input
-            type="number"
-            value={K}
-            onChange={(e) => setK(parseFloat(e.target.value))}
-            className="w-full border rounded-md p-2"
-            placeholder="e.g. 100"
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Risk-free rate r
-          </label>
-          <input
-            type="number"
-            step="0.01"
-            value={r}
-            onChange={(e) => setR(parseFloat(e.target.value))}
-            className="w-full border rounded-md p-2"
-            placeholder="e.g. 0.05"
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Volatility σ
-          </label>
-          <input
-            type="number"
-            step="0.01"
-            value={sigma}
-            onChange={(e) => setSigma(parseFloat(e.target.value))}
-            className="w-full border rounded-md p-2"
-            placeholder="e.g. 0.2"
-          />
-        </div>
-
-        <div>
-          <label className="block text-sm font-medium text-gray-700 mb-1">
-            Time Horizon T
-          </label>
-          <input
-            type="number"
-            step="0.1"
-            value={T}
-            onChange={(e) => setT(parseFloat(e.target.value))}
-            className="w-full border rounded-md p-2"
-            placeholder="e.g. 1"
-          />
-        </div>
+        {[
+          { label: "Initial Price S₀", value: S0, setter: setS0, step: "1" },
+          { label: "Strike K", value: K, setter: setK, step: "1" },
+          {
+            label: "Risk-free rate r",
+            value: r,
+            setter: setR,
+            step: "0.01",
+          },
+          {
+            label: "Volatility σ",
+            value: sigma,
+            setter: setSigma,
+            step: "0.01",
+          },
+          {
+            label: "Time Horizon T",
+            value: T,
+            setter: setT,
+            step: "0.1",
+          },
+        ].map((field, idx) => (
+          <div key={idx}>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              {field.label}
+            </label>
+            <input
+              type="number"
+              step={field.step}
+              value={field.value}
+              onChange={(e) => field.setter(parseFloat(e.target.value))}
+              className="w-full border rounded-md p-2"
+            />
+          </div>
+        ))}
       </div>
 
       {/* Extra Monte Carlo params */}

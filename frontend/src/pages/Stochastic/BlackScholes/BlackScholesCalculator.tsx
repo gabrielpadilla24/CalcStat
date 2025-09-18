@@ -12,35 +12,37 @@ import BlackScholesInfo from "./components/BlackScholesInfo";
 export default function BlackScholesCalculator() {
   const [result, setResult] = useState<BlackScholesResponse | null>(null);
 
-  // 👉 referencia a la sección de Info
+  // 👉 reference to the Info section
   const infoRef = useRef<HTMLDivElement>(null);
 
   return (
     <>
       <NavBar />
-      <div className="min-h-screen bg-gray-100 py-10">
-        <h1 className="text-4xl font-bold text-center mb-12">
+
+      <div className="min-h-screen bg-gray-100 py-10 px-4">
+        {/* Title */}
+        <h1 className="text-3xl sm:text-4xl font-bold text-center mb-12">
           Black–Scholes PDE Calculator
         </h1>
 
-        {/* Grid principal */}
-        <div className="max-w-[1440px] mx-auto flex flex-col lg:flex-row gap-6 px-6 justify-center">
+        {/* Main Container */}
+        <div className="w-full max-w-[1440px] mx-auto flex flex-col lg:flex-row gap-6 justify-center items-center lg:items-start">
           {/* Input */}
           <div className="w-full lg:w-1/3 max-w-md">
             <BlackScholesInput onResult={setResult} infoRef={infoRef} />
           </div>
 
           {/* Result */}
-          <div className="flex-1 max-w-[600px]">
+          <div className="w-full lg:flex-1 mt-8 lg:mt-0">
             <BlackScholesResult result={result} />
           </div>
         </div>
 
         {/* Info Section */}
         <div
-          className="max-w-[1230px] mx-auto px-6 mt-4"
           ref={infoRef}
           id="blackscholes-info"
+          className="w-full max-w-[1230px] mx-auto px-4 sm:px-6 mt-8"
         >
           <BlackScholesInfo />
         </div>
