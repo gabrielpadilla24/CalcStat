@@ -54,8 +54,8 @@ export default function BrownianResult({
         Simulated Trajectories
       </h2>
 
-      {/* 🔹 Usamos flex-grow para que el gráfico llene el espacio */}
-      <div className="flex-1">
+      {/* Chart container with explicit responsive height */}
+      <div className="w-full h-[300px] sm:h-[400px] md:h-[500px]">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={chartData}>
             <CartesianGrid strokeDasharray="3 3" />

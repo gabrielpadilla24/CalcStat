@@ -50,82 +50,99 @@ export default function BrownianInput({
   return (
     <form
       onSubmit={handleSubmit}
-      className="bg-white shadow-md rounded-xl p-6 border border-gray-200"
+      className="w-full max-w-md sm:max-w-lg bg-white shadow-md rounded-xl p-6 border border-gray-200 mx-auto"
     >
-      <h2 className="text-xl font-semibold mb-4">Simulation Parameters</h2>
+      <h2 className="text-xl font-semibold mb-6 text-center">
+        Simulation Parameters
+      </h2>
 
-      {/* Valor inicial */}
-      <div className="mb-3">
-        <label className="block text-sm font-medium">X₀ (Initial Value)</label>
-        <input
-          type="number"
-          value={x0}
-          onChange={(e) => setX0(parseFloat(e.target.value))}
-          className="mt-1 w-full border rounded-md p-2"
-        />
+      <div className="space-y-4">
+        {/* Initial Value */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700">
+            X₀ (Initial Value)
+          </label>
+          <input
+            type="number"
+            value={x0}
+            onChange={(e) => setX0(parseFloat(e.target.value))}
+            className="mt-1 w-full border rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-emerald-400"
+          />
+        </div>
+
+        {/* Drift */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700">
+            μ (Drift)
+          </label>
+          <input
+            type="number"
+            value={mu}
+            onChange={(e) => setMu(parseFloat(e.target.value))}
+            className="mt-1 w-full border rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-emerald-400"
+          />
+        </div>
+
+        {/* Volatility */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700">
+            σ (Volatility)
+          </label>
+          <input
+            type="number"
+            value={sigma}
+            onChange={(e) => setSigma(parseFloat(e.target.value))}
+            className="mt-1 w-full border rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-emerald-400"
+            step="0.01"
+          />
+        </div>
+
+        {/* Time Horizon */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700">
+            T (Time Horizon)
+          </label>
+          <input
+            type="number"
+            value={T}
+            onChange={(e) => setT(parseFloat(e.target.value))}
+            className="mt-1 w-full border rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-emerald-400"
+            step="0.1"
+          />
+        </div>
+
+        {/* Steps */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700">
+            N (Steps)
+          </label>
+          <input
+            type="number"
+            value={N}
+            onChange={(e) => setN(parseInt(e.target.value))}
+            className="mt-1 w-full border rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-emerald-400"
+          />
+        </div>
+
+        {/* Trajectories */}
+        <div>
+          <label className="block text-sm font-medium text-gray-700">
+            M (Trajectories)
+          </label>
+          <input
+            type="number"
+            value={M}
+            onChange={(e) => setM(parseInt(e.target.value))}
+            className="mt-1 w-full border rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-emerald-400"
+          />
+        </div>
       </div>
 
-      {/* Drift */}
-      <div className="mb-3">
-        <label className="block text-sm font-medium">μ (Drift)</label>
-        <input
-          type="number"
-          value={mu}
-          onChange={(e) => setMu(parseFloat(e.target.value))}
-          className="mt-1 w-full border rounded-md p-2"
-        />
-      </div>
-
-      {/* Volatilidad */}
-      <div className="mb-3">
-        <label className="block text-sm font-medium">σ (Volatility)</label>
-        <input
-          type="number"
-          value={sigma}
-          onChange={(e) => setSigma(parseFloat(e.target.value))}
-          className="mt-1 w-full border rounded-md p-2"
-          step="0.01"
-        />
-      </div>
-
-      {/* Horizonte T */}
-      <div className="mb-3">
-        <label className="block text-sm font-medium">T (Time Horizon)</label>
-        <input
-          type="number"
-          value={T}
-          onChange={(e) => setT(parseFloat(e.target.value))}
-          className="mt-1 w-full border rounded-md p-2"
-          step="0.1"
-        />
-      </div>
-
-      {/* Pasos N */}
-      <div className="mb-3">
-        <label className="block text-sm font-medium">N (Steps)</label>
-        <input
-          type="number"
-          value={N}
-          onChange={(e) => setN(parseInt(e.target.value))}
-          className="mt-1 w-full border rounded-md p-2"
-        />
-      </div>
-
-      {/* Trayectorias M */}
-      <div className="mb-3">
-        <label className="block text-sm font-medium">M (Trajectories)</label>
-        <input
-          type="number"
-          value={M}
-          onChange={(e) => setM(parseInt(e.target.value))}
-          className="mt-1 w-full border rounded-md p-2"
-        />
-      </div>
-
+      {/* Submit button */}
       <button
         type="submit"
         disabled={loading}
-        className="mt-4 w-full bg-[#5FBA9B] text-white py-2 px-4 rounded-lg hover:bg-[#4FAE8D] disabled:opacity-50"
+        className="mt-6 w-full bg-[#5FBA9B] text-white py-2 px-4 rounded-lg font-semibold hover:bg-[#4FAE8D] disabled:opacity-50 transition"
       >
         {loading ? "Simulating..." : "Simulate"}
       </button>
