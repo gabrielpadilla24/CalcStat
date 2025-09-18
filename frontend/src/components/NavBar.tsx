@@ -2,20 +2,26 @@ import { Link } from "react-router-dom";
 import { useState, useEffect, useRef } from "react";
 
 const NavBar = () => {
-  const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-  const dropdownRef = useRef<HTMLLIElement>(null);
+  const [openDropdown, setOpenDropdown] = useState<
+    "financial" | "stochastic" | null
+  >(null);
+  const financialRef = useRef<HTMLLIElement>(null);
+  const stochasticRef = useRef<HTMLLIElement>(null);
 
-  const toggleDropdown = () => {
-    setIsDropdownOpen(!isDropdownOpen);
+  const toggleDropdown = (menu: "financial" | "stochastic") => {
+    setOpenDropdown((prev) => (prev === menu ? null : menu)); // 👉 only one open
   };
 
   const handleClickOutside = (event: MouseEvent) => {
     if (
-      dropdownRef.current &&
-      !dropdownRef.current.contains(event.target as Node)
+      (financialRef.current &&
+        financialRef.current.contains(event.target as Node)) ||
+      (stochasticRef.current &&
+        stochasticRef.current.contains(event.target as Node))
     ) {
-      setIsDropdownOpen(false);
+      return; // click inside, do nothing
     }
+    setOpenDropdown(null); // close if clicked outside
   };
 
   useEffect(() => {
@@ -28,6 +34,7 @@ const NavBar = () => {
   return (
     <nav className="bg-white border-gray-200 dark:bg-gray-900 dark:border-gray-700">
       <div className="w-full flex flex-wrap items-center justify-between px-4 py-4">
+        {/* Logo */}
         <Link
           to="/"
           className="flex items-center space-x-3 rtl:space-x-reverse"
@@ -40,6 +47,7 @@ const NavBar = () => {
           />
         </Link>
 
+        {/* Mobile toggle button */}
         <button
           data-collapse-toggle="navbar-dropdown"
           type="button"
@@ -65,8 +73,10 @@ const NavBar = () => {
           </svg>
         </button>
 
+        {/* Links */}
         <div className="hidden w-full md:block md:w-auto" id="navbar-dropdown">
           <ul className="flex flex-col font-medium p-4 md:p-0 mt-4 border border-gray-100 rounded-lg bg-gray-50 md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 md:bg-white dark:bg-gray-800 md:dark:bg-gray-900 dark:border-gray-700">
+            {/* Home */}
             <li>
               <Link
                 to="/"
@@ -75,9 +85,11 @@ const NavBar = () => {
                 Home
               </Link>
             </li>
-            <li className="relative" ref={dropdownRef}>
+
+            {/* Financial Dropdown */}
+            <li className="relative" ref={financialRef}>
               <button
-                onClick={toggleDropdown}
+                onClick={() => toggleDropdown("financial")}
                 className="flex items-center justify-between w-full py-2 px-3 text-gray-900 hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-[#5FBA9B] md:p-0 md:w-auto dark:text-white md:dark:hover:text-[#5FBA9B] dark:focus:text-white dark:hover:bg-gray-700 md:dark:hover:bg-transparent"
               >
                 Financial
@@ -97,7 +109,7 @@ const NavBar = () => {
                   />
                 </svg>
               </button>
-              {isDropdownOpen && (
+              {openDropdown === "financial" && (
                 <div className="absolute z-10 mt-2 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
                   <ul className="py-2 text-sm text-gray-700 dark:text-gray-200">
                     <li>
@@ -111,7 +123,7 @@ const NavBar = () => {
                     <li>
                       <Link
                         to="/mortgage"
-                        className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                        className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
                       >
                         Mortgage Calculator
                       </Link>
@@ -155,14 +167,90 @@ const NavBar = () => {
                 </div>
               )}
             </li>
-            <li>
-              <Link
-                to="/pricing"
-                className="block py-2 px-3 text-gray-900 rounded-sm hover:bg-gray-100 hover:text-[#5FBA9B] md:hover:bg-transparent md:border-0 md:p-0 dark:text-[#5FBA9B] dark:hover:bg-gray-700 dark:hover:text-white md:dark:hover:bg-transparent"
+
+            {/* Stochastic Dropdown */}
+            <li className="relative" ref={stochasticRef}>
+              <button
+                onClick={() => toggleDropdown("stochastic")}
+                className="flex items-center justify-between w-full py-2 px-3 text-gray-900 hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-[#5FBA9B] md:p-0 md:w-auto dark:text-white md:dark:hover:text-[#5FBA9B] dark:focus:text-white dark:hover:bg-gray-700 md:dark:hover:bg-transparent"
               >
-                Pricing
-              </Link>
+                Stochastic
+                <svg
+                  className="w-2.5 h-2.5 ml-2"
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 10 6"
+                >
+                  <path
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="m1 1 4 4 4-4"
+                  />
+                </svg>
+              </button>
+              {openDropdown === "stochastic" && (
+                <div className="absolute z-10 mt-2 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
+                  <ul className="py-2 text-sm text-gray-700 dark:text-gray-200">
+                    <li>
+                      <Link
+                        to="/stochastic/blackscholes"
+                        className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                      >
+                        Black-Scholes Model
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        to="/stochastic/brownian"
+                        className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                      >
+                        Brownian Motion
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        to="/stochastic/itointegral"
+                        className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                      >
+                        Itô Integral
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        to="/stochastic/sde"
+                        className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                      >
+                        Differential Equations
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        to="/stochastic/martingale"
+                        className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                      >
+                        Martingale Test
+                      </Link>
+                    </li>
+                    <li>
+                      <hr className="my-2 border-gray-200 dark:border-gray-600" />
+                    </li>
+                    <li>
+                      <Link
+                        to="/stochastic"
+                        className="block px-4 py-2 font-medium text-[#5FBA9B] hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                      >
+                        See All
+                      </Link>
+                    </li>
+                  </ul>
+                </div>
+              )}
             </li>
+
+            {/* Contact */}
             <li>
               <Link
                 to="/contact"
