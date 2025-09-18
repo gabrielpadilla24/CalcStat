@@ -1,3 +1,5 @@
+"use client";
+
 import { useRef, useState, useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import NavBar from "@/components/NavBar";
@@ -92,30 +94,28 @@ const MortgageCalculator: React.FC<MortgageCalculatorProps> = ({
   return (
     <>
       <NavBar />
-      <div className="min-h-screen bg-gray-100 py-10 px-4">
+      <div className="min-h-screen bg-gray-100 py-10 px-4 sm:px-6 lg:px-8">
         <h1 className="text-3xl sm:text-4xl font-bold text-center mb-12">
           {getTitle()}
         </h1>
 
-        {/* Responsive form + chart layout */}
+        {/* FORM + RESULT */}
         <div
           className="
-            max-w-[1440px] 
+            max-w-[1170px]   /* ✅ igual que el ancho del gráfico */
             mx-auto 
             flex 
             flex-col 
-            md:flex-col 
             lg:flex-row 
             items-center 
             lg:items-start 
             justify-center 
-            gap-8 
-            lg:gap-12 
+            gap-10 
             mb-16
           "
         >
           {/* FORM */}
-          <div className="w-full max-w-[500px] flex-1">
+          <div className="w-full">
             <MortgageForm
               setResultado={setResultado}
               setTotalPayment={setTotalPayment}
@@ -131,8 +131,8 @@ const MortgageCalculator: React.FC<MortgageCalculatorProps> = ({
             />
           </div>
 
-          {/* CHART */}
-          <div className="w-full max-w-[650px] flex-1 flex justify-center">
+          {/* RESULT */}
+          <div className="w-full">
             <MonthlyBreakdownChart
               resultado={resultado}
               monthlyPropertyTax={monthlyPropertyTax}
@@ -147,8 +147,11 @@ const MortgageCalculator: React.FC<MortgageCalculatorProps> = ({
           </div>
         </div>
 
-        {/* Amortization graph */}
-        <div ref={amortizationRef} className="flex justify-center">
+        {/* AMORTIZATION GRAPH */}
+        <div
+          ref={amortizationRef}
+          className="max-w-[1170px] mx-auto flex justify-center"
+        >
           <AmortizationGraph
             principalPaid={principalPaid}
             interestPaid={interestPaid}
@@ -156,7 +159,7 @@ const MortgageCalculator: React.FC<MortgageCalculatorProps> = ({
           />
         </div>
 
-        {/* Conditional explanations */}
+        {/* CONDITIONAL EXPLANATIONS */}
         {loanTypeState === "ARM" && (
           <div className="mt-12">
             <ARMExplanation fixedYearsMessage={resultado?.fixedYearsMessage} />

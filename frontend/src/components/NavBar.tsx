@@ -118,10 +118,26 @@ const NavBar = () => {
                     </li>
                     <li>
                       <Link
-                        to="/rewards"
+                        to="/financial/npv"
                         className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
                       >
-                        Rewards
+                        NPV Calculator
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        to="/financial/irr"
+                        className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                      >
+                        IRR Calculator
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        to="/financial/savings"
+                        className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                      >
+                        Savings Calculator
                       </Link>
                     </li>
                     <li>
