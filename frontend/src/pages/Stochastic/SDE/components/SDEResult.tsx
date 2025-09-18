@@ -48,23 +48,28 @@ export default function SDEResult({ result }: { result?: SDEResponse }) {
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-md border border-gray-200 p-4 flex flex-col">
-      <h2 className="text-lg font-semibold mb-3 text-center">
+    <div className="bg-white rounded-xl shadow-md border border-gray-200 p-4 flex flex-col w-full">
+      <h2 className="text-lg sm:text-xl font-semibold mb-3 text-center">
         Simulated SDE Trajectories (Euler–Maruyama)
       </h2>
 
-      {/* Chart container */}
-      <div className="w-full h-[430px]">
+      {/* 🔹 Chart container responsivo */}
+      <div className="w-full h-[300px] sm:h-[400px] md:h-[450px]">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={chartData}>
             <CartesianGrid strokeDasharray="3 3" />
             <XAxis
               dataKey="step"
-              label={{ value: "Step", position: "insideBottom", offset: -5 }}
+              label={{
+                value: "Step",
+                position: "insideBottom",
+                offset: -5,
+              }}
+              tick={{ fontSize: 12 }}
             />
-            <YAxis />
+            <YAxis tick={{ fontSize: 12 }} />
             <Tooltip />
-            <Legend />
+            <Legend wrapperStyle={{ fontSize: "12px" }} />
 
             {Array.from({ length: M }, (_, idx) => (
               <Line
@@ -82,14 +87,18 @@ export default function SDEResult({ result }: { result?: SDEResponse }) {
 
       {/* 🔹 Stats section */}
       {stats && (
-        <div className="mt-6 text-center">
+        <div className="mt-6 text-center text-sm sm:text-base">
           <h3 className="text-md font-semibold mb-2">
             📊 Statistics of Xₜ at T
           </h3>
-          <p className="text-gray-700">Mean: {stats.mean.toFixed(4)}</p>
-          <p className="text-gray-700">Variance: {stats.variance.toFixed(4)}</p>
-          <p className="text-gray-700">Min: {stats.min.toFixed(4)}</p>
-          <p className="text-gray-700">Max: {stats.max.toFixed(4)}</p>
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-2">
+            <p className="text-gray-700">Mean: {stats.mean.toFixed(4)}</p>
+            <p className="text-gray-700">
+              Variance: {stats.variance.toFixed(4)}
+            </p>
+            <p className="text-gray-700">Min: {stats.min.toFixed(4)}</p>
+            <p className="text-gray-700">Max: {stats.max.toFixed(4)}</p>
+          </div>
         </div>
       )}
 
