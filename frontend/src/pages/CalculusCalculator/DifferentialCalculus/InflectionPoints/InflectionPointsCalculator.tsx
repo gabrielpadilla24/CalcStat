@@ -31,14 +31,16 @@ export default function InflectionPointsCalculator() {
     <>
       <NavBar />
 
-      <div className="min-h-screen bg-gray-100 py-10">
-        <h1 className="text-4xl font-bold text-center mb-12">
+      <div className="min-h-screen bg-gray-100 py-10 px-4">
+        {/* Title */}
+        <h1 className="text-3xl sm:text-4xl font-bold text-center mb-12">
           Concavity / Inflection Points
         </h1>
 
-        <div className="max-w-[1440px] mx-auto flex flex-col lg:flex-row justify-center items-start gap-6 px-6">
-          {/* Columna izquierda: Input + Graph */}
-          <div className="flex-1 max-w-[600px] w-full flex flex-col items-center">
+        {/* Main responsive container */}
+        <div className="max-w-[1440px] mx-auto flex flex-col lg:flex-row lg:items-start lg:justify-center gap-8">
+          {/* Left column: Input + Graph */}
+          <div className="flex-1 w-full max-w-[600px] mx-auto lg:mx-0 flex flex-col items-center">
             <div className="w-full">
               <InflectionPointsInput
                 onResult={(
@@ -61,25 +63,30 @@ export default function InflectionPointsCalculator() {
               />
             </div>
 
-            <div className="w-full">
+            {/* Graph */}
+            <div className="w-full mt-6">
               <InflectionPointsGraph
                 latex={original}
                 inflectionPoints={inflectionPoints}
                 inflectionPointsCoords={inflectionCoords}
-                height={500}
+                // 📱 smaller on mobile, larger on desktop
+                height={
+                  typeof window !== "undefined" && window.innerWidth < 768
+                    ? 300
+                    : 500
+                }
               />
             </div>
           </div>
 
-          {/* Columna derecha: Result */}
-          <div className="flex-1 w-full max-w-[600px]">
+          {/* Right column: Results */}
+          <div className="flex-1 w-full max-w-[600px] mx-auto lg:mx-0 mt-8 lg:mt-0">
             <InflectionPointsResult
               original={original}
               firstDerivative={firstDerivative}
               secondDerivative={secondDerivative}
               secondDerivativeZeros={secondDerivativeZeros}
               secondDerivativeSingularities={secondDerivativeSingularities}
-              // 🔹 nuevos:
               inflectionPoints={inflectionPoints}
               inflectionPointsCoords={inflectionCoords}
             />

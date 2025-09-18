@@ -36,8 +36,8 @@ const InflectionPointsResult: React.FC<InflectionPointsResultProps> = ({
   const hasResult = Boolean(original && firstDerivative && secondDerivative);
 
   return (
-    <div className="bg-white shadow-md rounded-xl p-6 w-[600px] mx-auto text-gray-800">
-      <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
+    <div className="bg-white shadow-md rounded-xl p-6 w-full max-w-[600px] mx-auto text-gray-800">
+      <h2 className="text-2xl sm:text-3xl font-bold mb-6 flex items-center gap-2">
         📈 Inflection / Concavity Result
       </h2>
 
@@ -48,13 +48,13 @@ const InflectionPointsResult: React.FC<InflectionPointsResultProps> = ({
       ) : (
         <>
           {/* f(x) */}
-          <div className="mb-4 flex items-center gap-2">
+          <div className="mb-4 flex flex-wrap items-center gap-2">
             <span className="font-semibold">Function:</span>
             <StaticMathField>{originalLatex ?? original}</StaticMathField>
           </div>
 
           {/* f'(x) */}
-          <div className="mb-4 flex items-center gap-2">
+          <div className="mb-4 flex flex-wrap items-center gap-2">
             <span className="font-semibold">First Derivative:</span>
             <StaticMathField>
               {firstDerivativeLatex ?? firstDerivative}
@@ -62,7 +62,7 @@ const InflectionPointsResult: React.FC<InflectionPointsResultProps> = ({
           </div>
 
           {/* f''(x) */}
-          <div className="mb-6 flex items-center gap-2">
+          <div className="mb-6 flex flex-wrap items-center gap-2">
             <span className="font-semibold">Second Derivative:</span>
             <StaticMathField>
               {secondDerivativeLatex ?? secondDerivative}
@@ -71,10 +71,11 @@ const InflectionPointsResult: React.FC<InflectionPointsResultProps> = ({
 
           {/* 🔎 Candidatos */}
           <div className="mt-8">
-            <h3 className="text-lg font-semibold mb-3">
+            <h3 className="text-lg sm:text-xl font-semibold mb-3">
               🔎 Inflection Candidates
             </h3>
 
+            {/* Zeros */}
             <div className="mb-4">
               <p className="text-sm font-medium text-gray-700">
                 Where f''(x) = 0:
@@ -96,6 +97,7 @@ const InflectionPointsResult: React.FC<InflectionPointsResultProps> = ({
               )}
             </div>
 
+            {/* Singularities */}
             <div>
               <p className="text-sm font-medium text-gray-700">
                 Where f''(x) does not exist:
@@ -118,13 +120,13 @@ const InflectionPointsResult: React.FC<InflectionPointsResultProps> = ({
             </div>
           </div>
 
-          {/* ✅ Confirmados en LaTeX */}
+          {/* ✅ Confirmed */}
           <div className="mt-8">
-            <h3 className="text-lg font-semibold mb-3">
+            <h3 className="text-lg sm:text-xl font-semibold mb-3">
               ✅ Inflection Points (confirmed)
             </h3>
             {inflectionPoints.length ? (
-              <div className="space-y-2">
+              <div className="space-y-3">
                 {inflectionPoints.map((pt, i) => {
                   const pointLatex = String.raw`\left(${pt.x},\,${pt.y}\right)`;
                   const numericCoord =
@@ -132,7 +134,10 @@ const InflectionPointsResult: React.FC<InflectionPointsResultProps> = ({
                       ? inflectionPointsCoords[i]
                       : null;
                   return (
-                    <div key={`infl-${i}`} className="flex items-center gap-2">
+                    <div
+                      key={`infl-${i}`}
+                      className="flex flex-wrap items-center gap-2"
+                    >
                       <span className="text-sm text-gray-700">P{i + 1}:</span>
                       <StaticMathField>{pointLatex}</StaticMathField>
                       {numericCoord && (
