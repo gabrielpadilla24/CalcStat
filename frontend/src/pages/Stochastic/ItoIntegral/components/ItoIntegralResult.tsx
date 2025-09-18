@@ -31,7 +31,7 @@ export default function ItoIntegralResult({
 }) {
   if (!result || !result.chartData || result.chartData.length === 0) {
     return (
-      <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6 text-center">
+      <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6 text-center w-full">
         <p className="text-gray-500">
           No simulation yet. Submit parameters to see results.
         </p>
@@ -50,13 +50,13 @@ export default function ItoIntegralResult({
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-md border border-gray-200 p-4 flex flex-col">
-      <h2 className="text-lg font-semibold mb-3 text-center">
+    <div className="bg-white rounded-xl shadow-md border border-gray-200 p-4 flex flex-col w-full">
+      <h2 className="text-lg sm:text-xl font-semibold mb-4 text-center">
         Simulated Itô Integral Trajectories
       </h2>
 
-      {/* 🔹 Fixed chart height instead of flex-grow */}
-      <div className="w-full h-[430px]">
+      {/* 🔹 Responsive chart height */}
+      <div className="w-full h-[300px] sm:h-[380px] lg:h-[430px]">
         <ResponsiveContainer width="100%" height="100%">
           <LineChart data={chartData}>
             <CartesianGrid strokeDasharray="3 3" />
