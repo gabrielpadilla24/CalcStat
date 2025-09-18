@@ -5,10 +5,10 @@ import { BlockMath } from "react-katex";
 type TangentLineResultProps = {
   original: string; // LaTeX de f(x)
   derivative: string; // LaTeX de f'(x)
-  x0: number; // valor numérico (usa NaN cuando no hay)
-  m: number; // valor numérico (usa NaN cuando no hay)
-  y0: number; // valor numérico (usa NaN cuando no hay)
-  fxTangent: string; // "y = ..." LaTeX (simplificada)
+  x0: number;
+  m: number;
+  y0: number;
+  fxTangent: string; // "y = ..." LaTeX
 };
 
 const isNonEmpty = (s: string | undefined | null): s is string =>
@@ -18,7 +18,11 @@ const isFiniteNum = (n: unknown): n is number =>
   typeof n === "number" && Number.isFinite(n);
 
 const SafeBlock: React.FC<{ math?: string }> = ({ math }) =>
-  isNonEmpty(math ?? "") ? <BlockMath math={math as string} /> : null;
+  isNonEmpty(math ?? "") ? (
+    <div className="overflow-x-auto">
+      <BlockMath math={math as string} />
+    </div>
+  ) : null;
 
 const TangentLineResult: React.FC<TangentLineResultProps> = ({
   original,
@@ -35,7 +39,7 @@ const TangentLineResult: React.FC<TangentLineResultProps> = ({
   const hasAllNumbers = hasX0 && hasM && hasY0;
   const hasFinal = isNonEmpty(fxTangent);
 
-  // Construcciones de sustitución SOLO si hay números válidos:
+  // LaTeX step-by-step
   const mEvalLatex =
     hasX0 && isNonEmpty(derivative)
       ? `m = \\left.${derivative}\\right|_{x=${x0}}`
@@ -47,63 +51,64 @@ const TangentLineResult: React.FC<TangentLineResultProps> = ({
   const tangentSubstLatex = hasAllNumbers ? `y = ${m}(x - ${x0}) + ${y0}` : "";
 
   return (
-    <div className="bg-white shadow-lg rounded-lg p-6">
-      <h2 className="text-2xl font-bold mb-4">📐 Tangent Line Result</h2>
+    <div className="bg-white shadow-md rounded-xl p-6 w-full text-gray-800">
+      <h2 className="text-2xl sm:text-3xl font-bold mb-6">
+        📐 Tangent Line Result
+      </h2>
 
       {!hasExpr ? (
         <p className="text-gray-500 italic">
           Enter a function and compute its tangent line to see the result here.
         </p>
       ) : (
-        <>
+        <div className="space-y-6">
           {/* Function */}
-          <div className="mb-3">
+          <div>
             <strong>Function:</strong>
-            <div className="mt-1">
-              <SafeBlock math={original} />
-            </div>
+            <SafeBlock math={original} />
           </div>
 
           {/* Derivative */}
-          <div className="mb-6">
+          <div>
             <strong>Derivative:</strong>
-            <div className="mt-1">
-              <SafeBlock math={derivative} />
-            </div>
+            <SafeBlock math={derivative} />
           </div>
 
           {/* Step-by-step */}
-          <h3 className="text-lg font-semibold mb-2">Step-by-Step</h3>
+          <div>
+            <h3 className="text-lg sm:text-xl font-semibold mb-3">
+              Step-by-Step
+            </h3>
 
-          {/* Paso 1: m */}
-          <div className="mb-5">
-            <p className="mb-2">Formula for slope:</p>
-            <SafeBlock math={`m = f'(x_0)`} />
-            {hasX0 && <SafeBlock math={mEvalLatex} />}
-            {hasM && <SafeBlock math={`m = ${m}`} />}
-          </div>
+            {/* Step 1: slope */}
+            <div className="mb-5">
+              <p className="mb-2 font-medium">Formula for slope:</p>
+              <SafeBlock math={`m = f'(x_0)`} />
+              {hasX0 && <SafeBlock math={mEvalLatex} />}
+              {hasM && <SafeBlock math={`m = ${m}`} />}
+            </div>
 
-          {/* Paso 2: y0 */}
-          <div className="mb-5">
-            <p className="mb-2">Formula for y-intercept point:</p>
-            <SafeBlock math={`y_0 = f(x_0)`} />
-            {hasX0 && <SafeBlock math={y0EvalLatex} />}
-            {hasY0 && <SafeBlock math={`y_0 = ${y0}`} />}
-          </div>
+            {/* Step 2: y0 */}
+            <div className="mb-5">
+              <p className="mb-2 font-medium">Formula for y-coordinate:</p>
+              <SafeBlock math={`y_0 = f(x_0)`} />
+              {hasX0 && <SafeBlock math={y0EvalLatex} />}
+              {hasY0 && <SafeBlock math={`y_0 = ${y0}`} />}
+            </div>
 
-          {/* Paso 3: Ecuación de la tangente */}
-          <div className="mb-5">
-            <p className="mb-2">Tangent line equation:</p>
-            <SafeBlock math={`y = m(x - x_0) + y_0`} />
-            {hasAllNumbers && <SafeBlock math={tangentSubstLatex} />}
-            {hasFinal && (
-              <div className="mt-2">
-                {/* versión final simplificada del backend */}
-                <SafeBlock math={fxTangent} />
-              </div>
-            )}
+            {/* Step 3: Tangent equation */}
+            <div>
+              <p className="mb-2 font-medium">Tangent line equation:</p>
+              <SafeBlock math={`y = m(x - x_0) + y_0`} />
+              {hasAllNumbers && <SafeBlock math={tangentSubstLatex} />}
+              {hasFinal && (
+                <div className="mt-2">
+                  <SafeBlock math={fxTangent} />
+                </div>
+              )}
+            </div>
           </div>
-        </>
+        </div>
       )}
     </div>
   );

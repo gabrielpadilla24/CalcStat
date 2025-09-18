@@ -7,10 +7,9 @@ import TangentLineResult from "./components/TangentLineResult";
 
 const TangentLineCalculator = () => {
   const [original, setOriginal] = useState<string>("");
-  const [derivative, setDerivative] = useState<string>(""); // f'(x) LaTeX
-  const [fxTangentStr, setFxTangentStr] = useState<string>(""); // "y = ..." LaTeX
+  const [derivative, setDerivative] = useState<string>("");
+  const [fxTangentStr, setFxTangentStr] = useState<string>("");
 
-  // 👉 Tipos estrictos: usamos NaN como valor “no inicializado” (sigue siendo number)
   const [x0, setX0] = useState<number>(NaN);
   const [m, setM] = useState<number>(NaN);
   const [y0, setY0] = useState<number>(NaN);
@@ -19,14 +18,16 @@ const TangentLineCalculator = () => {
     <>
       <NavBar />
 
-      <div className="min-h-screen bg-gray-100 py-10">
-        <h1 className="text-4xl font-bold text-center mb-12">
+      <div className="min-h-screen bg-gray-100 py-10 px-4">
+        {/* Title */}
+        <h1 className="text-3xl sm:text-4xl font-bold text-center mb-12">
           Tangent Line Calculator
         </h1>
 
-        <div className="max-w-[1440px] mx-auto flex flex-col lg:flex-row justify-center items-start gap-6 px-6">
-          {/* Columna izquierda: Input + Graph */}
-          <div className="flex-1 max-w-[600px] w-full flex flex-col items-center">
+        {/* Main container */}
+        <div className="max-w-[1440px] mx-auto flex flex-col lg:flex-row lg:items-start lg:justify-center gap-8">
+          {/* Left column: Input + Graph */}
+          <div className="flex-1 w-full max-w-[600px] mx-auto lg:mx-0 flex flex-col items-center">
             <div className="w-full">
               <TangentLineInput
                 onResult={(orig, x0Val, fxTangent, der, mVal, y0Val) => {
@@ -40,20 +41,25 @@ const TangentLineCalculator = () => {
               />
             </div>
 
-            {/* Gráfico (opcional) */}
-            <div className="w-full">
+            {/* Graph */}
+            <div className="w-full mt-6">
               <TangentLineGraph
-                latex={original} // data.original (LaTeX de f(x))
-                tangentLatex={fxTangentStr} // ✅ usar el estado correcto
+                latex={original}
+                tangentLatex={fxTangentStr}
                 x0={x0}
                 y0={y0}
-                height={500}
+                // Responsive height: smaller on mobile, larger on desktop
+                height={
+                  typeof window !== "undefined" && window.innerWidth < 768
+                    ? 300
+                    : 500
+                }
               />
             </div>
           </div>
 
-          {/* Columna derecha: Result */}
-          <div className="flex-1 w-full max-w-[600px]">
+          {/* Right column: Result */}
+          <div className="flex-1 w-full max-w-[600px] mx-auto lg:mx-0 mt-8 lg:mt-0">
             <TangentLineResult
               original={original}
               derivative={derivative}

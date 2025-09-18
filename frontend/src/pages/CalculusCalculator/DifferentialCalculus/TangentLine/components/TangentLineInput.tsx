@@ -40,8 +40,9 @@ const TangentLineInput = ({
       buttonText="Calculate Tangent Line"
       extraContent={
         <>
-          <div className="w-full text-left mt-2 mb-2">
-            <label className="flex items-center gap-3">
+          {/* Input de x₀ */}
+          <div className="w-full text-left mt-3 mb-3">
+            <label className="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-3">
               <span className="font-medium">x₀:</span>
               <input
                 type="number"
@@ -52,7 +53,7 @@ const TangentLineInput = ({
                 value={x0}
                 onChange={(e) => setX0(e.target.value)}
                 onWheel={(e) => (e.currentTarget as HTMLInputElement).blur()}
-                className="w-40 border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-400"
+                className="w-full sm:w-40 border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-emerald-400"
               />
             </label>
             <p className="text-xs text-gray-500 mt-1">
@@ -61,11 +62,11 @@ const TangentLineInput = ({
             </p>
           </div>
 
-          {/* 🔗 Link estilo "Financial Calculators" */}
-          <div className="mt-3">
+          {/* 🔗 Link extra */}
+          <div className="mt-4 text-center sm:text-left">
             <a
               href="/calculus/derivatives"
-              className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700 cursor-pointer transition-colors underline underline-offset-4 decoration-gray-300 hover:decoration-gray-500"
+              className="inline-flex items-center gap-1 text-sm text-gray-500 hover:text-gray-700 transition-colors underline underline-offset-4 decoration-gray-300 hover:decoration-gray-500"
             >
               see how to calculate the derivatives
               <span aria-hidden>›</span>
@@ -76,11 +77,11 @@ const TangentLineInput = ({
       onSuccess={(data) => {
         onResult(
           data.original,
-          data.x0, // ✅ número del backend
-          data.fxTangent, // LaTeX de la recta
+          data.x0,
+          data.fxTangent,
           data.derivative,
-          data.m, // ✅ número del backend
-          data.y0 // ✅ número del backend
+          data.m,
+          data.y0
         );
       }}
     />
