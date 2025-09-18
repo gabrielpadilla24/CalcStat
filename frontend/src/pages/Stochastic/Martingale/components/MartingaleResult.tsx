@@ -64,12 +64,13 @@ export default function MartingaleResult({
   } = result;
 
   return (
-    <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6 space-y-6">
+    <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6 space-y-6 w-full max-w-3xl mx-auto">
       <h2 className="text-xl font-semibold text-center mb-4">
         Martingale Test Result (
         {mode === "montecarlo" ? "Monte Carlo" : "Analytical"})
       </h2>
 
+      {/* Estado general */}
       <div className="text-center">
         <p className="font-medium text-gray-800">
           {isMartingale
@@ -85,7 +86,7 @@ export default function MartingaleResult({
           <h3 className="text-lg font-semibold text-center mb-3">
             Simulated Trajectories
           </h3>
-          <div className="w-full h-[430px]">
+          <div className="w-full h-[350px] sm:h-[430px]">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={chartData}>
                 <CartesianGrid strokeDasharray="3 3" />
@@ -121,7 +122,7 @@ export default function MartingaleResult({
 
       {/* Analytical mode → show math derivation */}
       {mode === "analytical" && partials && (
-        <div className="space-y-4">
+        <div className="space-y-4 overflow-x-auto">
           <p className="text-gray-700 font-medium">Process:</p>
           <BlockMath math={`f(t,W) = ${params.process}`} />
 
@@ -140,7 +141,7 @@ export default function MartingaleResult({
           <BlockMath math={final || ""} />
 
           {steps && steps.length > 0 && (
-            <div>
+            <div className="overflow-x-auto">
               <h3 className="text-lg font-semibold mt-6 mb-3">
                 Step-by-step derivation
               </h3>
