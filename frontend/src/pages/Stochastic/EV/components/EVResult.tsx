@@ -19,7 +19,7 @@ type EVResponse = {
 export default function EVResult({ result }: { result?: EVResponse }) {
   if (!result) {
     return (
-      <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6 text-center">
+      <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6 text-center max-w-full">
         <p className="text-gray-500">
           No computation yet. Select a process and compute E[Xₜ], Var(Xₜ).
         </p>
@@ -30,18 +30,26 @@ export default function EVResult({ result }: { result?: EVResponse }) {
   const { expectation, variance, steps, formula } = result;
 
   return (
-    <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6 space-y-6">
+    <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6 space-y-6 max-w-full">
       <h2 className="text-xl font-semibold text-center mb-4">
         Expectation & Variance
       </h2>
 
       <div className="space-y-4">
         <p className="text-gray-700 font-medium">Selected process:</p>
-        <BlockMath math={`X_t = ${formula}`} />{" "}
+        <div className="overflow-x-auto">
+          <BlockMath math={`X_t = ${formula}`} />
+        </div>
+
         <p className="text-gray-700 font-medium">Expectation:</p>
-        <BlockMath math={`E[X_t] = ${expectation}`} />
+        <div className="overflow-x-auto">
+          <BlockMath math={`E[X_t] = ${expectation}`} />
+        </div>
+
         <p className="text-gray-700 font-medium">Variance:</p>
-        <BlockMath math={`Var(X_t) = ${variance}`} />
+        <div className="overflow-x-auto">
+          <BlockMath math={`Var(X_t) = ${variance}`} />
+        </div>
       </div>
 
       {steps && steps.length > 0 && (
@@ -51,7 +59,9 @@ export default function EVResult({ result }: { result?: EVResponse }) {
           </h3>
           <div className="space-y-3">
             {steps.map((s, idx) => (
-              <BlockMath key={idx} math={s} />
+              <div key={idx} className="overflow-x-auto">
+                <BlockMath math={s} />
+              </div>
             ))}
           </div>
         </div>

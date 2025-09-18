@@ -26,26 +26,27 @@ const EVCalculator = () => {
     <>
       <NavBar />
 
-      <div className="min-h-screen bg-gray-100 py-10">
+      <div className="min-h-screen bg-gray-100 py-10 px-4">
         {/* Title */}
-        <h1 className="text-4xl font-bold text-center mb-12">
+        <h1 className="text-3xl sm:text-4xl font-bold text-center mb-12">
           Expectation & Variance of Stochastic Processes
         </h1>
 
         {/* Inputs + Result */}
-        <div className="max-w-[1440px] mx-auto flex flex-col lg:flex-row gap-6 px-6 justify-center">
+        <div className="max-w-[1230px] mx-auto flex flex-col lg:flex-row gap-6 justify-center items-center lg:items-start px-4 sm:px-6">
           {/* Input form */}
-          <div className="w-full lg:w-1/3 max-w-sm">
+          <div className="w-full max-w-md lg:max-w-sm">
             <EVInput onResult={setResult} />
           </div>
 
           {/* Result */}
-          <div className="flex-1 max-w-3xl">
+          <div className="w-full flex-1 mt-8 lg:mt-0">
             <EVResult result={result} />
           </div>
         </div>
+
         {/* Info Card */}
-        <div className="max-w-[1230px] mx-auto px-6 mt-6">
+        <div className="max-w-[1230px] mx-auto px-4 sm:px-6 mt-6">
           <EVInfo />
         </div>
       </div>
