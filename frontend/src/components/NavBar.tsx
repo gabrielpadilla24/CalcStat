@@ -3,12 +3,13 @@ import { useState, useEffect, useRef } from "react";
 
 const NavBar = () => {
   const [openDropdown, setOpenDropdown] = useState<
-    "financial" | "stochastic" | null
+    "financial" | "stochastic" | "probability" | null
   >(null);
   const financialRef = useRef<HTMLLIElement>(null);
   const stochasticRef = useRef<HTMLLIElement>(null);
+  const probabilityRef = useRef<HTMLLIElement>(null);
 
-  const toggleDropdown = (menu: "financial" | "stochastic") => {
+  const toggleDropdown = (menu: "financial" | "stochastic" | "probability") => {
     setOpenDropdown((prev) => (prev === menu ? null : menu)); // 👉 only one open
   };
 
@@ -17,7 +18,9 @@ const NavBar = () => {
       (financialRef.current &&
         financialRef.current.contains(event.target as Node)) ||
       (stochasticRef.current &&
-        stochasticRef.current.contains(event.target as Node))
+        stochasticRef.current.contains(event.target as Node)) ||
+      (probabilityRef.current &&
+        probabilityRef.current.contains(event.target as Node))
     ) {
       return; // click inside, do nothing
     }
@@ -240,6 +243,89 @@ const NavBar = () => {
                     <li>
                       <Link
                         to="/stochastic"
+                        className="block px-4 py-2 font-medium text-[#5FBA9B] hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                      >
+                        See All
+                      </Link>
+                    </li>
+                  </ul>
+                </div>
+              )}
+            </li>
+
+            {/* Probability & Stats */}
+            {/* Stochastic Dropdown */}
+            <li className="relative" ref={probabilityRef}>
+              <button
+                onClick={() => toggleDropdown("probability")}
+                className="flex items-center justify-between w-full py-2 px-3 text-gray-900 hover:bg-gray-100 md:hover:bg-transparent md:border-0 md:hover:text-[#5FBA9B] md:p-0 md:w-auto dark:text-white md:dark:hover:text-[#5FBA9B] dark:focus:text-white dark:hover:bg-gray-700 md:dark:hover:bg-transparent"
+              >
+                Probability and Stats
+                <svg
+                  className="w-2.5 h-2.5 ml-2"
+                  aria-hidden="true"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 10 6"
+                >
+                  <path
+                    stroke="currentColor"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    strokeWidth="2"
+                    d="m1 1 4 4 4-4"
+                  />
+                </svg>
+              </button>
+              {openDropdown === "probability" && (
+                <div className="absolute z-10 mt-2 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 dark:divide-gray-600">
+                  <ul className="py-2 text-sm text-gray-700 dark:text-gray-200">
+                    <li>
+                      <Link
+                        to="/probabilityandstats/binomialdistribution"
+                        className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                      >
+                        Binomial Distribution
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        to="/probabilityandstats/normaldistribution"
+                        className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                      >
+                        Normal Distribution
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        to="/probabilityandstats/bayes"
+                        className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                      >
+                        Bayes Theorem
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        to="/probabilityandstats/clt"
+                        className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                      >
+                        Central Limit Theorem
+                      </Link>
+                    </li>
+                    <li>
+                      <Link
+                        to="/probabilityandstats/uniformdistribution"
+                        className="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
+                      >
+                        Uniform Distribution
+                      </Link>
+                    </li>
+                    <li>
+                      <hr className="my-2 border-gray-200 dark:border-gray-600" />
+                    </li>
+                    <li>
+                      <Link
+                        to="/probabilityandstats"
                         className="block px-4 py-2 font-medium text-[#5FBA9B] hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white"
                       >
                         See All
