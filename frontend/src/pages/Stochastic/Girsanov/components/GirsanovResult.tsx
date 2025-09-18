@@ -74,7 +74,7 @@ export default function GirsanovResult({
   } = result;
 
   return (
-    <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6 space-y-6">
+    <div className="bg-white rounded-xl shadow-md border border-gray-200 p-6 space-y-6 w-full max-w-3xl mx-auto">
       <h2 className="text-xl font-semibold text-center mb-4">
         Girsanov’s Theorem Result
       </h2>
@@ -103,7 +103,7 @@ export default function GirsanovResult({
 
       {/* Analytical mode */}
       {params.mode === "analytical" && (
-        <>
+        <div className="space-y-4 overflow-x-auto">
           {process_P && (
             <>
               <p className="text-gray-700 font-medium">Process under P:</p>
@@ -139,14 +139,14 @@ export default function GirsanovResult({
               <h3 className="text-lg font-semibold mt-6 mb-3">
                 Step-by-step derivation
               </h3>
-              <div className="space-y-3">
+              <div className="space-y-3 overflow-x-auto">
                 {steps.map((s, idx) => (
                   <BlockMath key={idx} math={s} />
                 ))}
               </div>
             </div>
           )}
-        </>
+        </div>
       )}
 
       {/* Monte Carlo mode */}
@@ -155,7 +155,7 @@ export default function GirsanovResult({
           <h3 className="text-lg font-semibold text-center mb-3">
             Monte Carlo Simulation under P and Q
           </h3>
-          <div className="w-full h-[430px]">
+          <div className="w-full h-[350px] sm:h-[430px]">
             <ResponsiveContainer width="100%" height="100%">
               <LineChart data={chartData}>
                 <CartesianGrid strokeDasharray="3 3" />
@@ -171,7 +171,6 @@ export default function GirsanovResult({
                 <Tooltip />
                 <Legend />
 
-                {/* Trayectorias */}
                 {Object.keys(chartData[0])
                   .filter((k) => k.startsWith("traj"))
                   .map((trajKey, idx) => (

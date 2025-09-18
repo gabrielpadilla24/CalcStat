@@ -28,7 +28,7 @@ export default function GirsanovInput({
   infoRef,
 }: {
   onResult: (result: GirsanovResponse) => void;
-  infoRef: React.RefObject<HTMLDivElement>; // 👉 referencia al info
+  infoRef: React.RefObject<HTMLDivElement>;
 }) {
   const [mu, setMu] = useState<number>(0.1);
   const [muTilde, setMuTilde] = useState<number>(0.05);
@@ -78,16 +78,16 @@ export default function GirsanovInput({
   return (
     <form
       onSubmit={handleSubmit}
-      className="bg-white rounded-xl shadow-md border border-gray-200 p-6 space-y-4"
+      className="w-full max-w-md mx-auto bg-white rounded-xl shadow-md border border-gray-200 p-6 space-y-5"
     >
-      <h2 className="text-xl font-semibold text-center mb-2">
+      <h2 className="text-lg sm:text-xl font-semibold text-center mb-2">
         Girsanov’s Theorem Tool
       </h2>
 
       {/* Mode toggle */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-wrap items-center justify-between gap-2">
         <span className="text-sm font-medium text-gray-700">Mode</span>
-        <div className="flex gap-2">
+        <div className="flex flex-wrap gap-2">
           <button
             type="button"
             onClick={() => setMode("analytical")}
@@ -211,7 +211,7 @@ export default function GirsanovInput({
         Apply Girsanov’s Theorem
       </button>
 
-      {/* 🔽 Learn How it Works (scroll trigger) */}
+      {/* 🔽 Learn How it Works */}
       <div
         onClick={handleScroll}
         className="flex items-center justify-center gap-2 mt-4 cursor-pointer text-[#5FBA9B] hover:text-[#4FAE8D] font-medium transition-colors"
