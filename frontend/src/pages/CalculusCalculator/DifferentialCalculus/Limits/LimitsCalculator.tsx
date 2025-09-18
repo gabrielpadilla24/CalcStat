@@ -15,14 +15,16 @@ export default function LimitsCalculator() {
     <>
       <NavBar />
 
-      <div className="min-h-screen bg-gray-100 py-10">
-        <h1 className="text-4xl font-bold text-center mb-12">
+      <div className="min-h-screen bg-gray-100 py-10 px-4">
+        {/* Title */}
+        <h1 className="text-3xl sm:text-4xl font-bold text-center mb-12">
           Limits Calculator
         </h1>
 
-        <div className="max-w-[1440px] mx-auto flex flex-col lg:flex-row justify-center items-start gap-6 px-6">
-          {/* Columna izquierda: Input */}
-          <div className="flex-1 max-w-[600px] w-full flex flex-col items-center">
+        {/* Main responsive container */}
+        <div className="max-w-[1440px] mx-auto flex flex-col xl:flex-row justify-center items-center xl:items-start gap-6">
+          {/* Left column: Input */}
+          <div className="flex-1 w-full max-w-[600px] flex flex-col items-center">
             <div className="w-full">
               <LimitsInput
                 onResult={(orig, lim, fx) => {
@@ -34,14 +36,14 @@ export default function LimitsCalculator() {
             </div>
           </div>
 
-          {/* Columna derecha: Result */}
-          <div className="flex-1 w-full max-w-[600px]">
+          {/* Right column: Result */}
+          <div className="flex-1 w-full max-w-[600px] mt-8 xl:mt-0">
             <LimitsResult original={original} limit={limit} />
           </div>
         </div>
 
-        {/* Gráfico centrado debajo del input y resultado */}
-        <div className="flex justify-center mt-2">
+        {/* Graph centered below */}
+        <div className="flex justify-center mt-10">
           <div className="w-full max-w-[1250px]">
             <LimitsGraph latex={func} limitLatex={limit} />
           </div>
