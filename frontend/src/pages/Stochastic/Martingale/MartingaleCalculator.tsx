@@ -45,14 +45,14 @@ const MartingaleCalculator = () => {
         </h1>
 
         {/* Inputs + Result */}
-        <div className="max-w-[1440px] mx-auto flex flex-col lg:flex-row gap-6 justify-center items-center lg:items-start">
+        <div className="max-w-[1170px] mx-auto flex flex-col lg:flex-row gap-6 justify-center items-center lg:items-start px-4 sm:px-6">
           {/* Input */}
-          <div className="w-full max-w-sm lg:w-1/3">
+          <div className="w-full max-w-md lg:max-w-sm">
             <MartingaleInput onResult={setResult} />
           </div>
 
           {/* Result */}
-          <div className="w-full max-w-3xl mt-8 lg:mt-0">
+          <div className="w-full flex-1 mt-8 lg:mt-0">
             <MartingaleResult result={result} />
           </div>
         </div>
