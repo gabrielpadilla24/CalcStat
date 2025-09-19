@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react";
 import MatrixInput from "@/components/MatrixInput";
+import { api } from "@/lib/api"; // ✅ import api instance
 
 type DeterminantResponse = {
   determinant?: number;
@@ -21,19 +22,12 @@ const DeterminantInput = ({
     Array.from({ length: 3 }, () => Array(3).fill(0))
   );
 
-  const body = useMemo(() => JSON.stringify({ matrix }), [matrix]);
+  const body = useMemo(() => ({ matrix }), [matrix]);
 
   const handleCalculate = async () => {
     try {
-      const res = await fetch("http://localhost:8000/determinant", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body,
-      });
-      if (!res.ok) throw new Error("Request failed");
-
-      const data = (await res.json()) as DeterminantResponse;
-      onResult({ ...data, matrix });
+      const res = await api.post<DeterminantResponse>("/determinant", body); // ✅ using api
+      onResult({ ...res.data, matrix });
     } catch {
       onResult({ matrix, error: "Failed to calculate determinant." });
     }
