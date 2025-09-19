@@ -21,23 +21,20 @@ export default function LimitsCalculator() {
           Limits Calculator
         </h1>
 
-        {/* Main responsive container */}
-        <div className="max-w-[1440px] mx-auto flex flex-col xl:flex-row justify-center items-center xl:items-start gap-6">
+        <div className="max-w-[1440px] mx-auto grid grid-cols-1 xl:grid-cols-2 gap-0 xl:gap-6 px-4 sm:px-6 lg:px-8">
           {/* Left column: Input */}
-          <div className="flex-1 w-full max-w-[600px] flex flex-col items-center">
-            <div className="w-full">
-              <LimitsInput
-                onResult={(orig, lim, fx) => {
-                  setOriginal(orig);
-                  setLimit(lim);
-                  setFunc(fx); // guardamos la función pura
-                }}
-              />
-            </div>
+          <div className="w-full">
+            <LimitsInput
+              onResult={(orig, lim, fx) => {
+                setOriginal(orig);
+                setLimit(lim);
+                setFunc(fx);
+              }}
+            />
           </div>
 
           {/* Right column: Result */}
-          <div className="flex-1 w-full max-w-[600px] mt-8 xl:mt-0">
+          <div className="w-full">
             <LimitsResult original={original} limit={limit} />
           </div>
         </div>
