@@ -2,6 +2,7 @@ import React, { useState, useRef } from "react";
 import ReverseMortgageResults from "./ReverseMortgageResults";
 import ReverseMortgageChart from "./ReverseMortgageChart";
 import ReverseMortgageInfo from "./ReverseMortgageInfo";
+import { api } from "@/lib/api";
 
 type ReverseMortgagePayload = {
   homeEquity: number;
@@ -56,13 +57,15 @@ const ReverseMortgageForm = () => {
     }
 
     try {
-      const response = await fetch("http://localhost:8000/reverse-mortgage", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
+      const res = await api.post<
+        ReverseMortgageResult & {
+          error?: string;
+          homeEquity?: number;
+          amountOwedAtEnd?: number;
+        }
+      >("/reverse-mortgage", payload);
 
-      const data = await response.json();
+      const data = res.data;
 
       if (data.error) {
         setError(data.error);
