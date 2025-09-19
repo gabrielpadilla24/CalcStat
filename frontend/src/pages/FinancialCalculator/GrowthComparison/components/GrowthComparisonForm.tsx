@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import GrowthComparisonResults from "./GrowthComparisonResults";
+import { api } from "@/lib/api";
 
 export type GrowthComparisonResponse = {
   finalValues: number[];
@@ -34,13 +35,11 @@ const GrowthComparisonForm: React.FC<GrowthComparisonFormProps> = ({
     };
 
     try {
-      const response = await fetch("http://localhost:8000/growth-comparison", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-
-      const data: GrowthComparisonResponse = await response.json();
+      const response = await api.post<GrowthComparisonResponse>(
+        "/growth-comparison",
+        payload
+      );
+      const data = response.data;
 
       if (
         Array.isArray(data.finalValues) &&

@@ -3,6 +3,7 @@ import InputField from "@/components/InputField";
 import SubmitButton from "@/components/SubmitButton";
 import CheckBox from "@/components/CheckBox";
 import Tooltip from "@/components/Tooltip/Tooltip";
+import { api } from "@/lib/api";
 
 interface Props {
   setValoresPorAño: (valores: number[]) => void;
@@ -72,7 +73,7 @@ const ExponentialForm: React.FC<Props> = ({
     });
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     const payload = {
@@ -84,42 +85,32 @@ const ExponentialForm: React.FC<Props> = ({
       frequency: formData.addConstant ? formData.frequency : "Yearly",
     };
 
-    fetch("http://localhost:8000/compoundinterest", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(payload),
-    })
-      .then((res) => {
-        if (!res.ok) throw new Error("Server response error");
-        return res.json();
-      })
-      .then(
-        (data: {
-          resultado: number;
-          valoresPorAño: number[];
-          aportesPorAño: number[];
-        }) => {
-          setResultado(data.resultado);
-          setValoresPorAño(data.valoresPorAño);
-          setAportesPorAño(data.aportesPorAño);
+    try {
+      const res = await api.post<{
+        resultado: number;
+        valoresPorAño: number[];
+        aportesPorAño: number[];
+      }>("/compoundinterest", payload);
 
-          setFormulaData({
-            P: Number(formData.initialValue),
-            r: Number(formData.growthRate) / 100,
-            t: Number(formData.time),
-            C: formData.addConstant ? Number(formData.constantValue) : 0,
-            frequency: formData.addConstant ? formData.frequency : "Yearly",
-          });
+      const data = res.data;
 
-          setMostrarFormulaConValores(true);
-        }
-      )
-      .catch((err) => {
-        console.error("Error connecting to Backend:", err);
-        alert("Error connecting to Server");
+      setResultado(data.resultado);
+      setValoresPorAño(data.valoresPorAño);
+      setAportesPorAño(data.aportesPorAño);
+
+      setFormulaData({
+        P: Number(formData.initialValue),
+        r: Number(formData.growthRate) / 100,
+        t: Number(formData.time),
+        C: formData.addConstant ? Number(formData.constantValue) : 0,
+        frequency: formData.addConstant ? formData.frequency : "Yearly",
       });
+
+      setMostrarFormulaConValores(true);
+    } catch (err) {
+      console.error("Error connecting to Backend:", err);
+      alert("Error connecting to Server");
+    }
   };
 
   return (

@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import SavingsResults from "./SavingsResults";
+import { api } from "@/lib/api";
 
 export type SavingsResponse = {
   contribution: number;
@@ -29,13 +30,8 @@ const SavingsForm: React.FC<SavingsFormProps> = ({ onResult }) => {
     };
 
     try {
-      const response = await fetch("http://localhost:8000/savings", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-
-      const data: SavingsResponse = await response.json();
+      const response = await api.post<SavingsResponse>("/savings", payload);
+      const data = response.data;
 
       if (
         typeof data.contribution === "number" &&
