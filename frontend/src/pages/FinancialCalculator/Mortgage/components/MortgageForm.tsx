@@ -4,6 +4,7 @@ import FRM from "./FRM";
 import ARM from "./ARMForm";
 import InterestOnly from "./InterestOnly";
 import BalloonPayment from "./BalloonPayment";
+import { api } from "@/lib/api";
 
 interface Props {
   setTotalPayment: (value: number) => void;
@@ -39,7 +40,6 @@ const MortgageForm: React.FC<Props> = ({
   setInsurance,
   setLoanType,
   showLoanTypeSelector = true,
-  //loanType,
 }) => {
   const detectLoanTypeFromURL = (): string => {
     const path = window.location.pathname.toLowerCase();
@@ -102,7 +102,7 @@ const MortgageForm: React.FC<Props> = ({
     if (name === "insurance") setInsurance(value);
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     const homePrice = Number(formData.homePrice);
@@ -145,46 +145,46 @@ const MortgageForm: React.FC<Props> = ({
         return;
       }
 
-      fetch("http://localhost:8000/fixedrate", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
+      try {
+        const res = await api.post<{
+          monthlyPayment: number;
+          loanAmount: number;
+          totalPayments: number;
+          monthlyRate: number;
+          principalPaid: number[];
+          interestPaid: number[];
+          loanBalance: number[];
+        }>("/fixedrate", {
           homePrice,
           downPayment,
           interestRate,
           duration,
-        }),
-      })
-        .then((res) => {
-          if (!res.ok) throw new Error("Error connecting to backend");
-          return res.json();
-        })
-        .then((data) => {
-          const {
-            monthlyPayment,
-            loanAmount,
-            totalPayments,
-            monthlyRate,
-            principalPaid,
-            interestPaid,
-            loanBalance,
-          } = data;
-
-          setResultado({
-            monthlyPayment,
-            loanAmount,
-            totalPayments,
-            monthlyRate,
-          });
-          setTotalPayment(monthlyPayment);
-          setPrincipalPaid(principalPaid);
-          setInterestPaid(interestPaid);
-          setLoanBalance(loanBalance);
-        })
-        .catch((err) => {
-          console.error(err);
-          alert("There was an error calculating the monthly payment.");
         });
+
+        const {
+          monthlyPayment,
+          loanAmount,
+          totalPayments,
+          monthlyRate,
+          principalPaid,
+          interestPaid,
+          loanBalance,
+        } = res.data;
+
+        setResultado({
+          monthlyPayment,
+          loanAmount,
+          totalPayments,
+          monthlyRate,
+        });
+        setTotalPayment(monthlyPayment);
+        setPrincipalPaid(principalPaid);
+        setInterestPaid(interestPaid);
+        setLoanBalance(loanBalance);
+      } catch (err) {
+        console.error(err);
+        alert("There was an error calculating the monthly payment.");
+      }
 
       return;
     }
@@ -207,50 +207,51 @@ const MortgageForm: React.FC<Props> = ({
         return;
       }
 
-      fetch("http://localhost:8000/arm", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
+      try {
+        const res = await api.post<{
+          monthlyPayment: number;
+          loanAmount: number;
+          totalPayments: number;
+          monthlyRate: number;
+          principalPaid: number[];
+          interestPaid: number[];
+          loanBalance: number[];
+          fixedYearsMessage: string;
+        }>("/arm", {
           homePrice,
           downPayment,
           initialRate,
           armType: formData.armType,
           loanTerm,
-        }),
-      })
-        .then((res) => {
-          if (!res.ok) throw new Error("Backend error");
-          return res.json();
-        })
-        .then((data) => {
-          const {
-            monthlyPayment,
-            loanAmount,
-            totalPayments,
-            monthlyRate,
-            principalPaid,
-            interestPaid,
-            loanBalance,
-            fixedYearsMessage,
-          } = data;
-
-          setResultado({
-            monthlyPayment,
-            loanAmount,
-            totalPayments,
-            monthlyRate,
-            fixedYearsMessage,
-          });
-
-          setTotalPayment(monthlyPayment);
-          setPrincipalPaid(principalPaid);
-          setInterestPaid(interestPaid);
-          setLoanBalance(loanBalance);
-        })
-        .catch((err) => {
-          console.error(err);
-          alert("There was an error calculating the ARM payment.");
         });
+
+        const {
+          monthlyPayment,
+          loanAmount,
+          totalPayments,
+          monthlyRate,
+          principalPaid,
+          interestPaid,
+          loanBalance,
+          fixedYearsMessage,
+        } = res.data;
+
+        setResultado({
+          monthlyPayment,
+          loanAmount,
+          totalPayments,
+          monthlyRate,
+          fixedYearsMessage,
+        });
+
+        setTotalPayment(monthlyPayment);
+        setPrincipalPaid(principalPaid);
+        setInterestPaid(interestPaid);
+        setLoanBalance(loanBalance);
+      } catch (err) {
+        console.error(err);
+        alert("There was an error calculating the ARM payment.");
+      }
 
       return;
     }
@@ -278,51 +279,51 @@ const MortgageForm: React.FC<Props> = ({
         return;
       }
 
-      fetch("http://localhost:8000/interestonly", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
+      try {
+        const res = await api.post<{
+          interestOnlyPayment: number;
+          fixedPaymentAfter: number;
+          loanAmount: number;
+          totalPayments: number;
+          monthlyRate: number;
+          principalPaid: number[];
+          interestPaid: number[];
+          loanBalance: number[];
+        }>("/interestonly", {
           homePrice,
           downPayment,
           interestRate,
           interestOnlyPeriod,
           totalTerm,
-        }),
-      })
-        .then((res) => {
-          if (!res.ok) throw new Error("Backend error");
-          return res.json();
-        })
-        .then((data) => {
-          const {
-            interestOnlyPayment,
-            fixedPaymentAfter,
-            loanAmount,
-            totalPayments,
-            monthlyRate,
-            principalPaid,
-            interestPaid,
-            loanBalance,
-          } = data;
-
-          setResultado({
-            monthlyPayment: interestOnlyPayment,
-            secondPayment: fixedPaymentAfter,
-            loanAmount,
-            totalPayments,
-            monthlyRate,
-          });
-
-          setPrincipalPaid(principalPaid); // ✅ usar los datos reales
-          setInterestPaid(interestPaid); // ✅ usar los datos reales
-          setLoanBalance(loanBalance); // ✅ usar los datos reales
-          setTotalPayment(interestOnlyPayment);
-        })
-
-        .catch((err) => {
-          console.error(err);
-          alert("There was an error calculating the Interest Only payment.");
         });
+
+        const {
+          interestOnlyPayment,
+          fixedPaymentAfter,
+          loanAmount,
+          totalPayments,
+          monthlyRate,
+          principalPaid,
+          interestPaid,
+          loanBalance,
+        } = res.data;
+
+        setResultado({
+          monthlyPayment: interestOnlyPayment,
+          secondPayment: fixedPaymentAfter,
+          loanAmount,
+          totalPayments,
+          monthlyRate,
+        });
+
+        setPrincipalPaid(principalPaid);
+        setInterestPaid(interestPaid);
+        setLoanBalance(loanBalance);
+        setTotalPayment(interestOnlyPayment);
+      } catch (err) {
+        console.error(err);
+        alert("There was an error calculating the Interest Only payment.");
+      }
 
       return;
     }
@@ -347,7 +348,6 @@ const MortgageForm: React.FC<Props> = ({
         return;
       }
 
-      // ✅ VALIDACIÓN ADICIONAL
       if (balloonYear >= loanTerm) {
         alert(
           "Balloon Year must be less than the Loan Term. Otherwise, it's just a regular fixed-rate loan."
@@ -355,49 +355,49 @@ const MortgageForm: React.FC<Props> = ({
         return;
       }
 
-      fetch("http://localhost:8000/balloon", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
+      try {
+        const res = await api.post<{
+          monthlyPayment: number;
+          loanAmount: number;
+          monthlyRate: number;
+          principalPaid: number[];
+          interestPaid: number[];
+          loanBalance: number[];
+          secondPayment: number;
+        }>("/balloon", {
           homePrice,
           downPayment,
           interestRate,
           loanTerm,
           balloonYear,
-        }),
-      })
-        .then((res) => {
-          if (!res.ok) throw new Error("Backend error");
-          return res.json();
-        })
-        .then((data) => {
-          const {
-            monthlyPayment,
-            loanAmount,
-            monthlyRate,
-            principalPaid,
-            interestPaid,
-            loanBalance,
-            secondPayment, // 👈 asegúrate que esto se incluya
-          } = data;
-
-          setResultado({
-            monthlyPayment,
-            secondPayment, // 👈 para habilitar la tab
-            loanAmount,
-            totalPayments: balloonYear * 12,
-            monthlyRate,
-          });
-
-          setTotalPayment(monthlyPayment);
-          setPrincipalPaid(principalPaid);
-          setInterestPaid(interestPaid);
-          setLoanBalance(loanBalance);
-        })
-        .catch((err) => {
-          console.error(err);
-          alert("There was an error calculating the Balloon Payment.");
         });
+
+        const {
+          monthlyPayment,
+          loanAmount,
+          monthlyRate,
+          principalPaid,
+          interestPaid,
+          loanBalance,
+          secondPayment,
+        } = res.data;
+
+        setResultado({
+          monthlyPayment,
+          secondPayment,
+          loanAmount,
+          totalPayments: balloonYear * 12,
+          monthlyRate,
+        });
+
+        setTotalPayment(monthlyPayment);
+        setPrincipalPaid(principalPaid);
+        setInterestPaid(interestPaid);
+        setLoanBalance(loanBalance);
+      } catch (err) {
+        console.error(err);
+        alert("There was an error calculating the Balloon Payment.");
+      }
 
       return;
     }
