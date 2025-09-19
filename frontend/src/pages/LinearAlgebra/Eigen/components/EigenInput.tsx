@@ -2,6 +2,7 @@
 
 import { useMemo, useState } from "react";
 import MatrixInput from "@/components/MatrixInput";
+import { api } from "@/lib/api"; // ✅ import api instance
 
 export type Step = { text: string; math?: string };
 
@@ -41,17 +42,12 @@ const EigenInput = ({ onResult }: { onResult: (r: EigenResponse) => void }) => {
     setSizeInput(String(n));
   };
 
-  const body = useMemo(() => JSON.stringify({ matrix }), [matrix]);
+  const body = useMemo(() => ({ matrix }), [matrix]);
 
   const handleCalculate = async () => {
     try {
-      const res = await fetch("http://localhost:8000/eigen", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body,
-      });
-      if (!res.ok) throw new Error("Request failed");
-      const data = (await res.json()) as EigenResponse;
+      const res = await api.post<EigenResponse>("/eigen", body); // ✅ use api
+      const data = res.data;
 
       onResult({
         matrix: data.matrix ?? matrix,
