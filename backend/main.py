@@ -19,6 +19,12 @@ from stochastic import BrownianData, StochasticSimulator, ItoData, ItoLemmaData,
 
 app = FastAPI()
 
+
+@app.get("/")
+def read_root():
+    return {"message": "CalcStat API is live! 🚀 Go to /docs for full API docs."}
+
+
 # -----------------------------
 # CONFIGURACIÓN CORS
 # -----------------------------
