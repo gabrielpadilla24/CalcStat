@@ -27,7 +27,7 @@ export default function InflectionPointsInput({
     <div className="w-full max-w-[600px] mx-auto">
       <MathFunctionInput<InflectionPointsResponse>
         label="Enter a function to analyze inflection candidates:"
-        endpoint="http://localhost:8000/inflectionpoints"
+        endpoint="/inflectionpoints"
         payloadKey="equation"
         buttonText="Analyze"
         onSuccess={(data) =>
