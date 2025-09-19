@@ -2,6 +2,7 @@
 
 import { useEffect, useMemo, useState, ReactNode } from "react";
 import { addStyles, EditableMathField } from "react-mathquill";
+import { api } from "@/lib/api";
 
 addStyles();
 
@@ -78,19 +79,12 @@ const MathFunctionInput = <
     setErr(null);
     setLoading(true);
     try {
-      const res = await fetch(endpoint, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body,
-      });
-      if (!res.ok) {
-        const txt = await res.text().catch(() => "");
-        throw new Error(txt || "Request failed");
-      }
-      const data = (await res.json()) as TResponse;
-      onSuccess(data, latex);
+      // ✅ usamos el cliente axios con baseURL configurado
+      const res = await api.post<TResponse>(endpoint, body);
+      onSuccess(res.data, latex);
     } catch (e: unknown) {
-      const message = e instanceof Error ? e.message : "Unexpected error";
+      const message =
+        e instanceof Error ? e.message : "Unexpected error contacting server";
       setErr(message);
     } finally {
       setLoading(false);

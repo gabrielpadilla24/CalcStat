@@ -28,7 +28,7 @@ const CriticalPointsInput = ({
 }) => (
   <MathFunctionInput<CriticalPointsResponse>
     label="Enter a function to analyze critical points:"
-    endpoint="http://localhost:8000/criticalpoints"
+    endpoint="/criticalpoints"
     payloadKey="equation"
     buttonText="Find Critical Points"
     extraContent={
