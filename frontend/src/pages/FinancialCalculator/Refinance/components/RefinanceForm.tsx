@@ -2,6 +2,7 @@ import React, { useState, useRef } from "react";
 import RefinanceBreakEvenChart from "./RefinanceBreakEvenChart";
 import ScoreMeter from "./ScoreMeter";
 import RefinanceEducation from "./RefinanceEducation";
+import { api } from "@/lib/api";
 
 type RefinanceResult = {
   newMonthlyPayment: number;
@@ -13,6 +14,7 @@ type RefinanceResult = {
   cumulativeRefinanced: number[];
   groupedOriginal: number[];
   groupedRefinanced: number[];
+  refinanceScore?: number;
 };
 
 const RefinanceForm = () => {
@@ -42,15 +44,14 @@ const RefinanceForm = () => {
     };
 
     try {
-      const response = await fetch("http://localhost:8000/refinance", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
+      const res = await api.post<RefinanceResult & { refinanceScore: number }>(
+        "/refinance",
+        payload
+      );
 
-      const data = await response.json();
+      const data = res.data;
       setResult(data);
-      setScore(data.refinanceScore);
+      setScore(data.refinanceScore ?? null);
 
       setTimeout(() => {
         resultRef.current?.scrollIntoView({ behavior: "smooth" });
