@@ -3,6 +3,7 @@
 import NavBar from "@/components/NavBar";
 import SubmitButton from "@/components/SubmitButton";
 import { Link } from "react-router-dom";
+import BottomCTA from "@/components/BottomCTA";
 
 const LinearAlgebraCalculator = () => {
   return (
@@ -126,6 +127,7 @@ const LinearAlgebraCalculator = () => {
           </Link>
         </div>
       </div>
+      <BottomCTA buttonText="Browse All Calculators" href="/calculators" />
     </div>
   );
 };

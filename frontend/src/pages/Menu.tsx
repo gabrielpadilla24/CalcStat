@@ -32,7 +32,7 @@ const Menu = () => {
           </h2>
           <p className="text-sm text-gray-600 mb-4">
             Handle compound interest, annuities, loan amortization, and
-            investment growth effortlessly.
+            investment growth.
           </p>
           <Link to="/financial">
             <SubmitButton text="Go to Financial" />
