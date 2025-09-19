@@ -34,7 +34,7 @@ const TangentLineInput = ({
   return (
     <MathFunctionInput<TangentLineResponse, { x0?: number }>
       label="Enter a function to find the tangent line:"
-      endpoint="http://localhost:8000/tangentline"
+      endpoint="/tangentline"
       payloadKey="equation"
       extraPayload={extraPayload}
       buttonText="Calculate Tangent Line"
