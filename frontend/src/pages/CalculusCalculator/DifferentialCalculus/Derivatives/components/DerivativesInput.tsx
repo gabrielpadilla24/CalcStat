@@ -27,7 +27,7 @@ const DerivativesInput = ({
   <div className="w-full max-w-[600px] mx-auto">
     <MathFunctionInput<DerivativesResponse>
       label="Enter a function to differentiate:"
-      endpoint="http://localhost:8000/derivatives"
+      endpoint="/derivatives"
       payloadKey="equation"
       buttonText="Calculate Derivative"
       onSuccess={(data) =>
