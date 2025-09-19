@@ -17,7 +17,7 @@ const ImplicitDiffInput = ({
 }) => (
   <MathFunctionInput<ImplicitDiffResponse>
     label="Enter an equation for implicit differentiation (dy/dx):"
-    endpoint="http://localhost:8000/implicitdiff"
+    endpoint="/implicitdiff"
     payloadKey="equation"
     buttonText="Calculate Implicit Derivative"
     onSuccess={(data) => {
