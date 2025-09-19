@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from "react";
 import NPVResults from "./NPVResults";
 import NPVChart from "./NPVChart";
 import NPVInfo from "./NPVInfo";
+import { api } from "@/lib/api";
 
 type NPVResponse = {
   npv: number;
@@ -69,18 +70,18 @@ const NPVForm = () => {
       const payload = {
         futureValue: parseFloat(futureValue),
         years: parseInt(years),
-        // ✅ Enviamos porcentaje tal cual (ej. 8), backend hace /100
         interestRate: parseFloat(interestRate),
       };
 
       try {
-        const response = await fetch("http://localhost:8000/npv", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
-        });
+        const res = await api.post<{
+          npv: number;
+          futureValue: number;
+          years: number;
+          interestRate: number;
+        }>("/npv", payload);
 
-        const data = await response.json();
+        const data = res.data;
 
         if (
           typeof data.npv === "number" &&
@@ -109,18 +110,17 @@ const NPVForm = () => {
 
       const payload = {
         cashFlows: cashFlows.map((cf) => parseFloat(cf.amount)),
-        // ✅ Enviamos porcentaje tal cual (ej. 8), backend hace /100
         interestRate: parseFloat(interestRate),
       };
 
       try {
-        const response = await fetch("http://localhost:8000/npv-sequence", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
-        });
+        const res = await api.post<{
+          npv: number;
+          interestRate: number;
+          cashFlows: number[];
+        }>("/npv-sequence", payload);
 
-        const data = await response.json();
+        const data = res.data;
 
         if (
           typeof data.npv === "number" &&
@@ -131,7 +131,10 @@ const NPVForm = () => {
             npv: data.npv,
             years: data.cashFlows.length - 1,
             interestRate: data.interestRate,
-            cashFlows: data.cashFlows,
+            cashFlows: data.cashFlows.map((v, i) => ({
+              year: i,
+              value: v,
+            })),
           });
 
           setTimeout(() => {
