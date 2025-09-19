@@ -40,7 +40,7 @@ const Menu = () => {
         </div>
 
         {/* Quant */}
-        <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] text-left opacity-50 cursor-not-allowed">
+        <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] text-left">
           <img
             src="/img/quantimg.png"
             alt="Quant Calculator"
@@ -53,13 +53,13 @@ const Menu = () => {
             From risk models to optimization tools, explore financial logic with
             precision.
           </p>
-          <Link to="/stochastic">
-            <SubmitButton text="Go to Stochastic" />
+          <Link to="/quant">
+            <SubmitButton text="Go to Quant" />
           </Link>
         </div>
 
         {/* Stochastic */}
-        <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] text-left ">
+        <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] text-left">
           <img
             src="/img/stochasticimg.png"
             alt="Stochastic Calculator"
@@ -77,7 +77,7 @@ const Menu = () => {
         </div>
 
         {/* Calculus */}
-        <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] text-left opacity-50 cursor-not-allowed">
+        <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] text-left">
           <img
             src="/img/calculusimg.png"
             alt="Calculus Calculator"
@@ -89,16 +89,13 @@ const Menu = () => {
           <p className="text-sm text-gray-600 mb-4">
             Tackle differential, integral, and multivariable calculus with ease.
           </p>
-          <button
-            disabled
-            className="bg-gray-300 text-white px-6 py-2 rounded-md"
-          >
-            Coming Soon
-          </button>
+          <Link to="/calculus">
+            <SubmitButton text="Go to Calculus" />
+          </Link>
         </div>
 
         {/* Linear Algebra */}
-        <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] text-left opacity-50 cursor-not-allowed">
+        <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] text-left">
           <img
             src="/img/linearimg.png"
             alt="Linear Algebra Calculator"
@@ -111,16 +108,13 @@ const Menu = () => {
             Work with matrices, vectors, transformations and systems of
             equations.
           </p>
-          <button
-            disabled
-            className="bg-gray-300 text-white px-6 py-2 rounded-md"
-          >
-            Coming Soon
-          </button>
+          <Link to="/linearalgebra">
+            <SubmitButton text="Go to Linear Algebra" />
+          </Link>
         </div>
 
         {/* Probability & Stats */}
-        <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] text-left opacity-50 cursor-not-allowed">
+        <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] text-left">
           <img
             src="/img/probstatsimg.png"
             alt="Probability & Stats Calculator"
@@ -133,12 +127,9 @@ const Menu = () => {
             Calculate probabilities, visualize distributions, and analyze data
             with precision.
           </p>
-          <button
-            disabled
-            className="bg-gray-300 text-white px-6 py-2 rounded-md"
-          >
-            Coming Soon
-          </button>
+          <Link to="/probabilityandstats">
+            <SubmitButton text="Go to Probability & Stats" />
+          </Link>
         </div>
       </div>
     </div>
