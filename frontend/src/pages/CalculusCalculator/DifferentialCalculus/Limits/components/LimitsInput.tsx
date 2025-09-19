@@ -14,7 +14,7 @@ const LimitsInput = ({
 }) => (
   <MathFunctionInput<LimitsResponse>
     label="Enter a function to calculate its limit:"
-    endpoint="http://localhost:8000/limits"
+    endpoint="/limits"
     payloadKey="equation"
     buttonText="Calculate Limit"
     inputLeft={
