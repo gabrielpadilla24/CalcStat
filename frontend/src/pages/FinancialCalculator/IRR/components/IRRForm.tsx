@@ -1,5 +1,6 @@
 import React, { useState } from "react";
 import IRRResults from "./IRRResults";
+import { api } from "@/lib/api";
 
 type CashFlow = {
   year: number;
@@ -58,13 +59,15 @@ const IRRForm: React.FC<IRRFormProps> = ({ onResult, onLearnMore }) => {
     };
 
     try {
-      const response = await fetch("http://localhost:8000/irr", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
+      const res = await api.post<{
+        irr: number;
+        cashFlows: number[];
+        discountRates: number[];
+        npvs: number[];
+        error?: string;
+      }>("/irr", payload);
 
-      const data = await response.json();
+      const data = res.data;
 
       if (
         typeof data.irr === "number" &&
