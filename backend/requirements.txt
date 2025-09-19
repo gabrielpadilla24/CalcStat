@@ -1,0 +1,15 @@
+# --- Core framework ---
+fastapi==0.112.2
+uvicorn[standard]==0.30.6
+pydantic==2.9.2
+
+# --- Math & Finance ---
+numpy==1.26.4
+numpy-financial==1.0.0
+scipy==1.11.4
+sympy==1.12
+
+# --- Optional (statistics / modeling) ---
+statsmodels==0.14.2  
+
+
