@@ -6,10 +6,8 @@ pydantic==2.9.2
 # --- Math & Finance ---
 numpy==1.26.4
 numpy-financial==1.0.0
-scipy==1.11.4
+scipy==1.11.3
 sympy==1.12
 
 # --- Optional (statistics / modeling) ---
-statsmodels==0.14.2  
-
-
+statsmodels==0.14.2
