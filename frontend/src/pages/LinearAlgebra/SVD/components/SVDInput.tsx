@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react";
 import MatrixInput from "@/components/MatrixInput";
+import { api } from "@/lib/api"; // ✅ usa el cliente axios
 
 type SVDResponse = {
   singularValues?: number[];
@@ -33,32 +34,24 @@ const SVDInput = ({
       })
     );
 
+  // ✅ con axios enviamos objeto, no string
   const body = useMemo(
-    () =>
-      JSON.stringify({
-        matrix: clean(matrix as unknown as (number | string)[][]),
-      }),
+    () => ({ matrix: clean(matrix as unknown as (number | string)[][]) }),
     [matrix]
   );
 
   const handleCalculate = async () => {
     try {
-      const res = await fetch("http://localhost:8000/svd", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body,
-      });
-      if (!res.ok) throw new Error("Request failed");
-
-      const data = (await res.json()) as SVDResponse;
+      const res = await api.post<SVDResponse>("/svd", body);
+      const data = res.data;
 
       onResult({
         ...data,
-        matrix: clean(matrix as unknown as (number | string)[][]),
+        matrix: body.matrix,
       });
     } catch {
       onResult({
-        matrix: clean(matrix as unknown as (number | string)[][]),
+        matrix: body.matrix,
         error: "Failed to compute SVD.",
         explanation: "Please check your input and try again.",
       });
