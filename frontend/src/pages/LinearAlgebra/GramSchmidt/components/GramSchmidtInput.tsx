@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import { api } from "@/lib/api";
 
 type GramSchmidtResponse = {
   vectores: string;
@@ -36,10 +37,8 @@ const GramSchmidtInput = ({
       })
     );
 
-  const body = useMemo(
-    () => JSON.stringify({ vectors: clean(vectors) }),
-    [vectors]
-  );
+  // con axios mandamos objeto, no string
+  const body = useMemo(() => ({ vectors: clean(vectors) }), [vectors]);
 
   // 🔁 actualizar número de vectores
   const handleNumVectorsChange = (value: number) => {
@@ -80,15 +79,8 @@ const GramSchmidtInput = ({
 
   const handleCalculate = async () => {
     try {
-      const res = await fetch("http://localhost:8000/gramschmidt", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body,
-      });
-      if (!res.ok) throw new Error("Request failed");
-
-      const data = (await res.json()) as GramSchmidtResponse;
-      onResult(data);
+      const res = await api.post<GramSchmidtResponse>("/gramschmidt", body);
+      onResult(res.data);
     } catch {
       onResult({
         vectores: "",
@@ -126,7 +118,7 @@ const GramSchmidtInput = ({
           {Array.from({ length: numVectors }).map((_, i) => (
             <div
               key={i}
-              className="flex-1 min-w-[120px] max-w-[180px] p-3 sm:p-4 border rounded-lg bg-gray-50 flex flex-col gap-2"
+              className="flex-1 min-w=[120px] max-w-[180px] p-3 sm:p-4 border rounded-lg bg-gray-50 flex flex-col gap-2"
             >
               <h3 className="font-semibold mb-1 sm:mb-2 text-center">
                 v{i + 1}
