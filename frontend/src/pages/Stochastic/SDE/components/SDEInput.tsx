@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { addStyles, EditableMathField } from "react-mathquill";
+import { api } from "@/lib/api";
 
 addStyles();
 
@@ -44,13 +45,8 @@ export default function SDEInput({
     };
 
     try {
-      const res = await fetch("http://localhost:8000/sde", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-
-      const data = await res.json();
+      const res = await api.post<SDEResponse>("/sde", payload);
+      const data = res.data;
       onResult(data);
     } catch {
       alert("❌ Failed to connect to backend.");

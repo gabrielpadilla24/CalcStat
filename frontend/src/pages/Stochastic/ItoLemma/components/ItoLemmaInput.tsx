@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { addStyles, EditableMathField } from "react-mathquill";
+import { api } from "@/lib/api";
 
 addStyles();
 
@@ -35,14 +36,8 @@ export default function ItoLemmaInput({
     const payload: ItoLemmaData = { f, mu, sigma };
 
     try {
-      const res = await fetch("http://localhost:8000/ito-lemma", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-
-      const data = (await res.json()) as ItoLemmaResponse;
-      onResult(data);
+      const res = await api.post<ItoLemmaResponse>("/ito-lemma", payload);
+      onResult(res.data);
     } catch {
       alert("❌ Failed to connect to backend.");
     }

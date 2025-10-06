@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { api } from "@/lib/api";
 
 type EVData = {
   process: string;
@@ -19,7 +20,7 @@ export default function EVInput({
 }: {
   onResult: (result: EVResponse) => void;
 }) {
-  // 🔹 Valor inicial "Brownian motion" (coincide con backend)
+  // 🔹 Default matches backend expectation
   const [process, setProcess] = useState("Brownian motion");
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -28,15 +29,8 @@ export default function EVInput({
     const payload: EVData = { process };
 
     try {
-      // 🔹 endpoint correcto
-      const res = await fetch("http://localhost:8000/ev", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-
-      const data = await res.json();
-      onResult(data);
+      const res = await api.post<EVResponse>("/ev", payload);
+      onResult(res.data);
     } catch {
       alert("❌ Failed to connect to backend.");
     }
@@ -51,7 +45,7 @@ export default function EVInput({
         Select a Process
       </h2>
 
-      {/* Dropdown con procesos reconocidos por backend */}
+      {/* Backend-recognized processes */}
       <div>
         <label className="block text-sm font-medium text-gray-700 mb-1">
           Process

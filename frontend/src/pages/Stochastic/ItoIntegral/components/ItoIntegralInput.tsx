@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { api } from "@/lib/api";
 
 type ItoData = {
   integrand: string;
@@ -13,6 +14,7 @@ type ItoData = {
 type ItoResponse = {
   params: ItoData;
   chartData: { [key: string]: number | string }[];
+  error?: string;
 };
 
 export default function ItoIntegralInput({
@@ -32,13 +34,8 @@ export default function ItoIntegralInput({
     const payload: ItoData = { integrand, T, N, M, w0 };
 
     try {
-      const res = await fetch("http://localhost:8000/ito", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-
-      const data = await res.json();
+      const res = await api.post<ItoResponse>("/ito", payload);
+      const data = res.data;
       if (data.error) {
         alert("Error: " + data.error);
       } else {

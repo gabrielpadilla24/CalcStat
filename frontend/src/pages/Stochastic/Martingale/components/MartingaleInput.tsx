@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { api } from "@/lib/api";
 
 type MartingaleData = {
   process: string;
@@ -22,6 +23,7 @@ type MartingaleResponse = {
   diffusion?: string;
   final?: string;
   partials?: { f_t: string; f_W: string; f_WW: string };
+  error?: string;
 };
 
 export default function MartingaleInput({
@@ -49,14 +51,8 @@ export default function MartingaleInput({
     const payload: MartingaleData = { process, mode, T, N, M, w0 };
 
     try {
-      const res = await fetch("http://localhost:8000/martingale", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-
-      const data = await res.json();
-      onResult(data);
+      const res = await api.post<MartingaleResponse>("/martingale", payload);
+      onResult(res.data);
     } catch {
       alert("❌ Failed to connect to backend.");
     }

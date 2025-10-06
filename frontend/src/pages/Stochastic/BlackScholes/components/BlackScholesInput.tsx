@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { api } from "@/lib/api";
 
 type Mode = "derivation" | "analytical" | "montecarlo";
 type OptionType = "call" | "put";
@@ -60,13 +61,11 @@ export default function BlackScholesInput({
     };
 
     try {
-      const res = await fetch("http://localhost:8000/blackscholes", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-
-      const data: BlackScholesResponse = await res.json();
+      const res = await api.post<BlackScholesResponse>(
+        "/blackscholes",
+        payload
+      );
+      const data = res.data;
       if (data.error) {
         alert("⚠️ " + data.error);
       } else {
@@ -140,24 +139,14 @@ export default function BlackScholesInput({
         {[
           { label: "Initial Price S₀", value: S0, setter: setS0, step: "1" },
           { label: "Strike K", value: K, setter: setK, step: "1" },
-          {
-            label: "Risk-free rate r",
-            value: r,
-            setter: setR,
-            step: "0.01",
-          },
+          { label: "Risk-free rate r", value: r, setter: setR, step: "0.01" },
           {
             label: "Volatility σ",
             value: sigma,
             setter: setSigma,
             step: "0.01",
           },
-          {
-            label: "Time Horizon T",
-            value: T,
-            setter: setT,
-            step: "0.1",
-          },
+          { label: "Time Horizon T", value: T, setter: setT, step: "0.1" },
         ].map((field, idx) => (
           <div key={idx}>
             <label className="block text-sm font-medium text-gray-700 mb-1">

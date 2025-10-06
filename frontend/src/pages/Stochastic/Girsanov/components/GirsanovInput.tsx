@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { api } from "@/lib/api";
 
 type GirsanovData = {
   mu: number;
@@ -52,13 +53,8 @@ export default function GirsanovInput({
     };
 
     try {
-      const res = await fetch("http://localhost:8000/girsanov", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-
-      const data = await res.json();
+      const res = await api.post<GirsanovResponse>("/girsanov", payload);
+      const data = res.data;
       if (data.error) {
         alert("⚠️ " + data.error);
       } else {

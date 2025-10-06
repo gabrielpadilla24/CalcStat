@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { api } from "@/lib/api";
 
 type QVData = {
   process: string;
@@ -24,6 +25,7 @@ type QVResponse = {
   chartData?: { [key: string]: number | string }[];
   trajectoriesShown?: number;
   trajectoriesTotal?: number;
+  error?: string;
 };
 
 export default function QVInput({
@@ -49,15 +51,10 @@ export default function QVInput({
     const payload: QVData = { process, mode, T, N, M, a, b, mu, sigma };
 
     try {
-      const res = await fetch("http://localhost:8000/quadratic-variation", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-
-      const data = await res.json();
-      if (data.error) {
-        alert("⚠️ " + data.error);
+      const res = await api.post<QVResponse>("/quadratic-variation", payload);
+      const data = res.data;
+      if ((data as QVResponse).error) {
+        alert("⚠️ " + (data as QVResponse).error);
       } else {
         onResult(data);
       }
@@ -177,7 +174,7 @@ export default function QVInput({
         </div>
       )}
 
-      {/* Parameters a, b, mu, sigma (opcional para procesos específicos) */}
+      {/* Parameters a, b, mu, sigma (optional for specific processes) */}
       <div className="space-y-3">
         <div>
           <label className="block text-sm font-medium text-gray-700 mb-1">

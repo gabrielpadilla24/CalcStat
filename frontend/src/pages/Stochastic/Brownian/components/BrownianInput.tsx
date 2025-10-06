@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { api } from "@/lib/api";
 
 type BrownianResponse = {
   params: {
@@ -32,14 +33,15 @@ export default function BrownianInput({
     setLoading(true);
 
     try {
-      const res = await fetch("http://localhost:8000/brownian", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ x0, mu, sigma, T, N, M }),
+      const res = await api.post<BrownianResponse>("/brownian", {
+        x0,
+        mu,
+        sigma,
+        T,
+        N,
+        M,
       });
-
-      const data: BrownianResponse = await res.json();
-      onResult(data);
+      onResult(res.data);
     } catch (error) {
       console.error("Error fetching Brownian simulation:", error);
     } finally {
