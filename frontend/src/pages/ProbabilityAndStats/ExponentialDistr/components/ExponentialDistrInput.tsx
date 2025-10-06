@@ -4,6 +4,7 @@ import { useState } from "react";
 import ContinuousDistributionInput, {
   ContinuousQuery,
 } from "@/components/ContinuousDistributionInput";
+import { api } from "@/lib/api"; // ✅ use shared axios client
 
 type ExponentialParams = {
   lam: number;
@@ -46,16 +47,11 @@ export default function ExponentialDistrInput({ onResult }: Props) {
 
     try {
       setLoading(true);
-      const res = await fetch("http://127.0.0.1:8000/exponentialdistribution", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(params),
-      });
-
-      if (!res.ok) throw new Error("Backend error");
-
-      const data: ExponentialResponse = await res.json();
-      onResult(data);
+      const res = await api.post<ExponentialResponse>(
+        "/exponentialdistribution",
+        params
+      );
+      onResult(res.data);
     } catch (err) {
       console.error("Error fetching exponential distribution:", err);
       onResult(null);

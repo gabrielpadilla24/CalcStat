@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import { api } from "@/lib/api";
 
 type Row = {
   x: string;
@@ -77,16 +78,11 @@ export default function EVMInput({
         momentOrders: [1, 2, 3],
       };
 
-      const res = await fetch("http://127.0.0.1:8000/expectedvalueandmoments", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-
-      if (!res.ok) throw new Error("Backend error");
-
-      const data: EVMResponse = await res.json();
-      onResult(data);
+      const res = await api.post<EVMResponse>(
+        "/expectedvalueandmoments",
+        payload
+      );
+      onResult(res.data);
     } catch (err) {
       console.error("Error fetching EVM result:", err);
       onResult({ error: "Failed to compute results" });
