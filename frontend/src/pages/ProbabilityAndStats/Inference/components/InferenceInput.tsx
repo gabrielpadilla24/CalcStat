@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { api } from "@/lib/api";
 
 type InferenceResponse = {
   test: string;
@@ -95,16 +96,8 @@ export default function InferenceInput({ onResult }: Props) {
 
     try {
       setLoading(true);
-      const res = await fetch("http://127.0.0.1:8000/inference", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-
-      if (!res.ok) throw new Error("Backend error");
-
-      const data: InferenceResponse = await res.json();
-      onResult(data);
+      const res = await api.post<InferenceResponse>("/inference", payload);
+      onResult(res.data);
     } catch (err) {
       console.error("Error fetching inference result:", err);
       onResult({
