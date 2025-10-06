@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import DistributionInput from "@/components/DistributionInput";
+import { api } from "@/lib/api"; // ✅ use shared axios client
 
 type ProbabilityQuery =
   | { kind: "equal"; k: number }
@@ -47,16 +48,11 @@ export default function PoissonInput({ onResult }: Props) {
 
     try {
       setLoading(true);
-      const res = await fetch("http://127.0.0.1:8000/poissondistribution", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(params),
-      });
-
-      if (!res.ok) throw new Error("Backend error");
-
-      const data: PoissonResponse = await res.json();
-      onResult(data);
+      const res = await api.post<PoissonResponse>(
+        "/poissondistribution",
+        params
+      );
+      onResult(res.data);
     } catch (err) {
       console.error("Error fetching poisson distribution:", err);
       onResult(null);
@@ -96,7 +92,7 @@ export default function PoissonInput({ onResult }: Props) {
           />
         </div>
 
-        {/* Consulta de probabilidad */}
+        {/* Probability Query */}
         <div>
           <label className="font-medium">Probability Query</label>
           <p className="text-sm text-gray-500 mb-2">
@@ -106,7 +102,7 @@ export default function PoissonInput({ onResult }: Props) {
         </div>
       </div>
 
-      {/* Botón abajo */}
+      {/* Button */}
       <div className="flex justify-center mt-6">
         <button
           onClick={handleSubmit}
