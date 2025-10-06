@@ -29,7 +29,7 @@ const EqSystemInput = ({
   <div className="w-full max-w-full sm:max-w-[600px] mx-auto bg-white rounded-xl shadow-md border border-gray-200 p-4 sm:p-6 md:p-8">
     <LinearSystemInput<EqSystemResponse>
       label="Enter your system of equations"
-      endpoint="http://localhost:8000/eqsystem"
+      endpoint={`${import.meta.env.VITE_API_BASE_URL}/eqsystem`}
       buttonText="Calculate System"
       onSuccess={(data) =>
         onResult({
