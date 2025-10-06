@@ -4,6 +4,7 @@ import { useState } from "react";
 import ContinuousDistributionInput, {
   ContinuousQuery,
 } from "@/components/ContinuousDistributionInput";
+import { api } from "@/lib/api"; // ✅ shared axios client
 
 type UniformParams = {
   a: number;
@@ -50,16 +51,11 @@ export default function UniformInput({ onResult }: Props) {
 
     try {
       setLoading(true);
-      const res = await fetch("http://127.0.0.1:8000/uniformdistribution", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(params),
-      });
-
-      if (!res.ok) throw new Error("Backend error");
-
-      const data: UniformResponse = await res.json();
-      onResult(data);
+      const res = await api.post<UniformResponse>(
+        "/uniformdistribution",
+        params
+      );
+      onResult(res.data);
     } catch (err) {
       console.error("Error fetching uniform distribution:", err);
       onResult(null);
@@ -77,7 +73,7 @@ export default function UniformInput({ onResult }: Props) {
         Enter the parameters a and b for the uniform distribution.
       </p>
 
-      {/* Centramos el contenido */}
+      {/* Content */}
       <div className="flex-1 flex flex-col justify-center space-y-6">
         {/* a */}
         <div className="flex flex-col gap-1">
@@ -115,7 +111,7 @@ export default function UniformInput({ onResult }: Props) {
         </div>
       </div>
 
-      {/* Botón abajo */}
+      {/* Button */}
       <div className="flex justify-center mt-6">
         <button
           onClick={handleSubmit}
