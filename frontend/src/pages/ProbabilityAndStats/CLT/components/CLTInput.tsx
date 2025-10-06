@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { api } from "@/lib/api";
 
 type CLTResponse = {
   simulatedMeans?: number[];
@@ -59,16 +60,8 @@ export default function CLTInput({ onResult }: Props) {
         n_sim: Number(nSim),
       };
 
-      const res = await fetch("http://127.0.0.1:8000/clt", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(payload),
-      });
-
-      if (!res.ok) throw new Error("Backend error");
-
-      const data: CLTResponse = await res.json();
-      onResult(data);
+      const res = await api.post<CLTResponse>("/clt", payload);
+      onResult(res.data);
     } catch (err) {
       console.error("Error fetching CLT result:", err);
       onResult({ error: "Failed to run simulation" });
