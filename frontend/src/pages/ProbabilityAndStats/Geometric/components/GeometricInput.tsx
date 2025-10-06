@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import DistributionInput from "@/components/DistributionInput";
+import { api } from "@/lib/api";
 
 type ProbabilityQuery =
   | { kind: "equal"; k: number }
@@ -47,16 +48,11 @@ export default function GeometricInput({ onResult }: Props) {
 
     try {
       setLoading(true);
-      const res = await fetch("http://127.0.0.1:8000/geometricdistribution", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(params),
-      });
-
-      if (!res.ok) throw new Error("Backend error");
-
-      const data: GeometricResponse = await res.json();
-      onResult(data);
+      const res = await api.post<GeometricResponse>(
+        "/geometricdistribution",
+        params
+      );
+      onResult(res.data);
     } catch (err) {
       console.error("Error fetching geometric distribution:", err);
       onResult(null);
