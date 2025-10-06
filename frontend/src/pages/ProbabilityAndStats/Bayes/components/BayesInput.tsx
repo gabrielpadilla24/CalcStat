@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { api } from "@/lib/api";
 
 type BayesParams = {
   p_a: number;
@@ -25,9 +26,9 @@ type Props = {
 
 export default function BayesInput({ onResult }: Props) {
   const [pA, setPA] = useState<string>("");
-  const [pB, setPB] = useState<string>(""); // opcional
+  const [pB, setPB] = useState<string>("");
   const [pBgA, setPBgA] = useState<string>("");
-  const [pBgNotA, setPBgNotA] = useState<string>(""); // opcional
+  const [pBgNotA, setPBgNotA] = useState<string>("");
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async () => {
@@ -42,16 +43,8 @@ export default function BayesInput({ onResult }: Props) {
 
     try {
       setLoading(true);
-      const res = await fetch("http://127.0.0.1:8000/bayes", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(params),
-      });
-
-      if (!res.ok) throw new Error("Backend error");
-
-      const data: BayesResponse = await res.json();
-      onResult(data);
+      const res = await api.post<BayesResponse>("/bayes", params);
+      onResult(res.data);
     } catch (err) {
       console.error("Error fetching Bayes result:", err);
       onResult(null);
@@ -70,9 +63,7 @@ export default function BayesInput({ onResult }: Props) {
         P(B|¬A).
       </p>
 
-      {/* Centramos el contenido */}
       <div className="flex-1 flex flex-col justify-center space-y-6">
-        {/* P(A) */}
         <div className="flex flex-col gap-1">
           <label className="font-medium">P(A): Prior probability of A</label>
           <input
@@ -87,7 +78,6 @@ export default function BayesInput({ onResult }: Props) {
           />
         </div>
 
-        {/* P(B) opcional */}
         <div className="flex flex-col gap-1">
           <label className="font-medium">
             P(B): Probability of B (optional)
@@ -107,7 +97,6 @@ export default function BayesInput({ onResult }: Props) {
           </p>
         </div>
 
-        {/* P(B|A) */}
         <div className="flex flex-col gap-1">
           <label className="font-medium">P(B|A): Likelihood of B given A</label>
           <input
@@ -122,7 +111,6 @@ export default function BayesInput({ onResult }: Props) {
           />
         </div>
 
-        {/* P(B|¬A) opcional */}
         <div className="flex flex-col gap-1">
           <label className="font-medium">
             P(B|¬A): Likelihood of B given not A (optional)
@@ -143,7 +131,6 @@ export default function BayesInput({ onResult }: Props) {
         </div>
       </div>
 
-      {/* Botón */}
       <div className="flex justify-center mt-6">
         <button
           onClick={handleSubmit}
