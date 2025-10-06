@@ -2,6 +2,7 @@
 
 import { useState, useMemo } from "react";
 import MatrixInput from "@/components/MatrixInput";
+import { api } from "@/lib/api"; // ✅ usa el cliente axios
 
 type InverseResponse = {
   matrix: string[][];
@@ -22,19 +23,13 @@ const InverseInput = ({
     Array.from({ length: 3 }, () => Array(3).fill(0))
   );
 
-  const body = useMemo(() => JSON.stringify({ matrix }), [matrix]);
+  // ✅ con axios puedes enviar objeto directo
+  const body = useMemo(() => ({ matrix }), [matrix]);
 
   const handleCalculate = async () => {
     try {
-      const res = await fetch("http://localhost:8000/inverse", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body,
-      });
-      if (!res.ok) throw new Error("Request failed");
-
-      const data = (await res.json()) as InverseResponse;
-      onResult(data);
+      const res = await api.post<InverseResponse>("/inverse", body);
+      onResult(res.data);
     } catch {
       onResult({
         matrix: matrix.map((row) => row.map(String)),
