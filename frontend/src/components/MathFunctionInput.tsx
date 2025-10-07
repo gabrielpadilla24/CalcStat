@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useEffect, useMemo, useState, ReactNode } from "react";
+import { useEffect, useMemo, useState, ReactNode } from "react";
 import { addStyles, EditableMathField } from "react-mathquill";
 import { api } from "@/lib/api";
 

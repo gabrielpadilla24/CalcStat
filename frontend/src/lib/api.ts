@@ -13,7 +13,7 @@ const ENV_URL = import.meta.env.VITE_API_BASE_URL?.trim();
 const fallback =
   typeof window !== "undefined" && window.location.hostname === "localhost"
     ? "http://127.0.0.1:8000"
-    : "https://<TU-APP-RENDER>.onrender.com"; // ← cambia esto
+    : "https://calcstat.onrender.com/"; // ← cambia esto
 
 export const api = axios.create({
   baseURL: normalize(ENV_URL || fallback),
