@@ -3,10 +3,8 @@
 import { useEffect, useMemo, useState, ReactNode } from "react";
 import { addStyles, EditableMathField } from "react-mathquill";
 import { api } from "@/lib/api";
-
 addStyles();
 
-// JSON-safe type
 type Json = string | number | boolean | null | Json[] | { [k: string]: Json };
 
 interface MathField {
@@ -58,7 +56,7 @@ const MathFunctionInput = <
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState<string | null>(null);
 
-  // ✅ Build a plain object (NOT a JSON string)
+  // Build the object payload (not a JSON string)
   const payload = useMemo(
     () => ({
       ...(extraPayload ?? ({} as TExtra)),
@@ -76,16 +74,13 @@ const MathFunctionInput = <
   }, [latex, onLatexChange]);
 
   const handleCalculate = async () => {
-    setErr(null);
-    setLoading(true);
     try {
-      // ✅ Axios will JSON-serialize `payload` for us
+      setErr(null);
+      setLoading(true);
       const res = await api.post<TResponse>(endpoint, payload);
       onSuccess(res.data, latex);
-    } catch (e: unknown) {
-      const message =
-        e instanceof Error ? e.message : "Unexpected error contacting server";
-      setErr(message);
+    } catch {
+      console.error("Derivatives request failed:");
     } finally {
       setLoading(false);
     }
@@ -107,13 +102,12 @@ const MathFunctionInput = <
                 {inputLeft}
               </div>
             )}
-
             <EditableMathField
               latex={latex}
               onChange={(mf) => setLatex(mf.latex())}
-              mathquillDidMount={(mf) => {
-                onMathField?.(mf as unknown as MathField);
-              }}
+              mathquillDidMount={(mf) =>
+                onMathField?.(mf as unknown as MathField)
+              }
               className="text-xl w-full border border-gray-300 px-4 py-2 rounded-lg bg-white focus:outline-none"
             />
           </div>
@@ -137,7 +131,15 @@ const MathFunctionInput = <
             {loading ? "Calculating..." : buttonText}
           </button>
 
-          {err && <div className="mt-4 text-sm text-red-600">{err}</div>}
+          {err && (
+            <div className="mt-4 text-sm text-red-600">
+              {err}
+              <div className="text-xs text-gray-500 mt-1">
+                API: {api.defaults.baseURL}
+                {endpoint}
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </div>

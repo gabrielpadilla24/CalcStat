@@ -1,6 +1,5 @@
 "use client";
 
-// DerivativesInput.tsx
 import MathFunctionInput from "@/components/MathFunctionInput";
 
 type DerivativesResponse = {
