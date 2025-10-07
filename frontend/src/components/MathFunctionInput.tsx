@@ -58,12 +58,12 @@ const MathFunctionInput = <
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState<string | null>(null);
 
-  const body = useMemo(
-    () =>
-      JSON.stringify({
-        ...(extraPayload ?? ({} as TExtra)),
-        [payloadKey]: latex,
-      }),
+  // ✅ Build a plain object (NOT a JSON string)
+  const payload = useMemo(
+    () => ({
+      ...(extraPayload ?? ({} as TExtra)),
+      [payloadKey]: latex,
+    }),
     [latex, extraPayload, payloadKey]
   );
 
@@ -79,8 +79,8 @@ const MathFunctionInput = <
     setErr(null);
     setLoading(true);
     try {
-      // ✅ usamos el cliente axios con baseURL configurado
-      const res = await api.post<TResponse>(endpoint, body);
+      // ✅ Axios will JSON-serialize `payload` for us
+      const res = await api.post<TResponse>(endpoint, payload);
       onSuccess(res.data, latex);
     } catch (e: unknown) {
       const message =
