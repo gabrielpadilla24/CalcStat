@@ -1,9 +1,13 @@
 "use client";
 
-import { useEffect, useMemo, useState, ReactNode } from "react";
+import React, { useEffect, useMemo, useState, ReactNode } from "react";
 import { addStyles, EditableMathField } from "react-mathquill";
 import { api } from "@/lib/api";
+
+// Ensure MathQuill default styles once in client
 addStyles();
+
+/* ----------------------------- Types ----------------------------- */
 
 type Json = string | number | boolean | null | Json[] | { [k: string]: Json };
 
@@ -22,17 +26,33 @@ interface MathFunctionInputProps<
   label?: string;
   examples?: string[];
   buttonText?: string;
+
+  /** e.g. "/derivatives" – must be relative to your api baseURL */
   endpoint: string;
+
+  /** Key name expected by backend (default: "equation") */
   payloadKey?: string;
+
+  /** Any extra fields to include in the body */
   extraPayload?: TExtra;
+
+  /** Called with parsed JSON + the input latex */
   onSuccess: (data: TResponse, latex: string) => void;
+
+  /** UI extras */
   className?: string;
   inputLeft?: ReactNode;
   extraContent?: ReactNode;
+
+  /** optional preset value for the field */
   presetLatex?: string;
+
+  /** external listeners */
   onLatexChange?: (latex: string) => void;
   onMathField?: (mf: MathField | null) => void;
 }
+
+/* --------------------------- Component --------------------------- */
 
 const MathFunctionInput = <
   TResponse,
@@ -56,7 +76,16 @@ const MathFunctionInput = <
   const [loading, setLoading] = useState(false);
   const [err, setErr] = useState<string | null>(null);
 
-  // Build the object payload (not a JSON string)
+  // Update if parent changes preset
+  useEffect(() => {
+    if (typeof presetLatex === "string") setLatex(presetLatex);
+  }, [presetLatex]);
+
+  // Notify parent of changes
+  useEffect(() => {
+    onLatexChange?.(latex);
+  }, [latex, onLatexChange]);
+
   const payload = useMemo(
     () => ({
       ...(extraPayload ?? ({} as TExtra)),
@@ -65,22 +94,23 @@ const MathFunctionInput = <
     [latex, extraPayload, payloadKey]
   );
 
-  useEffect(() => {
-    if (typeof presetLatex === "string") setLatex(presetLatex);
-  }, [presetLatex]);
-
-  useEffect(() => {
-    onLatexChange?.(latex);
-  }, [latex, onLatexChange]);
-
   const handleCalculate = async () => {
+    setErr(null);
+    setLoading(true);
     try {
-      setErr(null);
-      setLoading(true);
+      // ✅ Axios handles JSON serialization; pass a plain object
       const res = await api.post<TResponse>(endpoint, payload);
+
+      // Helpful for debugging prod issues
+      console.log("✅ API success:", { endpoint, payload, data: res.data });
+
       onSuccess(res.data, latex);
     } catch {
-      console.error("Derivatives request failed:");
+      // Extract best possible message
+      const msg = "Unexpected error contacting server";
+
+      console.error("❌ API error:", { endpoint, payload, error: msg });
+      setErr(msg);
     } finally {
       setLoading(false);
     }
@@ -92,9 +122,11 @@ const MathFunctionInput = <
     >
       <div className="w-full max-w-[600px] bg-white rounded-xl shadow-md border border-gray-200 p-4 sm:p-6 lg:p-8">
         <div className="flex flex-col items-center text-center">
-          <label className="text-lg font-medium text-gray-700 mb-4">
-            {label}
-          </label>
+          {label && (
+            <label className="text-lg font-medium text-gray-700 mb-4">
+              {label}
+            </label>
+          )}
 
           <div className="w-full flex flex-wrap items-center gap-3 mb-6">
             {inputLeft && (
@@ -102,26 +134,29 @@ const MathFunctionInput = <
                 {inputLeft}
               </div>
             )}
+
             <EditableMathField
               latex={latex}
               onChange={(mf) => setLatex(mf.latex())}
-              mathquillDidMount={(mf) =>
-                onMathField?.(mf as unknown as MathField)
-              }
+              mathquillDidMount={(mf) => {
+                onMathField?.(mf as unknown as MathField);
+              }}
               className="text-xl w-full border border-gray-300 px-4 py-2 rounded-lg bg-white focus:outline-none"
             />
           </div>
 
           {extraContent}
 
-          <p className="text-sm text-gray-500 mb-4 break-words">
-            Examples:&nbsp;
-            {examples.map((ex, i) => (
-              <code key={i} className="mr-2 whitespace-nowrap">
-                {ex}
-              </code>
-            ))}
-          </p>
+          {examples.length > 0 && (
+            <p className="text-sm text-gray-500 mb-4 break-words">
+              Examples:&nbsp;
+              {examples.map((ex, i) => (
+                <code key={i} className="mr-2 whitespace-nowrap">
+                  {ex}
+                </code>
+              ))}
+            </p>
+          )}
 
           <button
             onClick={handleCalculate}
@@ -132,12 +167,8 @@ const MathFunctionInput = <
           </button>
 
           {err && (
-            <div className="mt-4 text-sm text-red-600">
+            <div className="mt-4 text-sm text-red-600 max-w-full break-words">
               {err}
-              <div className="text-xs text-gray-500 mt-1">
-                API: {api.defaults.baseURL}
-                {endpoint}
-              </div>
             </div>
           )}
         </div>
