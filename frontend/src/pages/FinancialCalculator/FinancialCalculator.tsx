@@ -93,7 +93,7 @@ const FinancialCalculator = () => {
             {
               title: "Mortgage Payments Calculator",
               desc: "Calculate your monthly mortgage payments. Perfect for home buyers, refinancing, and long-term loan planning.",
-              img: "/img/mortgage.png",
+              img: "/img/Mortgage.png",
               path: "/mortgage",
             },
             {
