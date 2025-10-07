@@ -10,7 +10,7 @@
     "preview": "vite preview"
   },
   "dependencies": {
-    "apexcharts": "^4.5.0",
+"apexcharts": "^3.49.1",
     "axios": "^1.12.2",
     "desmos": "^1.5.4",
     "katex": "^0.16.21",
