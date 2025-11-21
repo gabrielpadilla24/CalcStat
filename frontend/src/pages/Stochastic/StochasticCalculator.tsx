@@ -26,7 +26,7 @@ const StochasticCalculator = () => {
         {/*Brownian Motion Simulator */}
         <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] flex flex-col justify-between text-left">
           <img
-            src="/img/brownian.png"
+            src="/img/brownian.webp"
             alt="Brownian Motion Simulator"
             className="h-40 w-full object-cover mb-4 rounded"
           />
@@ -44,7 +44,7 @@ const StochasticCalculator = () => {
         {/* Ito Integral Calculator */}
         <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] flex flex-col justify-between text-left">
           <img
-            src="/img/ito_integral.png"
+            src="/img/ito_integral.webp"
             alt="Itô Integral Calculator"
             className="h-40 w-full object-cover mb-4 rounded"
           />
@@ -62,7 +62,7 @@ const StochasticCalculator = () => {
         {/* Ito Lemma Calculator */}
         <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] flex flex-col justify-between text-left">
           <img
-            src="/img/ito_lemma.png"
+            src="/img/ito_lemma.webp"
             alt="Itô's Lemma Calculator"
             className="h-40 w-full object-cover mb-4 rounded"
           />
@@ -80,7 +80,7 @@ const StochasticCalculator = () => {
         {/* SDE Solver */}
         <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] flex flex-col justify-between text-left">
           <img
-            src="/img/sde.png"
+            src="/img/sde.webp"
             alt="SDE Solver"
             className="h-40 w-full object-cover mb-4 rounded"
           />
@@ -97,7 +97,7 @@ const StochasticCalculator = () => {
         {/* Martingale Tester */}
         <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] flex flex-col justify-between text-left">
           <img
-            src="/img/martingale.png"
+            src="/img/martingale.webp"
             alt="Martingale Tester"
             className="h-40 w-full object-cover mb-4 rounded"
           />
@@ -115,7 +115,7 @@ const StochasticCalculator = () => {
         {/* Expected Value Calculator */}
         <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] flex flex-col justify-between text-left">
           <img
-            src="/img/ev.png"
+            src="/img/ev.webp"
             alt="Expected Value Calculator"
             className="h-40 w-full object-cover mb-4 rounded"
           />
@@ -133,7 +133,7 @@ const StochasticCalculator = () => {
         {/* Quadratic Variation Calculator */}
         <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] flex flex-col justify-between text-left">
           <img
-            src="/img/qv.png"
+            src="/img/qv.webp"
             alt="Quadratic Variation Calculator"
             className="h-40 w-full object-cover mb-4 rounded"
           />
@@ -151,7 +151,7 @@ const StochasticCalculator = () => {
         {/* Girsanov's Theorem Tool */}
         <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] flex flex-col justify-between text-left">
           <img
-            src="/img/girsanov.png"
+            src="/img/girsanov.webp"
             alt="Girsanov's Theorem Tool"
             className="h-40 w-full object-cover mb-4 rounded"
           />
@@ -170,7 +170,7 @@ const StochasticCalculator = () => {
         {/* Black-Scholes PDE Tool */}
         <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] flex flex-col justify-between text-left">
           <img
-            src="/img/black_scholes.png"
+            src="/img/black_scholes.webp"
             alt="Black-Scholes PDE Tool"
             className="h-40 w-full object-cover mb-4 rounded"
           />

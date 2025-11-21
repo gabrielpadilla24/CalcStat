@@ -26,7 +26,7 @@ const ProbabilityAndStatsCalculator = () => {
         {/*BINOMIAL DISTRIBUTION */}
         <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] flex flex-col justify-between text-left">
           <img
-            src="/img/binomial.png"
+            src="/img/binomial.webp"
             alt="Binomial Distribution"
             className="h-40 w-full object-cover mb-4 rounded"
           />
@@ -44,7 +44,7 @@ const ProbabilityAndStatsCalculator = () => {
         {/* POISSON DISTRIBUTION */}
         <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] flex flex-col justify-between text-left">
           <img
-            src="/img/poisson.png"
+            src="/img/poisson.webp"
             alt="Poisson Distribution"
             className="h-40 w-full object-cover mb-4 rounded"
           />
@@ -62,7 +62,7 @@ const ProbabilityAndStatsCalculator = () => {
         {/* GEOMETRIC DISTRIBUTION */}
         <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] flex flex-col justify-between text-left">
           <img
-            src="/img/geometric.png"
+            src="/img/geometric.webp"
             alt="Geometric Distribution"
             className="h-40 w-full object-cover mb-4 rounded"
           />
@@ -80,7 +80,7 @@ const ProbabilityAndStatsCalculator = () => {
         {/* Normal Distribution */}
         <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] flex flex-col justify-between text-left">
           <img
-            src="/img/normal.png"
+            src="/img/normal.webp"
             alt="Normal Distribution"
             className="h-40 w-full object-cover mb-4 rounded"
           />
@@ -98,7 +98,7 @@ const ProbabilityAndStatsCalculator = () => {
         {/* Exponential Distribution */}
         <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] flex flex-col justify-between text-left">
           <img
-            src="/img/exponential.png"
+            src="/img/exponential.webp"
             alt="Exponential Distribution"
             className="h-40 w-full object-cover mb-4 rounded"
           />
@@ -116,7 +116,7 @@ const ProbabilityAndStatsCalculator = () => {
         {/* UNIFORM DISTRIBUTION */}
         <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] flex flex-col justify-between text-left">
           <img
-            src="/img/uniform.png"
+            src="/img/uniform.webp"
             alt="Uniform Distribution"
             className="h-40 w-full object-cover mb-4 rounded"
           />
@@ -134,7 +134,7 @@ const ProbabilityAndStatsCalculator = () => {
         {/* BAYES THEOREM */}
         <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] flex flex-col justify-between text-left">
           <img
-            src="/img/bayes.png"
+            src="/img/bayes.webp"
             alt="Bayes Theorem"
             className="h-40 w-full object-cover mb-4 rounded"
           />
@@ -152,7 +152,7 @@ const ProbabilityAndStatsCalculator = () => {
         {/* EVM */}
         <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] flex flex-col justify-between text-left">
           <img
-            src="/img/evm.png"
+            src="/img/evm.webp"
             alt="Expected Value, Variance & Moments"
             className="h-40 w-full object-cover mb-4 rounded"
           />
@@ -170,7 +170,7 @@ const ProbabilityAndStatsCalculator = () => {
         {/* CLT */}
         <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] flex flex-col justify-between text-left">
           <img
-            src="/img/clt.png"
+            src="/img/clt.webp"
             alt="Central Limit Theorem"
             className="h-40 w-full object-cover mb-4 rounded"
           />
@@ -188,7 +188,7 @@ const ProbabilityAndStatsCalculator = () => {
         {/* INFERENCE CALCULATOR */}
         <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] flex flex-col justify-between text-left">
           <img
-            src="/img/inference.png"
+            src="/img/inference.webp"
             alt="Inference Calculator"
             className="h-40 w-full object-cover mb-4 rounded"
           />

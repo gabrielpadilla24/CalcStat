@@ -68,7 +68,7 @@ const FinancialCalculator = () => {
         {showCompound && (
           <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] text-left flex flex-col justify-between">
             <img
-              src="/img/compound.png"
+              src="/img/compound.webp"
               alt="Compound Interest Calculator"
               className="h-40 w-full object-cover mb-4 rounded"
             />
@@ -93,44 +93,44 @@ const FinancialCalculator = () => {
             {
               title: "Mortgage Payments Calculator",
               desc: "Calculate your monthly mortgage payments. Perfect for home buyers, refinancing, and long-term loan planning.",
-              img: "/img/Mortgage.png",
+              img: "/img/Mortgage.webp",
               path: "/mortgage",
             },
             {
               title: "Fixed Rate Mortgage",
               desc: "Calculate predictable monthly payments with fixed interest rates.",
-              img: "/img/fixedrate.png",
+              img: "/img/fixedrate.webp",
               path: "/mortgage/fixed",
             },
             {
               title: "ARM (Adjustable Rate)",
               desc: "Explore flexible mortgages with interest rates that may change over time.",
-              img: "/img/arm.png",
+              img: "/img/arm.webp",
               path: "/mortgage/arm",
             },
             {
               title: "Interest-Only Mortgage",
               desc: "Calculate payments for interest-only periods and plan ahead.",
-              img: "/img/interestonly.png",
+              img: "/img/interestonly.webp",
               path: "/mortgage/interest-only",
             },
             {
               title: "Balloon Payment Mortgage",
               desc: "See how large final payments affect your mortgage plan.",
-              img: "/img/balloon.png",
+              img: "/img/balloon.webp",
               path: "/mortgage/balloon",
             },
             {
               title: "Refinance Mortgage",
               desc: "Explore if refinancing your current mortgage can save you money.",
-              img: "/img/refinance.png",
+              img: "/img/refinance.webp",
               path: "/mortgage/refinance",
             },
 
             {
               title: "Reverse Mortgage",
               desc: "Estimate how much you can borrow using your home equity with a reverse mortgage.",
-              img: "/img/reverse.png",
+              img: "/img/reverse.webp",
               path: "/mortgage/reversemortgage",
             },
           ].map(({ title, desc, img, path }) => (
@@ -159,14 +159,14 @@ const FinancialCalculator = () => {
             {
               title: "Net Present Value Calculator",
               desc: "Calculate the Net Present Value of any investment. Ideal for project evaluation, cash flow analysis, and financial decision-making.",
-              img: "/img/npv.png",
+              img: "/img/npv.webp",
               path: "/financial/npv",
             },
 
             {
               title: "Internal Rate of Return",
               desc: "Calculate the Internal Rate of Return for any investment. Perfect for evaluating profitability, comparing projects, and guiding smart investment choices.",
-              img: "/img/irr.png",
+              img: "/img/irr.webp",
               path: "/financial/irr",
             },
           ].map(({ title, desc, img, path }) => (
@@ -195,7 +195,7 @@ const FinancialCalculator = () => {
             {
               title: "Savings Calculator",
               desc: "Plan your savings to reach any goal. Ideal for retirement, education, or big purchases — find out how much you need to save monthly or yearly to hit your target on time.",
-              img: "/img/savings.png",
+              img: "/img/savings.webp",
               path: "/financial/savings",
             },
           ].map(({ title, desc, img, path }) => (
@@ -224,7 +224,7 @@ const FinancialCalculator = () => {
             {
               title: "Growth Comparison Calculator",
               desc: "Compare how different return rates impact your investment over time.",
-              img: "/img/comparison.png",
+              img: "/img/comparison.webp",
               path: "/financial/comparison",
             },
           ].map(({ title, desc, img, path }) => (

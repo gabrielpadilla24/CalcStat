@@ -26,7 +26,7 @@ const LinearAlgebraCalculator = () => {
         {/* Determinant */}
         <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] flex flex-col justify-between text-left">
           <img
-            src="/img/determinant.png"
+            src="/img/determinant.webp"
             alt="Determinant"
             className="h-40 w-full object-cover mb-4 rounded"
           />
@@ -43,7 +43,7 @@ const LinearAlgebraCalculator = () => {
         {/* Inverse */}
         <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] flex flex-col justify-between text-left">
           <img
-            src="/img/inverse.png"
+            src="/img/inverse.webp"
             alt="Inverse"
             className="h-40 w-full object-cover mb-4 rounded"
           />
@@ -60,7 +60,7 @@ const LinearAlgebraCalculator = () => {
         {/* Linear Equation System */}
         <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] flex flex-col justify-between text-left">
           <img
-            src="/img/eqsystem.png"
+            src="/img/eqsystem.webp"
             alt="Linear Equation System"
             className="h-40 w-full object-cover mb-4 rounded"
           />
@@ -78,7 +78,7 @@ const LinearAlgebraCalculator = () => {
         {/* Eigenvalues & Eigenvectors */}
         <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] flex flex-col justify-between text-left">
           <img
-            src="/img/eigen.png"
+            src="/img/eigen.webp"
             alt="Eigenvalues and Eigenvectors"
             className="h-40 w-full object-cover mb-4 rounded"
           />
@@ -96,7 +96,7 @@ const LinearAlgebraCalculator = () => {
         {/* SVD */}
         <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] flex flex-col justify-between text-left">
           <img
-            src="/img/svd.png"
+            src="/img/svd.webp"
             alt="Singular Value Decomposition"
             className="h-40 w-full object-cover mb-4 rounded"
           />
@@ -114,7 +114,7 @@ const LinearAlgebraCalculator = () => {
         {/* Gram-Schmidt */}
         <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] flex flex-col justify-between text-left">
           <img
-            src="/img/gramschmidt.png"
+            src="/img/gramschmidt.webp"
             alt="Gram-Schmidt"
             className="h-40 w-full object-cover mb-4 rounded"
           />

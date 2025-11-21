@@ -26,7 +26,7 @@ const CalculusLandingPage = () => {
         {/* Derivatives */}
         <div className="bg-white rounded-lg shadow-md p-6 border border-gray-200 flex flex-col justify-between">
           <img
-            src="/img/derivatives.png"
+            src="/img/derivatives.webp"
             alt="Derivatives"
             className="h-40 w-full object-cover mb-4 rounded"
           />
@@ -45,7 +45,7 @@ const CalculusLandingPage = () => {
         {/* Critical Points */}
         <div className="bg-white rounded-lg shadow-md p-6 border border-gray-200 flex flex-col justify-between">
           <img
-            src="/img/criticalpoints.png"
+            src="/img/criticalpoints.webp"
             alt="Critical Points"
             className="h-40 w-full object-cover mb-4 rounded"
           />
@@ -63,7 +63,7 @@ const CalculusLandingPage = () => {
         {/* Tangent Line */}
         <div className="bg-white rounded-lg shadow-md p-6 border border-gray-200 flex flex-col justify-between">
           <img
-            src="/img/tangentline.png"
+            src="/img/tangentline.webp"
             alt="Tangent Line"
             className="h-40 w-full object-cover mb-4 rounded"
           />
@@ -82,7 +82,7 @@ const CalculusLandingPage = () => {
         {/* Inflection Points */}
         <div className="bg-white rounded-lg shadow-md p-6 border border-gray-200 flex flex-col justify-between">
           <img
-            src="/img/inflectionpoints.png"
+            src="/img/inflectionpoints.webp"
             alt="Inflection Points"
             className="h-40 w-full object-cover mb-4 rounded"
           />
@@ -101,7 +101,7 @@ const CalculusLandingPage = () => {
         {/* Implicit Differentiation */}
         <div className="bg-white rounded-lg shadow-md p-6 border border-gray-200 flex flex-col justify-between">
           <img
-            src="/img/implicitdifferentiation.png"
+            src="/img/implicitdifferentiation.webp"
             alt="Implicit Differentiation"
             className="h-40 w-full object-cover mb-4 rounded"
           />
@@ -119,7 +119,7 @@ const CalculusLandingPage = () => {
         {/* Limits */}
         <div className="bg-white rounded-lg shadow-md p-6 border border-gray-200 flex flex-col justify-between">
           <img
-            src="/img/limits.png"
+            src="/img/limits.webp"
             alt="Limits"
             className="h-40 w-full object-cover mb-4 rounded"
           />
