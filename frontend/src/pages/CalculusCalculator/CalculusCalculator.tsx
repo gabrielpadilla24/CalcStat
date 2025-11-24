@@ -29,6 +29,8 @@ const CalculusLandingPage = () => {
             src="/img/derivatives.webp"
             alt="Derivatives"
             className="h-40 w-full object-cover mb-4 rounded"
+            loading="lazy"
+            decoding="async"
           />
           <h2 className="text-lg sm:text-xl font-bold text-gray-800 mb-2">
             Derivatives
@@ -48,6 +50,8 @@ const CalculusLandingPage = () => {
             src="/img/criticalpoints.webp"
             alt="Critical Points"
             className="h-40 w-full object-cover mb-4 rounded"
+            loading="lazy"
+            decoding="async"
           />
           <h2 className="text-lg sm:text-xl font-bold text-gray-800 mb-2">
             Critical Points / Extrema
@@ -66,6 +70,8 @@ const CalculusLandingPage = () => {
             src="/img/tangentline.webp"
             alt="Tangent Line"
             className="h-40 w-full object-cover mb-4 rounded"
+            loading="lazy"
+            decoding="async"
           />
           <h2 className="text-lg sm:text-xl font-bold text-gray-800 mb-2">
             Tangent Line
@@ -85,6 +91,8 @@ const CalculusLandingPage = () => {
             src="/img/inflectionpoints.webp"
             alt="Inflection Points"
             className="h-40 w-full object-cover mb-4 rounded"
+            loading="lazy"
+            decoding="async"
           />
           <h2 className="text-lg sm:text-xl font-bold text-gray-800 mb-2">
             Inflection Points
@@ -104,6 +112,8 @@ const CalculusLandingPage = () => {
             src="/img/implicitdifferentiation.webp"
             alt="Implicit Differentiation"
             className="h-40 w-full object-cover mb-4 rounded"
+            loading="lazy"
+            decoding="async"
           />
           <h2 className="text-lg sm:text-xl font-bold text-gray-800 mb-2">
             Implicit Differentiation
@@ -122,6 +132,8 @@ const CalculusLandingPage = () => {
             src="/img/limits.webp"
             alt="Limits"
             className="h-40 w-full object-cover mb-4 rounded"
+            loading="lazy"
+            decoding="async"
           />
           <h2 className="text-lg sm:text-xl font-bold text-gray-800 mb-2">
             Limits
