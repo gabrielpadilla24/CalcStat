@@ -43,7 +43,7 @@ const NavBar = () => {
           className="flex items-center space-x-3 rtl:space-x-reverse"
         >
           <img
-            src="/img/logo.png"
+            src="/img/logo.webp"
             className="h-8 ml-11"
             alt="Logo"
             style={{ transform: "scale(2)" }}

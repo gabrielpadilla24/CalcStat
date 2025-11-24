@@ -10,42 +10,42 @@ const LandingPage = () => {
     {
       title: "Stochastic Calculator",
       desc: "Model uncertainty and randomness in complex systems — our Stochastic Calculator brings advanced math to life.",
-      img: "/img/stochasticimg.png",
+      img: "/img/stochasticimg.webp",
       link: "/stochastic",
       reverse: false,
     },
     {
       title: "Calculus Calculator",
       desc: "Tackle differential calculus with ease. Our Calculus Calculator is built for single-variable analysis.",
-      img: "/img/calculusimg.png",
+      img: "/img/calculusimg.webp",
       link: "/calculus",
       reverse: true,
     },
     {
       title: "Linear Algebra Calculator",
       desc: "Work with matrices, vectors, transformations and systems of equations. Our Linear Algebra Calculator empowers your understanding of core linear structures.",
-      img: "/img/linearimg.png",
+      img: "/img/linearimg.webp",
       link: "/linearalgebra",
       reverse: false,
     },
     {
       title: "Probability & Statistics",
       desc: "Calculate probabilities, visualize distributions, and analyze data with precision. Our Probability & Statistics Calculator supports everything from descriptive stats to hypothesis testing.",
-      img: "/img/probstatsimg.png",
+      img: "/img/probstatsimg.webp",
       link: "/probabilityandstats",
       reverse: true,
     },
     {
       title: "Financial Calculator",
       desc: "Handle compound interest, annuities, loan amortization, and investment growth effortlessly. Our Financial Calculator brings money math to life.",
-      img: "/img/financialimg.png",
+      img: "/img/financialimg.webp",
       link: "/financial",
       reverse: false,
     },
     {
       title: "Quant Calculator",
       desc: "From risk models to optimization tools, our Quant Calculator helps you explore financial logic with precision and speed.",
-      img: "/img/quantimg.png",
+      img: "/img/quantimg.webp",
       link: "/quant",
       reverse: true,
     },
@@ -58,7 +58,7 @@ const LandingPage = () => {
       {/* Hero Section */}
       <div className="flex flex-col items-center text-center px-4 pt-10 pb-20 min-h-[70vh]">
         <img
-          src="/img/logo.png"
+          src="/img/logo.webp"
           alt="Ilustración de calculadora"
           className="w-full max-w-md mb-8"
         />
