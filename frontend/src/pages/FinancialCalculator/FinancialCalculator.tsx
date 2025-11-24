@@ -5,7 +5,7 @@ import SubmitButton from "@/components/SubmitButton";
 import BottomCTA from "@/components/BottomCTA";
 
 const FinancialCalculator = () => {
-  const [selectedCategory, setSelectedCategory] = useState<string>("All");
+  const [selectedCategory, setSelectedCategory] = useState("All");
 
   const showCompound =
     selectedCategory === "All" || selectedCategory === "Compound";
@@ -71,6 +71,8 @@ const FinancialCalculator = () => {
               src="/img/compound.webp"
               alt="Compound Interest Calculator"
               className="h-40 w-full object-cover mb-4 rounded"
+              loading="lazy"
+              decoding="async"
             />
             <h2 className="text-xl font-bold text-gray-800 mb-2">
               Compound Interest Calculator
@@ -126,7 +128,6 @@ const FinancialCalculator = () => {
               img: "/img/refinance.webp",
               path: "/mortgage/refinance",
             },
-
             {
               title: "Reverse Mortgage",
               desc: "Estimate how much you can borrow using your home equity with a reverse mortgage.",
@@ -142,6 +143,8 @@ const FinancialCalculator = () => {
                 src={img}
                 alt={title}
                 className="h-40 w-full object-cover mb-4 rounded"
+                loading="lazy"
+                decoding="async"
               />
               <h2 className="text-xl font-bold text-gray-800 mb-2">{title}</h2>
               <div className="flex flex-col justify-between h-full">
@@ -162,7 +165,6 @@ const FinancialCalculator = () => {
               img: "/img/npv.webp",
               path: "/financial/npv",
             },
-
             {
               title: "Internal Rate of Return",
               desc: "Calculate the Internal Rate of Return for any investment. Perfect for evaluating profitability, comparing projects, and guiding smart investment choices.",
@@ -178,6 +180,8 @@ const FinancialCalculator = () => {
                 src={img}
                 alt={title}
                 className="h-40 w-full object-cover mb-4 rounded"
+                loading="lazy"
+                decoding="async"
               />
               <h2 className="text-xl font-bold text-gray-800 mb-2">{title}</h2>
               <div className="flex flex-col justify-between h-full">
@@ -207,6 +211,8 @@ const FinancialCalculator = () => {
                 src={img}
                 alt={title}
                 className="h-40 w-full object-cover mb-4 rounded"
+                loading="lazy"
+                decoding="async"
               />
               <h2 className="text-xl font-bold text-gray-800 mb-2">{title}</h2>
               <div className="flex flex-col justify-between h-full">
@@ -236,6 +242,8 @@ const FinancialCalculator = () => {
                 src={img}
                 alt={title}
                 className="h-40 w-full object-cover mb-4 rounded"
+                loading="lazy"
+                decoding="async"
               />
               <h2 className="text-xl font-bold text-gray-800 mb-2">{title}</h2>
               <div className="flex flex-col justify-between h-full">
