@@ -1,120 +1,225 @@
+# 🧮 CalcStat — The Ultimate Interactive Statistics & Financial Engineering Platform
 
-# 📊 Interactive Math & Finance Calculator Platform
-
-An interactive, modular platform for solving and visualizing complex mathematical and financial problems — built for aspiring quants, financial engineers, and curious minds.
-
----
-
-## 🌟 Vision
-
-To bridge mathematics, finance, and code through intuitive, educational, and powerful calculators — designed for learning, strategy development, and financial innovation.
+CalcStat is a **modern, web-based scientific calculator suite** built to unify advanced **mathematical, statistical, and financial computation** into one seamless platform.  
+It is designed for **students, researchers, and quantitative finance professionals** who need **interactive visualizations**, **dynamic formula rendering**, and **backend-powered computations** in real time.
 
 ---
 
-## ⚙️ Tech Stack
+## 🚀 Overview
 
-- **Frontend**: React + Vite + TailwindCSS + KaTeX + ApexCharts
-- **Backend**: FastAPI (Python), RESTful APIs
-- **Deployment**: Vercel (frontend), Render/GCP (backend)
-- **Design Principles**: Modular, Responsive, Scalable, Educational
+CalcStat combines the power of **FastAPI** (Python backend) and **React + TailwindCSS** (frontend) to deliver a responsive, modular, and extensible calculator ecosystem.  
+It supports **multiple specialized domains**, including:
 
----
+- 📈 **Financial Calculators** — mortgages, refinancing, NPV, IRR, savings, and investment comparisons.  
+- 🧠 **Probability & Statistics Calculators** — probability distributions, regression, and expected value tools.  
+- ∫ **Calculus Calculators** — symbolic derivatives, detailed step-by-step solutions, and formula visualization.  
+- 🎲 **Stochastic Calculus & Quant Tools** — Brownian motion simulators, martingale testers, and Black-Scholes PDEs.  
+- 💡 **Quant Calculators** — tools for quantitative finance, backtesting models, and risk metrics.
 
-## 🧠 Modules (Click to Jump)
-
-| Category | Calculators |
-|---------|-------------|
-| 📈 Financial | [Compound Interest](#-compound-interest-calculator)<br>[Annuity](#-annuity-calculator)<br>[Fixed Rate Mortgage](#-fixed-rate-mortgage)<br>[ARM](#-adjustable-rate-mortgage)<br>[Interest-Only Mortgage](#-interest-only-mortgage)<br>[Balloon Payment Mortgage](#-balloon-payment)<br>[Jumbo Loan](#-jumbo-loan)<br>[NPV](#-net-present-value)<br>[IRR](#-internal-rate-of-return)<br>[Reverse Mortgage](#-reverse-mortgage)<br>[Refinancing Calculator](#-refinance-break-even-calculator) |
-| 📊 Quant | [Monte Carlo Simulations](#-monte-carlo-simulator)<br>[Option Pricing (B&S)](#-black--scholes-calculator) |
-| 📐 Calculus | [Single Variable](#-single-variable-calculus)<br>[Multivariable](#-multivariable-calculus)<br>[Definite Integrals](#-definite-integral-calculator) |
-| 📏 Linear Algebra | [Matrix Operations](#-matrix-calculator)<br>[Eigenvalue Solver](#-eigenvalue-decomposer) |
-| 🎲 Probability & Statistics | [Descriptive Stats](#-statistical-summary)<br>[Probability Distributions](#-distribution-visualizer) |
-| 📉 Stochastic | [Brownian Motion](#-brownian-motion-simulator)<br>[Stochastic Interest Rates](#-vasicek-model) |
+CalcStat is **openly extensible**, enabling future integrations for AI-assisted computation, symbolic algebra engines, and interactive data visualization modules.
 
 ---
 
-## 🔍 Calculator Documentation
+## 🧠 Core Philosophy
 
-### 📈 Compound Interest Calculator
-- 📄 [Detailed Documentation](docs/compound-interest.md)
-- ✨ Visualize how your capital grows over time!
-- 🧮 Dynamic formula rendering with KaTeX
-- 🔁 Annual vs Monthly contributions
-- 📬 Backend API with breakdown per year
+> “Mathematics should be both powerful and intuitive.”
 
-### 🧾 Annuity Calculator
-- Calculates present and future value of annuities
-- Supports ordinary annuities and annuities due
-
-### 🏠 Fixed Rate Mortgage
-- Calculates monthly payments, interest vs principal
-- Includes amortization schedule and donut chart
-
-### 🔄 Adjustable Rate Mortgage
-- ARM types supported: 5/1, 7/1, etc.
-- Shows initial monthly payment validity period
-
-### 💸 Interest-Only Mortgage
-- Calculates interest-only period payments
-- Shows transition to regular payments
-
-### 🎈 Balloon Payment
-- Shows monthly payments + final balloon payoff
-- Includes dual-tab visualization
-
-### 🏦 Jumbo Loan
-- High-value mortgage calculator with standard logic
-
-### 💰 Net Present Value
-- Handles single value and full cashflow sequences
-- Includes KaTeX-rendered dynamic formula
-- Cashflow bar chart integrated
-
-### 📈 Internal Rate of Return
-- Finds IRR from user-provided cashflows
-- Annual chart visualization with ApexCharts
-
-### 🪙 Reverse Mortgage
-- Calculates loan balance over time
-- Supports lump sum or monthly advances
-- Debt accumulation chart
-
-### 🔁 Refinance Break Even Calculator
-- Compares original vs refinanced loans
-- Highlights breakeven point
-- Calculates Refinance Score based on user's goal
+CalcStat aims to make **advanced quantitative reasoning accessible** through clean design and interactivity:
+- Every module combines **mathematical rigor** with **intuitive user experience**.
+- Each formula is rendered dynamically with **KaTeX** for full mathematical clarity.
+- All calculations are performed securely on the **FastAPI backend**, ensuring accuracy and scalability.
 
 ---
 
-## 🚀 Deployment
+## 🧩 Architecture
 
-- Frontend: Vercel
-- Backend: Render or Google Cloud Run
-- Local dev:
-  - `npm run dev` (frontend)
-  - `uvicorn main:app --reload` (backend)
-
----
-
-## 🧪 Testing
-
-- Frontend: Manual and snapshot testing (Jest, coming soon)
-- Backend: Pytest for logic + endpoint tests
-- Planned CI/CD integration
+| Layer | Technology | Description |
+|-------|-------------|-------------|
+| **Frontend** | React + Vite + TailwindCSS | Modular, responsive UI; form handling, visualization, and formula rendering. |
+| **Backend** | FastAPI (Python) | High-performance REST API for real-time computation and mathematical models. |
+| **Data Models** | Pydantic | Input validation, typing, and schema enforcement for API endpoints. |
+| **Visualization** | ApexCharts + KaTeX | Interactive plots and symbolic formula rendering. |
+| **Deployment** | Vercel (frontend) + Render (backend) | Fully cloud-hosted with custom domain integration (`calcstat.com`). |
 
 ---
 
-## 📌 Roadmap
+## 🧮 Major Modules
 
-- 📊 AI-powered strategy generation (Q3 2025)
-- 🧾 User profile & history tracking
-- 🔐 OAuth & secure data storage
-- 🎓 Educational overlays for each calculator
-- 📱 Mobile-first UX optimizations
+### 1. Financial Calculator
+Includes multiple sub-tools:
+- **Fixed-Rate Mortgage (FRM)** with amortization schedule, pie and bar charts.
+- **Adjustable-Rate Mortgage (ARM)** with dynamic rate periods.
+- **Interest-Only Loans**, **Balloon Payments**, and **Jumbo Loans**.
+- **Refinance Calculator** with *Refinance Score* and break-even analysis.
+- **Savings & Investment Calculators** for compound growth and comparison of return rates.
+
+### 2. Probability & Statistics Calculator
+- Discrete & continuous **probability distributions** (Binomial, Poisson, Normal, etc.).
+- **Regression** with intercept, fitted values, and coefficient estimation.
+- **Expected Value**, **Variance**, and **Hypothesis Testing**.
+- All computations handled in Python with SciPy, NumPy, and StatsModels.
+
+### 3. Calculus Calculator
+- **Symbolic derivatives** using `sympy`, with automatic rule detection (product, chain, quotient).
+- **Step-by-step explanations** and **live LaTeX formula updates**.
+- Integration-ready with MathLive for real-time graphing.
+
+### 4. Stochastic Calculus Calculator
+- **Brownian Motion Simulator**
+- **Quadratic Variation**
+- **Martingale Tester**
+- **Girsanov Theorem Tool**
+- **Black–Scholes PDE Analyzer** with visual payoff representations.
+
+### 5. Quant Calculator
+- In-progress module focusing on **Quantitative Finance**, **AI-generated strategies**, and **Monte Carlo simulations**.
+- Future integration with **backtesting engines** and **price action research tools**.
 
 ---
 
-## 🧠 About the Author
+## 🧱 Backend Design (FastAPI)
 
-Gabriel — CS undergrad, passionate about building the next generation of AI+Finance tools. On track to apply for top MSFE programs like MIT, Columbia, and CMU.
+All endpoints follow a consistent pattern:
+```python
+@app.post("/npv")
+def npv_endpoint(data: NPVData):
+    try:
+        return FinancialCalculator.compute_npv(data)
+    except Exception as e:
+        return {"error": str(e)}
+````
+
+Each calculator has its own Pydantic model:
+
+```python
+class NPVData(BaseModel):
+    rate: float
+    cashflows: List[float]
+```
+
+### Key Features
+
+* Input validation via **Pydantic models**
+* Clean modular design per category
+* Rich mathematical computation via:
+
+  * `NumPy`
+  * `SymPy`
+  * `SciPy`
+  * `StatsModels`
+  * `Math` library
+
+---
+
+## 🎨 Frontend Design (React + TailwindCSS)
+
+* **Clean architecture** using folders:
+
+  ```
+  src/
+  ├─ components/
+  ├─ pages/
+  ├─ hooks/
+  ├─ utils/
+  └─ assets/
+  ```
+* **Dynamic form rendering** with controlled components.
+* **Custom hooks** for API communication.
+* **Responsive layout** for all devices.
+* **Dark / Light theme toggle**.
+* Integrated **auto-scroll** behavior to show formulas and charts only when triggered.
+
+---
+
+## 📊 Visual Components
+
+* Interactive charts powered by **ApexCharts**:
+
+  * Pie, bar, and line charts.
+  * Tabs for comparing multiple payment modes.
+* Mathematical expressions rendered dynamically with **KaTeX**.
+* Formula visualization adapts in real time as users change inputs.
+
+---
+
+## 🌐 Deployment & Domain
+
+* Frontend deployed on **Vercel** → [`https://calcstat.com`](https://calcstat.com)
+* Backend deployed on **Render** with FastAPI REST endpoints.
+* Domain purchased and managed via **Namecheap** with verified DNS and HTTPS.
+
+---
+
+## 🧰 Tech Stack Summary
+
+| Category            | Tools                                                            |
+| ------------------- | ---------------------------------------------------------------- |
+| **Frontend**        | React, Vite, TailwindCSS, TypeScript, ApexCharts, KaTeX          |
+| **Backend**         | FastAPI, Python 3.11, Pydantic, NumPy, SciPy, SymPy, StatsModels |
+| **Database**        | (optional) PostgreSQL integration for persistent data (future)   |
+| **Deployment**      | Vercel (Frontend) + Render (Backend)                             |
+| **Version Control** | Git + GitHub                                                     |
+| **Hosting**         | Custom Domain via Namecheap                                      |
+
+---
+
+## ⚙️ Installation & Setup
+
+### 🔹 1. Clone Repository
+
+```bash
+git clone https://github.com/yourusername/calcstat.git
+cd calcstat
+```
+
+### 🔹 2. Backend Setup
+
+```bash
+cd backend
+python3 -m venv venv
+source venv/bin/activate
+pip install -r requirements.txt
+uvicorn main:app --reload
+```
+
+### 🔹 3. Frontend Setup
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+Visit `http://localhost:5173` and start using the calculators.
+
+
+---
+
+
+
+## 🧾 License
+
+This project is licensed under the **MIT License** — feel free to use, modify, and distribute with attribution.
+
+---
+
+## 👤 Author
+
+**Gabriel Padilla**
+🎓 Computer Science @ Universidad de los Andes
+🌍 Creator of CalcStat — combining AI, finance, and mathematical computation
+🔗 [LinkedIn](https://www.linkedin.com/in/gabriel-padilla-314973232/) | [Website](https://calcstat.com)
+
+---
+
+## 💬 Acknowledgements
+
+CalcStat was built with the vision of making **advanced quantitative reasoning accessible** for everyone.
+Special thanks to the open-source community behind **FastAPI**, **React**, **TailwindCSS**, and **SciPy** for their exceptional tools.
+
+---
+
+> *“Where clarity meets computation.”*
+> — **CalcStat**
+
 
