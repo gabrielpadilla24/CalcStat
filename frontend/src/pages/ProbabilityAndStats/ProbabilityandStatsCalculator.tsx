@@ -1,11 +1,12 @@
 "use client";
 
+import React from "react";
 import NavBar from "@/components/NavBar";
 import SubmitButton from "@/components/SubmitButton";
 import { Link } from "react-router-dom";
 import BottomCTA from "@/components/BottomCTA";
 
-const ProbabilityAndStatsCalculator = () => {
+const ProbabilityAndStatsCalculator: React.FC = () => {
   return (
     <div className="bg-gray-100 min-h-screen">
       <NavBar />
@@ -21,14 +22,16 @@ const ProbabilityAndStatsCalculator = () => {
         </p>
       </div>
 
-      {/* Cards (Prob & Stats) */}
+      {/* Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto px-4 pb-20">
-        {/*BINOMIAL DISTRIBUTION */}
-        <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] flex flex-col justify-between text-left">
+        {/* Binomial Distribution */}
+        <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] flex flex-col text-left">
           <img
-            src="/img/binomial.png"
+            src="/img/binomial.webp"
             alt="Binomial Distribution"
             className="h-40 w-full object-cover mb-4 rounded"
+            loading="lazy"
+            decoding="async"
           />
           <h2 className="text-xl font-bold text-gray-800 mb-2">
             Binomial Distribution
@@ -41,12 +44,14 @@ const ProbabilityAndStatsCalculator = () => {
           </Link>
         </div>
 
-        {/* POISSON DISTRIBUTION */}
-        <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] flex flex-col justify-between text-left">
+        {/* Poisson Distribution */}
+        <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] flex flex-col text-left">
           <img
-            src="/img/poisson.png"
+            src="/img/poisson.webp"
             alt="Poisson Distribution"
             className="h-40 w-full object-cover mb-4 rounded"
+            loading="lazy"
+            decoding="async"
           />
           <h2 className="text-xl font-bold text-gray-800 mb-2">
             Poisson Distribution
@@ -59,12 +64,14 @@ const ProbabilityAndStatsCalculator = () => {
           </Link>
         </div>
 
-        {/* GEOMETRIC DISTRIBUTION */}
-        <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] flex flex-col justify-between text-left">
+        {/* Geometric Distribution */}
+        <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] flex flex-col text-left">
           <img
-            src="/img/geometric.png"
+            src="/img/geometric.webp"
             alt="Geometric Distribution"
             className="h-40 w-full object-cover mb-4 rounded"
+            loading="lazy"
+            decoding="async"
           />
           <h2 className="text-xl font-bold text-gray-800 mb-2">
             Geometric Distribution
@@ -78,11 +85,13 @@ const ProbabilityAndStatsCalculator = () => {
         </div>
 
         {/* Normal Distribution */}
-        <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] flex flex-col justify-between text-left">
+        <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] flex flex-col text-left">
           <img
-            src="/img/normal.png"
+            src="/img/normal.webp"
             alt="Normal Distribution"
             className="h-40 w-full object-cover mb-4 rounded"
+            loading="lazy"
+            decoding="async"
           />
           <h2 className="text-xl font-bold text-gray-800 mb-2">
             Normal Distribution
@@ -96,11 +105,13 @@ const ProbabilityAndStatsCalculator = () => {
         </div>
 
         {/* Exponential Distribution */}
-        <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] flex flex-col justify-between text-left">
+        <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] flex flex-col text-left">
           <img
-            src="/img/exponential.png"
+            src="/img/exponential.webp"
             alt="Exponential Distribution"
             className="h-40 w-full object-cover mb-4 rounded"
+            loading="lazy"
+            decoding="async"
           />
           <h2 className="text-xl font-bold text-gray-800 mb-2">
             Exponential Distribution
@@ -113,12 +124,14 @@ const ProbabilityAndStatsCalculator = () => {
           </Link>
         </div>
 
-        {/* UNIFORM DISTRIBUTION */}
-        <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] flex flex-col justify-between text-left">
+        {/* Uniform Distribution */}
+        <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] flex flex-col text-left">
           <img
-            src="/img/uniform.png"
+            src="/img/uniform.webp"
             alt="Uniform Distribution"
             className="h-40 w-full object-cover mb-4 rounded"
+            loading="lazy"
+            decoding="async"
           />
           <h2 className="text-xl font-bold text-gray-800 mb-2">
             Uniform Distribution
@@ -131,12 +144,14 @@ const ProbabilityAndStatsCalculator = () => {
           </Link>
         </div>
 
-        {/* BAYES THEOREM */}
-        <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] flex flex-col justify-between text-left">
+        {/* Bayes Theorem */}
+        <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] flex flex-col text-left">
           <img
-            src="/img/bayes.png"
+            src="/img/bayes.webp"
             alt="Bayes Theorem"
             className="h-40 w-full object-cover mb-4 rounded"
+            loading="lazy"
+            decoding="async"
           />
           <h2 className="text-xl font-bold text-gray-800 mb-2">
             Bayes Theorem
@@ -149,12 +164,14 @@ const ProbabilityAndStatsCalculator = () => {
           </Link>
         </div>
 
-        {/* EVM */}
-        <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] flex flex-col justify-between text-left">
+        {/* Expected Value, Variance & Moments */}
+        <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] flex flex-col text-left">
           <img
-            src="/img/evm.png"
+            src="/img/evm.webp"
             alt="Expected Value, Variance & Moments"
             className="h-40 w-full object-cover mb-4 rounded"
+            loading="lazy"
+            decoding="async"
           />
           <h2 className="text-xl font-bold text-gray-800 mb-2">
             Expected Value, Variance & Moments
@@ -167,12 +184,14 @@ const ProbabilityAndStatsCalculator = () => {
           </Link>
         </div>
 
-        {/* CLT */}
-        <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] flex flex-col justify-between text-left">
+        {/* Central Limit Theorem */}
+        <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] flex flex-col text-left">
           <img
-            src="/img/clt.png"
+            src="/img/clt.webp"
             alt="Central Limit Theorem"
             className="h-40 w-full object-cover mb-4 rounded"
+            loading="lazy"
+            decoding="async"
           />
           <h2 className="text-xl font-bold text-gray-800 mb-2">
             Central Limit Theorem
@@ -185,12 +204,14 @@ const ProbabilityAndStatsCalculator = () => {
           </Link>
         </div>
 
-        {/* INFERENCE CALCULATOR */}
-        <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] flex flex-col justify-between text-left">
+        {/* Inference Calculator */}
+        <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] flex flex-col text-left">
           <img
-            src="/img/inference.png"
+            src="/img/inference.webp"
             alt="Inference Calculator"
             className="h-40 w-full object-cover mb-4 rounded"
+            loading="lazy"
+            decoding="async"
           />
           <h2 className="text-xl font-bold text-gray-800 mb-2">
             Inference Calculator
@@ -203,6 +224,7 @@ const ProbabilityAndStatsCalculator = () => {
           </Link>
         </div>
       </div>
+
       <BottomCTA buttonText="Browse All Calculators" href="/calculators" />
     </div>
   );

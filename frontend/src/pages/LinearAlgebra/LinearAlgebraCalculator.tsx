@@ -1,11 +1,12 @@
 "use client";
 
+import React from "react";
 import NavBar from "@/components/NavBar";
 import SubmitButton from "@/components/SubmitButton";
 import { Link } from "react-router-dom";
 import BottomCTA from "@/components/BottomCTA";
 
-const LinearAlgebraCalculator = () => {
+const LinearAlgebraCalculator: React.FC = () => {
   return (
     <div className="bg-gray-100 min-h-screen">
       <NavBar />
@@ -26,9 +27,11 @@ const LinearAlgebraCalculator = () => {
         {/* Determinant */}
         <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] flex flex-col justify-between text-left">
           <img
-            src="/img/determinant.png"
+            src="/img/determinant.webp"
             alt="Determinant"
             className="h-40 w-full object-cover mb-4 rounded"
+            loading="lazy"
+            decoding="async"
           />
           <h2 className="text-xl font-bold text-gray-800 mb-2">Determinant</h2>
           <p className="text-sm text-gray-600 mb-4">
@@ -43,9 +46,11 @@ const LinearAlgebraCalculator = () => {
         {/* Inverse */}
         <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] flex flex-col justify-between text-left">
           <img
-            src="/img/inverse.png"
+            src="/img/inverse.webp"
             alt="Inverse"
             className="h-40 w-full object-cover mb-4 rounded"
+            loading="lazy"
+            decoding="async"
           />
           <h2 className="text-xl font-bold text-gray-800 mb-2">Inverse</h2>
           <p className="text-sm text-gray-600 mb-4">
@@ -60,9 +65,11 @@ const LinearAlgebraCalculator = () => {
         {/* Linear Equation System */}
         <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] flex flex-col justify-between text-left">
           <img
-            src="/img/eqsystem.png"
+            src="/img/eqsystem.webp"
             alt="Linear Equation System"
             className="h-40 w-full object-cover mb-4 rounded"
+            loading="lazy"
+            decoding="async"
           />
           <h2 className="text-xl font-bold text-gray-800 mb-2">
             Linear Equation System
@@ -78,9 +85,11 @@ const LinearAlgebraCalculator = () => {
         {/* Eigenvalues & Eigenvectors */}
         <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] flex flex-col justify-between text-left">
           <img
-            src="/img/eigen.png"
+            src="/img/eigen.webp"
             alt="Eigenvalues and Eigenvectors"
             className="h-40 w-full object-cover mb-4 rounded"
+            loading="lazy"
+            decoding="async"
           />
           <h2 className="text-xl font-bold text-gray-800 mb-2">
             Eigenvalues and Eigenvectors
@@ -96,9 +105,11 @@ const LinearAlgebraCalculator = () => {
         {/* SVD */}
         <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] flex flex-col justify-between text-left">
           <img
-            src="/img/svd.png"
+            src="/img/svd.webp"
             alt="Singular Value Decomposition"
             className="h-40 w-full object-cover mb-4 rounded"
+            loading="lazy"
+            decoding="async"
           />
           <h2 className="text-xl font-bold text-gray-800 mb-2">
             Singular Value Decomposition (SVD)
@@ -114,9 +125,11 @@ const LinearAlgebraCalculator = () => {
         {/* Gram-Schmidt */}
         <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] flex flex-col justify-between text-left">
           <img
-            src="/img/gramschmidt.png"
+            src="/img/gramschmidt.webp"
             alt="Gram-Schmidt"
             className="h-40 w-full object-cover mb-4 rounded"
+            loading="lazy"
+            decoding="async"
           />
           <h2 className="text-xl font-bold text-gray-800 mb-2">Gram-Schmidt</h2>
           <p className="text-sm text-gray-600 mb-4">
@@ -127,6 +140,7 @@ const LinearAlgebraCalculator = () => {
           </Link>
         </div>
       </div>
+
       <BottomCTA buttonText="Browse All Calculators" href="/calculators" />
     </div>
   );

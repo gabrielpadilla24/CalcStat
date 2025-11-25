@@ -19,7 +19,7 @@ const LimitsInput = ({
     buttonText="Calculate Limit"
     inputLeft={
       <img
-        src="/img/limitimg.png"
+        src="/img/limitimg.webp"
         alt="limit"
         className="h-10 w-auto object-contain select-none"
         draggable={false}

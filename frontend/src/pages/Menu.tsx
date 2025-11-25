@@ -23,7 +23,7 @@ const Menu = () => {
         {/* Financial */}
         <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] text-left">
           <img
-            src="/img/financialimg.png"
+            src="/img/financialimg.webp"
             alt="Financial Calculator"
             className="h-40 w-full object-cover mb-4 rounded"
           />
@@ -42,7 +42,7 @@ const Menu = () => {
         {/* Quant */}
         <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] text-left">
           <img
-            src="/img/quantimg.png"
+            src="/img/quantimg.webp"
             alt="Quant Calculator"
             className="h-40 w-full object-cover mb-4 rounded"
           />
@@ -61,7 +61,7 @@ const Menu = () => {
         {/* Stochastic */}
         <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] text-left">
           <img
-            src="/img/stochasticimg.png"
+            src="/img/stochasticimg.webp"
             alt="Stochastic Calculator"
             className="h-40 w-full object-cover mb-4 rounded"
           />
@@ -79,7 +79,7 @@ const Menu = () => {
         {/* Calculus */}
         <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] text-left">
           <img
-            src="/img/calculusimg.png"
+            src="/img/calculusimg.webp"
             alt="Calculus Calculator"
             className="h-40 w-full object-cover mb-4 rounded"
           />
@@ -97,7 +97,7 @@ const Menu = () => {
         {/* Linear Algebra */}
         <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] text-left">
           <img
-            src="/img/linearimg.png"
+            src="/img/linearimg.webp"
             alt="Linear Algebra Calculator"
             className="h-40 w-full object-cover mb-4 rounded"
           />
@@ -116,7 +116,7 @@ const Menu = () => {
         {/* Probability & Stats */}
         <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] text-left">
           <img
-            src="/img/probstatsimg.png"
+            src="/img/probstatsimg.webp"
             alt="Probability & Stats Calculator"
             className="h-40 w-full object-cover mb-4 rounded"
           />
