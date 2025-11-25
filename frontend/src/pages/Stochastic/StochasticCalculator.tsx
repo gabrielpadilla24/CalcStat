@@ -1,11 +1,12 @@
 "use client";
 
+import React from "react";
 import NavBar from "@/components/NavBar";
 import SubmitButton from "@/components/SubmitButton";
 import { Link } from "react-router-dom";
 import BottomCTA from "@/components/BottomCTA";
 
-const StochasticCalculator = () => {
+const StochasticCalculator: React.FC = () => {
   return (
     <div className="bg-gray-100 min-h-screen">
       <NavBar />
@@ -21,14 +22,16 @@ const StochasticCalculator = () => {
         </p>
       </div>
 
-      {/* Cards (Stochastic) */}
+      {/* Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto px-4 pb-20">
-        {/*Brownian Motion Simulator */}
-        <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] flex flex-col justify-between text-left">
+        {/* Brownian Motion */}
+        <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] flex flex-col text-left">
           <img
             src="/img/brownian.webp"
             alt="Brownian Motion Simulator"
             className="h-40 w-full object-cover mb-4 rounded"
+            loading="lazy"
+            decoding="async"
           />
           <h2 className="text-xl font-bold text-gray-800 mb-2">
             Brownian Motion Simulator
@@ -41,12 +44,14 @@ const StochasticCalculator = () => {
           </Link>
         </div>
 
-        {/* Ito Integral Calculator */}
-        <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] flex flex-col justify-between text-left">
+        {/* Ito Integral */}
+        <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] flex flex-col text-left">
           <img
             src="/img/ito_integral.webp"
             alt="Itô Integral Calculator"
             className="h-40 w-full object-cover mb-4 rounded"
+            loading="lazy"
+            decoding="async"
           />
           <h2 className="text-xl font-bold text-gray-800 mb-2">
             Itô Integral Calculator
@@ -59,12 +64,14 @@ const StochasticCalculator = () => {
           </Link>
         </div>
 
-        {/* Ito Lemma Calculator */}
-        <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] flex flex-col justify-between text-left">
+        {/* Ito Lemma */}
+        <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] flex flex-col text-left">
           <img
             src="/img/ito_lemma.webp"
             alt="Itô's Lemma Calculator"
             className="h-40 w-full object-cover mb-4 rounded"
+            loading="lazy"
+            decoding="async"
           />
           <h2 className="text-xl font-bold text-gray-800 mb-2">
             Itô's Lemma Calculator
@@ -78,11 +85,13 @@ const StochasticCalculator = () => {
         </div>
 
         {/* SDE Solver */}
-        <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] flex flex-col justify-between text-left">
+        <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] flex flex-col text-left">
           <img
             src="/img/sde.webp"
             alt="SDE Solver"
             className="h-40 w-full object-cover mb-4 rounded"
+            loading="lazy"
+            decoding="async"
           />
           <h2 className="text-xl font-bold text-gray-800 mb-2">SDE Solver</h2>
           <p className="text-sm text-gray-600 mb-4">
@@ -95,11 +104,13 @@ const StochasticCalculator = () => {
         </div>
 
         {/* Martingale Tester */}
-        <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] flex flex-col justify-between text-left">
+        <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] flex flex-col text-left">
           <img
             src="/img/martingale.webp"
             alt="Martingale Tester"
             className="h-40 w-full object-cover mb-4 rounded"
+            loading="lazy"
+            decoding="async"
           />
           <h2 className="text-xl font-bold text-gray-800 mb-2">
             Martingale Tester
@@ -112,12 +123,14 @@ const StochasticCalculator = () => {
           </Link>
         </div>
 
-        {/* Expected Value Calculator */}
-        <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] flex flex-col justify-between text-left">
+        {/* Expected Value */}
+        <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] flex flex-col text-left">
           <img
             src="/img/ev.webp"
             alt="Expected Value Calculator"
             className="h-40 w-full object-cover mb-4 rounded"
+            loading="lazy"
+            decoding="async"
           />
           <h2 className="text-xl font-bold text-gray-800 mb-2">
             Expected Value Calculator
@@ -130,12 +143,14 @@ const StochasticCalculator = () => {
           </Link>
         </div>
 
-        {/* Quadratic Variation Calculator */}
-        <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] flex flex-col justify-between text-left">
+        {/* Quadratic Variation */}
+        <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] flex flex-col text-left">
           <img
             src="/img/qv.webp"
             alt="Quadratic Variation Calculator"
             className="h-40 w-full object-cover mb-4 rounded"
+            loading="lazy"
+            decoding="async"
           />
           <h2 className="text-xl font-bold text-gray-800 mb-2">
             Quadratic Variation Calculator
@@ -148,12 +163,14 @@ const StochasticCalculator = () => {
           </Link>
         </div>
 
-        {/* Girsanov's Theorem Tool */}
-        <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] flex flex-col justify-between text-left">
+        {/* Girsanov’s Theorem */}
+        <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] flex flex-col text-left">
           <img
             src="/img/girsanov.webp"
             alt="Girsanov's Theorem Tool"
             className="h-40 w-full object-cover mb-4 rounded"
+            loading="lazy"
+            decoding="async"
           />
           <h2 className="text-xl font-bold text-gray-800 mb-2">
             Girsanov's Theorem Tool
@@ -167,12 +184,14 @@ const StochasticCalculator = () => {
           </Link>
         </div>
 
-        {/* Black-Scholes PDE Tool */}
-        <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] flex flex-col justify-between text-left">
+        {/* Black–Scholes PDE */}
+        <div className="bg-white rounded-md shadow-md p-6 border border-[#e0e0e0] flex flex-col text-left">
           <img
             src="/img/black_scholes.webp"
-            alt="Black-Scholes PDE Tool"
+            alt="Black–Scholes PDE Tool"
             className="h-40 w-full object-cover mb-4 rounded"
+            loading="lazy"
+            decoding="async"
           />
           <h2 className="text-xl font-bold text-gray-800 mb-2">
             Black–Scholes PDE Tool
@@ -186,7 +205,7 @@ const StochasticCalculator = () => {
           </Link>
         </div>
       </div>
-      {/* Bottom CTA */}
+
       <BottomCTA buttonText="Browse All Calculators" href="/calculators" />
     </div>
   );

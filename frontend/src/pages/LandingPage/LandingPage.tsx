@@ -61,6 +61,8 @@ const LandingPage = () => {
           src="/img/logo.webp"
           alt="Ilustración de calculadora"
           className="w-full max-w-md mb-8"
+          loading="eager"
+          decoding="async"
         />
         <h1 className="text-3xl md:text-5xl font-bold mb-4 text-gray-800">
           Smarter, faster calculations made simple
@@ -126,6 +128,8 @@ const LandingPage = () => {
               src={img}
               alt={title}
               className="w-full h-auto rounded-md shadow-md"
+              loading="lazy" // <-- 🚀 LAZY LOAD
+              decoding="async"
             />
           </div>
         </div>
